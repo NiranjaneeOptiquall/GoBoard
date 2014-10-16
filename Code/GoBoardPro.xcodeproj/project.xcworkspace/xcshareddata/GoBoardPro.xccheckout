@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>41EA505D-EB62-49DB-B3E8-695EB222924B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GoBoardPro</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
+		<string>https://10.2.1.98/projects/goboarpro_ipad_app/Code/iPhone</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>GoBoardPro.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
+		<string>https://10.2.1.98/projects/goboarpro_ipad_app</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://10.2.1.98/projects/goboarpro_ipad_app/Code/iPhone/GoBoardPro.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Code</string>
+		</dict>
+	</array>
+</dict>
+</plist>
