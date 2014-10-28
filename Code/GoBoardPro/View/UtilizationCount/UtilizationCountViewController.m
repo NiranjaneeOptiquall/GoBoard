@@ -154,7 +154,7 @@
     int aMaxCapacity = [[aDictCountInfo objectForKey:@"maxCapacity"] intValue];
     int aCurrent = [[aDictCountInfo objectForKey:@"current"] intValue];
     int percent = 100 * aCurrent / aMaxCapacity;
-    [aCell.lblCapicity setText:[NSString stringWithFormat:@"%d%% Capicity", percent]];
+    [aCell.lblCapicity setText:[NSString stringWithFormat:@"%d%% Capacity", percent]];
     if (percent > 80) {
         [aCell.txtCount setTextColor:[UIColor colorWithRed:218.0/255.0 green:154.0/255.0 blue:154.0/255.0 alpha:1.0]];
     }

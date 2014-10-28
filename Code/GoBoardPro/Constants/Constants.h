@@ -17,11 +17,11 @@ AppDelegate *gblAppDelegate;
 
 #define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
 
-#define LOCATION_VALUES                 @[@{@"title":@"Main Gynasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Swimming Pool", @"id": @"3"}, @{@"title":@"Tennis Court", @"id": @"4"}]
+#define LOCATION_VALUES                 @[@{@"title":@"Main Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Swimming Pool", @"id": @"3"}, @{@"title":@"Tennis Court", @"id": @"4"}]
 
-#define POSITION_VALUES                 @[@{@"title":@"Manager", @"id": @"1"}, @{@"title":@"Asssitant", @"id": @"2"}, @{@"title":@"Trainer", @"id": @"3"}, @{@"title":@"Medical Personnel", @"id": @"4"}]
+#define POSITION_VALUES                 @[@{@"title":@"Manager", @"id": @"1"}, @{@"title":@"Assistant", @"id": @"2"}, @{@"title":@"Trainer", @"id": @"3"}, @{@"title":@"Medical Personnel", @"id": @"4"}]
 
-#define FACILITY_VALUES                 @[@{@"title":@"Gynasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Games", @"id": @"3"}, @{@"title":@"Cafeteria", @"id": @"4"}]
+#define FACILITY_VALUES                 @[@{@"title":@"Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Games", @"id": @"3"}, @{@"title":@"Cafeteria", @"id": @"4"}]
 
 #define INJURY_TYPE_GENERAL                     @[@{@"title":@"Allergic Reaction", @"id": @"1"}, @{@"title":@"Diabetic Emergency", @"id": @"2"}, @{@"title":@"Fever", @"id": @"3"}, @{@"title":@"Gestrointestinal", @"id": @"4"}, @{@"title":@"Heart", @"id": @"5"}, @{@"title":@"Heat", @"id": @"6"}, @{@"title":@"Other", @"id": @"10"}]
 
