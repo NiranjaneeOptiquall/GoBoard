@@ -48,63 +48,67 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtFitstName isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter First Name");
-        return;
-    }
-    else if ([_txtMiddleName isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Middle Name");
-        return;
-    }
-    else if ([_txtLastName isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Last Name");
-        return;
-    }
-    else if ([_txtEmail isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Email address");
+    if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmail text]]) {
         [_txtEmail becomeFirstResponder];
-        alert(@"Update Profile", @"Please enter valid Email address");
+        alert(@"", @"Please enter valid Email address");
         return;
     }
     else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Phone Number");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPhone.text isValidPhoneNumber]) {
-        alert(@"Update Profile", @"Please enter valid Phone Number");
+        alert(@"", @"Please enter valid Phone Number");
         return;
     }
     else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Mobile Number");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtMobile.text isValidPhoneNumber]) {
-        alert(@"Update Profile", @"Please enter valid Mobile Number");
+        alert(@"", @"Please enter valid Mobile Number");
         return;
     }
     else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Password");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
-        alert(@"Login", @"Password should be 8 - 16 character long with atleast 1 numeric, 1 lower case letter and 1 upper case latter");
+        alert(@"", @"Password should be 8 - 16 character long with atleast 1 numeric, 1 lower case letter and 1 upper case latter");
         return;
     }
     else if ([_txtConfirmPassword isTextFieldBlank]) {
-        alert(@"Update Profile", @"Please enter Confirm Password");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPassword.text isEqualToString:_txtConfirmPassword.text]) {
-        alert(@"Update Profile", @"Password and Confirm Password does not match");
+        alert(@"", @"Password and Confirm Password does not match");
         [_txtConfirmPassword becomeFirstResponder];
         return;
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+}
 
 #pragma mark - Methods
 
@@ -123,6 +127,20 @@
 }
 
 #pragma mark - UITextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (!isUpdate) {
+        strPreviousText = textField.text;
+    }
+    
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    if (!isUpdate && ![strPreviousText isEqualToString:textField.text]) {
+        isUpdate = YES;
+    }
+    return YES;
+}
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
@@ -146,4 +164,8 @@
     return YES;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
 @end

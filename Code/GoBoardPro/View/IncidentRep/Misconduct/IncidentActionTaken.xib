@@ -19,12 +19,8 @@
                             <rect key="frame" x="14" y="42" width="204" height="63"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="onf-1G-nhb">
-                            <rect key="frame" x="168" y="47" width="50" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="From" minimumFontSize="17" id="4fq-Er-KC8">
-                            <rect key="frame" x="20" y="47" width="156" height="50"/>
+                            <rect key="frame" x="20" y="47" width="191" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <textInputTraits key="textInputTraits"/>
@@ -32,16 +28,17 @@
                                 <outlet property="delegate" destination="iN0-l3-epB" id="CZf-xW-iWd"/>
                             </connections>
                         </textField>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="onf-1G-nhb">
+                            <rect key="frame" x="168" y="46" width="50" height="50"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="1sC-Q8-9DJ">
                             <rect key="frame" x="259" y="42" width="204" height="63"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="pJQ-8S-Q6t">
-                            <rect key="frame" x="413" y="47" width="50" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Till" minimumFontSize="17" id="QvA-Ht-YDo">
-                            <rect key="frame" x="271" y="47" width="149" height="50"/>
+                            <rect key="frame" x="271" y="47" width="186" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <textInputTraits key="textInputTraits"/>
@@ -49,12 +46,17 @@
                                 <outlet property="delegate" destination="iN0-l3-epB" id="FE1-42-7hz"/>
                             </connections>
                         </textField>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="pJQ-8S-Q6t">
+                            <rect key="frame" x="413" y="46" width="50" height="50"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="Qf6-jP-JG3">
                             <rect key="frame" x="14" y="263" width="204" height="63"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="From" minimumFontSize="17" id="Y28-nc-LT8">
-                            <rect key="frame" x="20" y="268" width="156" height="50"/>
+                            <rect key="frame" x="20" y="268" width="191" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <textInputTraits key="textInputTraits"/>
@@ -62,16 +64,17 @@
                                 <outlet property="delegate" destination="iN0-l3-epB" id="6a9-5h-Npv"/>
                             </connections>
                         </textField>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="JSr-xt-SAi">
+                            <rect key="frame" x="168" y="267" width="50" height="50"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="Lzh-jq-wfx">
                             <rect key="frame" x="14" y="343" width="204" height="63"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="v6r-Ge-H8s">
-                            <rect key="frame" x="168" y="348" width="50" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Date" minimumFontSize="17" id="iJT-Jj-Q0E">
-                            <rect key="frame" x="20" y="348" width="156" height="50"/>
+                            <rect key="frame" x="20" y="348" width="191" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <textInputTraits key="textInputTraits"/>
@@ -79,16 +82,17 @@
                                 <outlet property="delegate" destination="iN0-l3-epB" id="Mpf-c1-2vg"/>
                             </connections>
                         </textField>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="v6r-Ge-H8s">
+                            <rect key="frame" x="168" y="347" width="50" height="50"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="1as-Ae-yzf">
                             <rect key="frame" x="259" y="263" width="204" height="63"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="ZW4-ey-7rE">
-                            <rect key="frame" x="413" y="268" width="50" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Till" minimumFontSize="17" id="QPE-v1-lih">
-                            <rect key="frame" x="265" y="268" width="155" height="50"/>
+                            <rect key="frame" x="265" y="268" width="192" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <textInputTraits key="textInputTraits"/>
@@ -96,9 +100,10 @@
                                 <outlet property="delegate" destination="iN0-l3-epB" id="EOq-4Q-Mft"/>
                             </connections>
                         </textField>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="JSr-xt-SAi">
-                            <rect key="frame" x="168" y="268" width="50" height="50"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="date.png" id="ZW4-ey-7rE">
+                            <rect key="frame" x="413" y="267" width="50" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtMemberId;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmployeePosition;
 @property (weak, nonatomic) IBOutlet UIImageView *imvEmployeePosBG;
+@property (weak, nonatomic) IBOutlet UILabel *lblEmpPosAsterisk;
 @property (weak, nonatomic) IBOutlet UITextField *txtFirstName;
 @property (weak, nonatomic) IBOutlet UITextField *txtMi;
 @property (weak, nonatomic) IBOutlet UITextField *txtLastName;

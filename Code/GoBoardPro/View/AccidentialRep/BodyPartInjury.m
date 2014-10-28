@@ -74,13 +74,14 @@
 
 - (IBAction)btnAddAnotherInjuryTapped:(id)sender {
     if ([_txtEnjuryType isTextFieldBlank]) {
-        alert(@"", @"Please select Injury type");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if ([_txtActionTaken isTextFieldBlank]) {
-        alert(@"", @"Please select action taken");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
+    
     NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
     if ([_btnGeneralInjury isSelected]) {
         [aDict setObject:@"General" forKey:@"type"];
@@ -219,17 +220,9 @@
 
 - (BOOL)isBodyPartInjuredInfoValidationSuccess {
     BOOL success = YES;
-    if ([_txtEnjuryType isTextFieldBlank]) {
+    if ([_txtEnjuryType isTextFieldBlank] || [_txtActionTaken isTextFieldBlank] || [_txtCareProvided isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please select injury type");
-    }
-    else if ([_txtActionTaken isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please select Actions taken on injury");
-    }
-    else if ([_txtCareProvided isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please select care provided by");
+        alert(@"", @"Please fill up all required fields.");
     }
     return success;
 }

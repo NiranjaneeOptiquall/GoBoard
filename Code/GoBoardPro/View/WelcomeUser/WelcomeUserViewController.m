@@ -39,16 +39,8 @@
 */
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtFacility isTextFieldBlank]) {
-        alert(@"", @"Please choose a Facility");
-        return;
-    }
-    else if ([_txtLocation isTextFieldBlank]) {
-        alert(@"", @"Please choose a Location");
-        return;
-    }
-    else if ([_txtPosition isTextFieldBlank]) {
-        alert(@"", @"Please choose a Position");
+    if ([_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];

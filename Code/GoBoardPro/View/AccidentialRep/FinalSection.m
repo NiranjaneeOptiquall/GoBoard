@@ -94,21 +94,9 @@
             return success;
         }
     }
-    if ([_txtEmpFName isTextFieldBlank]) {
+    if ([_txtEmpFName isTextFieldBlank] || [_txtEmpMI isTextFieldBlank] || [_txtEmpLName isTextFieldBlank] || [_txtEmpHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please enter employee first name, who is completing report");
-    }
-    else if ([_txtEmpMI isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter employee middle name, who is completing report");
-    }
-    else if ([_txtEmpLName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter employee last name, who is completing report");
-    }
-    else if ([_txtEmpHomePhone isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter employee home phone number, who is completing report");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if ([_txtEmpHomePhone.text isValidPhoneNumber]) {
         success = NO;

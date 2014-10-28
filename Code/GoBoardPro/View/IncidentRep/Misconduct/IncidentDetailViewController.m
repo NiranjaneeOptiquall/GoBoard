@@ -231,33 +231,9 @@
 
 - (BOOL)checkValidation {
     BOOL success = YES;
-    if ([_txtDateOfIncident isTextFieldBlank]) {
+    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtActivity isTextFieldBlank] || [_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please choose date of incident");
-    }
-    else if ([_txtTimeOfIncident isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose time of incident");
-    }
-    else if ([_txtFacility isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose facility");
-    }
-    else if ([_txtLocation isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose location");
-    }
-    else if ([_txtActivity isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose activity");
-    }
-    else if ([_txtWeather isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose Wheather");
-    }
-    else if ([_txtEquipment isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose equipment");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if (![self validateIncidentPersonal]) {
         return NO;

@@ -118,7 +118,7 @@
 		33CFBBCD19D2A27B00D86E68 /* close_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBCB19D2A27B00D86E68 /* close_btn@2x.png */; };
 		33CFBBD119D2ACD700D86E68 /* tick_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBD019D2ACD700D86E68 /* tick_btn@2x.png */; };
 		33CFBBD519D2ADE000D86E68 /* WelcomeUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CFBBD419D2ADE000D86E68 /* WelcomeUserViewController.m */; };
-		33CFBBD919D2C28300D86E68 /* arrow@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBD719D2C28300D86E68 /* arrow@2X.png */; };
+		33CFBBD919D2C28300D86E68 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBD719D2C28300D86E68 /* arrow@2x.png */; };
 		33CFBBDA19D2C28300D86E68 /* update_profile_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBD819D2C28300D86E68 /* update_profile_btn@2x.png */; };
 		33CFBBDE19D2CA6300D86E68 /* UpdateProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CFBBDD19D2CA6300D86E68 /* UpdateProfileViewController.m */; };
 		33CFBBEC19D2D21300D86E68 /* accident_report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE019D2D21300D86E68 /* accident_report@2x.png */; };
@@ -392,7 +392,7 @@
 		33CFBBD019D2ACD700D86E68 /* tick_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tick_btn@2x.png"; sourceTree = "<group>"; };
 		33CFBBD319D2ADE000D86E68 /* WelcomeUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeUserViewController.h; sourceTree = "<group>"; };
 		33CFBBD419D2ADE000D86E68 /* WelcomeUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeUserViewController.m; sourceTree = "<group>"; };
-		33CFBBD719D2C28300D86E68 /* arrow@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2X.png"; sourceTree = "<group>"; };
+		33CFBBD719D2C28300D86E68 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
 		33CFBBD819D2C28300D86E68 /* update_profile_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "update_profile_btn@2x.png"; sourceTree = "<group>"; };
 		33CFBBDC19D2CA6300D86E68 /* UpdateProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateProfileViewController.h; sourceTree = "<group>"; };
 		33CFBBDD19D2CA6300D86E68 /* UpdateProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateProfileViewController.m; sourceTree = "<group>"; };
@@ -904,7 +904,7 @@
 		33CFBBD619D2C26A00D86E68 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
-				33CFBBD719D2C28300D86E68 /* arrow@2X.png */,
+				33CFBBD719D2C28300D86E68 /* arrow@2x.png */,
 				33CFBBD819D2C28300D86E68 /* update_profile_btn@2x.png */,
 			);
 			name = Welcome;
@@ -1408,7 +1408,7 @@
 				33B6368019D9250600875A1D /* decrease_icon@2x.png in Resources */,
 				3337805619E6537300362F82 /* work_order_sel@2x.png in Resources */,
 				33CD6B6E19DAB6420024A02D /* EmergencyPersonnelView.xib in Resources */,
-				33CFBBD919D2C28300D86E68 /* arrow@2X.png in Resources */,
+				33CFBBD919D2C28300D86E68 /* arrow@2x.png in Resources */,
 				33CFBBBB19D28B9800D86E68 /* unchecked_white_radiobutton@2x.png in Resources */,
 				33DBA20919E556D90041A932 /* Icon-76@2x.png in Resources */,
 				33CD6B6119DA7E840024A02D /* figure_no_sel.png in Resources */,

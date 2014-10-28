@@ -10,8 +10,10 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import "Constants.h"
 
-@interface UpdateProfileViewController : UIViewController {
+@interface UpdateProfileViewController : UIViewController <UITextFieldDelegate> {
     NSInteger totalCertificateCount;
+    NSString *strPreviousText;
+    BOOL isUpdate;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlCertificationView;
 @property (weak, nonatomic) IBOutlet UITextField *txtFitstName;
@@ -26,4 +28,5 @@
 
 - (IBAction)btnAddMoreCertification:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 @end

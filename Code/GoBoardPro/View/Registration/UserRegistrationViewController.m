@@ -54,65 +54,53 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtFitstName isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter First Name");
-        return;
-    }
-    else if ([_txtMiddleName isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Middle Name");
-        return;
-    }
-    else if ([_txtLastName isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Last Name");
-        return;
-    }
-    else if ([_txtEmail isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Email address");
+    if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmail text]]) {
         [_txtEmail becomeFirstResponder];
-        alert(@"Sign Up", @"Please enter valid Email address");
+        alert(@"", @"Please enter valid Email address");
         return;
     }
     else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Phone Number");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPhone.text isValidPhoneNumber]) {
-        alert(@"Sign Up", @"Please enter valid Phone Number");
+        alert(@"", @"Please enter valid Phone Number");
         [_txtPhone becomeFirstResponder];
         return;
     }
     else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Mobile Number");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtMobile.text isValidPhoneNumber]) {
-        alert(@"Sign Up", @"Please enter valid Mobile Number");
+        alert(@"", @"Please enter valid Mobile Number");
         [_txtMobile becomeFirstResponder];
         return;
     }
     else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Password");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
-        alert(@"Login", @"Password should be 8 - 16 character long with atleast 1 numeric and 1 lower case letter and 1 upper case latter");
+        alert(@"", @"Password should be 8 - 16 character long with atleast 1 numeric and 1 lower case letter and 1 upper case latter");
         [_txtPassword becomeFirstResponder];
         return;
     }
     else if ([_txtConfirmPassword isTextFieldBlank]) {
-        alert(@"Sign Up", @"Please enter Confirm Password");
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     else if (![_txtPassword.text isEqualToString:_txtConfirmPassword.text]) {
-        alert(@"Sign Up", @"Password and Confirm Password does not match");
+        alert(@"", @"Password and Confirm Password does not match");
         [_txtConfirmPassword becomeFirstResponder];
         return;
     }
     else if (![_btnAggreeTerms isSelected]) {
-        alert(@"Sign Up", @"Please agree terms & conditions");
+        alert(@"", @"Please agree terms & conditions");
     }
     [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
 }

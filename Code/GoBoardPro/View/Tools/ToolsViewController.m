@@ -233,20 +233,8 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtPosition isTextFieldBlank]) {
-        alert(@"", @"Please choose position");
-        return;
-    }
-    else if ([_txtLocation isTextFieldBlank]) {
-        alert(@"", @"Please choose location");
-        return;
-    }
-    else if ([_txtFacility isTextFieldBlank]) {
-        alert(@"", @"Please choose facility");
-        return;
-    }
-    else if ([_txtTaskTitle isTextFieldBlank]) {
-        alert(@"", @"Please enter task title");
+    if ([_txtPosition isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtTaskTitle isTextFieldBlank]) {
+        alert(@"", @"Please fill up all required fields.");
         return;
     }
     [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Your task has been added success fully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];

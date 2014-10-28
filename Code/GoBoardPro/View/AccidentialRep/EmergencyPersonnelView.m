@@ -35,37 +35,9 @@
 
 - (BOOL)isEmergencyPersonnelValidationSucceed {
     BOOL success = YES;
-    if ([_txtTime911Called isTextFieldBlank]) {
+    if ([_txtTime911Called isTextFieldBlank] || [_txtTimeOfArrival isTextFieldBlank] || [_txtTimeOfDeparture isTextFieldBlank] || [_txtCaseNo isTextFieldBlank] || [_txtFirstName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtPhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please enter 911 called time");
-    }
-    else if ([_txtTimeOfArrival isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter 911 arrival time");
-    }
-    else if ([_txtTimeOfDeparture isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter 911 departure time");
-    }
-    else if ([_txtCaseNo isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter case number");
-    }
-    else if ([_txtFirstName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter first name");
-    }
-    else if ([_txtMI isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter middle name");
-    }
-    else if ([_txtLastName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter last name");
-    }
-    else if ([_txtPhone isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter phone number");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if ([_txtPhone.text isValidPhoneNumber]) {
         success = NO;
@@ -73,23 +45,8 @@
         alert(@"", @"Please enter valid phone number");
     }
     else if ([_txtBadge isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter badge number");
+        alert(@"", @"Please fill up all required fields.");
     }
-//    else {
-//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//        [formatter setDateFormat:@"hh:mm a"];
-//        NSDate *calledTime = [formatter dateFromString:_txtTime911Called.text];
-//        NSDate *arriveTime = [formatter dateFromString:_txtTimeOfArrival.text];
-//        NSDate *departureTime = [formatter dateFromString:_txtTimeOfDeparture.text];
-//        if ([calledTime compare:arriveTime] != NSOrderedAscending) {
-//            success = NO;
-//            alert(@"", @"911 arrival time cannot be earlier than calling time.");
-//        }
-//        else {
-//            
-//        }
-//    }
     return success;
 }
 

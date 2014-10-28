@@ -19,23 +19,9 @@
 */
 - (BOOL)isWitnessViewValidationSuccess {
     BOOL success = YES;
-    if ([_txtWitnessFName isTextFieldBlank]) {
+    if ([_txtWitnessFName isTextFieldBlank] || [_txtWitnessMI isTextFieldBlank] || [_txtWitnessLName isTextFieldBlank] || [_txtWitnessHomePhone isTextFieldBlank]) {
         success = NO;
-        [_txtWitnessFName becomeFirstResponder];
-        alert(@"", @"Please enter witness's first name");
-    }
-    else if ([_txtWitnessMI isTextFieldBlank]) {
-        success = NO;
-        [_txtWitnessMI becomeFirstResponder];
-        alert(@"", @"Please enter witness's middle name");
-    }
-    else if ([_txtWitnessLName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter witness's last name");
-    }
-    else if ([_txtWitnessHomePhone isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter witness's home phone number");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if ([_txtWitnessHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -49,7 +35,7 @@
     }
     else if ([_txtWitnessEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please enter witness's email address");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
         success = NO;

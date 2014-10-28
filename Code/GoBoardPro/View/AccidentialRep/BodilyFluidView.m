@@ -59,21 +59,9 @@
 
 - (BOOL)isBodilyFluidValidationSucceed {
     BOOL success = YES;
-    if ([_txtFName isTextFieldBlank]) {
+    if ([_txtFName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLName isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
+        alert(@"", @"Please fill up all required fields.");
         success = NO;
-        alert(@"", @"Please enter first name");
-    }
-    else if ([_txtMI isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter middle name");
-    }
-    else if ([_txtLName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter last name");
-    }
-    else if ([_txtPosition isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter position");
     }
     return success;
 }

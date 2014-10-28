@@ -42,6 +42,7 @@
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender {
     [_imvEmployeePosBG setHidden:YES];
     [_txtEmployeePosition setHidden:YES];
+    [_lblEmpPosAsterisk setHidden:YES];
     [_vwGuest setHidden:YES];
     [_vwEmployee setHidden:YES];
     [_btnEmployee setSelected:NO];
@@ -62,6 +63,7 @@
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_imvEmployeePosBG setHidden:NO];
         [_txtEmployeePosition setHidden:NO];
+        [_lblEmpPosAsterisk setHidden:NO];
         [_vwEmployee setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwEmployee.frame);
     }
@@ -105,69 +107,9 @@
 
 - (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
-    if ([_txtDateOfIncident isTextFieldBlank]) {
+    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please choose date of incident");
-    }
-    else if ([_txtTimeOfIncident isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose time of incident");
-    }
-    else if ([_txtFacility isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose facility");
-    }
-    else if ([_txtLocation isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose location");
-    }
-    else if ([_txtMemberId isTextFieldBlank]) {
-        success = NO;
-        if ([_btnMember isSelected]) {
-            alert(@"", @"Please enter member id");
-        }
-        else if ([_btnGuest isSelected]) {
-            alert(@"", @"Please enter driver's licence number");
-        }
-        else if ([_btnEmployee isSelected]) {
-            alert(@"", @"Please enter employee id");
-        }
-    }
-    else if ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter employee position");
-    }
-    else if ([_txtFirstName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter first name");
-    }
-    else if ([_txtMi isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter middle name");
-    }
-    else if ([_txtLastName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter last name");
-    }
-    else if ([_txtStreetAddress isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter street address");
-    }
-    else if ([_txtCity isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter city");
-    }
-    else if ([_txtState isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter state");
-    }
-    else if ([_txtZip isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter zip");
-    }
-    else if ([_txtHomePhone isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter home phone number");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if (![_txtHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -176,40 +118,16 @@
     }
     else if ([_txtEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please enter email address");
+        alert(@"", @"Please fill up all required fields.");
     }
     else if (![gblAppDelegate validateEmail:[_txtEmailAddress text]]) {
         success = NO;
         [_txtEmailAddress becomeFirstResponder];
         alert(@"", @"Please enter valid email address");
     }
-    else if ([_txtDob isTextFieldBlank]) {
+    else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank]) || [_txtActivity isTextFieldBlank] || [_txtWheather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please choose date of birth");
-    }
-    else if ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter host first name");
-    }
-    else if ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter host middle name");
-    }
-    else if ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please enter host last name");
-    }
-    else if ([_txtActivity isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose activity");
-    }
-    else if ([_txtWheather isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose Wheather");
-    }
-    else if ([_txtEquipment isTextFieldBlank]) {
-        success = NO;
-        alert(@"", @"Please choose equipment");
+        alert(@"", @"Please fill up all required fields.");
     }
     return success;
 }

@@ -17,6 +17,7 @@ AppDelegate *gblAppDelegate;
 
 #define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
 
+
 #define LOCATION_VALUES                 @[@{@"title":@"Main Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Swimming Pool", @"id": @"3"}, @{@"title":@"Tennis Court", @"id": @"4"}]
 
 #define POSITION_VALUES                 @[@{@"title":@"Manager", @"id": @"1"}, @{@"title":@"Assistant", @"id": @"2"}, @{@"title":@"Trainer", @"id": @"3"}, @{@"title":@"Medical Personnel", @"id": @"4"}]
