@@ -9,7 +9,7 @@
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AddCertificateView">
             <rect key="frame" x="0.0" y="0.0" width="752" height="77"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="DY6-oT-YNz">
                     <rect key="frame" x="44" y="7" width="315" height="63"/>
@@ -32,7 +32,7 @@
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bRo-bt-PmI">
-                    <rect key="frame" x="649" y="6" width="66" height="66"/>
+                    <rect key="frame" x="604" y="6" width="66" height="66"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="camera_icon.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -40,6 +40,13 @@
                     <connections>
                         <action selector="btnCaptureCertificatieImageTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="ahX-XK-a2D"/>
                     </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="a4Z-sv-BMg">
+                    <rect key="frame" x="679" y="6" width="66" height="66"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="collaps_icon_default.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Gvm-oq-ZLf">
                     <rect key="frame" x="393" y="6" width="204" height="64"/>
@@ -56,6 +63,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="btnCaptureImage" destination="bRo-bt-PmI" id="nlj-RO-kQ3"/>
+                <outlet property="btnRemove" destination="a4Z-sv-BMg" id="F0W-NS-ken"/>
                 <outlet property="txtCertificateName" destination="OgE-gM-xWL" id="uZI-Qw-BzE"/>
                 <outlet property="txtExpDate" destination="IT6-5C-7oy" id="GPQ-Ij-57X"/>
             </connections>
@@ -64,6 +72,7 @@
     </objects>
     <resources>
         <image name="camera_icon.png" width="66" height="66"/>
+        <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="text_box_date.png" width="204" height="62"/>
         <image name="text_box_email.png" width="315" height="62"/>
     </resources>

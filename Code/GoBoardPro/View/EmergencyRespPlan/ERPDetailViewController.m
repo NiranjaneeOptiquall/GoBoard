@@ -63,11 +63,13 @@
 }
 
 - (IBAction)btnTimeStartTapped:(id)sender {
+    isUpdate = YES;
     DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
     [datePopOver setDelegate:self];
     [datePopOver showInPopOverFor:sender limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:_txtTimeStart];
 }
 - (IBAction)btnTimeEndTapped:(id)sender {
+    isUpdate = YES;
     if (![_txtTimeEnd isEnabled]) {
         return;
     }
@@ -80,7 +82,17 @@
     [datePopOver showInPopOverFor:sender limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:_txtTimeEnd];
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (void)btnCheckMarkTapped:(UIButton*)btn {
+    isUpdate = YES;
     [btn setSelected:![btn isSelected]];
     UITableViewCell *cell = (UITableViewCell *)[btn superview];
     while (![cell isKindOfClass:[UITableViewCell class]]) {
@@ -168,4 +180,14 @@
         [_txtTimeEnd setEnabled:YES];
     }
 }
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+}
+
 @end

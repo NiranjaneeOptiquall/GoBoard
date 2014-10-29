@@ -12,6 +12,8 @@
     NSMutableArray *mutArrCount;
     NSInteger editingIndex;
     UIPopoverController *popOverMessage;
+    BOOL isUpdate;
+    NSString *strPreviousText;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblUserName;
 @property (weak, nonatomic) IBOutlet UILabel *lblFacility;
@@ -30,4 +32,5 @@
 - (IBAction)btnToggleCountAndTaskTapped:(id)sender;
 - (IBAction)btnSubmitCountTapped:(id)sender;
 - (IBAction)btnCountCommentTapped:(UIButton *)sender;
+- (IBAction)btnBackTapped:(id)sender;
 @end

@@ -20,7 +20,6 @@
 */
 
 - (void)awakeFromNib {
-    [self btnNotificationTapped:_btnNone];
     [self btnPersonInvolvedTapped:_btnMember];
     [self btnAffiliationTapped:_btnNonAssessedStudent];
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
@@ -29,15 +28,6 @@
 }
 
 #pragma mark - IBActions
-
-
-- (IBAction)btnNotificationTapped:(UIButton *)sender {
-    [_btn911Called setSelected:NO];
-    [_btnPoliceCalled setSelected:NO];
-    [_btnManager setSelected:NO];
-    [_btnNone setSelected:NO];
-    [sender setSelected:YES];
-}
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender {
     [_imvEmployeePosBG setHidden:YES];
@@ -93,7 +83,7 @@
     [_btnMale setSelected:NO];
     [_btnFemale setSelected:NO];
     [_btnNeutral setSelected:NO];
-    [_btnOther setSelected:NO];
+    [_btnOtherGender setSelected:NO];
     [sender setSelected:YES];
 }
 
@@ -107,7 +97,7 @@
 
 - (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
-    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
+    if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
         success = NO;
         alert(@"", @"Please fill up all required fields.");
     }
@@ -141,33 +131,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
-    if ([textField isEqual:_txtDateOfIncident]) {
-        [self setKeepViewInFrame:textField];
-        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
-        allowEditing = NO;
-    }
-    else if ([textField isEqual:_txtTimeOfIncident]) {
-        [self setKeepViewInFrame:textField];
-        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
-        allowEditing = NO;
-    }
-    else if ([textField isEqual:_txtFacility]) {
-        [self setKeepViewInFrame:textField];
-        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
-        dropDown.delegate = self;
-        [dropDown showDropDownWith:FACILITY_VALUES view:textField key:@"title"];
-        allowEditing = NO;
-    }
-    else if ([textField isEqual:_txtLocation]) {
-        [self setKeepViewInFrame:textField];
-        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
-        dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
-        allowEditing = NO;
-    }
-    else if ([textField isEqual:_txtDob]) {
+    if ([textField isEqual:_txtDob]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
@@ -228,8 +192,8 @@
             return NO;
         }
     }
-    
     return YES;
 }
+
 
 @end

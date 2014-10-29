@@ -96,12 +96,23 @@
     }
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (IBAction)btnPopOverTaskTapped:(UIButton *)sender {
     [sender setSelected:YES];
     [mutArrFilteredTaskList[editingIndex] setObject:[NSNumber numberWithInteger:sender.tag] forKey:@"messageOption"];
 }
 
 - (void)btnNoTapped:(UIButton*)btn {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
@@ -112,6 +123,7 @@
     [btn setSelected:![btn isSelected]];
 }
 - (void)btnYesTapped:(UIButton*)btn {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
@@ -123,6 +135,7 @@
     
 }
 - (void)btnCheckBoxTapped:(UIButton*)btn {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
@@ -338,12 +351,18 @@
     if ([[textField text] isEqualToString:@"--"]) {
         [textField setText:@""];
     }
+    if (!isUpdate) {
+        strPreviousText = textField.text;
+    }
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     NSIndexPath *indexPath = [self indexPathForCellSubView:textField];
     if (indexPath) {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:textField.trimText forKey:@"value"];
+    }
+    if (!isUpdate && ![strPreviousText isEqualToString:textField.text]) {
+        isUpdate = YES;
     }
     return YES;
 }
@@ -355,6 +374,12 @@
 
 
 #pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    if (!isUpdate) {
+        strPreviousText = textView.text;
+    }
+}
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text length] > 0) {
@@ -370,6 +395,19 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     [mutArrFilteredTaskList[editingIndex] setObject:textView.text forKey:@"message"];
+    if (!isUpdate && ![strPreviousText isEqualToString:textView.text]) {
+        isUpdate = YES;
+    }
 }
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+}
+
 @end
 

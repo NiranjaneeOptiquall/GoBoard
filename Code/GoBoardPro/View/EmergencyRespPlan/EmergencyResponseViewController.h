@@ -14,5 +14,4 @@
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tblEmergencyList;
-- (IBAction)unwindBackToEmergencyListScreen:(UIStoryboardSegue*)segue;
 @end

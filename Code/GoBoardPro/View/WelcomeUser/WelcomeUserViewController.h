@@ -16,5 +16,4 @@
 
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnUpdateProfileTapped:(id)sender;
-- (IBAction)unwindBackToWelcomeScreen:(UIStoryboardSegue*)segue;
 @end

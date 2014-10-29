@@ -11,34 +11,6 @@
             <rect key="frame" x="0.0" y="0.0" width="768" height="1500"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" id="5qZ-ok-quS">
-                    <rect key="frame" x="0.0" y="950" width="768" height="67"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="nkY-zf-nGD">
-                            <rect key="frame" x="43" y="1" width="266" height="66"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <state key="normal" title="add more person(s) involved" image="add_icon.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="btnAddMoreBodilyFluidTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Z68-QH-VOl"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="VZZ-Oj-SML">
-                            <rect key="frame" x="544" y="1" width="169" height="66"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="attach photo" image="camera_icon.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="btnAttachPhotoTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="6y7-CX-H0q"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="t5Z-5J-kLG">
                     <rect key="frame" x="43" y="1206" width="319" height="66"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -55,15 +27,12 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="btnAddEmergencyPersonnel" destination="t5Z-5J-kLG" id="4fC-SE-ksc"/>
-                <outlet property="btnCaptureImage" destination="VZZ-Oj-SML" id="jc1-XT-n5G"/>
-                <outlet property="vwFixedContent" destination="5qZ-ok-quS" id="sxE-mw-G7Z"/>
             </connections>
             <point key="canvasLocation" x="565" y="677"/>
         </view>
     </objects>
     <resources>
         <image name="add_icon.png" width="65" height="65"/>
-        <image name="camera_icon.png" width="66" height="66"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

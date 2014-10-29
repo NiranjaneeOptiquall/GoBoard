@@ -81,13 +81,24 @@
     for (NSDictionary *dict in mutArrCount) {
         count += [[dict objectForKey:@"current"] integerValue];
     }
-    [_lblTotalCount setText:[NSString stringWithFormat:@"%d", count]];
+    [_lblTotalCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
 }
 
 - (IBAction)btnCountCommentTapped:(UIButton *)sender {
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (void)btnIncreaseCountTapped:(UIButton*)btn {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForView:btn];
     NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
     NSInteger current = [[aDict objectForKey:@"current"] integerValue];
@@ -100,6 +111,7 @@
 }
 
 - (void)btnDecreaseCountTapped:(UIButton*)btn {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForView:btn];
     NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
     NSInteger current = [[aDict objectForKey:@"current"] integerValue];
@@ -216,7 +228,14 @@
 
 #pragma mark - TextFieldDelegate
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    strPreviousText = textField.text;
+}
+
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (!isUpdate && ![strPreviousText isEqualToString:textField.text]) {
+        isUpdate = YES;
+    }
     if ([textField isEqual:_txtPopOverMessage]) {
         [mutArrCount[editingIndex] setObject:textField.trimText forKey:@"message"];
     }
@@ -225,17 +244,18 @@
         NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
         int max = [[aDict objectForKey:@"maxCapacity"] intValue];
         int current = [textField.trimText intValue];
-        if (current >= 0 && current <= max) {
+        if (current >= 0) {
+            if ( current > max) {
+                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue]];
+                alert(@"Exceed Limit", strMsg);
+            }
             [aDict setObject:[NSNumber numberWithInt:current] forKey:@"current"];
             [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
         else {
-            NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue]];
-            alert(@"Exceed Limit", strMsg);
             [textField becomeFirstResponder];
         }
     }
-    
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -259,4 +279,11 @@
     return YES;
 }
 
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 @end

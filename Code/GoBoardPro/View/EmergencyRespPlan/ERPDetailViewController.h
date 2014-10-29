@@ -11,6 +11,7 @@
 
 @interface ERPDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, DatePickerDelegate> {
     NSMutableArray *mutArrActionList;
+    BOOL isUpdate;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *lblERPTitle;
@@ -24,5 +25,6 @@
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnTimeStartTapped:(id)sender;
 - (IBAction)btnTimeEndTapped:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 
 @end

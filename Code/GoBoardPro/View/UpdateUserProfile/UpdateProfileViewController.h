@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtPassword;
 @property (weak, nonatomic) IBOutlet UITextField *txtConfirmPassword;
 @property (weak, nonatomic) IBOutlet TPKeyboardAvoidingScrollView *mainScrlView;
+@property (weak, nonatomic) IBOutlet UIView *vwSubmit;
 
 - (IBAction)btnAddMoreCertification:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

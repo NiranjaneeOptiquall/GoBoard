@@ -11,15 +11,7 @@
 
 @interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate>
 
-@property (weak, nonatomic) IBOutlet UITextField *txtDateOfIncident;
-@property (weak, nonatomic) IBOutlet UITextField *txtTimeOfIncident;
-@property (weak, nonatomic) IBOutlet UITextField *txtFacility;
-@property (weak, nonatomic) IBOutlet UITextField *txtLocation;
-@property (weak, nonatomic) IBOutlet UITextField *txtDescription;
-@property (weak, nonatomic) IBOutlet UIButton *btn911Called;
-@property (weak, nonatomic) IBOutlet UIButton *btnPoliceCalled;
-@property (weak, nonatomic) IBOutlet UIButton *btnManager;
-@property (weak, nonatomic) IBOutlet UIButton *btnNone;
+
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuest;
 @property (weak, nonatomic) IBOutlet UIButton *btnEmployee;
@@ -63,7 +55,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtWheather;
 @property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
 
-- (IBAction)btnNotificationTapped:(UIButton *)sender;
+
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;
 - (IBAction)btnWasEmployeeOnWorkTapped:(UIButton *)sender;

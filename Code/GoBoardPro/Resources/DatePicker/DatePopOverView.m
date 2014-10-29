@@ -43,13 +43,13 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     if (!_desireDateFormat) {
         if (dateOption == DATE_SELECTION_DATE_ONLY) {
-            _desireDateFormat = @"dd/MM/yyyy";
+            _desireDateFormat = @"dd.MM.yyyy";
         }
         else if (dateOption == DATE_SELECTION_TIME_ONLY) {
             _desireDateFormat = @"hh:mm a";
         }
         else if (dateOption == DATE_SELECTION_DATE_AND_TIME) {
-            _desireDateFormat = @"dd/MM/yyyy hh:mm a";
+            _desireDateFormat = @"dd.MM.yyyy hh:mm a";
         }
     }
     

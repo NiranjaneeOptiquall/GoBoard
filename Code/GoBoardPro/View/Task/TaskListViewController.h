@@ -15,6 +15,8 @@
     UIPopoverController *popOver;
     UIPopoverController *popOverMessage;
     NSInteger editingIndex;
+    BOOL isUpdate;
+    NSString *strPreviousText;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *lblUserName;
@@ -46,6 +48,7 @@
 - (IBAction)btnToggleToCountTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnToggleTaskAndCountTapped:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 
 - (IBAction)btnPopOverTaskTapped:(UIButton *)sender;
 @end

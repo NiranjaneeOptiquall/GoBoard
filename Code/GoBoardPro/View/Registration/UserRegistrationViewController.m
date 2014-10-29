@@ -17,11 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    mutArrCertificateViews = [[NSMutableArray alloc] init];
-    [self addCertificationView];
-    [self addCertificationView];
-    [self addCertificationView];
-    [_mainScrlView setContentSize:CGSizeMake(768, 1300)];
+    [_mainScrlView setContentSize:CGSizeMake(768, CGRectGetMaxY(_vwTermsView.frame))];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,6 +42,7 @@
 #pragma mark - IBAction & Selectors
 
 - (IBAction)btnAddMoreCertification:(id)sender {
+    isUpdate = YES;
     [self addCertificationView];
 }
 
@@ -105,19 +102,76 @@
     [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 #pragma mark - Methods
+
+- (void)btnRemoveCertificateTapped:(UIButton*)sender {
+    totalCertificateCount--;
+    UIView *currentView = sender.superview;
+    NSInteger index = [_scrlCertificationView.subviews indexOfObject:currentView];
+    CGRect frame = CGRectZero;
+    for (NSInteger i = 0; i < [_scrlCertificationView.subviews count]; i++) {
+        UIView *vw = [_scrlCertificationView.subviews objectAtIndex:i];
+        if ([vw isKindOfClass:[currentView class]]) {
+            if (i != index) {
+                frame = vw.frame;
+                if (i > index) {
+                    frame.origin.y -= currentView.frame.size.height;
+                    vw.frame = frame;
+                }
+            }
+        }
+    }
+    [currentView removeFromSuperview];
+    [_scrlCertificationView setContentSize:CGSizeMake(_scrlCertificationView.contentSize.width, CGRectGetMaxY(frame))];
+    if (totalCertificateCount <= 3) {
+        CGRect sframe = _scrlCertificationView.frame;
+        sframe.size.height = CGRectGetMaxY(frame);
+        if (totalCertificateCount == 3) {
+            sframe.size.height = 232;
+        }
+        _scrlCertificationView.frame = sframe;
+        frame = _vwTermsView.frame;
+        frame.origin.y = CGRectGetMaxY(sframe);
+        _vwTermsView.frame = frame;
+        [_mainScrlView setContentSize:CGSizeMake(768, CGRectGetMaxY(_vwTermsView.frame))];
+    }
+    [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height - 5) animated:YES];
+}
 
 - (void)addCertificationView {
     AddCertificateView *aCertView = [[[NSBundle mainBundle] loadNibNamed:@"AddCertificateView" owner:self options:nil] firstObject];
     aCertView.parentView = self;
+    [aCertView.btnRemove addTarget:self action:@selector(btnRemoveCertificateTapped:) forControlEvents:UIControlEventTouchUpInside];
     CGRect frame = aCertView.frame;
     frame.origin.y = totalCertificateCount * frame.size.height;
     aCertView.frame = frame;
     [aCertView.txtCertificateName setDelegate:self];
     totalCertificateCount++;
     [_scrlCertificationView addSubview:aCertView];
-    [_scrlCertificationView setContentSize:CGSizeMake(0, CGRectGetMaxY(frame)+ 10)];
-    [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height - 5) animated:YES];
+    if (totalCertificateCount <= 3) {
+        frame = _scrlCertificationView.frame;
+        frame.size.height = CGRectGetMaxY(aCertView.frame);
+        if (totalCertificateCount == 3) {
+            frame.size.height = 232;
+        }
+        _scrlCertificationView.frame = frame;
+        frame = _vwTermsView.frame;
+        frame.origin.y = CGRectGetMaxY(_scrlCertificationView.frame);
+        _vwTermsView.frame = frame;
+        [_mainScrlView setContentSize:CGSizeMake(768, CGRectGetMaxY(_vwTermsView.frame))];
+    }
+    [_scrlCertificationView setContentSize:CGSizeMake(0, CGRectGetMaxY(aCertView.frame))];
+    [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height) animated:YES];
 }
 
 #pragma mark - UITextField Delegate
@@ -143,5 +197,33 @@
         
     return YES;
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (!isUpdate) {
+        strPreviousText = textField.text;
+    }
+    
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    if (!isUpdate && ![strPreviousText isEqualToString:textField.text]) {
+        isUpdate = YES;
+    }
+    return YES;
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+}
+
 
 @end
