@@ -281,13 +281,15 @@
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     if ([sender isEqual:_txtEnjuryType]) {
-        [sender setText:[value objectForKey:@"title"]];
         if ([[value objectForKey:@"id"] isEqualToString:@"10"]) {
             [_txtOtherInjury setEnabled:YES];
         }
         else {
             [_txtOtherInjury setEnabled:NO];
         }
+    }
+    else if ([sender isEqual:_txtCareProvided]) {
+        self.careProvided = [[value objectForKey:@"id"] integerValue];
     }
     [sender setText:[value objectForKey:@"title"]];
 }

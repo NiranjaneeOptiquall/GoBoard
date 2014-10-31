@@ -20,6 +20,9 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="mXX-Ru-IWV"/>
+                    </connections>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="C2v-aL-JnU">
                     <rect key="frame" x="393" y="7" width="204" height="63"/>
@@ -58,19 +61,25 @@
                         <action selector="btnSelectExpDate:" destination="iN0-l3-epB" eventType="touchUpInside" id="96D-9C-xKS"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.png" id="fEw-54-ZJz">
+                    <rect key="frame" x="309" y="13" width="50" height="50"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="btnCaptureImage" destination="bRo-bt-PmI" id="nlj-RO-kQ3"/>
                 <outlet property="btnRemove" destination="a4Z-sv-BMg" id="F0W-NS-ken"/>
-                <outlet property="txtCertificateName" destination="OgE-gM-xWL" id="uZI-Qw-BzE"/>
+                <outlet property="txtCertificateName" destination="OgE-gM-xWL" id="qx4-1s-dtL"/>
                 <outlet property="txtExpDate" destination="IT6-5C-7oy" id="GPQ-Ij-57X"/>
             </connections>
             <point key="canvasLocation" x="565" y="210.5"/>
         </view>
     </objects>
     <resources>
+        <image name="arrow.png" width="26" height="26"/>
         <image name="camera_icon.png" width="66" height="66"/>
         <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="text_box_date.png" width="204" height="62"/>

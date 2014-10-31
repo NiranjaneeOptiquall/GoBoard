@@ -30,6 +30,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblStaffMemberAccount;
 @property (strong, nonatomic) SignatureView *signatureView;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
+@property (weak, nonatomic) IBOutlet UIView *vwRefuseCare;
+@property (weak, nonatomic) IBOutlet UIView *vwStaffMember;
 
 - (IBAction)btnBloodbornePathogenTapped:(id)sender;
 - (IBAction)btnExposedToBloodTapped:(UIButton *)sender;

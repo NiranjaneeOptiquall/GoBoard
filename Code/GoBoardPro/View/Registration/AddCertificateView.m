@@ -18,6 +18,9 @@
     // Drawing code
 }
 */
+//- (void)awakeFromNib {
+//    [_txtCertificateName setDelegate:self];
+//}
 
 - (IBAction)btnSelectExpDate:(UIButton*)sender {
     DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -75,4 +78,16 @@
         }];
     }
 }
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+    dropDown.delegate = self;
+    [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+    return NO;
+}
+
+- (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
+    [sender setText:[value objectForKey:@"title"]];
+}
+
 @end

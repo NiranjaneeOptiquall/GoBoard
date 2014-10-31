@@ -21,6 +21,7 @@
     [self btnNotificationTapped:_btnNone];
     [self addViews];
     _isUpdate = NO;
+        
 }
 
 - (void)didReceiveMemoryWarning {
@@ -140,6 +141,7 @@
             if ([vw isKindOfClass:[AccidentFirstSection class]]) {
                 [vw removeObserver:self forKeyPath:@"frame"];
                 [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"frame"];
+                [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"careProvided"];
                 [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
             }
         }
@@ -233,7 +235,21 @@
 
 - (void)setPersonInvolved:(NSInteger)personInvolved {
     _personInvolved = personInvolved;
-    [finalSection PersonInvolved:_personInvolved];
+    BOOL isAtleastOneEmployee = NO;
+    for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
+        if ([vw isKindOfClass:[AccidentFirstSection class]]) {
+            isAtleastOneEmployee = [vw.vwPersonalInfo.btnEmployee isSelected];
+            if (isAtleastOneEmployee) {
+                break;
+            }
+        }
+    }
+    if (isAtleastOneEmployee) {
+        [finalSection PersonInvolved:PERSON_EMPLOYEE];
+    }
+    else {
+        [finalSection PersonInvolved:_personInvolved];
+    }
 }
 
 

@@ -26,6 +26,7 @@
     [self btnSentToInsuranceTapped:_btnYesInsurance];
     [self btnProcedureFollowedTapped:_btnYesProcedure];
     [self btnCallMadeTapped:_btnYesCall];
+    [self isAdmin];
 }
 
 - (IBAction)btnAddMoreWitnessTapped:(id)sender {
@@ -33,9 +34,6 @@
 }
 
 - (IBAction)btnCommunicationTapped:(UIButton *)sender {
-//    [_btnAdmin setSelected:NO];
-//    [_btnSupervisers setSelected:NO];
-//    [_btnRiskManagement setSelected:NO];
     [sender setSelected:![sender isSelected]];
 }
 
@@ -70,25 +68,50 @@
 #pragma mark - Method
 
 - (void)PersonInvolved:(NSInteger)person {
-    if (person == PERSON_EMPLOYEE) {
-        // Employee Selected
-        [_vwEmpCompProcedure setHidden:NO];
-        CGRect frame = _vwFollowup.frame;
-        frame.origin.y = CGRectGetMaxY(_vwEmpCompProcedure.frame);
-        _vwFollowup.frame = frame;
+    if (!_vwManagementFollowUp.hidden) {
+        if (person == PERSON_EMPLOYEE) {
+            // Employee Selected
+            [_vwEmpCompProcedure setHidden:NO];
+            CGRect frame = _vwFollowup.frame;
+            frame.origin.y = CGRectGetMaxY(_vwEmpCompProcedure.frame);
+            _vwFollowup.frame = frame;
+        }
+        else {
+            [_vwEmpCompProcedure setHidden:YES];
+            CGRect frame = _vwFollowup.frame;
+            frame.origin.y = _vwEmpCompProcedure.frame.origin.y;
+            _vwFollowup.frame = frame;
+        }
+        
+        CGRect frm = _vwManagementFollowUp.frame;
+        frm.size.height = CGRectGetMaxY(_vwFollowup.frame);
+        _vwManagementFollowUp.frame = frm;
+        frm = _vwSubmit.frame;
+        frm.origin.y = CGRectGetMaxY(_vwManagementFollowUp.frame);
+        _vwSubmit.frame = frm;
+        _vwSubmit.frame = frm;
+        frm = _vwFixedContent.frame;
+        frm.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        _vwFixedContent.frame = frm;
+        frm = self.frame;
+        frm.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+        self.frame = frm;
     }
-    else {
-        [_vwEmpCompProcedure setHidden:YES];
-        CGRect frame = _vwFollowup.frame;
-        frame.origin.y = _vwEmpCompProcedure.frame.origin.y;
-        _vwFollowup.frame = frame;
+}
+
+- (void)isAdmin {
+    if (!gblAppDelegate.isAdmin) {
+        [_vwManagementFollowUp setHidden:YES];
+        CGRect frame = _vwSubmit.frame;
+        frame.origin.y = _vwManagementFollowUp.frame.origin.y;
+        _vwSubmit.frame = frame;
+        frame = _vwFixedContent.frame;
+        frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        _vwFixedContent.frame = frame;
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+        self.frame = frame;
     }
-    CGRect frm = _vwFixedContent.frame;
-    frm.size.height = CGRectGetMaxY(_vwFollowup.frame);
-    _vwFixedContent.frame = frm;
-    frm = self.frame;
-    frm.size.height = CGRectGetMaxY(_vwFixedContent.frame);
-    self.frame = frm;
 }
 
 - (void)addWitnessView {

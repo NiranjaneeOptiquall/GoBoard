@@ -7,6 +7,7 @@
 //
 
 #import "SOPDetailViewController.h"
+#import "WebViewController.h"
 
 @interface SOPDetailViewController ()
 
@@ -28,18 +29,29 @@
     return UIStatusBarStyleLightContent;
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"SOPLinkDetail"]) {
+        WebViewController *webVC = (WebViewController *)[segue destinationViewController];
+        webVC.strRequestURL = @"http://www.google.com";
+    }
 }
-*/
+
 
 #pragma mark - IBActions & Selectors
 
+- (void)btnViewLinkTapped:(UIButton *)btn {
+    UITableViewCell *cell = (UITableViewCell *)[btn superview];
+    while (![cell isKindOfClass:[UITableViewCell class]]) {
+        cell = (UITableViewCell*)[cell superview];
+    }
+    NSIndexPath *indexPath = [_tblSOPList indexPathForCell:cell];
+    selectedRow = indexPath.row;
+    [self performSegueWithIdentifier:@"SOPLinkDetail" sender:nil];
+}
 
 #pragma mark - Methods
 
@@ -77,6 +89,8 @@
     [aLbl setText:[mutArrSOPList objectAtIndex:indexPath.row]];
     [aLbl sizeToFit];
     UIView *aView = [aCell.contentView viewWithTag:4];
+    UIButton *linkBtn = (UIButton*)[aCell viewWithTag:3];
+    [linkBtn addTarget:self action:@selector(btnViewLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
     [aView setFrame:frame];

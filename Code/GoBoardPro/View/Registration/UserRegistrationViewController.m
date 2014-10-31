@@ -83,7 +83,7 @@
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
-        alert(@"", @"Password should be 8 - 16 character long with atleast 1 numeric and 1 lower case letter and 1 upper case latter");
+        alert(@"", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
         [_txtPassword becomeFirstResponder];
         return;
     }
@@ -156,7 +156,6 @@
     CGRect frame = aCertView.frame;
     frame.origin.y = totalCertificateCount * frame.size.height;
     aCertView.frame = frame;
-    [aCertView.txtCertificateName setDelegate:self];
     totalCertificateCount++;
     [_scrlCertificationView addSubview:aCertView];
     if (totalCertificateCount <= 3) {

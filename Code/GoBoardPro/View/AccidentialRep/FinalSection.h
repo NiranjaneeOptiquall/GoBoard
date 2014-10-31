@@ -39,6 +39,8 @@
 @property (weak, nonatomic) IBOutlet UIView *vwEmpCompProcedure;
 @property (weak, nonatomic) IBOutlet UIView *vwFollowup;
 @property (weak, nonatomic) IBOutlet UITextField *txtManagementFollowUpDate;
+@property (weak, nonatomic) IBOutlet UIView *vwSubmit;
+@property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 
 
 @property (strong, nonatomic) SignatureView *signatureView;

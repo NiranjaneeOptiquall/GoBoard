@@ -10,6 +10,7 @@
 
 @interface SOPDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
     NSMutableArray *mutArrSOPList;
+    NSInteger selectedRow;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblSOPCategory;
 @property (weak, nonatomic) IBOutlet UILabel *lblSOPParentCategory;

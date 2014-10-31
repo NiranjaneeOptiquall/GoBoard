@@ -14,6 +14,7 @@
     NSMutableArray *mutArrBodyPart;
     NSInteger bodyPartIndex;
     NSInteger selectedBodyPart;
+    
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *txtEnjuryType;
@@ -41,6 +42,7 @@
 
 @property (strong, nonatomic) NSMutableArray *mutArrInjuryList;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
+@property (assign, nonatomic) NSInteger careProvided;
 
 - (IBAction)btnInjuryTypeGeneralTapped:(UIButton *)sender;
 - (IBAction)btnInjuryTypeBodyPartTapped:(UIButton *)sender;

@@ -7,6 +7,7 @@
 //
 
 #import "ERPDetailViewController.h"
+#import "WebViewController.h"
 
 @interface ERPDetailViewController ()
 
@@ -30,15 +31,17 @@
     return UIStatusBarStyleLightContent;
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"SOPLinkDetail"]) {
+        WebViewController *webVC = (WebViewController *)[segue destinationViewController];
+        webVC.strRequestURL = @"http://www.google.com";
+    }
 }
-*/
+
 
 #pragma mark - IBActions & Selectors
 
@@ -102,6 +105,16 @@
     [[mutArrActionList objectAtIndex:indexPath.row] setObject:[NSNumber numberWithBool:[btn isSelected]] forKey:@"isChecked"];
 }
 
+- (void)btnViewLinkTapped:(UIButton *)btn {
+    UITableViewCell *cell = (UITableViewCell *)[btn superview];
+    while (![cell isKindOfClass:[UITableViewCell class]]) {
+        cell = (UITableViewCell*)[cell superview];
+    }
+    NSIndexPath *indexPath = [_tblActionsTaken indexPathForCell:cell];
+    selectedRow = indexPath.row;
+    [self performSegueWithIdentifier:@"ERPLinkDetail" sender:nil];
+}
+
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
@@ -153,6 +166,8 @@
     UIButton *btn = (UIButton*)[aCell viewWithTag:3];
     [btn setSelected:isChecked];
     [btn addTarget:self action:@selector(btnCheckMarkTapped:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton *linkBtn = (UIButton*)[aCell viewWithTag:5];
+    [linkBtn addTarget:self action:@selector(btnViewLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;

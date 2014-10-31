@@ -31,7 +31,7 @@ AppDelegate *gblAppDelegate;
 
 #define ACTION_TAKEN                            @[@{@"title":@"Ice Applied", @"id": @"1"}, @{@"title":@"Provided Bandages", @"id": @"2"}, @{@"title":@"Called Security", @"id": @"3"}, @{@"title":@"Called 911"}]
 
-#define CARE_PROVIDED_BY                        @[@{@"title":@"Staff", @"id": @"1"}, @{@"title":@"Medical Personnel", @"id": @"2"}, @{@"title":@"Security", @"id": @"3"}, @{@"title":@"911", @"id":@"4"}]
+#define CARE_PROVIDED_BY                        @[@{@"title":@"Staff", @"id": @"1"}, @{@"title":@"Medical Personnel", @"id": @"2"}, @{@"title":@"Security", @"id": @"3"}, @{@"title":@"911", @"id":@"4"}, @{@"title":@"Refused Care", @"id":@"5"}]
 
 #define WEEKDAYS                                @[@{@"title":@"Sunday", @"id": @"1"}, @{@"title":@"Monday", @"id": @"2"}, @{@"title":@"Tuesday", @"id": @"3"}, @{@"title":@"Wednesday", @"id": @"4"}, @{@"title":@"Thursday", @"id": @"5"}, @{@"title":@"Friday", @"id": @"6"}, @{@"title":@"Saturday", @"id": @"7"}]
 

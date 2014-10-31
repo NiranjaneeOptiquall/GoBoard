@@ -11,6 +11,7 @@
 		33106C5719DD5E31005F801A /* IncidentActionTaken.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33106C5619DD5E31005F801A /* IncidentActionTaken.xib */; };
 		33114CF81A0109FB00DFB37D /* AccidentFirstSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 33114CF71A0109FB00DFB37D /* AccidentFirstSection.m */; };
 		33114CFA1A010A0900DFB37D /* AccidentFirstSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33114CF91A010A0900DFB37D /* AccidentFirstSection.xib */; };
+		33236DCE1A03AA1C00384A41 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33236DCD1A03AA1C00384A41 /* WebViewController.m */; };
 		332E3A3519D535060088AB61 /* SOPDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 332E3A3419D535060088AB61 /* SOPDetailViewController.m */; };
 		332E3A4019D541950088AB61 /* red_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 332E3A3719D541950088AB61 /* red_n@2x.png */; };
 		332E3A4119D541950088AB61 /* checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 332E3A3819D541950088AB61 /* checked@2x.png */; };
@@ -233,6 +234,8 @@
 		33114CF61A0109FB00DFB37D /* AccidentFirstSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentFirstSection.h; sourceTree = "<group>"; };
 		33114CF71A0109FB00DFB37D /* AccidentFirstSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentFirstSection.m; sourceTree = "<group>"; };
 		33114CF91A010A0900DFB37D /* AccidentFirstSection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccidentFirstSection.xib; sourceTree = "<group>"; };
+		33236DCC1A03AA1C00384A41 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		33236DCD1A03AA1C00384A41 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		332E3A3319D535060088AB61 /* SOPDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOPDetailViewController.h; sourceTree = "<group>"; };
 		332E3A3419D535060088AB61 /* SOPDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOPDetailViewController.m; sourceTree = "<group>"; };
 		332E3A3719D541950088AB61 /* red_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_n@2x.png"; sourceTree = "<group>"; };
@@ -1027,6 +1030,8 @@
 			children = (
 				33CFBC5619D2FABB00D86E68 /* ERPDetailViewController.h */,
 				33CFBC5719D2FABB00D86E68 /* ERPDetailViewController.m */,
+				33236DCC1A03AA1C00384A41 /* WebViewController.h */,
+				33236DCD1A03AA1C00384A41 /* WebViewController.m */,
 			);
 			name = ERPDetail;
 			sourceTree = "<group>";
@@ -1579,6 +1584,7 @@
 				335DECBC19EBCDE200FFFD4D /* AdminTaskListViewController.m in Sources */,
 				334585F519D98672000AB7E1 /* PersonInformation.m in Sources */,
 				3341572319E8F39800A71E02 /* LineGraphView.m in Sources */,
+				33236DCE1A03AA1C00384A41 /* WebViewController.m in Sources */,
 				33114CF81A0109FB00DFB37D /* AccidentFirstSection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

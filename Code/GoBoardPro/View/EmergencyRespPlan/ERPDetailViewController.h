@@ -12,6 +12,7 @@
 @interface ERPDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, DatePickerDelegate> {
     NSMutableArray *mutArrActionList;
     BOOL isUpdate;
+    NSInteger selectedRow;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *lblERPTitle;
