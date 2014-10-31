@@ -15,11 +15,13 @@
                     <rect key="frame" x="282" y="11" width="130" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                    <state key="normal" title="Member" image="unchecked_Member.png">
-                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Member" image="unchecked_white_radiobutton.png">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_Member.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnPersonInvolvedTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="1Lt-Rc-XVc"/>
                     </connections>
@@ -29,10 +31,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Guest" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnPersonInvolvedTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="xbt-my-bRQ"/>
                     </connections>
@@ -42,10 +46,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Employee" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnPersonInvolvedTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Vxy-zg-Y5G"/>
                     </connections>
@@ -61,11 +67,13 @@
                     <rect key="frame" x="199" y="70" width="255" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                    <state key="normal" title="Non-Assessed Student" image="unchecked_Member.png">
-                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Non-Assessed Student" image="unchecked_white_radiobutton.png">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_Member.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="zAJ-h8-ojx"/>
                     </connections>
@@ -75,10 +83,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Assessed Student" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="0td-lH-6Uh"/>
                     </connections>
@@ -88,10 +98,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Alumni" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="udO-mr-xnG"/>
                     </connections>
@@ -101,10 +113,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Community" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="IPZ-io-nGf"/>
                     </connections>
@@ -114,10 +128,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Other" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="DtZ-0y-b6P"/>
                     </connections>
@@ -231,6 +247,9 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="OGR-MU-Dhf"/>
+                    </connections>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="b9F-cR-k8u">
                     <rect key="frame" x="399" y="514" width="315" height="63"/>
@@ -241,6 +260,9 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="iq5-ky-R5A"/>
+                    </connections>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="w2M-Kp-72w">
                     <rect key="frame" x="55" y="595" width="315" height="63"/>
@@ -349,10 +371,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Faculty/Staff" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnAffiliationTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="3ME-uR-OCg"/>
                     </connections>
@@ -609,7 +633,6 @@
         <image name="text_box_email.png" width="315" height="62"/>
         <image name="text_box_mi.png" width="80" height="61"/>
         <image name="text_box_name.png" width="261" height="62"/>
-        <image name="unchecked_Member.png" width="44" height="44"/>
         <image name="unchecked_white_radiobutton.png" width="44" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

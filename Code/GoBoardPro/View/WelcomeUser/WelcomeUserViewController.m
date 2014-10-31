@@ -40,17 +40,13 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];
 }
 
 - (IBAction)btnUpdateProfileTapped:(id)sender {
-}
-
-- (IBAction)unwindBackToWelcomeScreen:(UIStoryboardSegue*)segue {
-    
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {

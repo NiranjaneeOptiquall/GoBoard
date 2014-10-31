@@ -88,6 +88,12 @@
 
 - (IBAction)DoneSigning:(id)sender
 {
+    if ([[txtName trimText] isEqualToString:@""]) {
+        alert(@"", @"Please enter your name");
+        return;
+    }
+    
+    
     [popOver dismissPopoverAnimated:YES];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"DoneSigning" object:nil];
 }

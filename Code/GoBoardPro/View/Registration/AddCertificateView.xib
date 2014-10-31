@@ -19,7 +19,7 @@
                     <rect key="frame" x="54" y="11" width="298" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="words" secureTextEntry="YES"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_date.png" id="C2v-aL-JnU">
                     <rect key="frame" x="393" y="7" width="204" height="63"/>

@@ -24,7 +24,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtLastName;
 @property (weak, nonatomic) IBOutlet UITextField *txtPhone;
 @property (weak, nonatomic) IBOutlet UITextField *txtBadge;
-@property (weak, nonatomic) IBOutlet UITextField *txtAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UITextView *txvAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UILabel *lblAdditionalInfo;
 
 - (IBAction)btnEmergencyPersonnelTapped:(UIButton *)sender;
 - (BOOL)isEmergencyPersonnelValidationSucceed;

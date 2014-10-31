@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="WitnessView">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="435"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="481"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Witness Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Bn2-rk-5TQ">
@@ -18,35 +18,35 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kQ8-IG-ayL">
-                    <rect key="frame" x="282" y="3" width="130" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                    <state key="normal" title="Member" image="unchecked_Member.png">
-                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <state key="selected" image="checked_Member.png"/>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5Jb-Vy-EPc">
                     <rect key="frame" x="420" y="3" width="114" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Guest" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="btnWitnessStatusTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="vEe-WP-jm3"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="UyF-YL-vMK">
                     <rect key="frame" x="548" y="3" width="137" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <state key="normal" title="Employee" image="unchecked_white_radiobutton.png">
-                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="btnWitnessStatusTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Q11-0V-p6E"/>
+                    </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="z2g-0W-ScS">
                     <rect key="frame" x="55" y="60" width="262" height="63"/>
@@ -133,19 +133,6 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="3Xh-Rm-45C">
-                    <rect key="frame" x="55" y="352" width="659" height="63"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Witness Written Account" textAlignment="center" minimumFontSize="17" id="fGf-zd-X0i">
-                    <rect key="frame" x="65" y="359" width="641" height="49"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    <connections>
-                        <outlet property="delegate" destination="iN0-l3-epB" id="Lrj-Ja-mdy"/>
-                    </connections>
-                </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="No3-OF-afA">
                     <rect key="frame" x="319" y="87" width="10" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -188,6 +175,42 @@
                     <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kQ8-IG-ayL">
+                    <rect key="frame" x="282" y="3" width="130" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                    <state key="normal" title="Member" image="unchecked_white_radiobutton.png">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="btnWitnessStatusTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="fao-Bc-Br0"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="y8d-vw-yAU">
+                    <rect key="frame" x="55" y="352" width="659" height="114"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Witness written account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1t3-2r-zSU">
+                    <rect key="frame" x="242" y="393" width="284" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="pnF-AY-KHc">
+                    <rect key="frame" x="60" y="352" width="646" height="104"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="7of-7G-fUH"/>
+                    </connections>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -195,25 +218,24 @@
                 <outlet property="btnEmployee" destination="UyF-YL-vMK" id="UJR-kB-wEf"/>
                 <outlet property="btnGuest" destination="5Jb-Vy-EPc" id="XDE-gx-K6f"/>
                 <outlet property="btnMember" destination="kQ8-IG-ayL" id="mce-0F-kJm"/>
-                <outlet property="txtDescIncident" destination="fGf-zd-X0i" id="Vp2-Mg-ybB"/>
+                <outlet property="lblWitnessWrittenAccount" destination="1t3-2r-zSU" id="s4s-Io-vOK"/>
                 <outlet property="txtWitnessAlternatePhone" destination="ZA2-Ng-diA" id="9mG-VW-Ssp"/>
                 <outlet property="txtWitnessEmailAddress" destination="nQM-fT-MCq" id="FnN-em-Qzk"/>
                 <outlet property="txtWitnessFName" destination="WIA-62-o7u" id="DVj-Fb-eF2"/>
                 <outlet property="txtWitnessHomePhone" destination="wGV-O8-I1e" id="ufn-Yd-ut4"/>
                 <outlet property="txtWitnessLName" destination="nXF-B8-oyp" id="FPS-qh-8xu"/>
                 <outlet property="txtWitnessMI" destination="5u6-bG-8Ys" id="mWJ-ss-rzY"/>
+                <outlet property="txvDescIncident" destination="pnF-AY-KHc" id="DGv-El-gyU"/>
             </connections>
-            <point key="canvasLocation" x="485" y="164.5"/>
+            <point key="canvasLocation" x="485" y="187.5"/>
         </view>
     </objects>
     <resources>
         <image name="checked_Member.png" width="44" height="44"/>
-        <image name="checked_white_radiobutton.png" width="44" height="44"/>
         <image name="report_filers_text_box.png" width="681" height="113"/>
         <image name="text_box_email.png" width="315" height="62"/>
         <image name="text_box_mi.png" width="80" height="61"/>
         <image name="text_box_name.png" width="261" height="62"/>
-        <image name="unchecked_Member.png" width="44" height="44"/>
         <image name="unchecked_white_radiobutton.png" width="44" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

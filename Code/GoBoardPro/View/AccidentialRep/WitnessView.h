@@ -19,8 +19,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtWitnessHomePhone;
 @property (weak, nonatomic) IBOutlet UITextField *txtWitnessAlternatePhone;
 @property (weak, nonatomic) IBOutlet UITextField *txtWitnessEmailAddress;
-@property (weak, nonatomic) IBOutlet UITextField *txtDescIncident;
+@property (weak, nonatomic) IBOutlet UITextView *txvDescIncident;
+@property (weak, nonatomic) IBOutlet UILabel *lblWitnessWrittenAccount;
 
 
+- (IBAction)btnWitnessStatusTapped:(UIButton*)sender;
 - (BOOL)isWitnessViewValidationSuccess;
+
 @end

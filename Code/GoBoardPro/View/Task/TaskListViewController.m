@@ -120,7 +120,9 @@
     else {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"N" forKey:@"value"];
     }
-    [btn setSelected:![btn isSelected]];
+    [btn setSelected:YES];
+    TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
+    [aCell.btnYes setSelected:NO];
 }
 - (void)btnYesTapped:(UIButton*)btn {
     isUpdate = YES;
@@ -131,8 +133,9 @@
     else {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"Y" forKey:@"value"];
     }
-    [btn setSelected:![btn isSelected]];
-    
+    [btn setSelected:YES];
+    TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
+    [aCell.btnNo setSelected:NO];
 }
 - (void)btnCheckBoxTapped:(UIButton*)btn {
     isUpdate = YES;
@@ -143,7 +146,7 @@
     else {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"C" forKey:@"value"];
     }
-    [btn setSelected:![btn isSelected]];
+   
 }
 
 - (void)btnKeyboardIconTapped:(UIButton*)btn {
@@ -152,6 +155,9 @@
     _lblPopOverTaskTitle.text = [mutArrFilteredTaskList[indexPath.row] objectForKey:@"task"];
     _lblPopOverTaskLocation.text = _lblLocation.text;
     _txvPopOverMessage.text = [mutArrFilteredTaskList[indexPath.row] objectForKey:@"message"];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
     NSInteger option = [[mutArrFilteredTaskList[indexPath.row] objectForKey:@"messageOption"] integerValue];
     
     for (int i = 2; i <= 6; i++) {

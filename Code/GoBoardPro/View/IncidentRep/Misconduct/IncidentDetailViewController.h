@@ -37,18 +37,21 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnYesCall;
 @property (weak, nonatomic) IBOutlet UIButton *btnNoCall;
 @property (weak, nonatomic) IBOutlet UIButton *btnCallNotReq;
-@property (weak, nonatomic) IBOutlet UITextField *txtAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UITextView *txvAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UILabel *lblAdditonInfo;
 @property (weak, nonatomic) IBOutlet UIView *vwBasicInfo;
 @property (weak, nonatomic) IBOutlet UIView *vwSubmit;
 @property (weak, nonatomic) IBOutlet UITextField *txtDateOfIncident;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeOfIncident;
 @property (weak, nonatomic) IBOutlet UITextField *txtFacility;
 @property (weak, nonatomic) IBOutlet UITextField *txtLocation;
-@property (weak, nonatomic) IBOutlet UITextField *txtIncidentDesc;
+@property (weak, nonatomic) IBOutlet UITextView *txvIncidentDesc;
+@property (weak, nonatomic) IBOutlet UILabel *lblIncidentDesc;
 @property (weak, nonatomic) IBOutlet UITextField *txtActivity;
 @property (weak, nonatomic) IBOutlet UITextField *txtWeather;
 @property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
 @property (weak, nonatomic) IBOutlet UITextField *txtChooseIncident;
+@property (weak, nonatomic) IBOutlet UITextField *txtActionTaken;
 
 @property (weak, nonatomic) IBOutlet UIButton *btn911Called;
 @property (weak, nonatomic) IBOutlet UIButton *btnPoliceCalled;
@@ -56,9 +59,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnNone;
 @property (weak, nonatomic) IBOutlet UIButton *btnCapturePerson;
 @property (weak, nonatomic) IBOutlet UILabel *lblReportFilerPlaceHolder;
+@property (weak, nonatomic) IBOutlet UITextField *txtEmpAlternatePhone;
+@property (weak, nonatomic) IBOutlet UITextField *txtEmpHomePhone;
+@property (weak, nonatomic) IBOutlet UITextField *txtEmpEmail;
 
 
-
+@property (assign, nonatomic) BOOL isUpdate;
 @property (nonatomic, assign) NSInteger incidentType;
 
 - (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
@@ -68,4 +74,5 @@
 - (IBAction)btnNotificationTapped:(UIButton *)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnCapturePersonPic:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 @end

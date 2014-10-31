@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface IncidenceReportViewController : UIViewController
-- (IBAction)unwindBackToIncidentOptionScreen:(UIStoryboardSegue*)segue;
+
 @end

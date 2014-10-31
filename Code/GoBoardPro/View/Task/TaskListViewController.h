@@ -35,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskLocation;
 @property (weak, nonatomic) IBOutlet UITextView *txvPopOverMessage;
 @property (weak, nonatomic) IBOutlet UIButton *btnTaskComment;
+@property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
 @property (weak, nonatomic) IBOutlet UIButton *btnGoBoardGroup;
 @property (weak, nonatomic) IBOutlet UIButton *btnBuildingSupervisor;
 @property (weak, nonatomic) IBOutlet UIButton *btnAreaSupervisor;

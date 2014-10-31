@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SignatureView.h"
 
-@interface FinalSection : UIView {
+@interface FinalSection : UIView<UITextFieldDelegate> {
     NSInteger totalWitnessCount;
     NSMutableArray *mutArrWitnessViews;
 }
@@ -33,8 +33,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnYesCall;
 @property (weak, nonatomic) IBOutlet UIButton *btnNoCall;
 @property (weak, nonatomic) IBOutlet UIButton *btnCallNotReq;
-@property (weak, nonatomic) IBOutlet UITextField *txtAdditionalInformation;
+@property (weak, nonatomic) IBOutlet UITextView *txvAdditionalInformation;
+@property (weak, nonatomic) IBOutlet UILabel *lblAdditionalInfo;
 @property (weak, nonatomic) IBOutlet UIButton *btnFinalSubmit;
+@property (weak, nonatomic) IBOutlet UIView *vwEmpCompProcedure;
+@property (weak, nonatomic) IBOutlet UIView *vwFollowup;
+@property (weak, nonatomic) IBOutlet UITextField *txtManagementFollowUpDate;
+
 
 @property (strong, nonatomic) SignatureView *signatureView;
 
@@ -44,6 +49,7 @@
 - (IBAction)btnProcedureFollowedTapped:(UIButton *)sender;
 - (IBAction)btnCallMadeTapped:(UIButton *)sender;
 - (IBAction)btnSignatureTapped:(id)sender;
+- (void)PersonInvolved:(NSInteger)person;
 
 - (BOOL)isFinalSectionValidationSuccess;
 - (void)addWitnessView;

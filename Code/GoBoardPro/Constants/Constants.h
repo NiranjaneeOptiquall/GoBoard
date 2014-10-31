@@ -43,4 +43,11 @@ AppDelegate *gblAppDelegate;
 #define LEG_INJURY                              @[@"Ankle", @"Foot", @"Groin", @"Hip", @"Knee", @"Leg", @"Thigh", @"Toe"]
 
 
+typedef enum : NSUInteger {
+    PERSON_MEMBER = 1,
+    PERSON_GUEST,
+    PERSON_EMPLOYEE,
+} PersonInvolved;
+
+
 #endif

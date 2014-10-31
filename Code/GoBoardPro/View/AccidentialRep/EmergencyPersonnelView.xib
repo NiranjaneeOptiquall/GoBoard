@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EmergencyPersonnelView">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="552"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="595"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Personnel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SfY-r4-B0Z">
@@ -26,7 +26,9 @@
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="NyR-EF-7XO"/>
                     </connections>
@@ -39,7 +41,9 @@
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="2Hc-Hl-8yw"/>
                     </connections>
@@ -52,7 +56,9 @@
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="VZG-5H-KgY"/>
                     </connections>
@@ -65,7 +71,9 @@
                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="checked_white_radiobutton.png"/>
+                    <state key="selected" image="checked_Member.png">
+                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <connections>
                         <action selector="btnEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Iz1-65-ecS"/>
                     </connections>
@@ -124,19 +132,6 @@
                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                     <connections>
                         <outlet property="delegate" destination="iN0-l3-epB" id="xg5-Bg-ZMf"/>
-                    </connections>
-                </textField>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="uiL-jK-2cg">
-                    <rect key="frame" x="55" y="469" width="659" height="63"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Additional Information" textAlignment="center" minimumFontSize="17" id="Uxf-JA-Qel">
-                    <rect key="frame" x="71" y="476" width="629" height="49"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    <connections>
-                        <outlet property="delegate" destination="iN0-l3-epB" id="ubb-W9-tlw"/>
                     </connections>
                 </textField>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="time_ERP.png" id="Q9J-za-DHK">
@@ -284,6 +279,27 @@
                     <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="Vxt-5Q-plb">
+                    <rect key="frame" x="55" y="471" width="659" height="114"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additional Information" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ga2-HT-Sfl">
+                    <rect key="frame" x="242" y="512" width="284" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="BEt-KT-2DB">
+                    <rect key="frame" x="60" y="471" width="646" height="104"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="1Op-6R-8Ha"/>
+                    </connections>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <nil key="simulatedStatusBarMetrics"/>
@@ -293,7 +309,7 @@
                 <outlet property="btnFirePersonnel" destination="NVY-cc-VRm" id="XP1-Xi-PaW"/>
                 <outlet property="btnPoliceOfficer" destination="oBz-jb-eq8" id="gSA-Ex-4S2"/>
                 <outlet property="btnPublicSafety" destination="R4B-NU-yWd" id="jrU-2x-Xsj"/>
-                <outlet property="txtAdditionalInfo" destination="Uxf-JA-Qel" id="MgI-Ol-pQk"/>
+                <outlet property="lblAdditionalInfo" destination="ga2-HT-Sfl" id="3p7-je-3G0"/>
                 <outlet property="txtBadge" destination="Sz7-XY-srL" id="0qz-uS-20k"/>
                 <outlet property="txtCaseNo" destination="x5a-1T-MOt" id="Q52-au-VcD"/>
                 <outlet property="txtFirstName" destination="0if-V4-VCI" id="uIL-MD-Nc2"/>
@@ -303,12 +319,13 @@
                 <outlet property="txtTime911Called" destination="SpV-Sp-zRK" id="bJ5-f2-dNQ"/>
                 <outlet property="txtTimeOfArrival" destination="QEU-vd-Idi" id="hSU-hu-S00"/>
                 <outlet property="txtTimeOfDeparture" destination="ai9-Bp-iN1" id="P52-mv-7Bw"/>
+                <outlet property="txvAdditionalInfo" destination="BEt-KT-2DB" id="fFQ-4M-Bbf"/>
             </connections>
-            <point key="canvasLocation" x="530" y="-134"/>
+            <point key="canvasLocation" x="530" y="-112.5"/>
         </view>
     </objects>
     <resources>
-        <image name="checked_white_radiobutton.png" width="44" height="44"/>
+        <image name="checked_Member.png" width="44" height="44"/>
         <image name="report_filers_text_box.png" width="681" height="113"/>
         <image name="text_box_email.png" width="315" height="62"/>
         <image name="text_box_mi.png" width="80" height="61"/>

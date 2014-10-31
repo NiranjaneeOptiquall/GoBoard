@@ -46,8 +46,5 @@
     }
 }
 
-- (IBAction)unwindBackToIncidentOptionScreen:(UIStoryboardSegue*)segue {
-    
-}
 
 @end

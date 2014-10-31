@@ -52,7 +52,7 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmail text]]) {
@@ -61,7 +61,7 @@
         return;
     }
     else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![_txtPhone.text isValidPhoneNumber]) {
@@ -70,7 +70,7 @@
         return;
     }
     else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![_txtMobile.text isValidPhoneNumber]) {
@@ -79,7 +79,7 @@
         return;
     }
     else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
@@ -88,7 +88,7 @@
         return;
     }
     else if ([_txtConfirmPassword isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![_txtPassword.text isEqualToString:_txtConfirmPassword.text]) {
@@ -98,6 +98,7 @@
     }
     else if (![_btnAggreeTerms isSelected]) {
         alert(@"", @"Please agree terms & conditions");
+        return;
     }
     [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
 }
@@ -178,14 +179,47 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtPhone] || [textField isEqual:_txtMobile]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
         return YES;
     }
     if ([textField isEqual:_txtPhone] || [textField isEqual:_txtMobile]) {
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789 +()"];
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 15) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
             return NO;
         }
     }

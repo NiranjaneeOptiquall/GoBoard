@@ -60,7 +60,7 @@
 - (BOOL)isBodilyFluidValidationSucceed {
     BOOL success = YES;
     if ([_txtFName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLName isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         success = NO;
     }
     return success;
@@ -71,6 +71,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    _parentVC.isUpdate = YES;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -85,4 +89,18 @@
     
     return YES;
 }
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    _parentVC.isUpdate = YES;
+    [_lblStaffMemberAccount setHidden:YES];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if ([textView.text length] == 0) {
+        [_lblStaffMemberAccount setHidden:NO];
+    }
+}
+
 @end

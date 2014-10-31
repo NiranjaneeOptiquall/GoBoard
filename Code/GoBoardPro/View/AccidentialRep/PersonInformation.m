@@ -25,6 +25,7 @@
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
     [self btnGenderTapped:_btnMale];
     [self btnIsMinorTapped:_btnNotMinor];
+    
 }
 
 #pragma mark - IBActions
@@ -44,10 +45,12 @@
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
+        [_parentVC setPersonInvolved:PERSON_GUEST];
     }
     else if ([sender isEqual:_btnMember]) {
         [_txtMemberId setPlaceholder:@"Member ID"];
         frame.origin.y = _vwEmployee.frame.origin.y;
+        [_parentVC setPersonInvolved:PERSON_MEMBER];
     }
     else if ([sender isEqual:_btnEmployee]) {
         [_txtMemberId setPlaceholder:@"Employee ID"];
@@ -56,11 +59,13 @@
         [_lblEmpPosAsterisk setHidden:NO];
         [_vwEmployee setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwEmployee.frame);
+        [_parentVC setPersonInvolved:PERSON_EMPLOYEE];
     }
     _vwCommon.frame = frame;
     CGRect mainFrame = self.frame;
     mainFrame.size.height = CGRectGetMaxY(frame);
     [self setFrame:mainFrame];
+    _parentVC.isUpdate = YES;
 }
 
 - (IBAction)btnAffiliationTapped:(UIButton *)sender {
@@ -71,12 +76,14 @@
     [_btnCommunity setSelected:NO];
     [_btnOther setSelected:NO];
     [sender setSelected:YES];
+    _parentVC.isUpdate = YES;
 }
 
 - (IBAction)btnWasEmployeeOnWorkTapped:(UIButton *)sender {
     [_btnEmployeeNotOnWork setSelected:NO];
     [_btnEmployeeOnWork setSelected:NO];
     [sender setSelected:YES];
+    _parentVC.isUpdate = YES;
 }
 
 - (IBAction)btnGenderTapped:(UIButton *)sender {
@@ -85,12 +92,14 @@
     [_btnNeutral setSelected:NO];
     [_btnOtherGender setSelected:NO];
     [sender setSelected:YES];
+    _parentVC.isUpdate = YES;
 }
 
 - (IBAction)btnIsMinorTapped:(UIButton *)sender {
     [_btnNotMinor setSelected:NO];
     [_btnMinor setSelected:NO];
     [sender setSelected:YES];
+    _parentVC.isUpdate = YES;
 }
 
 #pragma mark - Methods
@@ -99,7 +108,7 @@
     BOOL success = YES;
     if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if (![_txtHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -108,7 +117,7 @@
     }
     else if ([_txtEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if (![gblAppDelegate validateEmail:[_txtEmailAddress text]]) {
         success = NO;
@@ -117,7 +126,7 @@
     }
     else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank]) || [_txtActivity isTextFieldBlank] || [_txtWheather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     return success;
 }
@@ -131,6 +140,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
+    _parentVC.isUpdate = YES;
     if ([textField isEqual:_txtDob]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -163,6 +173,9 @@
 
 - (void)setKeepViewInFrame:(UIView*)vw {
     TPKeyboardAvoidingScrollView *scrollView = (TPKeyboardAvoidingScrollView*)[self superview];
+    while (![scrollView isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
+        scrollView = (TPKeyboardAvoidingScrollView*)[scrollView superview];
+    }
     CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:scrollView];
     if (point.y <scrollView.contentOffset.y || point.y > scrollView.contentOffset.y + scrollView.frame.size.height) {
         [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];
@@ -176,14 +189,47 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
         return YES;
     }
     if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789 +()"];
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 15) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
             return NO;
         }
     }

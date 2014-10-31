@@ -7,15 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AccidentFirstSection.h"
-#import "PersonInformation.h"
-#import "BodyPartInjury.h"
+#import "Constants.h"
 #import "ThirdSection.h"
 #import "FinalSection.h"
 
 @interface AccidentReportViewController : UIViewController<DropDownValueDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
-    PersonInformation *personalInfoView;
-    BodyPartInjury *bodyPartView;
     ThirdSection *thirdSection;
     FinalSection *finalSection;
     NSMutableArray *mutArrAccidentViews;
@@ -39,10 +35,13 @@
 @property (weak, nonatomic) IBOutlet UIView *vwFirstSection;
 @property (weak, nonatomic) IBOutlet UIView *vwAddMoreFirstSection;
 @property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
+@property (assign, nonatomic) NSInteger personInvolved;
 
+@property (assign, nonatomic) BOOL isUpdate;
 
 - (IBAction)btnAttachPhotoTapped:(UIButton *)sender;
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender;
+- (IBAction)btnBackTapped:(id)sender;
 
 - (IBAction)btnNotificationTapped:(UIButton *)sender;
 @end

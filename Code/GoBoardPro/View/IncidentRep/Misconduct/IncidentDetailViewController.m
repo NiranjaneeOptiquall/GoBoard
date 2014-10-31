@@ -32,11 +32,13 @@
     if (_incidentType == 2) {
         _lblIncidentTitle.text = @"Customer Service Incident Report";
         [_imvIncidentIcon setImage:[UIImage imageNamed:@"customer_service.png"]];
+        [_lblAdditonInfo setText:@"Action Taken and Additional Information"];
     }
     else if (_incidentType == 3) {
         _lblIncidentTitle.text = @"Other Incident Report";
         [_imvIncidentIcon setImage:[UIImage imageNamed:@"other_incidents.png"]];
     }
+    _isUpdate = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,6 +62,7 @@
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    _isUpdate = YES;
     if ([object isKindOfClass:[IncidentPersonalInformation class]]) {
         NSInteger index = [mutArrIncidentPerson indexOfObject:object];
         float previousMaxY = CGRectGetMaxY([object frame]);
@@ -167,11 +170,8 @@
 }
 
 - (void)addActionTakenView {
-    if (_incidentType == 1 || _incidentType == 3) {
+    if (_incidentType == 1) {
         actionTaken = (IncidentActionTaken*)[[[NSBundle mainBundle] loadNibNamed:@"IncidentActionTaken" owner:self options:nil]firstObject];
-        if (_incidentType == 3) {
-            [actionTaken setShouldHideTextField:YES];
-        }
         CGRect frame = actionTaken.frame;
         frame.origin.y = _vwSubmit.frame.origin.y;
         actionTaken.frame = frame;
@@ -200,6 +200,7 @@
 }
 
 - (IBAction)btnFollowUpCallTapped:(UIButton *)sender {
+    _isUpdate = YES;
     [_btnYesCall setSelected:NO];
     [_btnNoCall setSelected:NO];
     [_btnCallNotReq setSelected:NO];
@@ -207,11 +208,12 @@
 }
 
 - (IBAction)btnNotificationTapped:(UIButton *)sender {
-    [_btn911Called setSelected:NO];
-    [_btnPoliceCalled setSelected:NO];
-    [_btnManager setSelected:NO];
-    [_btnNone setSelected:NO];
-    [sender setSelected:YES];
+//    [_btn911Called setSelected:NO];
+//    [_btnPoliceCalled setSelected:NO];
+//    [_btnManager setSelected:NO];
+//    [_btnNone setSelected:NO];
+    _isUpdate = YES;
+    [sender setSelected:![sender isSelected]];
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
@@ -224,16 +226,33 @@
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
     CGRect rect = [_vwAfterPersonalInfo convertRect:sender.frame toView:self.view];
     [actionSheet showFromRect:rect inView:self.view animated:YES];
+    _isUpdate = YES;
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (_isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 #pragma mark - Methods
 
 - (BOOL)checkValidation {
     BOOL success = YES;
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtActivity isTextFieldBlank] || [_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if (![self validateIncidentPersonal]) {
         return NO;
@@ -313,6 +332,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
+    _isUpdate = YES;
     if ([textField isEqual:_txtDateOfIncident]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -360,13 +380,74 @@
         [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
         allowEditing = NO;
     }
+    else if ([textField isEqual:_txtChooseIncident]) {
+        [self setKeepViewInFrame:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtActionTaken]) {
+        [self setKeepViewInFrame:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtManagementFollowUp]) {
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
+        allowEditing = NO;
+    }
     return allowEditing;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
 
     if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtEmpHomePhone] || [textField isEqual:_txtEmpAlternatePhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
         return YES;
+    }
+    if ([textField isEqual:_txtEmpHomePhone] || [textField isEqual:_txtEmpAlternatePhone]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
     }
     if ([_txtEmpMI isEqual:textField]) {
         if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 5) {
@@ -380,29 +461,25 @@
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    [_lblReportFilerPlaceHolder setHidden:YES];
+    _isUpdate = YES;
+    if ([textView isEqual:_txvIncidentDesc])
+        [_lblIncidentDesc setHidden:YES];
+    else if ([textView isEqual:_txtReportAccount])
+        [_lblReportFilerPlaceHolder setHidden:YES];
+    else if ([textView isEqual:_txvAdditionalInfo])
+        [_lblAdditonInfo setHidden:YES];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([textView.text length] == 0) {
-        [_lblReportFilerPlaceHolder setHidden:NO];
+        if ([textView isEqual:_txvIncidentDesc])
+            [_lblIncidentDesc setHidden:NO];
+        else if ([textView isEqual:_txtReportAccount])
+            [_lblReportFilerPlaceHolder setHidden:NO];
+        else if ([textView isEqual:_txvAdditionalInfo])
+            [_lblAdditonInfo setHidden:NO];
     }
 }
-
-//- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-////    if ([text length] == 0 && textView.text.length <= 1) {
-////        [_lblReportFilerPlaceHolder setHidden:NO];
-////    }
-////    else
-//    if ([textView.text stringByReplacingCharactersInRange:range withString:text].length > 0) {
-//        [_lblReportFilerPlaceHolder setHidden:YES];
-//    }
-//    else {
-//        [_lblReportFilerPlaceHolder setHidden:NO];
-//    }
-//    
-//    return YES;
-//}
 
 #pragma mark - DropDownValueDelegate
 
@@ -441,5 +518,7 @@
         }];
     }
 }
+
+
 
 @end

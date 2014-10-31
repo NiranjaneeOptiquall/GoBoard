@@ -83,7 +83,7 @@
     [_btnMale setSelected:NO];
     [_btnFemale setSelected:NO];
     [_btnNeutral setSelected:NO];
-    [_btnOther setSelected:NO];
+    [_btnOtherGender setSelected:NO];
     [sender setSelected:YES];
 }
 
@@ -98,7 +98,7 @@
 - (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
     if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         success = NO;
     }
     else if ([_txtHomePhone.text isValidPhoneNumber]) {
@@ -113,7 +113,7 @@
     }
     else if ([_txtEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if (![gblAppDelegate validateEmail:[_txtEmailAddress text]]) {
         success = NO;
@@ -122,7 +122,7 @@
     }
     else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     
     return success;
@@ -148,14 +148,47 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
         return YES;
     }
     if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789 +()"];
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 15) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
             return NO;
         }
     }

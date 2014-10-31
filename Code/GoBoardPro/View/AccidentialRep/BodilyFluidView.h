@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "SignatureView.h"
+#import "AccidentReportViewController.h"
 
 @interface BodilyFluidView : UIView <UITextFieldDelegate>
 
@@ -25,8 +26,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodCleanupNotRequired;
 @property (weak, nonatomic) IBOutlet UIButton *btnExposedToBlood;
 @property (weak, nonatomic) IBOutlet UIButton *btnNotExposedToBlood;
-
+@property (weak, nonatomic) IBOutlet UITextView *txvStaffMemberAccount;
+@property (weak, nonatomic) IBOutlet UILabel *lblStaffMemberAccount;
 @property (strong, nonatomic) SignatureView *signatureView;
+@property (weak, nonatomic) AccidentReportViewController *parentVC;
 
 - (IBAction)btnBloodbornePathogenTapped:(id)sender;
 - (IBAction)btnExposedToBloodTapped:(UIButton *)sender;

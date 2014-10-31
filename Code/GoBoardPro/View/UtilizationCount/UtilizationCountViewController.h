@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnCountComment;
 @property (weak, nonatomic) IBOutlet UILabel *lblCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblTask;
+@property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
 
 - (IBAction)btnToggleCountAndTaskTapped:(id)sender;
 - (IBAction)btnSubmitCountTapped:(id)sender;

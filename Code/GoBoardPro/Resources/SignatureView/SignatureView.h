@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "Constants.h"
 //#import "UAModalPanel.h"
 @interface SignatureView : UIViewController<UIPopoverControllerDelegate>
 {

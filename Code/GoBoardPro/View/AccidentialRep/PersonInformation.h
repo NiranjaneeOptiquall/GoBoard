@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "AccidentReportViewController.h"
+
 
 @interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate>
 
@@ -55,6 +57,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtWheather;
 @property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
 
+
+@property (weak, nonatomic) AccidentReportViewController *parentVC;
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;

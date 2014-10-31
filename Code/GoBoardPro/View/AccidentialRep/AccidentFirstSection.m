@@ -7,6 +7,7 @@
 //
 
 #import "AccidentFirstSection.h"
+#import "AccidentReportViewController.h"
 
 
 @implementation AccidentFirstSection
@@ -14,10 +15,20 @@
 - (void)awakeFromNib {
     [_vwPersonalInfo setBackgroundColor:[UIColor clearColor]];
     [_vwPersonalInfo addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    
     [_vwBodyPartInjury setBackgroundColor:[UIColor clearColor]];
     [_vwBodyPartInjury manageData];
+    
     [_vwBodyPartInjury addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     [_vwBodilyFluid setBackgroundColor:[UIColor clearColor]];
+    
+}
+
+- (void)setParentVC:(AccidentReportViewController *)parentVC {
+    _parentVC = parentVC;
+    _vwPersonalInfo.parentVC = _parentVC;
+    _vwBodyPartInjury.parentVC = _parentVC;
+    _vwBodilyFluid.parentVC = _parentVC;
 }
 
 
@@ -39,6 +50,13 @@
     CGRect frame = self.frame;
     frame.size.height = CGRectGetMaxY(_vwBodilyFluid.frame);
     self.frame = frame;
+}
+
+- (BOOL)validateAccidentFirstSection {
+    if (![_vwPersonalInfo isPersonalInfoValidationSuccess] || ![_vwBodyPartInjury isBodyPartInjuredInfoValidationSuccess] || ![_vwBodilyFluid isBodilyFluidValidationSucceed]) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

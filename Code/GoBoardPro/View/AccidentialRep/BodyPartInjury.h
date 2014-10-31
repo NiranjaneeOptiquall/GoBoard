@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "AccidentReportViewController.h"
 
 @interface BodyPartInjury : UIView<UITableViewDataSource, UITableViewDelegate, DropDownValueDelegate> {
     NSMutableArray *mutArrBodyPart;
@@ -39,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblNoInjuryAdded;
 
 @property (strong, nonatomic) NSMutableArray *mutArrInjuryList;
+@property (weak, nonatomic) AccidentReportViewController *parentVC;
 
 - (IBAction)btnInjuryTypeGeneralTapped:(UIButton *)sender;
 - (IBAction)btnInjuryTypeBodyPartTapped:(UIButton *)sender;

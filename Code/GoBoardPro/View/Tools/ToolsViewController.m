@@ -234,7 +234,7 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtPosition isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtTaskTitle isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Your task has been added success fully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];

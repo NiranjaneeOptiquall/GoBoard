@@ -37,7 +37,7 @@
     BOOL success = YES;
     if ([_txtTime911Called isTextFieldBlank] || [_txtTimeOfArrival isTextFieldBlank] || [_txtTimeOfDeparture isTextFieldBlank] || [_txtCaseNo isTextFieldBlank] || [_txtFirstName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtPhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if ([_txtPhone.text isValidPhoneNumber]) {
         success = NO;
@@ -45,7 +45,7 @@
         alert(@"", @"Please enter valid phone number");
     }
     else if ([_txtBadge isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     return success;
 }
@@ -106,14 +106,47 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtPhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
         return YES;
     }
     if ([textField isEqual:_txtPhone]) {
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789 +()"];
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 15) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
             return NO;
         }
     }
@@ -137,6 +170,18 @@
     else if ([field isEqual:_txtTimeOfArrival]) {
         [_txtTimeOfDeparture setEnabled:YES];
         [_txtTimeOfDeparture setText:@""];
+    }
+}
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [_lblAdditionalInfo setHidden:YES];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if ([textView.text length] == 0) {
+        [_lblAdditionalInfo setHidden:NO];
     }
 }
 @end

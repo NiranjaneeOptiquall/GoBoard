@@ -7,7 +7,7 @@
 //
 
 #import "AccidentReportViewController.h"
-
+#import "AccidentFirstSection.h"
 
 @interface AccidentReportViewController ()
 
@@ -20,6 +20,7 @@
     mutArrAccidentViews = [[NSMutableArray alloc] init];
     [self btnNotificationTapped:_btnNone];
     [self addViews];
+    _isUpdate = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,22 +35,10 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
-        if ([vw isKindOfClass:[AccidentFirstSection class]]) {
-            [vw removeObserver:self forKeyPath:@"frame"];
-            [vw.vwBodilyFluid removeObserver:self forKeyPath:@"frame"];
-            [vw.vwBodyPartInjury removeObserver:self forKeyPath:@"frame"];
-            [vw.vwPersonalInfo removeObserver:self forKeyPath:@"frame"];
-        }
-    }
-    [thirdSection removeObserver:self forKeyPath:@"frame"];
-    [finalSection removeObserver:self forKeyPath:@"frame"];
-}
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    _isUpdate = YES;
     if ([object isKindOfClass:[AccidentFirstSection class]]) {
         NSInteger index = [_vwFirstSection.subviews indexOfObject:object];
         CGRect frame = [object frame];
@@ -74,7 +63,7 @@
     }
     else if ([object isEqual:_vwFirstSection]) {
         CGRect frame = thirdSection.frame;
-        frame.origin.y = CGRectGetMaxY(bodyPartView.frame);
+        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
         thirdSection.frame = frame;
         
         frame = finalSection.frame;
@@ -98,17 +87,21 @@
     [_btnManager setSelected:NO];
     [_btnNone setSelected:NO];
     [sender setSelected:YES];
+    _isUpdate = YES;
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
-    if (![personalInfoView isPersonalInfoValidationSuccess]) {
-        return;
-    }
-    else if (![bodyPartView isBodyPartInjuredInfoValidationSuccess]) {
+//    if (![personalInfoView isPersonalInfoValidationSuccess]) {
+//        return;
+//    }
+//    else if (![bodyPartView isBodyPartInjuredInfoValidationSuccess]) {
+//        return;
+//    }
+    if (![self validateFirstSection]) {
         return;
     }
     else if (![thirdSection isThirdSectionValidationSuccess]) {
@@ -119,8 +112,42 @@
     }
 }
 
+- (BOOL)validateFirstSection {
+    BOOL isSuccess = YES;
+    for (AccidentFirstSection *view in _vwFirstSection.subviews) {
+        if ([view isKindOfClass:[AccidentFirstSection class]]) {
+            isSuccess = [view validateAccidentFirstSection];
+            if (!isSuccess) {
+                break;
+            }
+        }
+    }
+    return isSuccess;
+}
+
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender {
+    _isUpdate = YES;
     [self addAccidentView];
+}
+
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (_isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
+            if ([vw isKindOfClass:[AccidentFirstSection class]]) {
+                [vw removeObserver:self forKeyPath:@"frame"];
+                [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"frame"];
+                [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
+            }
+        }
+        [thirdSection removeObserver:self forKeyPath:@"frame"];
+        [finalSection removeObserver:self forKeyPath:@"frame"];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
 }
 
 - (IBAction)btnAttachPhotoTapped:(UIButton *)sender {
@@ -155,7 +182,7 @@
 
 - (void)addAccidentView {
     AccidentFirstSection *accidentView = (AccidentFirstSection*)[[[NSBundle mainBundle] loadNibNamed:@"AccidentFirstSection" owner:self options:nil] firstObject];
-    
+    accidentView.parentVC = self;
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
     totalAccidentFirstSectionCount++;
@@ -184,26 +211,6 @@
 
 - (void)addViews {
     [self addAccidentView];
-    
-    
-    /*personalInfoView = (PersonInformation*)[[[NSBundle mainBundle] loadNibNamed:@"PersonInformation" owner:self options:nil] firstObject];
-    [personalInfoView setBackgroundColor:[UIColor clearColor]];
-    CGRect frame = personalInfoView.frame;
-    frame.origin.y = 166;
-    personalInfoView.frame = frame;
-    [_scrlMainView addSubview:personalInfoView];
-    [personalInfoView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
-    [_scrlMainView sendSubviewToBack:personalInfoView];
-    
-    bodyPartView = (BodyPartInjury*)[[[NSBundle mainBundle] loadNibNamed:@"BodyPartInjury" owner:self options:nil] firstObject];
-    [bodyPartView setBackgroundColor:[UIColor clearColor]];
-     frame = bodyPartView.frame;
-    frame.origin.y = CGRectGetMaxY(personalInfoView.frame);
-    bodyPartView.frame = frame;
-    [_scrlMainView addSubview:bodyPartView];
-    [bodyPartView manageData];
-    [bodyPartView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
-    */
     thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
     CGRect frame = thirdSection.frame;
     frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
@@ -220,7 +227,13 @@
     [_scrlMainView addSubview:finalSection];
     [finalSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     [finalSection.btnFinalSubmit addTarget:self action:@selector(btnFinalSubmitTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [finalSection PersonInvolved:_personInvolved];
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+}
+
+- (void)setPersonInvolved:(NSInteger)personInvolved {
+    _personInvolved = personInvolved;
+    [finalSection PersonInvolved:_personInvolved];
 }
 
 
@@ -276,6 +289,7 @@
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    _isUpdate = YES;
     BOOL allowEditing = YES;
     if ([textField isEqual:_txtDateOfIncident]) {
         [self setKeepViewInFrame:textField];
@@ -323,12 +337,22 @@
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
+    _isUpdate = YES;
     [_lblIncidentDesc setHidden:YES];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([textView.text length] == 0) {
         [_lblIncidentDesc setHidden:NO];
+    }
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

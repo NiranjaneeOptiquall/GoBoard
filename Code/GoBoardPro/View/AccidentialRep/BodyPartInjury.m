@@ -74,11 +74,11 @@
 
 - (IBAction)btnAddAnotherInjuryTapped:(id)sender {
     if ([_txtEnjuryType isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if ([_txtActionTaken isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     
@@ -222,7 +222,7 @@
     BOOL success = YES;
     if ([_txtEnjuryType isTextFieldBlank] || [_txtActionTaken isTextFieldBlank] || [_txtCareProvided isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     return success;
 }
@@ -236,6 +236,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
+    _parentVC.isUpdate = YES;
     if ([textField isEqual:_txtEnjuryType]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
@@ -269,6 +270,9 @@
 
 - (void)setKeepViewInFrame:(UIView*)vw {
     TPKeyboardAvoidingScrollView *scrollView = (TPKeyboardAvoidingScrollView*)[self superview];
+    while (![scrollView isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
+        scrollView = (TPKeyboardAvoidingScrollView*)[scrollView superview];
+    }
     CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:scrollView];
     if (point.y <scrollView.contentOffset.y || point.y > scrollView.contentOffset.y + scrollView.frame.size.height) {
         [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];

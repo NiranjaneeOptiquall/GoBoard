@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AccidentFirstSection">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="3071"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="3126"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" id="Z35-1Q-5nL" customClass="PersonInformation">
@@ -1084,7 +1084,7 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" id="v5Q-PM-O4f" customClass="BodilyFluidView">
-                    <rect key="frame" x="0.0" y="2137" width="768" height="934"/>
+                    <rect key="frame" x="0.0" y="2137" width="768" height="989"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Was blood or bodily fluid present?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gGM-44-35u">
@@ -1280,19 +1280,6 @@
                             <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="zho-g2-qUS">
-                            <rect key="frame" x="55" y="851" width="659" height="63"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Staff Members Written Account" textAlignment="center" minimumFontSize="17" id="gJI-dS-6Vu">
-                            <rect key="frame" x="65" y="858" width="641" height="49"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            <connections>
-                                <outlet property="delegate" destination="v5Q-PM-O4f" id="7Qj-fH-6qi"/>
-                            </connections>
-                        </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZmT-JP-ghc">
                             <rect key="frame" x="49" y="37" width="114" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1359,6 +1346,27 @@
                                 <action selector="btnBloodbornePathogenTapped:" destination="v5Q-PM-O4f" eventType="touchUpInside" id="Zhw-Ev-b0U"/>
                             </connections>
                         </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="8Wo-IP-U2n">
+                            <rect key="frame" x="55" y="855" width="659" height="114"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Staff Members Written Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DlB-MJ-DP8">
+                            <rect key="frame" x="242" y="896" width="284" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="qCL-3V-0Ra">
+                            <rect key="frame" x="60" y="855" width="646" height="104"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            <connections>
+                                <outlet property="delegate" destination="v5Q-PM-O4f" id="h5u-em-oVt"/>
+                            </connections>
+                        </textView>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
@@ -1371,10 +1379,12 @@
                         <outlet property="btnMedicalPersonnelTreated" destination="bQY-MH-oh3" id="VVa-bl-xn1"/>
                         <outlet property="btnNotExposedToBlood" destination="FKs-Pj-egJ" id="qqm-td-qO2"/>
                         <outlet property="btnSelfTreated" destination="KKC-jn-ake" id="rm6-Gl-5fS"/>
+                        <outlet property="lblStaffMemberAccount" destination="DlB-MJ-DP8" id="0uF-p0-6Bw"/>
                         <outlet property="txtFName" destination="8eI-ky-gFo" id="adt-aa-HM6"/>
                         <outlet property="txtLName" destination="mro-di-dRd" id="zwY-IU-Ub1"/>
                         <outlet property="txtMI" destination="Mh4-8c-wvk" id="tH8-VD-yeJ"/>
                         <outlet property="txtPosition" destination="mXy-Jg-Iv3" id="ZnP-SK-qjY"/>
+                        <outlet property="txvStaffMemberAccount" destination="qCL-3V-0Ra" id="12X-qx-wTb"/>
                     </connections>
                 </view>
             </subviews>
@@ -1385,7 +1395,7 @@
                 <outlet property="vwBodyPartInjury" destination="dv9-eE-FaQ" id="bor-4k-Fcw"/>
                 <outlet property="vwPersonalInfo" destination="Z35-1Q-5nL" id="cM2-L1-eyy"/>
             </connections>
-            <point key="canvasLocation" x="565" y="1450.5"/>
+            <point key="canvasLocation" x="565" y="1478"/>
         </view>
     </objects>
     <resources>

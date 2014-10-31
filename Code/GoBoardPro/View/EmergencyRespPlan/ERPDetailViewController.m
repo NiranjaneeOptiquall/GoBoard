@@ -44,11 +44,11 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtTimeStart isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if ([_txtTimeEnd isTextFieldBlank]) {
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
         return;
     }
     NSString *key = @"isChecked";

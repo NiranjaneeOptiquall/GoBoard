@@ -104,9 +104,12 @@
     NSInteger current = [[aDict objectForKey:@"current"] integerValue];
     NSInteger max = [[aDict objectForKey:@"maxCapacity"] integerValue];
     current++;
-    if (current <= max) {
-        [aDict setObject:[NSNumber numberWithInteger:current] forKey:@"current"];
+    if (current > max) {
+        NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d, %@ is over capacity now.", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue], [aDict objectForKey:@"facility"]];
+        alert(@"Exceed Limit", strMsg);
+//
     }
+    [aDict setObject:[NSNumber numberWithInteger:current] forKey:@"current"];
     [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
@@ -135,7 +138,7 @@
     for (NSDictionary *dict in mutArrCount) {
         count += [[dict objectForKey:@"current"] integerValue];
     }
-    [_lblTotalCount setText:[NSString stringWithFormat:@"%d", count]];
+    [_lblTotalCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
 }
 
 - (NSIndexPath *)indexPathForView:(id)view {
@@ -187,12 +190,12 @@
     else {
         [aCell.btnDecreaseCount setHidden:NO];
     }
-    if (aCurrent == aMaxCapacity) {
-        [aCell.btnIncreaseCount setHidden:YES];
-    }
-    else {
-        [aCell.btnIncreaseCount setHidden:NO];
-    }
+//    if (aCurrent == aMaxCapacity) {
+//        [aCell.btnIncreaseCount setHidden:YES];
+//    }
+//    else {
+//        [aCell.btnIncreaseCount setHidden:NO];
+//    }
     
     CGRect frame = [aCell.lblDevider frame];
     frame.origin.y = aCell.frame.size.height - frame.size.height;
@@ -204,7 +207,9 @@
     UITableViewCell *aCell = [tableView cellForRowAtIndexPath:indexPath];
     _lblPopOverLocation.text = [mutArrCount[indexPath.row] objectForKey:@"facility"];
     _txtPopOverMessage.text = [mutArrCount[indexPath.row] objectForKey:@"message"];
-
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
     editingIndex = indexPath.row;
     if (popOverMessage) {
         [popOverMessage dismissPopoverAnimated:NO];
@@ -246,7 +251,7 @@
         int current = [textField.trimText intValue];
         if (current >= 0) {
             if ( current > max) {
-                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue]];
+                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d, %@ is over capacity now.", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue], [aDict objectForKey:@"facility"]];
                 alert(@"Exceed Limit", strMsg);
             }
             [aDict setObject:[NSNumber numberWithInt:current] forKey:@"current"];

@@ -33,10 +33,10 @@
 }
 
 - (IBAction)btnCommunicationTapped:(UIButton *)sender {
-    [_btnAdmin setSelected:NO];
-    [_btnSupervisers setSelected:NO];
-    [_btnRiskManagement setSelected:NO];
-    [sender setSelected:YES];
+//    [_btnAdmin setSelected:NO];
+//    [_btnSupervisers setSelected:NO];
+//    [_btnRiskManagement setSelected:NO];
+    [sender setSelected:![sender isSelected]];
 }
 
 - (IBAction)btnSentToInsuranceTapped:(UIButton *)sender {
@@ -69,6 +69,28 @@
 
 #pragma mark - Method
 
+- (void)PersonInvolved:(NSInteger)person {
+    if (person == PERSON_EMPLOYEE) {
+        // Employee Selected
+        [_vwEmpCompProcedure setHidden:NO];
+        CGRect frame = _vwFollowup.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmpCompProcedure.frame);
+        _vwFollowup.frame = frame;
+    }
+    else {
+        [_vwEmpCompProcedure setHidden:YES];
+        CGRect frame = _vwFollowup.frame;
+        frame.origin.y = _vwEmpCompProcedure.frame.origin.y;
+        _vwFollowup.frame = frame;
+    }
+    CGRect frm = _vwFixedContent.frame;
+    frm.size.height = CGRectGetMaxY(_vwFollowup.frame);
+    _vwFixedContent.frame = frm;
+    frm = self.frame;
+    frm.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+    self.frame = frm;
+}
+
 - (void)addWitnessView {
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
     [aWitnessView setBackgroundColor:[UIColor clearColor]];
@@ -96,7 +118,7 @@
     }
     if ([_txtEmpFName isTextFieldBlank] || [_txtEmpMI isTextFieldBlank] || [_txtEmpLName isTextFieldBlank] || [_txtEmpHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please fill up all required fields.");
+        alert(@"", @"Please completed all required fields.");
     }
     else if ([_txtEmpHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -117,5 +139,75 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if ([textField isEqual:_txtManagementFollowUpDate]) {
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtEmpHomePhone] || [textField isEqual:_txtEmpAlternatePhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
+        return YES;
+    }
+    if ([textField isEqual:_txtEmpHomePhone] || [textField isEqual:_txtEmpAlternatePhone]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+    }
+    return YES;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [_lblAdditionalInfo setHidden:YES];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if ([textView.text length] == 0) {
+        [_lblAdditionalInfo setHidden:NO];
+    }
 }
 @end
