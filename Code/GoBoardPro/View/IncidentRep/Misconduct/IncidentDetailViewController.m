@@ -55,9 +55,7 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
-        [vw removeObserver:self forKeyPath:@"frame"];
-    }
+    
 }
 
 
@@ -235,6 +233,9 @@
         [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
+        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
+            [vw removeObserver:self forKeyPath:@"frame"];
+        }
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -243,6 +244,9 @@
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
+        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
+            [vw removeObserver:self forKeyPath:@"frame"];
+        }
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

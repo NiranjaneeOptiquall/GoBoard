@@ -33,7 +33,7 @@
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context { 
     if ([keyPath isEqualToString:@"frame"]) {
         if ([object isEqual:_vwPersonalInfo]) {
             CGRect frame = _vwBodyPartInjury.frame;

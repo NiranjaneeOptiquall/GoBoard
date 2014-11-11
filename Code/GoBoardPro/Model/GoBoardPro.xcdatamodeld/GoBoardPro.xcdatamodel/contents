@@ -1,4 +1,187 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ActionTakenType" syncable="YES">
+        <attribute name="actionID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ActivityTypes" syncable="YES">
+        <attribute name="activityTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="AffiliationType" syncable="YES">
+        <attribute name="affiliationTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="CareProvidedType" syncable="YES">
+        <attribute name="careProvidedID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ConditionTypes" syncable="YES">
+        <attribute name="conditionTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Country" syncable="YES">
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="countryID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="EmergencyPersonnel" syncable="YES">
+        <attribute name="accidentReportID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="additionalInformation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="badgeNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="middileInitial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="EquipmentTypes" syncable="YES">
+        <attribute name="equipmentTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ERPHeader" representedClassName="ERPHeader" syncable="YES">
+        <attribute name="erpHeaderID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="erpTitles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPTitle" inverseName="erpHeader" inverseEntity="ERPTitle" syncable="YES"/>
+    </entity>
+    <entity name="ERPTask" syncable="YES">
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="task" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="erpTitle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPTitle" inverseName="erpTasks" inverseEntity="ERPTitle" syncable="YES"/>
+    </entity>
+    <entity name="ERPTitle" representedClassName="ERPTitle" syncable="YES">
+        <attribute name="erpTitleID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="erpHeader" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPHeader" inverseName="erpTitles" inverseEntity="ERPHeader" syncable="YES"/>
+        <relationship name="erpTasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPTask" inverseName="erpTitle" inverseEntity="ERPTask" syncable="YES"/>
+    </entity>
+    <entity name="Facility" syncable="YES">
+        <attribute name="accountID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stateCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FacilityLocation" syncable="YES">
+        <attribute name="clientDefaultLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
+    <entity name="FacilityPosition" syncable="YES">
+        <attribute name="clientDefaultLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
+    <entity name="GenderTypes" representedClassName="GenderTypes" syncable="YES">
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="genderTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Person" syncable="YES">
+        <attribute name="activityTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliationTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="alternatePhone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="careProvidedTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="conditionTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateOfBirth" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="employeeTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="equipmentTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="genderTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="guesOfLastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guestOfFirstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guestOfMiddleInitial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="middleInitial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="minor" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="personTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="primaryPhone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reportID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="stateCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="suiteNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="titlePosition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Report" syncable="YES">
+        <attribute name="bloodCleanupRequired" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="bloodOrBodilyFluidPresent" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="bloodPresentEmployeeTreated" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="bloodPresentMedicalPersonnelTreated" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="bloodPresentSelfTreated" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="caregiverExposedToBlood" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstAidProvidedByFirstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstAidProvidedByLastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstAidProvidedByMiddleInitial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstAidProvidedByTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="occuredDateTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="occuredDuringWorkHours" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="reportTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="signature" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="staffMemberWrittenStatement" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="time911Called" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="States" representedClassName="States" syncable="YES">
+        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="stateCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stateID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="stateValue" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
+        <element name="GenderTypes" positionX="261" positionY="116" width="128" height="103"/>
+        <element name="ActionTakenType" positionX="-252" positionY="-18" width="128" height="103"/>
+        <element name="ActivityTypes" positionX="-252" positionY="117" width="128" height="103"/>
+        <element name="AffiliationType" positionX="-254" positionY="252" width="128" height="103"/>
+        <element name="CareProvidedType" positionX="-252" positionY="392" width="128" height="103"/>
+        <element name="ConditionTypes" positionX="-83" positionY="-18" width="128" height="103"/>
+        <element name="Country" positionX="-83" positionY="117" width="128" height="103"/>
+        <element name="EmergencyPersonnel" positionX="-83" positionY="252" width="128" height="178"/>
+        <element name="EquipmentTypes" positionX="88" positionY="-18" width="128" height="103"/>
+        <element name="ERPHeader" positionX="432" positionY="-18" width="128" height="118"/>
+        <element name="ERPTask" positionX="429" positionY="306" width="128" height="103"/>
+        <element name="ERPTitle" positionX="430" positionY="135" width="128" height="118"/>
+        <element name="Facility" positionX="-84" positionY="459" width="128" height="208"/>
+        <element name="FacilityLocation" positionX="88" positionY="117" width="128" height="103"/>
+        <element name="FacilityPosition" positionX="90" positionY="252" width="128" height="103"/>
+        <element name="Person" positionX="601" positionY="-18" width="128" height="478"/>
+        <element name="Report" positionX="601" positionY="486" width="128" height="343"/>
+    </elements>
 </model>

@@ -215,6 +215,7 @@
 		33EB4A9A19D1A3A2008EF8FD /* text_box_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9219D1A3A2008EF8FD /* text_box_email@2x.png */; };
 		33EB4A9C19D1A3A2008EF8FD /* text_box_mi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9419D1A3A2008EF8FD /* text_box_mi@2x.png */; };
 		33EB4A9E19D1A3A2008EF8FD /* text_box_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */; };
+		33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FE66691A10D7090058BFB6 /* WebSerivceCall.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -514,6 +515,8 @@
 		33EB4A9219D1A3A2008EF8FD /* text_box_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_email@2x.png"; sourceTree = "<group>"; };
 		33EB4A9419D1A3A2008EF8FD /* text_box_mi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_mi@2x.png"; sourceTree = "<group>"; };
 		33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_name@2x.png"; sourceTree = "<group>"; };
+		33FE66681A10D7090058BFB6 /* WebSerivceCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSerivceCall.h; sourceTree = "<group>"; };
+		33FE66691A10D7090058BFB6 /* WebSerivceCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSerivceCall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -796,6 +799,7 @@
 		3397CACC19D0347700788153 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				33FE66671A10D6EA0058BFB6 /* WebServices */,
 				3354197D19E7A931009B2B20 /* SignatureView */,
 				3341572719E8F88400A71E02 /* Bar Chart */,
 				3337805C19E6B6EA00362F82 /* Line Graph */,
@@ -1284,6 +1288,15 @@
 			name = Registration;
 			sourceTree = "<group>";
 		};
+		33FE66671A10D6EA0058BFB6 /* WebServices */ = {
+			isa = PBXGroup;
+			children = (
+				33FE66681A10D7090058BFB6 /* WebSerivceCall.h */,
+				33FE66691A10D7090058BFB6 /* WebSerivceCall.m */,
+			);
+			path = WebServices;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1521,6 +1534,7 @@
 				3354198119E7A931009B2B20 /* SignatureView.m in Sources */,
 				332E3A4F19D570C60088AB61 /* TaskTableViewCell.m in Sources */,
 				33B6368719D9327800875A1D /* UtilizationCountTableViewCell.m in Sources */,
+				33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */,
 				3397CAD219D0347700788153 /* GoBoardPro.xcdatamodeld in Sources */,
 				3337809F19E6B6EA00362F82 /* MIMLineGraph.m in Sources */,
 				33D5A59519E3F17C00344278 /* GraphDetailViewController.m in Sources */,
@@ -1715,6 +1729,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = GoBoardPro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1729,6 +1747,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = GoBoardPro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

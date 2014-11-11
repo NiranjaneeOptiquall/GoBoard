@@ -100,7 +100,15 @@
         alert(@"", @"Please agree terms & conditions");
         return;
     }
-    [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
+    
+    WebSerivceCall *aServiceCall = [[WebSerivceCall alloc] init];
+    NSDictionary *aDictParam = @{@"Email":[_txtEmail trimText], @"Password":[_txtPassword trimText], @"ConfirmPassword": [_txtConfirmPassword trimText]};
+    [aServiceCall callWebService:USER_REGISTRATION parameters:aDictParam complition:^(NSDictionary *response) {
+        [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
+    } failure:^(NSError *error) {
+        
+    }];
+    
 }
 
 - (IBAction)btnBackTapped:(id)sender {

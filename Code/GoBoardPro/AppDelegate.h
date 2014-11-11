@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-
+typedef void (^QSCompletionBlock) ();
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

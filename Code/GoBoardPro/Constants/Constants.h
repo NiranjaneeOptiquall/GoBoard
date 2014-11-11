@@ -9,6 +9,7 @@
 #ifndef GoBoardPro_Constants_h
 #define GoBoardPro_Constants_h
 
+#import "WebSerivceCall.h"
 #import "AppDelegate.h"
 #import "DatePopOverView.h"
 #import "DropDownPopOver.h"
@@ -49,5 +50,9 @@ typedef enum : NSUInteger {
     PERSON_EMPLOYEE,
 } PersonInvolved;
 
+#define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
+#define SERVICE_HTTP_METHOD         @{@"Register":@"POST"}
+
+#define USER_REGISTRATION           SERVICE_URL @"Register"
 
 #endif

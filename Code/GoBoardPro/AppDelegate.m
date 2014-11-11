@@ -18,6 +18,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     gblAppDelegate = self;
+   
+    WebSerivceCall *aWSCall = [[WebSerivceCall alloc] init];
+    [aWSCall callWebService:[NSString stringWithFormat:@"%@states", SERVICE_URL] parameters:nil complition:^(NSDictionary * dictionary) {
+        NSLog(@"%@", dictionary);
+    } failure:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
     return YES;
 }
 
@@ -105,7 +112,7 @@
     if (!coordinator) {
         return nil;
     }
-    _managedObjectContext = [[NSManagedObjectContext alloc] init];
+    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     return _managedObjectContext;
 }
