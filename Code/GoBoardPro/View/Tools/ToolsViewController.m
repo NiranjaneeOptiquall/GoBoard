@@ -234,10 +234,10 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtPosition isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtTaskTitle isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
-    [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Your task has been added success fully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+    [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your task has been added success fully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
 }
 
 

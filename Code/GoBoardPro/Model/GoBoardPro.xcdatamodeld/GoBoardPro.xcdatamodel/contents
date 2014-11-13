@@ -164,9 +164,23 @@
         <attribute name="stateID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="stateValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="UserFacility" representedClassName="UserFacility" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserLocation" inverseName="facility" inverseEntity="UserLocation" syncable="YES"/>
+        <relationship name="positions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserPosition" inverseName="facility" inverseEntity="UserPosition" syncable="YES"/>
+    </entity>
+    <entity name="UserLocation" representedClassName="UserLocation" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="facility" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserFacility" inverseName="locations" inverseEntity="UserFacility" syncable="YES"/>
+    </entity>
+    <entity name="UserPosition" representedClassName="UserPosition" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="facility" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserFacility" inverseName="positions" inverseEntity="UserFacility" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
-        <element name="GenderTypes" positionX="261" positionY="116" width="128" height="103"/>
         <element name="ActionTakenType" positionX="-252" positionY="-18" width="128" height="103"/>
         <element name="ActivityTypes" positionX="-252" positionY="117" width="128" height="103"/>
         <element name="AffiliationType" positionX="-254" positionY="252" width="128" height="103"/>
@@ -178,10 +192,15 @@
         <element name="ERPHeader" positionX="432" positionY="-18" width="128" height="118"/>
         <element name="ERPTask" positionX="429" positionY="306" width="128" height="103"/>
         <element name="ERPTitle" positionX="430" positionY="135" width="128" height="118"/>
-        <element name="Facility" positionX="-84" positionY="459" width="128" height="208"/>
+        <element name="Facility" positionX="-84" positionY="453" width="128" height="208"/>
         <element name="FacilityLocation" positionX="88" positionY="117" width="128" height="103"/>
         <element name="FacilityPosition" positionX="90" positionY="252" width="128" height="103"/>
+        <element name="GenderTypes" positionX="261" positionY="116" width="128" height="103"/>
         <element name="Person" positionX="601" positionY="-18" width="128" height="478"/>
         <element name="Report" positionX="601" positionY="486" width="128" height="343"/>
+        <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
+        <element name="UserFacility" positionX="142" positionY="369" width="128" height="103"/>
+        <element name="UserPosition" positionX="214" positionY="515" width="128" height="88"/>
+        <element name="UserLocation" positionX="61" positionY="513" width="128" height="88"/>
     </elements>
 </model>

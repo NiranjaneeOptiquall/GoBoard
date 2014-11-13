@@ -60,7 +60,7 @@
 - (BOOL)isBodilyFluidValidationSucceed {
     BOOL success = YES;
     if ([_txtFName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLName isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
     return success;

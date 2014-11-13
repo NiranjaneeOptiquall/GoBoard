@@ -52,7 +52,7 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmail text]]) {
@@ -61,7 +61,7 @@
         return;
     }
     else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtPhone.text isValidPhoneNumber]) {
@@ -70,7 +70,7 @@
         return;
     }
     else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtMobile.text isValidPhoneNumber]) {
@@ -79,7 +79,7 @@
         return;
     }
     else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
@@ -88,7 +88,7 @@
         return;
     }
     else if ([_txtConfirmPassword isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtPassword.text isEqualToString:_txtConfirmPassword.text]) {
@@ -101,11 +101,21 @@
         return;
     }
     
-    WebSerivceCall *aServiceCall = [[WebSerivceCall alloc] init];
-    NSDictionary *aDictParam = @{@"Email":[_txtEmail trimText], @"Password":[_txtPassword trimText], @"ConfirmPassword": [_txtConfirmPassword trimText]};
-    [aServiceCall callWebService:USER_REGISTRATION parameters:aDictParam complition:^(NSDictionary *response) {
-        [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
-    } failure:^(NSError *error) {
+//    WebSerivceCall *aServiceCall = [[WebSerivceCall alloc] init];
+    NSMutableArray *aMutArrCertificate = [NSMutableArray array];
+    for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
+        if ([certificate isKindOfClass:[AddCertificateView class]]) {
+            NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
+            [aMutArrCertificate addObject:@{@"Name": certificate.txtCertificateName.trimText, @"ExpirationDate":certificate.txtExpDate.trimText, @"Photo":@""}];
+            //, @"Photo":[aData base64EncodedStringWithOptions:0]
+        }
+    }
+    NSDictionary *aDictParam = @{@"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate};
+    [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"POST" complition:^(NSDictionary *response) {
+        if ([response objectForKey:@"Success"]) {
+          [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
+        }
+    } failure:^(NSError *error, NSDictionary *response) {
         
     }];
     
@@ -114,7 +124,7 @@
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];

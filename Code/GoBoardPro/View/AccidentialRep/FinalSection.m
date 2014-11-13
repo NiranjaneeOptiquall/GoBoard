@@ -100,7 +100,7 @@
 }
 
 - (void)isAdmin {
-    if (!gblAppDelegate.isAdmin) {
+    if (![[User currentUser] isAdmin]) {
         [_vwManagementFollowUp setHidden:YES];
         CGRect frame = _vwSubmit.frame;
         frame.origin.y = _vwManagementFollowUp.frame.origin.y;
@@ -141,7 +141,7 @@
     }
     if ([_txtEmpFName isTextFieldBlank] || [_txtEmpMI isTextFieldBlank] || [_txtEmpLName isTextFieldBlank] || [_txtEmpHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if ([_txtEmpHomePhone.text isValidPhoneNumber]) {
         success = NO;

@@ -85,14 +85,24 @@
 //        alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
 //        return;
 //    }
-    
-    if ([[_txtUserId trimText] isEqualToString:@"admin"]) {
-        gblAppDelegate.isAdmin = YES;
-        [self performSegueWithIdentifier:@"loginToHome" sender:nil];
-    }
-    else {
-        [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
-    }
+//    WebSerivceCall *serviceCall = [[WebSerivceCall alloc] init];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+        if ([[response objectForKey:@"Success"] boolValue]) {
+            User *currentUser = [User currentUser];
+            currentUser.firstName = [response objectForKey:@"FirstName"];
+            currentUser.lastName = [response objectForKey:@"LastName"];
+            currentUser.userId = [response objectForKey:@"Id"];
+            currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
+//            if (currentUser.isAdmin) {
+//                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
+//            }
+//            else {
+                [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
+//            }
+        }
+    } failure:^(NSError *error, NSDictionary *response) {
+        alert(@"", MSG_LOGIN_FAILURE);
+    }];
 }
 
 - (IBAction)btnForgotPasswordTapped:(id)sender {

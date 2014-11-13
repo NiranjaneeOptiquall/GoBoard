@@ -47,11 +47,11 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtTimeStart isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if ([_txtTimeEnd isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     NSString *key = @"isChecked";
@@ -87,7 +87,7 @@
 
 - (IBAction)btnBackTapped:(id)sender {
     if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];

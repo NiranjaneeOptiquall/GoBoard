@@ -10,13 +10,16 @@
 #define GoBoardPro_Constants_h
 
 #import "WebSerivceCall.h"
+#import "AFNetworking.h"
 #import "AppDelegate.h"
 #import "DatePopOverView.h"
 #import "DropDownPopOver.h"
+#import "User.h"
+
 
 AppDelegate *gblAppDelegate;
 
-#define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
+#define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
 
 
 #define LOCATION_VALUES                 @[@{@"title":@"Main Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Swimming Pool", @"id": @"3"}, @{@"title":@"Tennis Court", @"id": @"4"}]
@@ -50,9 +53,25 @@ typedef enum : NSUInteger {
     PERSON_EMPLOYEE,
 } PersonInvolved;
 
-#define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
-#define SERVICE_HTTP_METHOD         @{@"Register":@"POST"}
 
-#define USER_REGISTRATION           SERVICE_URL @"Register"
+#define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
+#define SERVICE_HTTP_METHOD         @{@"UserAuthentication":@"GET", @"UserForgotPassword" : @"POST", @"UserFacility":@"GET"}
+
+#define USER_SERVICE                @"User"
+#define USER_LOGIN                  @"UserAuthentication"
+#define USER_FORGOT_PASSWORD        @"UserForgotPassword"
+#define USER_FACILITY               @"UserFacility"
+
+
+
+
+
+
+
+
+#define MSG_REQUIRED_FIELDS         @"Please complete all required fields."
+#define MSG_PROFILE_UPDATE_SUCCESS  @"Profile has been updated Successfully"
+#define MSG_PROFILE_UPDATE_FAILURE  @"Unable to update profile at this time, Please try again later"
+#define MSG_LOGIN_FAILURE           @"Email id or password does not match, Please check your email id or password"
 
 #endif

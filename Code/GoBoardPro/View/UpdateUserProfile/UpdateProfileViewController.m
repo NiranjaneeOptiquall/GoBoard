@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self getUserInfo];
     // Do any additional setup after loading the view.
 }
 
@@ -49,7 +49,7 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmail text]]) {
@@ -58,7 +58,7 @@
         return;
     }
     else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtPhone.text isValidPhoneNumber]) {
@@ -66,23 +66,19 @@
         return;
     }
     else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if (![_txtMobile.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Mobile Number");
         return;
     }
-    else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
-        return;
-    }
-    else if (![_txtPassword.text isValidPassword]) {
+//    else if ([_txtPassword isTextFieldBlank]) {
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//        return;
+//    }
+    else if (![_txtPassword isTextFieldBlank] && ![_txtPassword.text isValidPassword]) {
         alert(@"", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
-        return;
-    }
-    else if ([_txtConfirmPassword isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
         return;
     }
     else if (![_txtPassword.text isEqualToString:_txtConfirmPassword.text]) {
@@ -90,13 +86,33 @@
         [_txtConfirmPassword becomeFirstResponder];
         return;
     }
-    [self.navigationController popViewControllerAnimated:YES];
+    NSMutableArray *aMutArrCertificate = [NSMutableArray array];
+    for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
+        if ([certificate isKindOfClass:[AddCertificateView class]]) {
+            NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
+            [aMutArrCertificate addObject:@{@"Name": certificate.txtCertificateName.trimText, @"ExpirationDate":certificate.txtExpDate.trimText, @"Photo":@""}];
+            //, @"Photo":[aData base64EncodedStringWithOptions:0]
+        }
+    }
+    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate};
+    [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
+        if ([response objectForKey:@"Success"]) {
+            [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        }
+        else {
+            alert(@"", @"Unable to update profile at this time, Please try again later");
+        }
+    } failure:^(NSError *error, NSDictionary *response) {
+        alert(@"", @"Unable to update profile at this time, Please try again later");
+    }];
+    
 }
 
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
@@ -104,6 +120,35 @@
 }
 
 #pragma mark - Methods
+
+- (void)getUserInfo {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", USER_SERVICE, [[User currentUser]userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        if ([[response objectForKey:@"Success"] boolValue]) {
+            if([response objectForKey:@"FirstName"])_txtFitstName.text = [response objectForKey:@"FirstName"];
+            if([response objectForKey:@"MiddleInitial"])_txtMiddleName.text = [response objectForKey:@"MiddleInitial"];
+            if([response objectForKey:@"LastName"])_txtLastName.text = [response objectForKey:@"LastName"];
+            if([response objectForKey:@"Email"])_txtEmail.text = [response objectForKey:@"Email"];
+            if([response objectForKey:@"Phone"])_txtPhone.text = [response objectForKey:@"Phone"];
+            if([response objectForKey:@"Mobile"])_txtMobile.text = [response objectForKey:@"Mobile"];
+            if ([response objectForKey:@"Certifications"]) {
+                for (NSDictionary *aDict in [response objectForKey:@"Certifications"]) {
+                    AddCertificateView *certificate = [self addCertificationView];
+                    certificate.txtCertificateName.text = [aDict objectForKey:@"Name"];
+                    NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc] init];
+                    NSString *aStrDate = [[[aDict objectForKey:@"ExpirationDate"] componentsSeparatedByString:@"."] firstObject];
+                    [aDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+                    NSDate *aDate = [aDateFormatter dateFromString:aStrDate];
+                    [aDateFormatter setDateFormat:@"MM/dd/yyyy"];
+                    certificate.txtExpDate.text = [aDateFormatter stringFromDate:aDate];
+//                    certificate.imgCertificate = 
+                }
+            }
+        }
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
+    
+}
 
 - (void)btnRemoveCertificateTapped:(UIButton*)sender {
     totalCertificateCount--;
@@ -139,7 +184,7 @@
     [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height - 5) animated:YES];
 }
 
-- (void)addCertificationView {
+- (AddCertificateView*)addCertificationView {
     AddCertificateView *aCertView = [[[NSBundle mainBundle] loadNibNamed:@"AddCertificateView" owner:self options:nil] firstObject];
     CGRect frame = aCertView.frame;
     [aCertView.btnRemove addTarget:self action:@selector(btnRemoveCertificateTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -163,7 +208,7 @@
     if (totalCertificateCount > 3) {
     [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height - 5) animated:YES];    
     }
-    
+    return aCertView;
 }
 
 #pragma mark - UITextField Delegate

@@ -10,10 +10,11 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import "Constants.h"
 
-@interface UpdateProfileViewController : UIViewController <UITextFieldDelegate> {
+@interface UpdateProfileViewController : UIViewController <UITextFieldDelegate, UIAlertViewDelegate> {
     NSInteger totalCertificateCount;
     NSString *strPreviousText;
     BOOL isUpdate;
+    
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlCertificationView;
 @property (weak, nonatomic) IBOutlet UITextField *txtFitstName;

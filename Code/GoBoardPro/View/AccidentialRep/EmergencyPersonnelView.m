@@ -37,7 +37,7 @@
     BOOL success = YES;
     if ([_txtTime911Called isTextFieldBlank] || [_txtTimeOfArrival isTextFieldBlank] || [_txtTimeOfDeparture isTextFieldBlank] || [_txtCaseNo isTextFieldBlank] || [_txtFirstName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtPhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if ([_txtPhone.text isValidPhoneNumber]) {
         success = NO;
@@ -45,7 +45,7 @@
         alert(@"", @"Please enter valid phone number");
     }
     else if ([_txtBadge isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     return success;
 }

@@ -93,7 +93,7 @@
 
 - (void)btnFinalSubmitTapped:(id)sender {
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
 //    if (![personalInfoView isPersonalInfoValidationSuccess]) {
@@ -134,22 +134,26 @@
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (_isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
-        for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
-            if ([vw isKindOfClass:[AccidentFirstSection class]]) {
-                [vw removeObserver:self forKeyPath:@"frame"];
-                [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"frame"];
-                [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"careProvided"];
-                [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
-            }
-        }
-        [thirdSection removeObserver:self forKeyPath:@"frame"];
-        [finalSection removeObserver:self forKeyPath:@"frame"];
+        [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];
     }
     
+}
+
+- (void)removeObservers {
+    for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
+        if ([vw isKindOfClass:[AccidentFirstSection class]]) {
+            [vw removeObserver:self forKeyPath:@"frame"];
+            [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"frame"];
+            [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"careProvided"];
+            [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
+        }
+    }
+    [thirdSection removeObserver:self forKeyPath:@"frame"];
+    [finalSection removeObserver:self forKeyPath:@"frame"];
 }
 
 - (IBAction)btnAttachPhotoTapped:(UIButton *)sender {
@@ -368,6 +372,7 @@
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
+        [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

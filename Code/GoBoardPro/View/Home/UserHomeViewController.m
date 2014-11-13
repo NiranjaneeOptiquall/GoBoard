@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (!gblAppDelegate.isAdmin) {
+    if (![[User currentUser] isAdmin]) {
         [_btnTools setHidden:YES];
         CGPoint center = _btnSurvey.center;
         center.x = self.view.center.x;

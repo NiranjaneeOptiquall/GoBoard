@@ -32,7 +32,7 @@
     BOOL success = YES;
     if ([_txtWitnessFName isTextFieldBlank] || [_txtWitnessMI isTextFieldBlank] || [_txtWitnessLName isTextFieldBlank] || [_txtWitnessHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if ([_txtWitnessHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -46,7 +46,7 @@
     }
     else if ([_txtWitnessEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
         success = NO;

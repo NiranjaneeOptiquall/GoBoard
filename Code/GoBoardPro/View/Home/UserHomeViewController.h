@@ -12,7 +12,6 @@
 @interface UserHomeViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
-- (IBAction)btnBackTapped:(id)sender;
 
 - (IBAction)unwindBackToHomeScreen:(UIStoryboardSegue*)segue;
 

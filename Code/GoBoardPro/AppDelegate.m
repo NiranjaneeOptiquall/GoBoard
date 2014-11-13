@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "Constants.h"
+#import "Reachability.h"
 @interface AppDelegate () 
 
 @end
@@ -19,12 +20,6 @@
     // Override point for customization after application launch.
     gblAppDelegate = self;
    
-    WebSerivceCall *aWSCall = [[WebSerivceCall alloc] init];
-    [aWSCall callWebService:[NSString stringWithFormat:@"%@states", SERVICE_URL] parameters:nil complition:^(NSDictionary * dictionary) {
-        NSLog(@"%@", dictionary);
-    } failure:^(NSError *error) {
-        NSLog(@"%@", error);
-    }];
     return YES;
 }
 
@@ -133,6 +128,60 @@
 }
 
 
+- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
+    if ([self isNetworkReachable]) {
+        [self showActivityIndicator];
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
+        NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
+        aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
+        
+        [request setHTTPMethod:httpMethod];
+        if (params) {
+            NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
+            NSString *aStr = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", aStr);
+            [request setHTTPBody:aData];
+        }
+        [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^
+                                             (NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                 [self hideActivityIndicator];
+                                                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:JSON];
+                                                 if ([[aDict objectForKey:@"Success"] boolValue]) {
+                                                     completion(aDict);
+                                                 }
+                                                 else {
+                                                     failure (nil, aDict);
+                                                 }
+                                             }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                 [self hideActivityIndicator];
+                                                 failure (error, JSON);
+                                                 
+                                             }];
+        
+        [operation start];
+    }
+    else {
+        failure(nil, nil);
+        
+    }
+}
+
+#pragma mark Reachability
+
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
+
+
 #pragma mark - Methods
 
 - (BOOL)validateEmail:(NSString*)strEmail {
@@ -142,8 +191,92 @@
     return [emailTest evaluateWithObject:[strEmail trimString]];
 }
 
+- (NSString *)appName {
+    return @"GoBoardPro";
+}
+
+- (void)showActivityIndicator {
+//    if (_shouldHideActivityIndicator) {
+        [self showActivityIndicatorWithMessage:nil];
+//    }
+}
+
+
+- (void)showActivityIndicatorWithMessage:(NSString*)strMessage {
+    [self showActivityIndicatorWithMessage:strMessage atPosition:ActivityIndicatorPositionCenter];
+}
+
+
+- (void)showActivityIndicatorWithMessage:(NSString*)strMessage atPosition:(ActivityIndicatorPosition)pos {
+    if (!viewActivity) {
+        viewActivity = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        [viewActivity setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8]];
+        indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+        [indicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [indicatorView startAnimating];
+        if (strMessage && strMessage.length > 0) {
+            NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont fontWithName:@"HelveticaNeue-Light" size:11] forKey: NSFontAttributeName];
+            
+            // iOS 7 method to mesure height of string instead if sizeWithFont: as it is deprecated
+            float height = [strMessage boundingRectWithSize:CGSizeMake(viewActivity.frame.size.width - 6, 30) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+            UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(3, 0, viewActivity.frame.size.width - 6, height)];
+            lbl.numberOfLines = 0;
+            [lbl setBackgroundColor:[UIColor clearColor]];
+            [lbl setTextColor:[UIColor whiteColor]];
+            [lbl setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:11]];
+            [lbl setTextAlignment:NSTextAlignmentCenter];
+            [lbl setText:strMessage];
+            float a = ((viewActivity.frame.size.height - indicatorView.frame.size.height - height - 5) / 2) + (indicatorView.frame.size.height / 2);
+            indicatorView.center = CGPointMake(viewActivity.center.x, a);
+            lbl.center = CGPointMake(viewActivity.center.x, viewActivity.frame.size.height - indicatorView.frame.origin.y - (height/2));
+            [viewActivity addSubview:lbl];
+        }
+        else {
+            indicatorView.center = viewActivity.center;
+        }
+        
+        [viewActivity addSubview:indicatorView];
+        [viewActivity.layer setCornerRadius:6.0];
+        if (pos == ActivityIndicatorPositionCenter) {
+            viewActivity.center = self.window.center;
+        }
+        else if (pos == ActivityIndicatorPositionBottom) {
+            viewActivity.center = CGPointMake(self.window.center.x, self.window.bounds.size.height - (viewActivity.bounds.size.height / 2) - 55);
+        }
+        else if (pos == ActivityIndicatorPositionTop) {
+            viewActivity.center = CGPointMake(self.window.center.x, (viewActivity.bounds.size.height / 2) + 80);
+        }
+        
+        [self.window addSubview:viewActivity];
+    }
+}
+
+- (void)hideActivityIndicator {
+//    if (_shouldHideActivityIndicator) {
+        if (viewActivity) {
+            [indicatorView stopAnimating];
+            [viewActivity removeFromSuperview];
+            indicatorView = nil;
+            viewActivity = nil;
+        }
+//    }
+    
+}
+
 
 @end
+
+
+
+
+
+
+
+
+
+//==================================== Categories ======================================\\
+
+
 
 @implementation NSString (Additions)
 

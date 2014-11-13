@@ -99,7 +99,7 @@
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
@@ -146,7 +146,7 @@
     else {
         [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"C" forKey:@"value"];
     }
-   
+    [btn setSelected:!btn.isSelected];
 }
 
 - (void)btnKeyboardIconTapped:(UIButton*)btn {
@@ -360,6 +360,13 @@
     if (!isUpdate) {
         strPreviousText = textField.text;
     }
+}
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+        return NO;
+    }
+    return YES;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {

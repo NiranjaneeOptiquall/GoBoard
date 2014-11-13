@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface ForgotPasswordViewController : UIViewController
+@interface ForgotPasswordViewController : UIViewController <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *txtEmailId;
 - (IBAction)btnSubmitTapped:(id)sender;

@@ -230,7 +230,7 @@
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (_isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:@"GoBoardPro" message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
@@ -256,7 +256,7 @@
     BOOL success = YES;
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtActivity isTextFieldBlank] || [_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![self validateIncidentPersonal]) {
         return NO;

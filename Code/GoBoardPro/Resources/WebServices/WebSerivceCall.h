@@ -7,15 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Constants.h"
 
 @interface WebSerivceCall : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDelegate> {
     NSMutableData *responseData;
+    NSString *strUrl;
 }
 
 @property (copy, nonatomic) void (^complete)(NSDictionary*);
-@property (copy, nonatomic) void (^fail)(NSError*);
+@property (copy, nonatomic) void (^fail)(NSError*, NSDictionary*);
 
-- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error))failure;
+- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure;
 
 
 

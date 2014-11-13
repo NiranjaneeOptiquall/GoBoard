@@ -64,7 +64,7 @@
         aCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
     if (strKey) {
-        aCell.textLabel.text = [[aryDataSource objectAtIndex:indexPath.row] objectForKey:strKey];
+        aCell.textLabel.text = [[aryDataSource objectAtIndex:indexPath.row] valueForKey:strKey];
     }
     else {
         aCell.textLabel.text = [aryDataSource objectAtIndex:indexPath.row];

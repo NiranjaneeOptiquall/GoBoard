@@ -50,12 +50,34 @@
         return;
     }
     [_txtEmailId resignFirstResponder];
-    alert(@"Password Recovery", @"We have sent you an email with password recovery link");
-    [self.navigationController popViewControllerAnimated:YES];
+
+//    WebSerivceCall *serviceCall = [[WebSerivceCall alloc] init];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?emailAddress=%@", USER_FORGOT_PASSWORD,_txtEmailId.trimText] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FORGOT_PASSWORD] complition:^(NSDictionary *response) {
+        if ([[response objectForKey:@"Success"] boolValue]) {
+           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Password reset link has been sent to your email address." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert setTag:1];
+            [alert show];
+        }
+        else {
+            alert(@"", @"This email address is not registered with us. Please enter valid email address.");
+        }
+    } failure:^(NSError *error, NSDictionary *response) {
+        alert(@"", @"There is an unexpected error occured, please try again later.");
+    }];
+
+    
 }
+
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [self btnSubmitTapped:nil];
     return YES;
+}
+
+#pragma mark - UIAlertView Delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end

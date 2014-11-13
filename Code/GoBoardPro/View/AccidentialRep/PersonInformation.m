@@ -108,7 +108,7 @@
     BOOL success = YES;
     if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![_txtHomePhone.text isValidPhoneNumber]) {
         success = NO;
@@ -117,7 +117,7 @@
     }
     else if ([_txtEmailAddress isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![gblAppDelegate validateEmail:[_txtEmailAddress text]]) {
         success = NO;
@@ -126,7 +126,7 @@
     }
     else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank]) || [_txtActivity isTextFieldBlank] || [_txtWheather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     return success;
 }

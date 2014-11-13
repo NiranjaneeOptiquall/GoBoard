@@ -74,11 +74,11 @@
 
 - (IBAction)btnAddAnotherInjuryTapped:(id)sender {
     if ([_txtEnjuryType isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     else if ([_txtActionTaken isTextFieldBlank]) {
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
     
@@ -222,7 +222,7 @@
     BOOL success = YES;
     if ([_txtEnjuryType isTextFieldBlank] || [_txtActionTaken isTextFieldBlank] || [_txtCareProvided isTextFieldBlank]) {
         success = NO;
-        alert(@"", @"Please completed all required fields.");
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     return success;
 }
