@@ -295,7 +295,7 @@
     frame.origin.y = totalRows * frame.size.height + 50;
     dropDown.frame = frame;
     [dropDown.btnRemoveDropdown addTarget:self action:@selector(btnRemoveDropdownTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [dropDown.txtDropdownField setPlaceholder:[NSString stringWithFormat:@"Dropdown #%d", totalDropDownFields + 1]];
+    [dropDown.txtDropdownField setPlaceholder:[NSString stringWithFormat:@"Dropdown #%ld", (long)totalDropDownFields + 1]];
     [_vwDropDownList addSubview:dropDown];
 
     frame = _btnAddDropdownField.frame;
@@ -344,7 +344,7 @@
             else {
                 frame.origin.x = rightX;
             }
-            [field.txtDropdownField setPlaceholder:[NSString stringWithFormat:@"Dropdown #%d", index + 1]];
+            [field.txtDropdownField setPlaceholder:[NSString stringWithFormat:@"Dropdown #%ld", (long)index + 1]];
             frame.origin.y = totalRows * frame.size.height + 50;
             field.frame = frame;
             maxY = CGRectGetMaxY(frame);

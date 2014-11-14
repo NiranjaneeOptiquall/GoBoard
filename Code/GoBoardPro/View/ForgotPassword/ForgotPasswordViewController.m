@@ -41,11 +41,11 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     if ([[_txtEmailId text] isEqualToString:@""]) {
-        alert(@"Forgot Password", @"Please enter email id");
+        alert(@"Forgot Password", @"Please enter an email address");
         return;
     }
     else if (![gblAppDelegate validateEmail:[_txtEmailId text]]) {
-        alert(@"Forgot Password", @"Please enter valid email id");
+        alert(@"Forgot Password", @"Please enter a valid email address");
         [_txtEmailId becomeFirstResponder];
         return;
     }
@@ -53,16 +53,18 @@
 
 //    WebSerivceCall *serviceCall = [[WebSerivceCall alloc] init];
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?emailAddress=%@", USER_FORGOT_PASSWORD,_txtEmailId.trimText] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FORGOT_PASSWORD] complition:^(NSDictionary *response) {
-        if ([[response objectForKey:@"Success"] boolValue]) {
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Password reset link has been sent to your email address." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [alert setTag:1];
             [alert show];
+    } failure:^(NSError *error, NSDictionary *response) {
+        if (response) {
+            
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }
         else {
-            alert(@"", @"This email address is not registered with us. Please enter valid email address.");
+            alert(@"", @"There is an unexpected error occured, please try again later.");
         }
-    } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", @"There is an unexpected error occured, please try again later.");
+        
     }];
 
     

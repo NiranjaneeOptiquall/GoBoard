@@ -7,6 +7,7 @@
 //
 
 #import "SOPViewController.h"
+#import "SOPDetailViewController.h"
 #import "ERPHeaderView.h"
 
 @interface SOPViewController ()
@@ -17,7 +18,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getAllEmergencyList];
+    NSLog(@"%@", _mutArrCategoryHierarchy);
+    if (!_dictSOPCategory) {
+        [_btnSOPList setHidden:YES];
+        [_lblTitle setText:@"Standard Operating Procedure"];
+        [self getSOPCategories];
+    }
+    else {
+        [_lblTitle setText:[_dictSOPCategory objectForKey:@"Title"]];
+        mutArrSOPList = [_dictSOPCategory objectForKey:@"Categories"];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,8 +43,12 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"SOPDetail"]) {
+        SOPDetailViewController *aDetail = (SOPDetailViewController*)segue.destinationViewController;
+        aDetail.dictSopCategry = sender;
+        aDetail.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+        [aDetail.mutArrCategoryHierarchy addObject:[sender objectForKey:@"Title"]];
+    }
 }
 
 
@@ -53,52 +67,61 @@
     
 }
 
+- (IBAction)btnBackTapped:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+    [_mutArrCategoryHierarchy removeLastObject];
+}
+
+- (IBAction)btnSOPListTapped:(id)sender {
+    [_mutArrCategoryHierarchy removeAllObjects];
+    NSArray *vcs = [self.navigationController viewControllers];
+    for (int i = 0; i < [vcs count]; i++) {
+        if ([vcs[i] isKindOfClass:[SOPViewController class]]) {
+            [self.navigationController popToViewController:vcs[i] animated:YES];
+            break;
+        }
+    }
+}
+
 #pragma mark - Methods
 
-- (void)getAllEmergencyList {
-    mutArrSOPList = [[NSMutableArray alloc] init];
-    for (int i = 0; i < 5; i++) {
-        NSMutableArray *aTemp = [NSMutableArray array];
-        for (int k = 0; k < 4; k++) {
-            [aTemp addObject:[NSString stringWithFormat:@"Sub SOP Title %d-%d", i, k]];
-        }
-        NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"SOP Title", @"title", aTemp, @"sub", [NSNumber numberWithBool:NO], @"isExpanded", nil];
-        [mutArrSOPList addObject:aDict];
-    }
+- (void)getSOPCategories {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
+        _dictSOPCategory = response;
+        mutArrSOPList = [response objectForKey:@"SopCategories"];
+        [_tblSOPList reloadData];
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
 }
 
 #pragma mark - UITableView Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [mutArrSOPList count];
+    return 1;//[mutArrSOPList count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    BOOL isExpanded = [[[mutArrSOPList objectAtIndex:section] objectForKey:@"isExpanded"] boolValue];
-    if (isExpanded) {
-        return [[[mutArrSOPList objectAtIndex:section] objectForKey:@"sub"] count];
-    }
-    return 0;
+    return [mutArrSOPList count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    NSInteger currentIndex = indexPath.section + indexPath.row + 1;
-    for (int i = 0; i < indexPath.section; i++) {
-        NSMutableDictionary *aDict = [mutArrSOPList objectAtIndex:i];
-        BOOL isExpand = [[aDict objectForKey:@"isExpanded"] boolValue];
-        if (isExpand) {
-            currentIndex += [[aDict objectForKey:@"sub"] count];
-        }
-    }
-    if (currentIndex == 0 || currentIndex % 2 == 0) {
+    if (indexPath.row == 0 || indexPath.row % 2 == 0) {
         [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
+    NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-    [aLbl setText:[[[mutArrSOPList objectAtIndex:indexPath.section] objectForKey:@"sub"] objectAtIndex:indexPath.row]];
+    [aLbl setText:[aDict objectForKey:@"Title"]];
+    if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
+        [aCell setAccessoryType:UITableViewCellAccessoryNone];
+    }
+    else {
+        [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    }
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
@@ -106,34 +129,21 @@
     return aCell;
 }
 
-- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    NSInteger currentIndex = section;
-    for (int i = 0; i < section; i++) {
-        NSMutableDictionary *aDict = [mutArrSOPList objectAtIndex:i];
-        BOOL isExpand = [[aDict objectForKey:@"isExpanded"] boolValue];
-        if (isExpand) {
-            currentIndex += [[aDict objectForKey:@"sub"] count];
-        }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
+    if (!_mutArrCategoryHierarchy) {
+        _mutArrCategoryHierarchy = [NSMutableArray array];
     }
-    
-    ERPHeaderView *aHeaderView = [[[NSBundle mainBundle] loadNibNamed:@"ERPHeaderView" owner:self options:nil] firstObject];
-    if (currentIndex == 0 || currentIndex % 2 == 0) {
-        [aHeaderView setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
+    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] ) {
+        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
     }
     else {
-        [aHeaderView setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
+        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+        sopView.dictSOPCategory = aDict;
+        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+        [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
+        [self.navigationController pushViewController:sopView animated:YES];
     }
-    [aHeaderView.lblSectionHeaser setText:[[mutArrSOPList objectAtIndex:section] objectForKey:@"title"]];
-    [aHeaderView.btnSection setTag:section];
-    [aHeaderView.btnSection addTarget:self action:@selector(btnHeaderTapped:) forControlEvents:UIControlEventTouchUpInside];
-    BOOL isExpanded = [[[mutArrSOPList objectAtIndex:section] objectForKey:@"isExpanded"] boolValue];
-    if (isExpanded) {
-        [aHeaderView.imvExpandCollapse setImage:[UIImage imageNamed:@"collaps_icon@2x.png"]];
-    }
-    else {
-        [aHeaderView.imvExpandCollapse setImage:[UIImage imageNamed:@"expand_icon@2x.png"]];
-    }
-    return aHeaderView;
 }
 
 @end

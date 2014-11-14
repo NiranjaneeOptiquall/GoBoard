@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "Reachability.h"
+#import "Crittercism.h"
 @interface AppDelegate () 
 
 @end
@@ -19,7 +20,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     gblAppDelegate = self;
-   
+    
+    [Crittercism enableWithAppID:@"54658465466eda0236000003"];
+    //    //sync Breadcrumb Mode
+    [Crittercism setAsyncBreadcrumbMode:YES];
     return YES;
 }
 

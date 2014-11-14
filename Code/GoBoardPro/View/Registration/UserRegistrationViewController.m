@@ -105,7 +105,7 @@
     NSMutableArray *aMutArrCertificate = [NSMutableArray array];
     for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
         if ([certificate isKindOfClass:[AddCertificateView class]]) {
-            NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
+//            NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
             [aMutArrCertificate addObject:@{@"Name": certificate.txtCertificateName.trimText, @"ExpirationDate":certificate.txtExpDate.trimText, @"Photo":@""}];
             //, @"Photo":[aData base64EncodedStringWithOptions:0]
         }

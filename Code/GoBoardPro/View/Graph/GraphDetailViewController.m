@@ -189,7 +189,7 @@
             NSDictionary *aDict = [mutArrDataSource objectAtIndex:i];
             [(UILabel *)[lbl objectAtIndex:i] setText:[[aDict objectForKey:@"xValue"] objectAtIndex:indexPath.row]];
         }
-        [aLblTotalValue setText:[NSString stringWithFormat:@"%d", [aLblFistValue.text integerValue] + [aLblSecondValue.text integerValue] + [aLblThirdValue.text integerValue]]];
+        [aLblTotalValue setText:[NSString stringWithFormat:@"%ld", (long)([aLblFistValue.text integerValue] + [aLblSecondValue.text integerValue] + [aLblThirdValue.text integerValue])]];
     }
    
     return aCell;

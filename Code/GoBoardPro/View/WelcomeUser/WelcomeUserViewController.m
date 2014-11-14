@@ -16,11 +16,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+//    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
     [_txtLocation setEnabled:NO];
     [_txtPosition setEnabled:NO];
     [self getUserFacilities];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -171,8 +176,14 @@
     if ([sender isEqual:_txtFacility]) {
         [_txtLocation setEnabled:YES];
         [_txtPosition setEnabled:YES];
-        selectedFacility = value;
-        [self fetchPositionAndLocation];
+        if (![selectedFacility isEqual:value]) {
+            selectedFacility = value;
+            selectedPosition = nil;
+            selectedLocation = nil;
+            [_txtLocation setText:@""];
+            [_txtPosition setText:@""];
+            [self fetchPositionAndLocation];
+        }
     }
     else if ([sender isEqual:_txtPosition]) {
         selectedPosition = value;

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		330D66E81A15BC2000C3C656 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 330D66E61A15BC2000C3C656 /* dsym_upload.sh */; };
+		330D66E91A15BC2000C3C656 /* libCrittercism_v5_0_4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */; };
 		33106C5519DD5E1C005F801A /* IncidentActionTaken.m in Sources */ = {isa = PBXBuildFile; fileRef = 33106C5419DD5E1C005F801A /* IncidentActionTaken.m */; };
 		33106C5719DD5E31005F801A /* IncidentActionTaken.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33106C5619DD5E31005F801A /* IncidentActionTaken.xib */; };
 		33114CF81A0109FB00DFB37D /* AccidentFirstSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 33114CF71A0109FB00DFB37D /* AccidentFirstSection.m */; };
@@ -243,6 +245,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		330D66E31A15BC2000C3C656 /* CRFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRFilter.h; sourceTree = "<group>"; };
+		330D66E41A15BC2000C3C656 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
+		330D66E51A15BC2000C3C656 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
+		330D66E61A15BC2000C3C656 /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
+		330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v5_0_4.a; sourceTree = "<group>"; };
 		33106C5319DD5E1C005F801A /* IncidentActionTaken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentActionTaken.h; sourceTree = "<group>"; };
 		33106C5419DD5E1C005F801A /* IncidentActionTaken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncidentActionTaken.m; sourceTree = "<group>"; };
 		33106C5619DD5E31005F801A /* IncidentActionTaken.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncidentActionTaken.xib; sourceTree = "<group>"; };
@@ -568,6 +575,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				333780A419E6BACF00362F82 /* CoreGraphics.framework in Frameworks */,
+				330D66E91A15BC2000C3C656 /* libCrittercism_v5_0_4.a in Frameworks */,
 				33D5A59A19E3F27200344278 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -582,6 +590,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		330D66E21A15BC2000C3C656 /* CrittercismSDK */ = {
+			isa = PBXGroup;
+			children = (
+				330D66E31A15BC2000C3C656 /* CRFilter.h */,
+				330D66E41A15BC2000C3C656 /* Crittercism.h */,
+				330D66E51A15BC2000C3C656 /* CrittercismDelegate.h */,
+				330D66E61A15BC2000C3C656 /* dsym_upload.sh */,
+				330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */,
+			);
+			path = CrittercismSDK;
+			sourceTree = "<group>";
+		};
 		332B60CF1A146CB700B7C7EF /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -901,6 +921,7 @@
 		3397CACC19D0347700788153 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				330D66E21A15BC2000C3C656 /* CrittercismSDK */,
 				332B60EC1A146D9C00B7C7EF /* Reachability */,
 				332B60CF1A146CB700B7C7EF /* AFNetworking */,
 				33FE66671A10D6EA0058BFB6 /* WebServices */,
@@ -1607,6 +1628,7 @@
 				33DBA21519E559E80041A932 /* Icon-Spotlight-40.png in Resources */,
 				3337809B19E6B6EA00362F82 /* lines1.png in Resources */,
 				33CFBBF519D2D21300D86E68 /* tasks@2x.png in Resources */,
+				330D66E81A15BC2000C3C656 /* dsym_upload.sh in Resources */,
 				334585FE19D98D13000AB7E1 /* BodyInjuryBodyPartCell.xib in Resources */,
 				33B6368119D9250600875A1D /* increase_icon@2x.png in Resources */,
 				33D6309619D3F5F00090BE80 /* checked_red@2x.png in Resources */,
@@ -1777,7 +1799,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1821,7 +1843,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: DAVID TSCHANTZ (H2E8ZT56ZV)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1854,6 +1876,10 @@
 				INFOPLIST_FILE = GoBoardPro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7eeb24c1-361a-40be-89e9-5c748ec7b0e5";
 			};
@@ -1872,6 +1898,10 @@
 				INFOPLIST_FILE = GoBoardPro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7eeb24c1-361a-40be-89e9-5c748ec7b0e5";
 			};

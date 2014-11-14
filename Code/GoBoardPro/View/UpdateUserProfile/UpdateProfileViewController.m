@@ -18,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self getUserInfo];
+    [_btnLikeToRcvTextMSG.titleLabel setNumberOfLines:2];
+    [_btnLikeToRcvTextMSG.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     // Do any additional setup after loading the view.
 }
 
@@ -48,7 +50,7 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtFitstName isTextFieldBlank] || [_txtMiddleName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
+    if ([_txtFitstName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
@@ -57,19 +59,11 @@
         alert(@"", @"Please enter valid Email address");
         return;
     }
-    else if ([_txtPhone isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        return;
-    }
-    else if (![_txtPhone.text isValidPhoneNumber]) {
+    else if (![_txtPhone isTextFieldBlank] && ![_txtPhone.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Phone Number");
         return;
     }
-    else if ([_txtMobile isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        return;
-    }
-    else if (![_txtMobile.text isValidPhoneNumber]) {
+    else if (![_txtMobile isTextFieldBlank] && ![_txtMobile.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Mobile Number");
         return;
     }
@@ -94,9 +88,11 @@
             //, @"Photo":[aData base64EncodedStringWithOptions:0]
         }
     }
-    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate};
+    NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
+    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG};
     [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
         if ([response objectForKey:@"Success"]) {
+            [self updateUser];
             [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         }
         else {
@@ -106,6 +102,15 @@
         alert(@"", @"Unable to update profile at this time, Please try again later");
     }];
     
+}
+
+- (void)updateUser {
+    [[User currentUser] setFirstName:_txtFitstName.text];
+    [[User currentUser] setMiddleInitials:_txtMiddleName.text];
+    [[User currentUser] setLastName:_txtLastName.text];
+    [[User currentUser] setEmail:_txtEmail.text];
+    [[User currentUser] setPhone:_txtPhone.text];
+    [[User currentUser] setMobile:_txtMobile.text];
 }
 
 - (IBAction)btnBackTapped:(id)sender {
@@ -119,18 +124,35 @@
     }
 }
 
+- (IBAction)btnLikeToRcvTextMSGTapped:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
+}
+
 #pragma mark - Methods
 
 - (void)getUserInfo {
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", USER_SERVICE, [[User currentUser]userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         if ([[response objectForKey:@"Success"] boolValue]) {
-            if([response objectForKey:@"FirstName"])_txtFitstName.text = [response objectForKey:@"FirstName"];
-            if([response objectForKey:@"MiddleInitial"])_txtMiddleName.text = [response objectForKey:@"MiddleInitial"];
-            if([response objectForKey:@"LastName"])_txtLastName.text = [response objectForKey:@"LastName"];
-            if([response objectForKey:@"Email"])_txtEmail.text = [response objectForKey:@"Email"];
-            if([response objectForKey:@"Phone"])_txtPhone.text = [response objectForKey:@"Phone"];
-            if([response objectForKey:@"Mobile"])_txtMobile.text = [response objectForKey:@"Mobile"];
-            if ([response objectForKey:@"Certifications"]) {
+            if([response objectForKey:@"FirstName"] && ![[response objectForKey:@"FirstName"]isKindOfClass:[NSNull class]]) {
+                _txtFitstName.text = [response objectForKey:@"FirstName"];
+            }
+            if([response objectForKey:@"MiddleInitial"] && ![[response objectForKey:@"MiddleInitial"]isKindOfClass:[NSNull class]]) {
+                _txtMiddleName.text = [response objectForKey:@"MiddleInitial"];
+            }
+            if([response objectForKey:@"LastName"] && ![[response objectForKey:@"LastName"]isKindOfClass:[NSNull class]]) {
+                _txtLastName.text = [response objectForKey:@"LastName"];
+            }
+            if([response objectForKey:@"Email"] && ![[response objectForKey:@"Email"]isKindOfClass:[NSNull class]]) {
+                _txtEmail.text = [response objectForKey:@"Email"];
+            }
+            if([response objectForKey:@"Phone"] && ![[response objectForKey:@"Phone"]isKindOfClass:[NSNull class]]) {
+                _txtPhone.text = [response objectForKey:@"Phone"];
+            }
+            if([response objectForKey:@"Mobile"] && ![[response objectForKey:@"Mobile"]isKindOfClass:[NSNull class]]) {
+                _txtMobile.text = [response objectForKey:@"Mobile"];
+            }
+            [_btnLikeToRcvTextMSG setSelected:[[response objectForKey:@"ReceiveTextMessages"] boolValue]];
+            if ([response objectForKey:@"Certifications"] && ![[response objectForKey:@"Certifications"]isKindOfClass:[NSNull class]]) {
                 for (NSDictionary *aDict in [response objectForKey:@"Certifications"]) {
                     AddCertificateView *certificate = [self addCertificationView];
                     certificate.txtCertificateName.text = [aDict objectForKey:@"Name"];
@@ -143,6 +165,7 @@
 //                    certificate.imgCertificate = 
                 }
             }
+            [self updateUser];
         }
     } failure:^(NSError *error, NSDictionary *response) {
         

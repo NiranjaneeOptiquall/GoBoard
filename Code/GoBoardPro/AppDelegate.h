@@ -38,6 +38,8 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 - (NSString *)appName;
 - (BOOL)isNetworkReachable;
 - (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure;
+- (void)showActivityIndicator;
+- (void)hideActivityIndicator;
 @end
 
 

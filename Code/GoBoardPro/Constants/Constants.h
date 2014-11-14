@@ -55,12 +55,14 @@ typedef enum : NSUInteger {
 
 
 #define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
-#define SERVICE_HTTP_METHOD         @{@"UserAuthentication":@"GET", @"UserForgotPassword" : @"POST", @"UserFacility":@"GET"}
+#define SERVICE_HTTP_METHOD         @{@"UserAuthentication":@"GET", @"UserForgotPassword" : @"POST", @"UserFacility":@"GET", @"SopCategory":@"GET", @"SopDetail":@"GET"}
 
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
 #define USER_FORGOT_PASSWORD        @"UserForgotPassword"
 #define USER_FACILITY               @"UserFacility"
+#define SOP_CATEGORY                @"SopCategory"
+#define SOP_DETAIL                  @"SopDetail"
 
 
 

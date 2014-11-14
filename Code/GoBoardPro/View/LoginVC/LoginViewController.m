@@ -19,6 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    _txtUserId.text = @"kapil";
+//    _txtPassword.text = @"Goboardpro1";
     [self initialUIConfig];
 }
 
