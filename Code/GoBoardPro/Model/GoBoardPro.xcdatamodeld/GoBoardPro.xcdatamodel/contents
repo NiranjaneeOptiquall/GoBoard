@@ -53,25 +53,36 @@
         <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ERPHeader" representedClassName="ERPHeader" syncable="YES">
-        <attribute name="erpHeaderID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+    <entity name="ERPCategory" representedClassName="ERPCategory" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="erpTitles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPTitle" inverseName="erpHeader" inverseEntity="ERPTitle" syncable="YES"/>
+        <relationship name="erpTitles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPSubcategory" inverseName="erpHeader" inverseEntity="ERPSubcategory" syncable="YES"/>
     </entity>
-    <entity name="ERPTask" syncable="YES">
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="task" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="taskID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <relationship name="erpTitle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPTitle" inverseName="erpTasks" inverseEntity="ERPTitle" syncable="YES"/>
+    <entity name="ERPHistory" representedClassName="ERPHistory" syncable="YES">
+        <attribute name="endDateTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="erpSubcategoryId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startDateTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="taskList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPHistoryTask" inverseName="erpHistory" inverseEntity="ERPHistoryTask" syncable="YES"/>
     </entity>
-    <entity name="ERPTitle" representedClassName="ERPTitle" syncable="YES">
-        <attribute name="erpTitleID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+    <entity name="ERPHistoryTask" representedClassName="ERPHistoryTask" syncable="YES">
+        <attribute name="completed" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="erpTaskId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="erpHistory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPHistory" inverseName="taskList" inverseEntity="ERPHistory" syncable="YES"/>
+    </entity>
+    <entity name="ERPSubcategory" representedClassName="ERPSubcategory" syncable="YES">
+        <attribute name="subCateId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="erpHeader" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPHeader" inverseName="erpTitles" inverseEntity="ERPHeader" syncable="YES"/>
+        <relationship name="erpHeader" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPCategory" inverseName="erpTitles" inverseEntity="ERPCategory" syncable="YES"/>
         <relationship name="erpTasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPTask" inverseName="erpTitle" inverseEntity="ERPTask" syncable="YES"/>
+    </entity>
+    <entity name="ERPTask" representedClassName="ERPTask" syncable="YES">
+        <attribute name="attachmentLink" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="task" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="erpTitle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPSubcategory" inverseName="erpTasks" inverseEntity="ERPSubcategory" syncable="YES"/>
     </entity>
     <entity name="Facility" syncable="YES">
         <attribute name="accountID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -87,12 +98,6 @@
         <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="FacilityLocation" syncable="YES">
-        <attribute name="clientDefaultLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-    </entity>
-    <entity name="FacilityPosition" syncable="YES">
         <attribute name="clientDefaultLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -187,20 +192,21 @@
         <element name="CareProvidedType" positionX="-252" positionY="392" width="128" height="103"/>
         <element name="ConditionTypes" positionX="-83" positionY="-18" width="128" height="103"/>
         <element name="Country" positionX="-83" positionY="117" width="128" height="103"/>
-        <element name="EmergencyPersonnel" positionX="-83" positionY="252" width="128" height="178"/>
+        <element name="EmergencyPersonnel" positionX="-81" positionY="243" width="128" height="178"/>
         <element name="EquipmentTypes" positionX="88" positionY="-18" width="128" height="103"/>
-        <element name="ERPHeader" positionX="432" positionY="-18" width="128" height="118"/>
-        <element name="ERPTask" positionX="429" positionY="306" width="128" height="103"/>
-        <element name="ERPTitle" positionX="430" positionY="135" width="128" height="118"/>
+        <element name="ERPCategory" positionX="378" positionY="-558" width="128" height="88"/>
+        <element name="ERPTask" positionX="375" positionY="-234" width="128" height="103"/>
+        <element name="ERPSubcategory" positionX="376" positionY="-405" width="128" height="103"/>
         <element name="Facility" positionX="-84" positionY="453" width="128" height="208"/>
         <element name="FacilityLocation" positionX="88" positionY="117" width="128" height="103"/>
-        <element name="FacilityPosition" positionX="90" positionY="252" width="128" height="103"/>
         <element name="GenderTypes" positionX="261" positionY="116" width="128" height="103"/>
         <element name="Person" positionX="601" positionY="-18" width="128" height="478"/>
         <element name="Report" positionX="601" positionY="486" width="128" height="343"/>
         <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
-        <element name="UserFacility" positionX="142" positionY="369" width="128" height="103"/>
-        <element name="UserPosition" positionX="214" positionY="515" width="128" height="88"/>
-        <element name="UserLocation" positionX="61" positionY="513" width="128" height="88"/>
+        <element name="UserFacility" positionX="151" positionY="-558" width="128" height="103"/>
+        <element name="UserLocation" positionX="70" positionY="-414" width="128" height="88"/>
+        <element name="UserPosition" positionX="223" positionY="-412" width="128" height="88"/>
+        <element name="ERPHistory" positionX="540" positionY="-576" width="128" height="148"/>
+        <element name="ERPHistoryTask" positionX="540" positionY="-396" width="128" height="88"/>
     </elements>
 </model>

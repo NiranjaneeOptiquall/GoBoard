@@ -24,6 +24,7 @@
     [self initialUIConfig];
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -75,35 +76,48 @@
 }
 
 - (IBAction)btnSignInTapped:(id)sender {
-//    if ([_txtUserId isTextFieldBlank]) {
-//        alert(@"Login", @"Please enter user id");
-//        return;
-//    }
-//    else if ([_txtPassword isTextFieldBlank]) {
-//        alert(@"Login", @"Please enter password");
-//        return;
-//    }
-//    else if (![_txtPassword.text isValidPassword]) {
-//        alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
-//        return;
-//    }
-//    WebSerivceCall *serviceCall = [[WebSerivceCall alloc] init];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    if ([_txtUserId isTextFieldBlank]) {
+        alert(@"Login", @"Please enter user id");
+        return;
+    }
+    else if ([_txtPassword isTextFieldBlank]) {
+        alert(@"Login", @"Please enter password");
+        return;
+    }
+    else if (![_txtPassword.text isValidPassword]) {
+        alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
+        return;
+    }
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
-        if ([[response objectForKey:@"Success"] boolValue]) {
             User *currentUser = [User currentUser];
             currentUser.firstName = [response objectForKey:@"FirstName"];
             currentUser.lastName = [response objectForKey:@"LastName"];
-            currentUser.userId = [response objectForKey:@"Id"];
+            currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
             currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
+            NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+            if (prevUserId) {
+                if (![prevUserId isEqualToString:currentUser.userId]) {
+                    [self resetLocalDatabaseForNewUser];
+                }
+            }
+            [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
 //            if (currentUser.isAdmin) {
 //                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
 //            }
 //            else {
                 [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
 //            }
-        }
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", MSG_LOGIN_FAILURE);
+        if (response) {
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+        }
+        else {
+            alert(@"", MSG_LOGIN_FAILURE);
+        }
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
 }
 
@@ -126,6 +140,22 @@
 }
 
 #pragma mark - Methods
+
+- (void)resetLocalDatabaseForNewUser {
+    NSError * error;
+    NSURL * storeURL = [[gblAppDelegate.managedObjectContext persistentStoreCoordinator] URLForPersistentStore:[[[gblAppDelegate.managedObjectContext persistentStoreCoordinator] persistentStores] lastObject]];
+    [gblAppDelegate.managedObjectContext lock];
+    [gblAppDelegate.managedObjectContext reset];//to drop pending changes
+    //delete the store from the current managedObjectContext
+    if ([[gblAppDelegate.managedObjectContext persistentStoreCoordinator] removePersistentStore: [[[gblAppDelegate.managedObjectContext persistentStoreCoordinator] persistentStores] lastObject] error:&error])
+    {
+        // remove the file containing the data
+        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
+        //recreate the store like in the  appDelegate method
+        [[[gblAppDelegate managedObjectContext] persistentStoreCoordinator] addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options: @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES} error:&error];
+    }    
+    [gblAppDelegate.managedObjectContext unlock];
+}
 
 - (void)initialUIConfig {
     [_btnGuestSignIn setSelected:NO];

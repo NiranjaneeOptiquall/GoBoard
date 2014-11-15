@@ -17,8 +17,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getAllActionListForEmergency];
-    [_lblERPTitle setText:[NSString stringWithFormat:@"%@ - %@", [_dictCategory objectForKey:@"title"], [[_dictCategory objectForKey:@"sub"] objectAtIndex:_selectedIndex]]];
+//    [self getAllActionListForEmergency];
+    [_lblERPTitle setText:[NSString stringWithFormat:@"%@ - %@", _erpSubcategory.erpHeader.title, _erpSubcategory.title]];
     [_txtTimeEnd setEnabled:NO];
 }
 
@@ -36,9 +36,9 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"SOPLinkDetail"]) {
+    if ([[segue identifier] isEqualToString:@"ERPLinkDetail"]) {
         WebViewController *webVC = (WebViewController *)[segue destinationViewController];
-        webVC.strRequestURL = @"http://www.google.com";
+        webVC.strRequestURL = [[[_erpSubcategory.erpTasks allObjects] objectAtIndex:selectedRow] attachmentLink];
     }
 }
 
@@ -54,15 +54,42 @@
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
-    NSString *key = @"isChecked";
+    NSString *key = @"isCompleted";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == 1", key];
-    NSArray *a = [mutArrActionList filteredArrayUsingPredicate:predicate];
+    NSArray *a = [[_erpSubcategory.erpTasks allObjects] filteredArrayUsingPredicate:predicate];
     if ([a count] == 0) {
         alert(@"", @"Please select atleast a step you followed.");
         return;
     }
-    alert(@"", @"Your response has been saved.");
-    [self.navigationController popViewControllerAnimated:YES];
+//    alert(@"", @"Your response has been saved.");
+    NSMutableArray *aryTask = [NSMutableArray array];
+    for (ERPTask *task in _erpSubcategory.erpTasks) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        [dict setObject:task.taskID forKey:@"ErpTaskId"];
+        if (task.isCompleted) {
+            [dict setObject:@"true" forKey:@"Completed"];
+        }
+        else {
+            [dict setObject:@"false" forKey:@"Completed"];
+        }
+        [aryTask addObject:dict];
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    NSString *aStrDate = [formatter stringFromDate:[NSDate date]];
+    NSString *aStartDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeStart.text];
+    NSString *aEndDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeEnd.text];
+    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"LocationId":[[[User currentUser] selectedLocation] value], @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
+    if (gblAppDelegate.isNetworkReachable) {
+        [gblAppDelegate callWebService:ERP_HISTORY parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_HISTORY] complition:^(NSDictionary *response) {
+            [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        } failure:^(NSError *error, NSDictionary *response) {
+            [self saveInLocal:aDict];
+        }];
+    }
+    else {
+        [self saveInLocal:aDict];
+    }
 }
 
 - (IBAction)btnTimeStartTapped:(id)sender {
@@ -102,7 +129,7 @@
         cell = (UITableViewCell*)[cell superview];
     }
     NSIndexPath *indexPath = [_tblActionsTaken indexPathForCell:cell];
-    [[mutArrActionList objectAtIndex:indexPath.row] setObject:[NSNumber numberWithBool:[btn isSelected]] forKey:@"isChecked"];
+    [[[_erpSubcategory.erpTasks allObjects] objectAtIndex:indexPath.row]setIsCompleted:btn.isSelected];
 }
 
 - (void)btnViewLinkTapped:(UIButton *)btn {
@@ -113,6 +140,31 @@
     NSIndexPath *indexPath = [_tblActionsTaken indexPathForCell:cell];
     selectedRow = indexPath.row;
     [self performSegueWithIdentifier:@"ERPLinkDetail" sender:nil];
+}
+
+#pragma mark - Methods
+
+- (void)saveInLocal:(NSDictionary*)dict {
+    ERPHistory *aErpHistory = [NSEntityDescription insertNewObjectForEntityForName:@"ERPHistory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    aErpHistory.userId = [dict objectForKey:@"UserId"];
+    aErpHistory.facilityId = [dict objectForKey:@"FacilityId"];
+    aErpHistory.locationId = [dict objectForKey:@"LocationId"];
+    aErpHistory.erpSubcategoryId = [dict objectForKey:@"ErpSubcategoryId"];
+    aErpHistory.startDateTime = [dict objectForKey:@"StartDateTime"];
+    aErpHistory.endDateTime = [dict objectForKey:@"EndDateTime"];
+    NSMutableSet *taskList = [NSMutableSet set];
+    for (NSDictionary *aDictTask in [dict objectForKey:@"Tasks"]) {
+        ERPHistoryTask *aTask = [NSEntityDescription insertNewObjectForEntityForName:@"ERPHistoryTask" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aTask.completed = [aDictTask objectForKey:@"Completed"];
+        aTask.erpTaskId = [aDictTask objectForKey:@"ErpTaskId"];
+        aTask.erpHistory = aErpHistory;
+        [taskList addObject:aTask];
+    }
+    aErpHistory.taskList = taskList;
+    [gblAppDelegate.managedObjectContext insertObject:aErpHistory];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
@@ -129,26 +181,11 @@
 
 #pragma mark - Methods
 
-- (void)getAllActionListForEmergency {
-    mutArrActionList = [[NSMutableArray alloc] init];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell..", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action with atleast two line in cell to display larger cell.This is a simple action with atleast two line in cell to display larger cell.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-    [mutArrActionList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a simple action.", @"action", [NSNumber numberWithBool:NO], @"isChecked", nil]];
-}
 
 #pragma mark - UITableView Datasource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [mutArrActionList count];
+    return [_erpSubcategory.erpTasks count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -160,13 +197,20 @@
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
     UILabel *aLbl = (UILabel*)[aCell viewWithTag:2];
-    [aLbl setText:[[mutArrActionList objectAtIndex:indexPath.row] objectForKey:@"action"]];
+    ERPTask *task = [[_erpSubcategory.erpTasks allObjects] objectAtIndex:indexPath.row];
+    [aLbl setText:task.task];
     [aLbl sizeToFit];
-    BOOL isChecked = [[[mutArrActionList objectAtIndex:indexPath.row] objectForKey:@"isChecked"] boolValue];
+    BOOL isChecked = [task isCompleted];
     UIButton *btn = (UIButton*)[aCell viewWithTag:3];
     [btn setSelected:isChecked];
     [btn addTarget:self action:@selector(btnCheckMarkTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIButton *linkBtn = (UIButton*)[aCell viewWithTag:5];
+    if ([task.attachmentLink length] > 0) {
+        [linkBtn setHidden:NO];
+    }
+    else {
+        [linkBtn setHidden:YES];
+    }
     [linkBtn addTarget:self action:@selector(btnViewLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
@@ -177,7 +221,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     UILabel *aLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 632, 21)];
-    NSString *aStr = [[mutArrActionList objectAtIndex:indexPath.row] objectForKey:@"action"];
+    NSString *aStr = [(ERPTask *)[[_erpSubcategory.erpTasks allObjects] objectAtIndex:indexPath.row] task];
     [aLbl setText:aStr];
     [aLbl setFont:[UIFont systemFontOfSize:17.0]];
     [aLbl setNumberOfLines:0];
@@ -202,7 +246,6 @@
     if (buttonIndex == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    
 }
 
 @end

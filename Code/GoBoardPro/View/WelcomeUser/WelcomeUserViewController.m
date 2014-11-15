@@ -54,6 +54,9 @@
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
+    [[User currentUser] setSelectedFacility:selectedFacility];
+    [[User currentUser] setSelectedLocation:selectedLocation];
+    [[User currentUser] setSelectedPosition:selectedPosition];
     [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];
 }
 
@@ -67,42 +70,42 @@
         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",USER_FACILITY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FACILITY] complition:^(NSDictionary *response) {
             NSLog(@"%@", response);
             [self deleteAllFacilities];
-            if ([[response objectForKey:@"Success"] boolValue]) {
-                NSArray *aryFacility = [response objectForKey:@"Facilities"];
+        
+            NSArray *aryFacility = [response objectForKey:@"Facilities"];
 
-                for (NSDictionary *aDict in aryFacility) {
-                    UserFacility *facility = [NSEntityDescription insertNewObjectForEntityForName:@"UserFacility" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                    facility.name = [aDict objectForKey:@"Name"];
-                    facility.value = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
-                    NSMutableSet *locations = [NSMutableSet set];
-                    for (NSDictionary *aDictLoc in [aDict objectForKey:@"Locations"]) {
-                        UserLocation *location = [NSEntityDescription insertNewObjectForEntityForName:@"UserLocation" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                        location.name = [aDictLoc objectForKey:@"Name"];
-                        location.value = [NSString stringWithFormat:@"%ld", (long)[[aDictLoc objectForKey:@"Id"] integerValue]];
-                        location.facility = facility;
-                        [locations addObject:location];
-                    }
-                    facility.locations = locations;
-                    
-                    NSMutableSet *positions = [NSMutableSet set];
-                    for (NSDictionary *aDictPos in [aDict objectForKey:@"Positions"]) {
-                        UserPosition *position = [NSEntityDescription insertNewObjectForEntityForName:@"UserPosition" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                        position.name = [aDictPos objectForKey:@"Name"];
-                        position.value = [NSString stringWithFormat:@"%ld", (long)[[aDictPos objectForKey:@"Id"] integerValue]];
-                        position.facility = facility;
-                        [positions addObject:position];
-                    }
-                    facility.positions = positions;
-                    [gblAppDelegate.managedObjectContext insertObject:facility];
+            for (NSDictionary *aDict in aryFacility) {
+                UserFacility *facility = [NSEntityDescription insertNewObjectForEntityForName:@"UserFacility" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                facility.name = [aDict objectForKey:@"Name"];
+                facility.value = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
+                NSMutableSet *locations = [NSMutableSet set];
+                for (NSDictionary *aDictLoc in [aDict objectForKey:@"Locations"]) {
+                    UserLocation *location = [NSEntityDescription insertNewObjectForEntityForName:@"UserLocation" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    location.name = [aDictLoc objectForKey:@"Name"];
+                    location.value = [NSString stringWithFormat:@"%ld", (long)[[aDictLoc objectForKey:@"Id"] integerValue]];
+                    location.facility = facility;
+                    [locations addObject:location];
                 }
-                NSError *error = nil;
-                if (![gblAppDelegate.managedObjectContext save:&error]) {
-                    
+                facility.locations = locations;
+                
+                NSMutableSet *positions = [NSMutableSet set];
+                for (NSDictionary *aDictPos in [aDict objectForKey:@"Positions"]) {
+                    UserPosition *position = [NSEntityDescription insertNewObjectForEntityForName:@"UserPosition" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    position.name = [aDictPos objectForKey:@"Name"];
+                    position.value = [NSString stringWithFormat:@"%ld", (long)[[aDictPos objectForKey:@"Id"] integerValue]];
+                    position.facility = facility;
+                    [positions addObject:position];
                 }
-                else {
-                    [self fetchFacilities];
-                }
+                facility.positions = positions;
+                [gblAppDelegate.managedObjectContext insertObject:facility];
             }
+            NSError *error = nil;
+            if (![gblAppDelegate.managedObjectContext save:&error]) {
+                
+            }
+            else {
+                [self fetchFacilities];
+            }
+            
         } failure:^(NSError *error, NSDictionary *response) {
             NSLog(@"Error: %@\n%@", error, response);
         }];
@@ -129,7 +132,7 @@
 - (void)fetchFacilities {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserFacility"];
     [request setPropertiesToFetch:@[@"name", @"value"]];
-     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     [request setSortDescriptors:@[sortByName]];
      aryFacilities = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
 }

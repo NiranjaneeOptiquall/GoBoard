@@ -55,7 +55,7 @@ typedef enum : NSUInteger {
 
 
 #define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
-#define SERVICE_HTTP_METHOD         @{@"UserAuthentication":@"GET", @"UserForgotPassword" : @"POST", @"UserFacility":@"GET", @"SopCategory":@"GET", @"SopDetail":@"GET"}
+
 
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
@@ -63,7 +63,11 @@ typedef enum : NSUInteger {
 #define USER_FACILITY               @"UserFacility"
 #define SOP_CATEGORY                @"SopCategory"
 #define SOP_DETAIL                  @"SopDetail"
+#define ERP_CATEGORY                @"Erp"
+#define ERP_HISTORY                  @"ErpHistory"
 
+
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST"}
 
 
 

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tblSOPList;
 @property (weak, nonatomic) IBOutlet UIButton *btnSOPList;
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
+@property (weak, nonatomic) IBOutlet UITableView *tblSOPCategory;
 - (IBAction)unwindBackToSOPListScreen:(UIStoryboardSegue*)segue;
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSOPListTapped:(id)sender;

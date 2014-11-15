@@ -8,18 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "ERPTask.h"
+#import "ERPSubcategory.h"
+#import "ERPCategory.h"
+#import "ERPHistory.h"
+#import "ERPHistoryTask.h"
 
 @interface ERPDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, DatePickerDelegate> {
-    NSMutableArray *mutArrActionList;
     BOOL isUpdate;
     NSInteger selectedRow;
 }
-
 @property (weak, nonatomic) IBOutlet UILabel *lblERPTitle;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeStart;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeEnd;
 @property (weak, nonatomic) IBOutlet UITableView *tblActionsTaken;
 
+@property (nonatomic, weak) ERPSubcategory *erpSubcategory;
 @property (nonatomic, weak) NSDictionary *dictCategory;
 @property (nonatomic, assign) NSInteger selectedIndex;
 

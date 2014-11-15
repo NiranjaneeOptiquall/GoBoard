@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UserFacility.h"
+#import "UserLocation.h"
+#import "UserPosition.h"
 
 @interface User : NSObject
 
@@ -19,8 +22,9 @@
 @property (strong, nonatomic) NSString *password;
 @property (assign, nonatomic) BOOL isAdmin;
 @property (strong, nonatomic) NSString *userId;
-@property (strong, nonatomic) NSMutableArray *mutArrCertificates;
-
+@property (strong, nonatomic) UserFacility *selectedFacility;
+@property (strong, nonatomic) UserLocation *selectedLocation;
+@property (strong, nonatomic) UserPosition *selectedPosition;
 + (User *)currentUser;
 
 @end

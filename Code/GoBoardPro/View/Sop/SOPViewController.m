@@ -21,11 +21,22 @@
     NSLog(@"%@", _mutArrCategoryHierarchy);
     if (!_dictSOPCategory) {
         [_btnSOPList setHidden:YES];
-        [_lblTitle setText:@"Standard Operating Procedure"];
+        [_lblTitle setText:@"Standard Operating Procedures"];
+        [_tblSOPCategory setHidden:YES];
         [self getSOPCategories];
     }
     else {
-        [_lblTitle setText:[_dictSOPCategory objectForKey:@"Title"]];
+        [_lblTitle setHidden:YES];
+        CGRect frame = _tblSOPCategory.frame;
+        frame.size.height = _mutArrCategoryHierarchy.count * _tblSOPCategory.rowHeight;
+        _tblSOPCategory.frame = frame;
+        if (CGRectGetMaxY(frame) > _tblSOPList.frame.origin.y) {
+            frame = _tblSOPList.frame;
+            frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
+            _tblSOPList.frame = frame;
+        }
+//        [_lblTitle setText:[_dictSOPCategory objectForKey:@"Title"]];
         mutArrSOPList = [_dictSOPCategory objectForKey:@"Categories"];
     }
 }
@@ -102,30 +113,44 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ([tableView isEqual:_tblSOPCategory]) {
+        return [_mutArrCategoryHierarchy count];
+    }
     return [mutArrSOPList count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    if (indexPath.row == 0 || indexPath.row % 2 == 0) {
-        [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
+    if ([tableView isEqual:_tblSOPCategory]) {
+        [aCell setBackgroundColor:[UIColor clearColor]];
+        UILabel *lbl = (UILabel*)[aCell.contentView viewWithTag:2];
+        [lbl setText:[_mutArrCategoryHierarchy objectAtIndex:indexPath.row]];
+        CGRect frame = lbl.frame;
+        frame.origin.x = indexPath.row * 50 + 5;
+        frame.size.width = 532 - frame.origin.x;
+        lbl.frame = frame;
     }
     else {
-        [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
+        if (indexPath.row == 0 || indexPath.row % 2 == 0) {
+            [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
+        }
+        else {
+            [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
+        }
+        NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
+        UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
+        [aLbl setText:[aDict objectForKey:@"Title"]];
+        if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
+            [aCell setAccessoryType:UITableViewCellAccessoryNone];
+        }
+        else {
+            [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        }
+        UIView *aView = [aCell.contentView viewWithTag:4];
+        CGRect frame = aView.frame;
+        frame.origin.y = aCell.frame.size.height - 3;
+        [aView setFrame:frame];
     }
-    NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
-    UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-    [aLbl setText:[aDict objectForKey:@"Title"]];
-    if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
-        [aCell setAccessoryType:UITableViewCellAccessoryNone];
-    }
-    else {
-        [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    }
-    UIView *aView = [aCell.contentView viewWithTag:4];
-    CGRect frame = aView.frame;
-    frame.origin.y = aCell.frame.size.height - 3;
-    [aView setFrame:frame];
     return aCell;
 }
 

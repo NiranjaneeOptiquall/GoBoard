@@ -45,7 +45,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"SOPLinkDetail"]) {
         WebViewController *webVC = (WebViewController *)[segue destinationViewController];
-        webVC.strRequestURL = @"http://www.google.com";
+        webVC.strRequestURL = [[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:selectedRow] objectForKey:@"AttachmentLink"];
     }
     else {
         [_mutArrCategoryHierarchy removeLastObject];
@@ -110,6 +110,12 @@
         [aLbl sizeToFit];
         UIView *aView = [aCell.contentView viewWithTag:4];
         UIButton *linkBtn = (UIButton*)[aCell viewWithTag:3];
+        if (![[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:indexPath.row] objectForKey:@"AttachmentLink"] || [[[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:indexPath.row] objectForKey:@"AttachmentLink"] isKindOfClass:[NSNull class]]) {
+            [linkBtn setHidden:YES];
+        }
+        else {
+            [linkBtn setHidden:NO];
+        }
         [linkBtn addTarget:self action:@selector(btnViewLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
         CGRect frame = aView.frame;
         frame.origin.y = aCell.frame.size.height - 3;

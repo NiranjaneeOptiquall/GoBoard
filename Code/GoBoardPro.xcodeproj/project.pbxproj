@@ -93,6 +93,12 @@
 		3354198419E7DCFD009B2B20 /* graph_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354198319E7DCFD009B2B20 /* graph_icon@2x.png */; };
 		3354198719E7DD7C009B2B20 /* GraphListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3354198619E7DD7C009B2B20 /* GraphListViewController.m */; };
 		335DECBC19EBCDE200FFFD4D /* AdminTaskListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 335DECBB19EBCDE200FFFD4D /* AdminTaskListViewController.m */; };
+		3366BC101A1724B7003FA3BF /* ERPTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC0F1A1724B7003FA3BF /* ERPTask.m */; };
+		3366BC131A1724B8003FA3BF /* ERPSubcategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC121A1724B8003FA3BF /* ERPSubcategory.m */; };
+		3366BC161A1724B8003FA3BF /* ERPCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC151A1724B8003FA3BF /* ERPCategory.m */; };
+		3366BC1F1A17630F003FA3BF /* ERPHistoryTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC1E1A17630F003FA3BF /* ERPHistoryTask.m */; };
+		3366BC221A17638C003FA3BF /* ERPHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC211A17638C003FA3BF /* ERPHistory.m */; };
+		3366BC241A176808003FA3BF /* sync_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3366BC231A176808003FA3BF /* sync_icon@2x.png */; };
 		3397CAA319D02D7A00788153 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3397CAA219D02D7A00788153 /* main.m */; };
 		3397CAA619D02D7A00788153 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3397CAA519D02D7A00788153 /* AppDelegate.m */; };
 		3397CAAF19D02D7A00788153 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3397CAAD19D02D7A00788153 /* Main.storyboard */; };
@@ -279,12 +285,12 @@
 		332B60E21A146CB700B7C7EF /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		332B60ED1A146D9C00B7C7EF /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		332B60EE1A146D9C00B7C7EF /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		332B61041A14BE1200B7C7EF /* UserLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserLocation.h; path = GoBoardPro/Model/CoreDataModel/UserLocation.h; sourceTree = "<group>"; };
-		332B61051A14BE1200B7C7EF /* UserLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserLocation.m; path = GoBoardPro/Model/CoreDataModel/UserLocation.m; sourceTree = "<group>"; };
-		332B61071A14BE1300B7C7EF /* UserFacility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserFacility.h; path = GoBoardPro/Model/CoreDataModel/UserFacility.h; sourceTree = "<group>"; };
-		332B61081A14BE1300B7C7EF /* UserFacility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserFacility.m; path = GoBoardPro/Model/CoreDataModel/UserFacility.m; sourceTree = "<group>"; };
-		332B610A1A14BE1300B7C7EF /* UserPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPosition.h; path = GoBoardPro/Model/CoreDataModel/UserPosition.h; sourceTree = "<group>"; };
-		332B610B1A14BE1300B7C7EF /* UserPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserPosition.m; path = GoBoardPro/Model/CoreDataModel/UserPosition.m; sourceTree = "<group>"; };
+		332B61041A14BE1200B7C7EF /* UserLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserLocation.h; sourceTree = "<group>"; };
+		332B61051A14BE1200B7C7EF /* UserLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserLocation.m; sourceTree = "<group>"; };
+		332B61071A14BE1300B7C7EF /* UserFacility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserFacility.h; sourceTree = "<group>"; };
+		332B61081A14BE1300B7C7EF /* UserFacility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFacility.m; sourceTree = "<group>"; };
+		332B610A1A14BE1300B7C7EF /* UserPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPosition.h; sourceTree = "<group>"; };
+		332B610B1A14BE1300B7C7EF /* UserPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPosition.m; sourceTree = "<group>"; };
 		332E3A3319D535060088AB61 /* SOPDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOPDetailViewController.h; sourceTree = "<group>"; };
 		332E3A3419D535060088AB61 /* SOPDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOPDetailViewController.m; sourceTree = "<group>"; };
 		332E3A3719D541950088AB61 /* red_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_n@2x.png"; sourceTree = "<group>"; };
@@ -389,6 +395,17 @@
 		3354198619E7DD7C009B2B20 /* GraphListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphListViewController.m; sourceTree = "<group>"; };
 		335DECBA19EBCDE200FFFD4D /* AdminTaskListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminTaskListViewController.h; sourceTree = "<group>"; };
 		335DECBB19EBCDE200FFFD4D /* AdminTaskListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminTaskListViewController.m; sourceTree = "<group>"; };
+		3366BC0E1A1724B7003FA3BF /* ERPTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPTask.h; sourceTree = "<group>"; };
+		3366BC0F1A1724B7003FA3BF /* ERPTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ERPTask.m; sourceTree = "<group>"; };
+		3366BC111A1724B8003FA3BF /* ERPSubcategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPSubcategory.h; sourceTree = "<group>"; };
+		3366BC121A1724B8003FA3BF /* ERPSubcategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ERPSubcategory.m; sourceTree = "<group>"; };
+		3366BC141A1724B8003FA3BF /* ERPCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPCategory.h; sourceTree = "<group>"; };
+		3366BC151A1724B8003FA3BF /* ERPCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ERPCategory.m; sourceTree = "<group>"; };
+		3366BC1D1A17630F003FA3BF /* ERPHistoryTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPHistoryTask.h; sourceTree = "<group>"; };
+		3366BC1E1A17630F003FA3BF /* ERPHistoryTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ERPHistoryTask.m; sourceTree = "<group>"; };
+		3366BC201A17638C003FA3BF /* ERPHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPHistory.h; sourceTree = "<group>"; };
+		3366BC211A17638C003FA3BF /* ERPHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ERPHistory.m; sourceTree = "<group>"; };
+		3366BC231A176808003FA3BF /* sync_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync_icon@2x.png"; sourceTree = "<group>"; };
 		3397CA9D19D02D7A00788153 /* GoBoardPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoBoardPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3397CAA119D02D7A00788153 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3397CAA219D02D7A00788153 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -640,6 +657,22 @@
 		332B61031A14BDFE00B7C7EF /* CoreDataModel */ = {
 			isa = PBXGroup;
 			children = (
+				3366BC201A17638C003FA3BF /* ERPHistory.h */,
+				3366BC211A17638C003FA3BF /* ERPHistory.m */,
+				3366BC1D1A17630F003FA3BF /* ERPHistoryTask.h */,
+				3366BC1E1A17630F003FA3BF /* ERPHistoryTask.m */,
+				3366BC141A1724B8003FA3BF /* ERPCategory.h */,
+				3366BC151A1724B8003FA3BF /* ERPCategory.m */,
+				3366BC111A1724B8003FA3BF /* ERPSubcategory.h */,
+				3366BC121A1724B8003FA3BF /* ERPSubcategory.m */,
+				3366BC0E1A1724B7003FA3BF /* ERPTask.h */,
+				3366BC0F1A1724B7003FA3BF /* ERPTask.m */,
+				332B610A1A14BE1300B7C7EF /* UserPosition.h */,
+				332B610B1A14BE1300B7C7EF /* UserPosition.m */,
+				332B61071A14BE1300B7C7EF /* UserFacility.h */,
+				332B61081A14BE1300B7C7EF /* UserFacility.m */,
+				332B61041A14BE1200B7C7EF /* UserLocation.h */,
+				332B61051A14BE1200B7C7EF /* UserLocation.m */,
 			);
 			path = CoreDataModel;
 			sourceTree = "<group>";
@@ -841,12 +874,6 @@
 		3397CA9419D02D7A00788153 = {
 			isa = PBXGroup;
 			children = (
-				332B610A1A14BE1300B7C7EF /* UserPosition.h */,
-				332B610B1A14BE1300B7C7EF /* UserPosition.m */,
-				332B61071A14BE1300B7C7EF /* UserFacility.h */,
-				332B61081A14BE1300B7C7EF /* UserFacility.m */,
-				332B61041A14BE1200B7C7EF /* UserLocation.h */,
-				332B61051A14BE1200B7C7EF /* UserLocation.m */,
 				333780A319E6BACF00362F82 /* CoreGraphics.framework */,
 				33D5A59919E3F27200344278 /* QuartzCore.framework */,
 				3397CA9F19D02D7A00788153 /* GoBoardPro */,
@@ -1053,6 +1080,7 @@
 		33CFBBDF19D2D18800D86E68 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3366BC231A176808003FA3BF /* sync_icon@2x.png */,
 				33CFBBE019D2D21300D86E68 /* accident_report@2x.png */,
 				33CFBBE119D2D21300D86E68 /* daily_log_icon@@x.png */,
 				33CFBBE219D2D21300D86E68 /* emergency_response_plan@2x.png */,
@@ -1536,6 +1564,7 @@
 				33DF9A3E19DBE4950055841D /* IncidentPersonalInformation.xib in Resources */,
 				33CD6B5F19DA7E840024A02D /* figure_leftLeg.png in Resources */,
 				33EB4A9A19D1A3A2008EF8FD /* text_box_email@2x.png in Resources */,
+				3366BC241A176808003FA3BF /* sync_icon@2x.png in Resources */,
 				33315CB619DD7A62008C37FF /* DropDownPopOver.xib in Resources */,
 				33D630A319D3F66E0090BE80 /* checked_Member@2x.png in Resources */,
 				332E3A4819D541950088AB61 /* faded_y@2x.png in Resources */,
@@ -1664,6 +1693,7 @@
 				33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */,
 				3397CAD219D0347700788153 /* GoBoardPro.xcdatamodeld in Sources */,
 				3337809F19E6B6EA00362F82 /* MIMLineGraph.m in Sources */,
+				3366BC131A1724B8003FA3BF /* ERPSubcategory.m in Sources */,
 				33D5A59519E3F17C00344278 /* GraphDetailViewController.m in Sources */,
 				33CFBC5019D2EC6300D86E68 /* ERPHeaderView.m in Sources */,
 				33B0C88119DADB6400D1002E /* WitnessView.m in Sources */,
@@ -1691,8 +1721,10 @@
 				3337809219E6B6EA00362F82 /* MIMMeter.m in Sources */,
 				332B60E31A146CB700B7C7EF /* AFHTTPClient.m in Sources */,
 				33EB4A5219D18F30008EF8FD /* ForgotPasswordViewController.m in Sources */,
+				3366BC101A1724B7003FA3BF /* ERPTask.m in Sources */,
 				33CFBC4119D2E8BB00D86E68 /* IncidenceReportViewController.m in Sources */,
 				33EB4A5819D18F4F008EF8FD /* UserHomeViewController.m in Sources */,
+				3366BC221A17638C003FA3BF /* ERPHistory.m in Sources */,
 				33B0C88819DAE02F00D1002E /* FinalSection.m in Sources */,
 				3337809C19E6B6EA00362F82 /* LineScrollView.m in Sources */,
 				3337809119E6B6EA00362F82 /* MIMMargin.m in Sources */,
@@ -1702,6 +1734,7 @@
 				3337808D19E6B6EA00362F82 /* AnchorInfo.m in Sources */,
 				3397CAD319D0347700788153 /* LoginViewController.m in Sources */,
 				33D5A5A619E40C0F00344278 /* ToolsViewController.m in Sources */,
+				3366BC1F1A17630F003FA3BF /* ERPHistoryTask.m in Sources */,
 				333780A119E6B6EA00362F82 /* TestLineClass.m in Sources */,
 				3337808C19E6B6EA00362F82 /* Anchor.m in Sources */,
 				3337808F19E6B6EA00362F82 /* MIM_MathClass.m in Sources */,
@@ -1718,6 +1751,7 @@
 				3337809019E6B6EA00362F82 /* MIMFloatingView.m in Sources */,
 				3337809519E6B6EA00362F82 /* XAxisBand.m in Sources */,
 				33CD6B7419DABB380024A02D /* ThirdSection.m in Sources */,
+				3366BC161A1724B8003FA3BF /* ERPCategory.m in Sources */,
 				33DF9A4F19DC24540055841D /* DatePopOverView.m in Sources */,
 				3337809419E6B6EA00362F82 /* PageControl.m in Sources */,
 				332B61061A14BE1200B7C7EF /* UserLocation.m in Sources */,

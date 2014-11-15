@@ -20,10 +20,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     gblAppDelegate = self;
-    
+    NSLog(@"%@", [self applicationDocumentsDirectory]);
     [Crittercism enableWithAppID:@"54658465466eda0236000003"];
     //    //sync Breadcrumb Mode
     [Crittercism setAsyncBreadcrumbMode:YES];
+    _shouldHideActivityIndicator = YES;
     return YES;
 }
 
@@ -172,6 +173,47 @@
     }
 }
 
+- (void)callSynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
+    if ([self isNetworkReachable]) {
+        [self showActivityIndicator];
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
+        NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
+        aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
+        
+        [request setHTTPMethod:httpMethod];
+        if (params) {
+            NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
+            NSString *aStr = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", aStr);
+            [request setHTTPBody:aData];
+        }
+        [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
+//        AFJSONRequestOperation *operation = [AFJSONRequestOperation ]
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^
+                                             (NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                 [self hideActivityIndicator];
+                                                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:JSON];
+                                                 if ([[aDict objectForKey:@"Success"] boolValue]) {
+                                                     completion(aDict);
+                                                 }
+                                                 else {
+                                                     failure (nil, aDict);
+                                                 }
+                                             }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                 [self hideActivityIndicator];
+                                                 failure (error, JSON);
+                                                 
+                                             }];
+        
+        [operation start];
+    }
+    else {
+        failure(nil, nil);
+        
+    }
+}
+
 #pragma mark Reachability
 
 - (BOOL)isNetworkReachable {
@@ -200,9 +242,9 @@
 }
 
 - (void)showActivityIndicator {
-//    if (_shouldHideActivityIndicator) {
+    if (_shouldHideActivityIndicator) {
         [self showActivityIndicatorWithMessage:nil];
-//    }
+    }
 }
 
 
@@ -256,14 +298,14 @@
 }
 
 - (void)hideActivityIndicator {
-//    if (_shouldHideActivityIndicator) {
+    if (_shouldHideActivityIndicator) {
         if (viewActivity) {
             [indicatorView stopAnimating];
             [viewActivity removeFromSuperview];
             indicatorView = nil;
             viewActivity = nil;
         }
-//    }
+    }
     
 }
 

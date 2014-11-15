@@ -27,7 +27,7 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (strong, nonatomic) UINavigationController *navigationController;
-//@property (nonatomic, assign) BOOL shouldHideActivityIndicator;
+@property (nonatomic, assign) BOOL shouldHideActivityIndicator;
 
 @property (assign, nonatomic) BOOL isAdmin;
 

@@ -10,9 +10,16 @@
 #import "Constants.h"
 
 @interface UserHomeViewController : UIViewController
+{
+    NSInteger syncCount;
+    BOOL isErrorOccurred;
+}
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
+@property (weak, nonatomic) IBOutlet UILabel *lblPendingCount;
 
+
+- (IBAction)btnStartSyncCount:(id)sender;
 - (IBAction)unwindBackToHomeScreen:(UIStoryboardSegue*)segue;
 
 @end
