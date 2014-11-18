@@ -16,5 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnCheckBox;
 @property (weak, nonatomic) IBOutlet UITextField *txtTemp;
 @property (weak, nonatomic) IBOutlet UILabel *lblFarenhite;
+@property (weak, nonatomic) IBOutlet UIView *vwDrpDown;
+@property (weak, nonatomic) IBOutlet UITextField *txtDropDown;
 
 @end

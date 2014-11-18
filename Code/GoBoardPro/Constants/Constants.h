@@ -64,8 +64,9 @@ typedef enum : NSUInteger {
 #define SOP_CATEGORY                @"SopCategory"
 #define SOP_DETAIL                  @"SopDetail"
 #define ERP_CATEGORY                @"Erp"
-#define ERP_HISTORY                  @"ErpHistory"
-
+#define ERP_HISTORY                 @"ErpHistory"
+#define UTILIZATION_COUNT           @"Count"
+#define TASK                        @"Task"
 
 #define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST"}
 
@@ -79,5 +80,6 @@ typedef enum : NSUInteger {
 #define MSG_PROFILE_UPDATE_SUCCESS  @"Profile has been updated Successfully"
 #define MSG_PROFILE_UPDATE_FAILURE  @"Unable to update profile at this time, Please try again later"
 #define MSG_LOGIN_FAILURE           @"Email id or password does not match, Please check your email id or password"
-
+#define MSG_NO_INTERNET             @"Please make sure you have an Internet connection and try again."
+#define MSG_SERVICE_FAIL            @"An unexpected error occurred.  Please try again.  If the issue persists, please contact support."
 #endif

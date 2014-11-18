@@ -19,6 +19,9 @@
     [super viewDidLoad];
 //    [self getAllActionListForEmergency];
     [_lblERPTitle setText:[NSString stringWithFormat:@"%@ - %@", _erpSubcategory.erpHeader.title, _erpSubcategory.title]];
+    if ([_erpSubcategory.erpTasks count] == 0) {
+        [_lblNoRecords setHidden:NO];
+    }
     [_txtTimeEnd setEnabled:NO];
 }
 
@@ -58,7 +61,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == 1", key];
     NSArray *a = [[_erpSubcategory.erpTasks allObjects] filteredArrayUsingPredicate:predicate];
     if ([a count] == 0) {
-        alert(@"", @"Please select atleast a step you followed.");
+        alert(@"", @"Please check at least one item that was completed");
         return;
     }
 //    alert(@"", @"Your response has been saved.");

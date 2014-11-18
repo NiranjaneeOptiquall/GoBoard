@@ -14,4 +14,5 @@
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tblEmergencyList;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 @end

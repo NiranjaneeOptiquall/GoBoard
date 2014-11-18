@@ -10,6 +10,10 @@
 #import "TaskListViewController.h"
 #import "UtilizationCountTableViewCell.h"
 #import "Constants.h"
+#import "UtilizationHeaderView.h"
+#import "UtilizationCount.h"
+#import "SubmitCountUser.h"
+#import "SubmitUtilizationCount.h"
 
 @interface UtilizationCountViewController ()
 
@@ -59,6 +63,98 @@
 #pragma mark - IBActions & Selectors
 
 - (IBAction)btnToggleCountAndTaskTapped:(id)sender {
+    [self submitData:YES];
+}
+
+
+- (IBAction)btnSubmitCountTapped:(id)sender {
+    [self submitData:NO];
+}
+
+- (NSDictionary *)getPostLocation:(UtilizationCount*)location {
+    
+    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id", nil];
+    NSMutableArray *subLocations = [NSMutableArray array];
+    for (UtilizationCount *subLocation in [location.sublocations allObjects]) {
+        if (subLocation.isUpdateAvailable) {
+            [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime}];
+        }
+    }
+    if ([subLocations count] > 0) {
+        [aDict setObject:subLocations forKey:@"Sublocations"];
+    }
+    return aDict;
+}
+
+- (void)submitData:(BOOL)showTask {
+    NSMutableArray *mutArrUpdatedCount = [NSMutableArray array];
+    for (UtilizationCount *location in mutArrCount) {
+        if (location.isUpdateAvailable) {
+            [mutArrUpdatedCount addObject:[self getPostLocation:location]];
+        }
+    }
+    if ([mutArrUpdatedCount count] > 0) {
+        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":[[[User currentUser]selectedLocation] value], @"PositionId":[[[User currentUser]selectedPosition] value], @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
+        [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Count has been updated successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            if (showTask) {
+                isUpdate = NO;
+                for (NSMutableDictionary *aDict in mutArrCount) {
+                    [aDict setObject:[aDict objectForKey:@"originalMessage"] forKey:@"Message"];
+                    [aDict setObject:[aDict objectForKey:@"originalCount"] forKey:@"LastCount"];
+                    [aDict setObject:[NSNumber numberWithBool:NO] forKey:@"CountRemainSame"];
+                }
+                [alert setTag:1];
+            }
+            [alert show];
+        } failure:^(NSError *error, NSDictionary *response) {
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+            [self saveSubmitToLocal:aDict];
+        }];
+    }
+    else if (showTask) {
+        [self showTask];
+    }
+    else {
+        alert(@"", @"Count is already updated.");
+    }
+}
+
+- (void)saveSubmitToLocal:(NSDictionary *)aDict {
+    SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    user.facilityId = [aDict objectForKey:@"FacilityId"];
+    user.locationId = [aDict objectForKey:@"LocationId"];
+    user.userId = [aDict objectForKey:@"UserId"];
+    user.userId = [aDict objectForKey:@"PositionId"];
+    NSMutableSet *locSet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"Locations"]) {
+        UtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        location.name = [dict objectForKey:@"Name"];
+        location.lastCount = [dict objectForKey:@"LastCount"];
+        location.lastCountDateTime = [dict objectForKey:@"LastCountDateTime"];
+        location.capacity = [dict objectForKey:@"Capacity"];
+        location.message = [dict objectForKey:@"Message"];
+        location.locationId = [dict objectForKey:@"Id"];
+        NSMutableSet *set = [NSMutableSet set];
+        for (NSDictionary *subLoc in [dict objectForKey:@"Sublocations"]) {
+            UtilizationCount *subLocation = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            subLocation.name = [subLoc objectForKey:@"Name"];
+            subLocation.lastCount = [subLoc objectForKey:@"LastCount"];
+            subLocation.lastCountDateTime = [subLoc objectForKey:@"LastCountDateTime"];
+            subLocation.locationId = [subLoc objectForKey:@"Id"];
+            subLocation.location = location;
+            [set addObject:subLocation];
+        }
+        location.sublocations = set;
+        [locSet addObject:location];
+    }
+    user.countLocation = locSet;
+    [gblAppDelegate.managedObjectContext insertObject:user];
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+- (void)showTask {
     NSArray *aryNavigationStack = [self.navigationController viewControllers];
     BOOL isPoped = NO;
     for (id obj in aryNavigationStack) {
@@ -71,17 +167,6 @@
     if (!isPoped) {
         [self performSegueWithIdentifier:@"CountToTask" sender:self];
     }
-}
-
-- (IBAction)btnViewBreakOutTapped:(id)sender {
-}
-
-- (IBAction)btnSubmitCountTapped:(id)sender {
-    NSInteger count = 0;
-    for (NSDictionary *dict in mutArrCount) {
-        count += [[dict objectForKey:@"current"] integerValue];
-    }
-    [_lblTotalCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
 }
 
 - (IBAction)btnCountCommentTapped:(UIButton *)sender {
@@ -99,46 +184,181 @@
 
 - (void)btnIncreaseCountTapped:(UIButton*)btn {
     isUpdate = YES;
-    NSIndexPath *indexPath = [self indexPathForView:btn];
-    NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
-    NSInteger current = [[aDict objectForKey:@"current"] integerValue];
-    NSInteger max = [[aDict objectForKey:@"maxCapacity"] integerValue];
-    current++;
-    if (current > max) {
-        NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d, %@ is over capacity now.", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue], [aDict objectForKey:@"facility"]];
-        alert(@"Exceed Limit", strMsg);
-//
+    id view = [btn superview];
+    while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
+        view = [view superview];
     }
-    [aDict setObject:[NSNumber numberWithInteger:current] forKey:@"current"];
-    [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    UtilizationCount *location;
+    NSInteger section;
+    if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+        section = [(UtilizationHeaderView*)view section];
+        location = [mutArrCount objectAtIndex:section];
+    }
+    else {
+        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        section = indexPath.section;
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+    }
+    NSInteger current = [location.lastCount integerValue];
+    NSInteger max = [location.capacity integerValue];
+    current++;
+    if (current > max && !location.location) {
+        NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
+        alert(@"Exceed Limit", strMsg);
+    }
+    location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
+    if (location.location) {
+        location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] + 1];
+        if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
+            NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
+            alert(@"Exceed Limit", strMsg);
+        }
+        location.location.isUpdateAvailable = YES;
+    }
+    else if (location.sublocations.count > 0) {
+        for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+            subLoc.lastCount = 0;
+        }
+    }
+    location.isUpdateAvailable = YES;
+    [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+//    [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self showTotalCount];
 }
 
 - (void)btnDecreaseCountTapped:(UIButton*)btn {
     isUpdate = YES;
-    NSIndexPath *indexPath = [self indexPathForView:btn];
-    NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
-    NSInteger current = [[aDict objectForKey:@"current"] integerValue];
+    id view = [btn superview];
+    while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
+        view = [view superview];
+    }
+    UtilizationCount *location;
+    NSInteger section;
+    if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+        section = [(UtilizationHeaderView*)view section];
+        location = [mutArrCount objectAtIndex:section];
+    }
+    else {
+        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        section = indexPath.section;
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+    }
+    NSInteger current = [location.lastCount integerValue];
     current--;
     if (current >= 0) {
-        [aDict setObject:[NSNumber numberWithInteger:current] forKey:@"current"];
+        location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
+        if (location.location) {
+            location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] - 1];
+            location.location.isUpdateAvailable = YES;
+        }
+        else if (location.sublocations.count > 0) {
+            for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+                subLoc.lastCount = 0;
+            }
+        }
+        location.isUpdateAvailable = YES;
+        [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
     }
-    [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    [self showTotalCount];
+}
+
+
+- (void)btnMessageTapped:(UIButton*)sender {
+    id view = [sender superview];
+    while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
+        view = [view superview];
+    }
+    UtilizationCount *location;
+    if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+        editingIndex =[(UtilizationHeaderView*)view section];
+        location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
+    }
+    else {
+        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        editingIndex = indexPath.row;
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+    }
+    
+    _lblPopOverLocation.text = location.name;
+    
+    _txtPopOverMessage.text = location.message;
+    
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
+
+    if (popOverMessage) {
+        [popOverMessage dismissPopoverAnimated:NO];
+        popOverMessage.contentViewController.view = nil;
+        popOverMessage = nil;
+    }
+    UIViewController *viewController = [[UIViewController alloc] init];
+    viewController.view = _vwPopOverMessage;
+    popOverMessage = [[UIPopoverController alloc] initWithContentViewController:viewController];
+    viewController = nil;
+    [popOverMessage setDelegate:self];
+    [popOverMessage setPopoverContentSize:_vwPopOverMessage.frame.size];
+    CGRect frame = [sender.superview convertRect:sender.frame toView:_tblCountList];
+    frame = [_tblCountList convertRect:frame toView:self.view];
+    [popOverMessage presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)btnCountRemainSameTapped:(UIButton*)sender {
+    id view = [sender superview];
+    while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
+        view = [view superview];
+    }
+    UtilizationCount *location;
+    if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+        location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
+    }
+    else {
+        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+    }
+    location.isCountRemainSame = YES;
+    location.isUpdateAvailable = YES;
+    isUpdate = YES;
 }
 
 #pragma mark - Methods
 
-- (void)getAllCounts {
-    mutArrCount = [[NSMutableArray alloc] init];
-    [mutArrCount addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"Fitness Center", @"facility", [NSNumber numberWithInt:30], @"maxCapacity", [NSNumber numberWithInt:25], @"current", [NSDate dateWithTimeIntervalSinceNow:-36000], @"lastUpdate", @"", @"message", nil]];
-    [mutArrCount addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"Swimming Pool", @"facility", [NSNumber numberWithInt:20], @"maxCapacity", [NSNumber numberWithInt:5], @"current", [NSDate dateWithTimeIntervalSinceNow:-3600], @"lastUpdate", @"", @"message", nil]];
-    [mutArrCount addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"East Lounge", @"facility", [NSNumber numberWithInt:50], @"maxCapacity", [NSNumber numberWithInt:25], @"current", [NSDate dateWithTimeIntervalSinceNow:-18000], @"lastUpdate", @"", @"message", nil]];
-    [mutArrCount addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"Snack Bar", @"facility", [NSNumber numberWithInt:40], @"maxCapacity", [NSNumber numberWithInt:18], @"current", [NSDate dateWithTimeIntervalSinceNow:-20000], @"lastUpdate", @"", @"message", nil]];
-    [mutArrCount addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"SpaGo", @"facility", [NSNumber numberWithInt:30], @"maxCapacity", [NSNumber numberWithInt:2], @"current", [NSDate dateWithTimeIntervalSinceNow:-76000], @"lastUpdate", @"", @"message", nil]];
+- (void)showTotalCount {
     NSInteger count = 0;
-    for (NSDictionary *dict in mutArrCount) {
-        count += [[dict objectForKey:@"current"] integerValue];
+    for (UtilizationCount *location in mutArrCount) {
+        count += [location.lastCount integerValue];
     }
     [_lblTotalCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
+}
+
+- (void)getAllCounts {
+    [[WebSerivceCall webServiceObject] callServiceForUtilizationCount];
+    [self fetchOfflineCountData];
+    [_tblCountList reloadData];
+}
+
+- (void)fetchOfflineCountData {
+    mutArrCount = [[NSMutableArray alloc] init];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UtilizationCount"];
+    //    [request setPropertiesToFetch:@[@"categoryId", @"title", @"erpTitles", @"erpTitles.subCateId", @"erpTitles.title"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"location = nil"];
+    [request setPredicate:predicate];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortByName]];
+    NSError *error = nil;
+    NSArray *aryCategories = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        [mutArrCount addObjectsFromArray:aryCategories];
+    }
+    if ([mutArrCount count] == 0) {
+        [_lblNoRecords setHidden:NO];
+    }
+    else {
+        for (UtilizationCount *location in mutArrCount) {
+            [location setInitialValues];
+        }
+    }
 }
 
 - (NSIndexPath *)indexPathForView:(id)view {
@@ -152,24 +372,44 @@
 
 #pragma mark - UITableView Datasource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [mutArrCount count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [[[mutArrCount objectAtIndex:section] sublocations] count];
+}
+
+- (NSString *)getLastUpdate:(NSString*)lastDate {
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    NSDate *lastDt = [aFormatter dateFromString:lastDate];
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [cal components:NSCalendarUnitMinute fromDate:lastDt toDate:[NSDate date] options:0];
+    NSString *aStrTime = [NSString stringWithFormat:@"Last Count:%ld mins.", (long)components.minute];
+    return aStrTime;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UtilizationCountTableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    if (indexPath.row == 0 || indexPath.row % 2 == 0) {
+    if (indexPath.section == 0 || indexPath.section % 2 == 0) {
         [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
-    NSMutableDictionary *aDictCountInfo = [mutArrCount objectAtIndex:indexPath.row];
-    [aCell.lblFacilityArea setText:[aDictCountInfo objectForKey:@"facility"]];
-    int aMaxCapacity = [[aDictCountInfo objectForKey:@"maxCapacity"] intValue];
-    int aCurrent = [[aDictCountInfo objectForKey:@"current"] intValue];
-    int percent = 100 * aCurrent / aMaxCapacity;
-    [aCell.lblCapicity setText:[NSString stringWithFormat:@"%d%% Capacity", percent]];
+    UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
+    UtilizationCount *subLocation = [[location.sublocations allObjects] objectAtIndex:indexPath.row];
+    [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
+    int aCurrent = [subLocation.lastCount intValue];
+    
+    if (subLocation.lastCountDateTime.length == 0) {
+        aCell.lblLastUpdate.text = @"";
+    }
+    else {
+        aCell.lblLastUpdate.text = [NSString stringWithFormat:@"- %@",[self getLastUpdate:subLocation.lastCountDateTime]];
+    }
+    int percent = 100 * [location.lastCount floatValue] / [location.capacity floatValue];
     if (percent > 80) {
         [aCell.txtCount setTextColor:[UIColor colorWithRed:218.0/255.0 green:154.0/255.0 blue:154.0/255.0 alpha:1.0]];
     }
@@ -190,40 +430,76 @@
     else {
         [aCell.btnDecreaseCount setHidden:NO];
     }
-//    if (aCurrent == aMaxCapacity) {
-//        [aCell.btnIncreaseCount setHidden:YES];
-//    }
-//    else {
-//        [aCell.btnIncreaseCount setHidden:NO];
-//    }
-    
+    if (indexPath.row == [location.sublocations count] - 1)
+        [aCell.lblDevider setHidden:NO];
+    else [aCell.lblDevider setHidden:YES];
     CGRect frame = [aCell.lblDevider frame];
     frame.origin.y = aCell.frame.size.height - frame.size.height;
     [aCell.lblDevider setFrame:frame];
     return aCell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *aCell = [tableView cellForRowAtIndexPath:indexPath];
-    _lblPopOverLocation.text = [mutArrCount[indexPath.row] objectForKey:@"facility"];
-    _txtPopOverMessage.text = [mutArrCount[indexPath.row] objectForKey:@"message"];
-    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"hh:mm a"];
-    [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
-    editingIndex = indexPath.row;
-    if (popOverMessage) {
-        [popOverMessage dismissPopoverAnimated:NO];
-        popOverMessage.contentViewController.view = nil;
-        popOverMessage = nil;
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 90;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UtilizationHeaderView *aHeaderView = (UtilizationHeaderView *)[[[NSBundle mainBundle] loadNibNamed:@"UtilizationHeaderView" owner:self options:nil] firstObject];
+    aHeaderView.section = section;
+    if (section == 0 || section % 2 == 0) {
+        [aHeaderView setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
-    UIViewController *viewController = [[UIViewController alloc] init];
-    viewController.view = _vwPopOverMessage;
-    popOverMessage = [[UIPopoverController alloc] initWithContentViewController:viewController];
-    viewController = nil;
-    [popOverMessage setDelegate:self];
-    [popOverMessage setPopoverContentSize:_vwPopOverMessage.frame.size];
-    CGRect frame = [tableView convertRect:aCell.frame toView:self.view];
-    [popOverMessage presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    else {
+        [aHeaderView setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
+    }
+    UtilizationCount *location = [mutArrCount objectAtIndex:section];
+    [aHeaderView.lblFacilityArea setText:location.name];
+    int aMaxCapacity = [location.capacity intValue];
+    int aCurrent = [location.lastCount intValue];
+    int percent = 100 * aCurrent / aMaxCapacity;
+    if (location.lastCountDateTime.length == 0) {
+        aHeaderView.lblLastUpdate.text = @"";
+    }
+    else {
+        aHeaderView.lblLastUpdate.text = [self getLastUpdate:location.lastCountDateTime];
+    }
+    [aHeaderView.lblCapicity setText:[NSString stringWithFormat:@"%d%% Capacity", percent]];
+    if (percent > 80) {
+        [aHeaderView.txtCount setTextColor:[UIColor colorWithRed:218.0/255.0 green:154.0/255.0 blue:154.0/255.0 alpha:1.0]];
+    }
+    else if (percent > 40) {
+        [aHeaderView.txtCount setTextColor:[UIColor colorWithRed:228.0/255.0 green:195.0/255.0 blue:96.0/255.0 alpha:1.0]];
+    }
+    else {
+        [aHeaderView.txtCount setTextColor:[UIColor colorWithRed:124.0/255.0 green:193.0/255.0 blue:139.0/255.0 alpha:1.0]];
+    }
+    [aHeaderView.txtCount setText:[NSString stringWithFormat:@"%d", aCurrent]];
+    [aHeaderView.txtCount setFont:[UIFont boldSystemFontOfSize:64.0]];
+    [aHeaderView.txtCount setDelegate:self];
+    [aHeaderView.btnDecreaseCount addTarget:self action:@selector(btnDecreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aHeaderView.btnIncreaseCount addTarget:self action:@selector(btnIncreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aHeaderView.btnMessage addTarget:self action:@selector(btnMessageTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aHeaderView.btnCountRemainSame.layer setCornerRadius:3.0];
+    [aHeaderView.btnCountRemainSame setClipsToBounds:YES];
+    [aHeaderView.btnCountRemainSame addTarget:self action:@selector(btnCountRemainSameTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aHeaderView.btnCountRemainSame.titleLabel setNumberOfLines:2];
+    [aHeaderView.btnCountRemainSame.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    if (aCurrent == 0) {
+        [aHeaderView.btnDecreaseCount setHidden:YES];
+    }
+    else {
+        [aHeaderView.btnDecreaseCount setHidden:NO];
+    }
+    if ([location.sublocations count] > 0)
+        [aHeaderView.lblDevider setHidden:YES];
+    else
+        [aHeaderView.lblDevider setHidden:NO];
+    return aHeaderView;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
@@ -242,24 +518,59 @@
         isUpdate = YES;
     }
     if ([textField isEqual:_txtPopOverMessage]) {
-        [mutArrCount[editingIndex] setObject:textField.trimText forKey:@"message"];
+        UtilizationCount *location = [mutArrCount objectAtIndex:editingIndex];
+        if (![textField.trimText isEqualToString:location.message]) {
+            location.message = textField.trimText;
+            location.isUpdateAvailable = YES;
+        }
     }
     else {
-        NSIndexPath *indexPath = [self indexPathForView:textField];
-        NSMutableDictionary *aDict = [mutArrCount objectAtIndex:indexPath.row];
-        int max = [[aDict objectForKey:@"maxCapacity"] intValue];
+        id view = [textField superview];
+        while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
+            view = [view superview];
+        }
+        UtilizationCount *location;
+        NSInteger section;
+        if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+            section = [(UtilizationHeaderView*)view section];
+            location = [mutArrCount objectAtIndex:section];
+        }
+        else {
+            NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+            section = indexPath.section;
+            location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+        }
+        
+        int max = [location.capacity intValue];
         int current = [textField.trimText intValue];
         if (current >= 0) {
-            if ( current > max) {
-                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %d, %@ is over capacity now.", [aDict objectForKey:@"facility"], [[aDict objectForKey:@"maxCapacity"] intValue], [aDict objectForKey:@"facility"]];
+            if ( current > max && !location.location) {
+                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
                 alert(@"Exceed Limit", strMsg);
             }
-            [aDict setObject:[NSNumber numberWithInt:current] forKey:@"current"];
-            [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            int previousCount = [location.lastCount intValue];
+            location.lastCount = [NSString stringWithFormat:@"%d", current];
+            int newCount = [location.lastCount intValue];
+            if (location.location) {
+                location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] + newCount - previousCount];
+                if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
+                    NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
+                    alert(@"Exceed Limit", strMsg);
+                }
+                location.location.isUpdateAvailable = YES;
+            }
+            else if (location.sublocations.count > 0) {
+                for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+                    subLoc.lastCount = 0;
+                }
+            }
+            location.isUpdateAvailable = YES;
+            [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
         }
         else {
             [textField becomeFirstResponder];
         }
+        [self showTotalCount];
     }
 }
 
@@ -287,8 +598,13 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [self.navigationController popViewControllerAnimated:YES];
+    if (alertView.tag == 1) {
+        [self showTask];
+    }
+    else {
+        if (buttonIndex == 0) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 @end

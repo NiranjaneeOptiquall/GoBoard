@@ -76,19 +76,19 @@
 }
 
 - (IBAction)btnSignInTapped:(id)sender {
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     if ([_txtUserId isTextFieldBlank]) {
-        alert(@"Login", @"Please enter user id");
+        alert(@"Login", @"Please enter a Username");
         return;
     }
     else if ([_txtPassword isTextFieldBlank]) {
-        alert(@"Login", @"Please enter password");
+        alert(@"Login", @"Please enter a Password");
         return;
     }
     else if (![_txtPassword.text isValidPassword]) {
         alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
         return;
     }
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
             User *currentUser = [User currentUser];
             currentUser.firstName = [response objectForKey:@"FirstName"];
@@ -111,12 +111,7 @@
 //            }
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
-        if (response) {
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
-        }
-        else {
-            alert(@"", MSG_LOGIN_FAILURE);
-        }
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
 }

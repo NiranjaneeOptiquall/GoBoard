@@ -161,14 +161,14 @@
                                                  }
                                              }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                  [self hideActivityIndicator];
-                                                 failure (error, JSON);
+                                                 failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
                                                  
                                              }];
         
         [operation start];
     }
     else {
-        failure(nil, nil);
+        failure(nil, @{@"ErrorMessage":MSG_NO_INTERNET});
         
     }
 }

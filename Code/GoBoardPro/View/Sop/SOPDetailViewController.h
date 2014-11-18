@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblSOPTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblSOPList;
 @property (weak, nonatomic) IBOutlet UITableView *tblSOPCategory;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 
 @property (strong, nonatomic) NSDictionary *dictSopCategry;
 @property (strong, nonatomic) NSMutableArray *mutArrCategoryHierarchy;

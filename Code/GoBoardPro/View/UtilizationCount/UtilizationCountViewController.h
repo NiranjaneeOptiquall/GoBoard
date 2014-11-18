@@ -15,11 +15,7 @@
     BOOL isUpdate;
     NSString *strPreviousText;
 }
-@property (weak, nonatomic) IBOutlet UILabel *lblUserName;
-@property (weak, nonatomic) IBOutlet UILabel *lblFacility;
-@property (weak, nonatomic) IBOutlet UILabel *lblLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lblPosition;
-@property (weak, nonatomic) IBOutlet UILabel *lblTiming;
+
 @property (weak, nonatomic) IBOutlet UITableView *tblCountList;
 @property (weak, nonatomic) IBOutlet UILabel *lblTotalCount;
 @property (weak, nonatomic) IBOutlet UIView *vwPopOverMessage;
@@ -29,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblTask;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 
 - (IBAction)btnToggleCountAndTaskTapped:(id)sender;
 - (IBAction)btnSubmitCountTapped:(id)sender;

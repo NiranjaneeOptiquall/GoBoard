@@ -9,6 +9,8 @@
 #import "TaskListViewController.h"
 #import "TaskTableViewCell.h"
 #import "UtilizationCountViewController.h"
+#import "TaskList.h"
+#import "TaskResponseTypeValues.h"
 
 @interface TaskListViewController ()
 
@@ -18,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     [self getAllTasks];
     NSArray *aryNavigationStack = [self.navigationController viewControllers];
     BOOL isCount = NO;
@@ -69,13 +72,10 @@
     [_tblTaskList reloadData];
 }
 
-- (IBAction)btnToggleToCountTapped:(id)sender {
-}
-
 - (IBAction)btnSubmitTapped:(id)sender {
-    for (NSMutableDictionary *aDict in mutArrFilteredTaskList) {
-        if ([[aDict objectForKey:@"value"] length] > 0) {
-            [aDict setObject:[NSNumber numberWithBool:YES] forKey:@"isCompleted"];
+    for (TaskList *task in mutArrFilteredTaskList) {
+        if ([task.response length] > 0) {
+            task.isCompleted = [NSNumber numberWithBool:YES];
         }
     }
     [_tblTaskList reloadData];
@@ -107,18 +107,33 @@
 }
 
 - (IBAction)btnPopOverTaskTapped:(UIButton *)sender {
-    [sender setSelected:YES];
-    [mutArrFilteredTaskList[editingIndex] setObject:[NSNumber numberWithInteger:sender.tag] forKey:@"messageOption"];
+    [sender setSelected:!sender.isSelected];
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:editingIndex];
+    if ([sender isEqual:_btnCommentTask]) {
+        task.isCommentTask = [NSNumber numberWithBool:sender.isSelected];
+    }
+    else if ([sender isEqual:_btnCommentGoBoardGroup]) {
+        task.isCommentGoBoardGroup = [NSNumber numberWithBool:sender.isSelected];
+    }
+    else if ([sender isEqual:_btnCommentBuildingSupervisor]) {
+        task.isCommentBuildingSupervisor = [NSNumber numberWithBool:sender.isSelected];
+    }
+    else if ([sender isEqual:_btnCommentAreaSupervisor]) {
+        task.isCommentAreaSupervisor = [NSNumber numberWithBool:sender.isSelected];
+    }
+    else if ([sender isEqual:_btnCommentWorkOrder]) {
+        task.isCommentWorkOrder = [NSNumber numberWithBool:sender.isSelected];
+    }
 }
 
 - (void)btnNoTapped:(UIButton*)btn {
     isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@""];
     }
     else {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"N" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@"no"];
     }
     [btn setSelected:YES];
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
@@ -128,10 +143,10 @@
     isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@""];
     }
     else {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"Y" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@"yes"];
     }
     [btn setSelected:YES];
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
@@ -141,10 +156,10 @@
     isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     if (btn.isSelected) {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@""];
     }
     else {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:@"C" forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:@"checked"];
     }
     [btn setSelected:!btn.isSelected];
 }
@@ -152,22 +167,19 @@
 - (void)btnKeyboardIconTapped:(UIButton*)btn {
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
-    _lblPopOverTaskTitle.text = [mutArrFilteredTaskList[indexPath.row] objectForKey:@"task"];
-    _lblPopOverTaskLocation.text = _lblLocation.text;
-    _txvPopOverMessage.text = [mutArrFilteredTaskList[indexPath.row] objectForKey:@"message"];
+    TaskList *aTask = mutArrFilteredTaskList[indexPath.row];
+    _lblPopOverTaskTitle.text = [aTask name];
+    _lblPopOverTaskLocation.text = [[[User currentUser] selectedLocation] name];
+    _txvPopOverMessage.text = [aTask comment];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"hh:mm a"];
     [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
-    NSInteger option = [[mutArrFilteredTaskList[indexPath.row] objectForKey:@"messageOption"] integerValue];
     
-    for (int i = 2; i <= 6; i++) {
-        if (i == option) {
-            [(UIButton*)[_vwMessagePopOver viewWithTag:i] setSelected:YES];
-        }
-        else {
-            [(UIButton*)[_vwMessagePopOver viewWithTag:i] setSelected:NO];
-        }
-    }
+    [_btnCommentAreaSupervisor setSelected:[aTask.isCommentAreaSupervisor boolValue]];
+    [_btnCommentBuildingSupervisor setSelected:[aTask.isCommentBuildingSupervisor boolValue]];
+    [_btnCommentGoBoardGroup setSelected:[aTask.isCommentGoBoardGroup boolValue]];
+    [_btnCommentTask setSelected:[aTask.isCommentTask boolValue]];
+    [_btnCommentWorkOrder setSelected:[aTask.isCommentWorkOrder boolValue]];
     
     editingIndex = indexPath.row;
     if (popOverMessage) {
@@ -188,18 +200,23 @@
 #pragma mark - Methods
 
 - (void)getAllTasks {
-    mutArrTaskList = [[NSMutableArray alloc] init];
-
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with checkbox.", @"task", @"This is a demo description with single line.", @"description", @"checkbox", @"type", [NSNumber numberWithBool:NO], @"isCompleted", @"", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with checkbox.", @"task", @"This is a demo description with two line. For checking the PopOver size that suits for dynamic height or not, So we can be sure that it will work for any height based on the text, maximum lines allowed are four only.", @"description", @"checkbox", @"type", [NSNumber numberWithBool:YES], @"isCompleted", @"C", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with TextField.", @"task", @"This is a demo description with single line.", @"description", @"textField", @"type", [NSNumber numberWithBool:NO], @"isCompleted", @"", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with TextField.", @"task", @"This is a demo description with single line.", @"description", @"textField", @"type", [NSNumber numberWithBool:YES], @"isCompleted", @"72", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with YES/NO.", @"task", @"This is a demo description with single line.", @"description", @"yesNo", @"type", [NSNumber numberWithBool:NO], @"isCompleted", @"", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with YES/NO.", @"task", @"This is a demo description with single line.", @"description", @"yesNo", @"type", [NSNumber numberWithBool:YES], @"isCompleted", @"N", @"value", @"", @"message", nil]];
-    [mutArrTaskList addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"This is a Demo task with YES/NO.", @"task", @"This is a demo description with single line.", @"description", @"yesNo", @"type", [NSNumber numberWithBool:YES], @"isCompleted", @"Y", @"value", @"", @"message", nil]];
-    mutArrFilteredTaskList = mutArrTaskList;
-   
+    [[WebSerivceCall webServiceObject] callServiceForTaskList];
+    [self fetchAllTask];
 }
+
+- (void)fetchAllTask {
+    NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
+    mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
+    if ([mutArrTaskList count] == 0) {
+        [_lblNoRecords setHidden:NO];
+        alert(@"", MSG_NO_INTERNET);
+    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
+    NSArray *a =[mutArrTaskList filteredArrayUsingPredicate:predicate];
+    _lblTaskRemaining.text = [NSString stringWithFormat:@"%ld", (long)a.count];
+    mutArrFilteredTaskList = mutArrTaskList;
+}
+
 
 - (NSIndexPath*)indexPathForCellSubView:(id)view {
     TaskTableViewCell *aCell = (TaskTableViewCell*)[view superview];
@@ -218,7 +235,6 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TaskTableViewCell *aCell = (TaskTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"cell"];
-    NSDictionary *aDict = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     if (indexPath.row == 0 || indexPath.row % 2 == 0) {
         [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
@@ -229,25 +245,28 @@
     [aCell.btnNo setHidden:YES];
     [aCell.btnYes setHidden:YES];
     [aCell.btnCheckBox setHidden:YES];
+    [aCell.vwDrpDown setHidden:YES];
+    [aCell.txtDropDown setDelegate:self];
     [aCell.btnNo addTarget:self action:@selector(btnNoTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnYes addTarget:self action:@selector(btnYesTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnCheckBox addTarget:self action:@selector(btnCheckBoxTapped:) forControlEvents:UIControlEventTouchUpInside];
-    BOOL isCompleted = [[aDict objectForKey:@"isCompleted"] boolValue];
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
+    BOOL isCompleted = [task.isCompleted boolValue];
     [aCell.btnKeyboardIcon addTarget:self action:@selector(btnKeyboardIconTapped:) forControlEvents:UIControlEventTouchUpInside];
     if (isCompleted) {
-        if ([[aDict objectForKey:@"type"] isEqualToString:@"checkbox"]) {
+        if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
             [aCell.btnCheckBox setUserInteractionEnabled:NO];
             [aCell.btnCheckBox setSelected:YES];
         }
-        else if ([[aDict objectForKey:@"type"] isEqualToString:@"textField"]) {
+        else if ([task.responseType isEqualToString:@"numeric"]) {
             [aCell.txtTemp setHidden:NO];
             [aCell.txtTemp setUserInteractionEnabled:NO];
-            [aCell.txtTemp setText:[aDict objectForKey:@"value"]];
+            [aCell.txtTemp setText:task.response];
             [aCell.txtTemp setTextColor:[UIColor colorWithRed:120.0/255.0 green:197.0/255.0 blue:121.0/255.0 alpha:1.0]];
         }
-        else {
-            if ([[aDict objectForKey:@"value"] isEqualToString:@"Y"]) {
+        else if ([task.responseType isEqualToString:@"yesno"]) {
+            if ([task.response isEqualToString:@"yes"]) {
                 [aCell.btnYes setHidden:NO];
                 [aCell.btnYes setSelected:YES];
                 [aCell.btnYes setUserInteractionEnabled:NO];
@@ -258,7 +277,12 @@
                 [aCell.btnNo setUserInteractionEnabled:NO];
             }
         }
-        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[aDict objectForKey:@"task"]];
+        else if ([task.responseType isEqualToString:@"dropdown"]) {
+            [aCell.vwDrpDown setHidden:NO];
+            aCell.txtDropDown.text = task.response;
+            aCell.txtDropDown.userInteractionEnabled = NO;
+        }
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:task.name];
         [attributeString addAttribute:NSStrikethroughStyleAttributeName
                                 value:@2
                                 range:NSMakeRange(0, [attributeString length])];
@@ -268,23 +292,22 @@
     }
     else {
         [aCell.lblTask setAttributedText:nil];
-        [aCell.lblTask setText:[aDict objectForKey:@"task"]];
+        [aCell.lblTask setText:task.name];
         [aCell.lblTask setTextColor:[UIColor darkGrayColor]];
         [aCell.btnKeyboardIcon setHidden:NO];
-        if ([[aDict objectForKey:@"type"] isEqualToString:@"checkbox"]) {
-            if ([[aDict objectForKey:@"value"] isEqualToString:@"C"]) {
-                [aCell.btnCheckBox setHidden:NO];
+        if ([task.responseType isEqualToString:@"checkbox"]) {
+            [aCell.btnCheckBox setHidden:NO];
+            if ([task.response isEqualToString:@"checked"]) {
                 [aCell.btnCheckBox setSelected:YES];
             }
             else {
-                [aCell.btnCheckBox setHidden:NO];
                 [aCell.btnCheckBox setSelected:NO];
             }
         }
-        else if ([[aDict objectForKey:@"type"] isEqualToString:@"textField"]) {
+        else if ([task.responseType isEqualToString:@"numeric"]) {
             [aCell.txtTemp setHidden:NO];
-            if (![[aDict objectForKey:@"value"] isEqualToString:@""]) {
-                [aCell.txtTemp setText:[aDict objectForKey:@"value"]];
+            if (![task.response isEqualToString:@""]) {
+                [aCell.txtTemp setText:task.response];
             }
             else {
                 [aCell.txtTemp setText:@"--"];
@@ -292,11 +315,28 @@
             [aCell.txtTemp setUserInteractionEnabled:YES];
             [aCell.txtTemp setTextColor:[UIColor colorWithRed:204.0/255.0 green:0.0 blue:0.0 alpha:1.0]];
         }
-        else {
+        else if ([task.responseType isEqualToString:@"yesno"]) {
             [aCell.btnNo setHidden:NO];
             [aCell.btnYes setHidden:NO];
             [aCell.btnNo setSelected:NO];
             [aCell.btnYes setSelected:NO];
+            if ([task.response isEqualToString:@"yes"]) {
+                [aCell.btnYes setSelected:YES];
+            }
+            else if ([task.response isEqualToString:@"no"]) {
+                [aCell.btnNo setSelected:YES];
+            }
+        }
+        else if ([task.responseType isEqualToString:@"dropdown"]) {
+            [aCell.vwDrpDown setHidden:NO];
+            for (TaskResponseTypeValues *type in task.responseTypeValues) {
+                if ([type.typeId isEqualToString:task.response]) {
+                    aCell.txtDropDown.text = type.code;
+                    break;
+                }
+            }
+            
+            aCell.txtDropDown.userInteractionEnabled = YES;
         }
     }
     [aCell.lblFarenhite setTextColor:aCell.txtTemp.textColor];
@@ -309,12 +349,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *aDict = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     CGRect frame = _lblDetailDesc.frame;
     frame.size.width = 470;
     _lblDetailDesc.frame = frame;
-    [_lblDetailTitle setText:[aDict objectForKey:@"task"]];
-    [_lblDetailDesc setText:[aDict objectForKey:@"description"]];
+    [_lblDetailTitle setText:task.name];
+    [_lblDetailDesc setText:task.desc];
     [_lblDetailDesc sizeToFit];
     frame = _vwDetailPopOver.frame;
     frame.size.height = CGRectGetMaxY(_lblDetailDesc.frame) + 18;
@@ -353,6 +393,19 @@
 
 #pragma mark - UITextField Delegate
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    NSIndexPath *indexPath = [self indexPathForCellSubView:textField];
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
+    if ([[task responseType] isEqualToString:@"dropdown"]) {
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        editingIndex = indexPath.row;
+        [dropDown showDropDownWith:[task.responseTypeValues allObjects] view:textField key:@"value"];
+        return NO;
+    }
+    return YES;
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if ([[textField text] isEqualToString:@"--"]) {
         [textField setText:@""];
@@ -372,7 +425,7 @@
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     NSIndexPath *indexPath = [self indexPathForCellSubView:textField];
     if (indexPath) {
-        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setObject:textField.trimText forKey:@"value"];
+        [[mutArrFilteredTaskList objectAtIndex:indexPath.row] setResponse:textField.trimText];
     }
     if (!isUpdate && ![strPreviousText isEqualToString:textField.text]) {
         isUpdate = YES;
@@ -407,7 +460,7 @@
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    [mutArrFilteredTaskList[editingIndex] setObject:textView.text forKey:@"message"];
+    [mutArrFilteredTaskList[editingIndex] setComment:textView.text];
     if (!isUpdate && ![strPreviousText isEqualToString:textView.text]) {
         isUpdate = YES;
     }
@@ -419,7 +472,13 @@
     if (buttonIndex == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    
+}
+
+
+- (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:editingIndex];
+    task.response = [(TaskResponseTypeValues*)value typeId];
+    [(UITextField*)sender setText:[(TaskResponseTypeValues*)value code]];
 }
 
 @end

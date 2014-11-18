@@ -10,6 +10,8 @@
 #import "GuestFormViewController.h"
 #import "ERPHistory.h"
 #import "ERPHistoryTask.h"
+#import "SubmitCountUser.h"
+#import "SubmitUtilizationCount.h"
 
 @interface UserHomeViewController ()
 
@@ -82,11 +84,13 @@
 }
 
 
-#pragma mark - Methods
+#pragma mark - Sync Methods
 
 - (void)getSyncCount {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ERPHistory"];
     syncCount = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
     }
@@ -102,8 +106,12 @@
     BOOL isSyncError = NO;
     isSyncError = [self syncERPHistory];
     if (!isSyncError) {
+        isSyncError = [self syncUtilizationCount];
+    }
+    if (!isSyncError) {
         alert(@"", @"All data are Synchronised with server.");
     }
+    [self getSyncCount];
     gblAppDelegate.shouldHideActivityIndicator = YES;
     [gblAppDelegate hideActivityIndicator];
 }
@@ -127,7 +135,7 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isHistorySaved = YES;
             isErrorOccurred = YES;
-            alert(@"", @"Due to some unexpected error, we are unable to sync your data at this time. Please try again later.");
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isHistorySaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
@@ -137,7 +145,51 @@
         }
     }
     [gblAppDelegate.managedObjectContext save:nil];
-    [self getSyncCount];
     return isErrorOccurred;
 }
+
+- (BOOL)syncUtilizationCount {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (SubmitCountUser *user in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSMutableArray *mutArrLocations = [NSMutableArray array];
+        for (SubmitUtilizationCount *location in [user.countLocation allObjects]) {
+            [mutArrLocations addObject:[self getPostLocation:location]];
+        }
+        NSDictionary *aDict = @{@"FacilityId":user.facilityId, @"LocationId":user.locationId, @"PositionId":user.positionId, @"UserId":user.userId, @"Locations":mutArrLocations};
+        [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:user];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
+
+- (NSDictionary *)getPostLocation:(SubmitUtilizationCount*)location {
+    
+    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id", nil];
+    NSMutableArray *subLocations = [NSMutableArray array];
+    for (SubmitUtilizationCount *subLocation in [location.sublocations allObjects]) {
+        [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime}];
+    }
+    if ([subLocations count] > 0) {
+        [aDict setObject:subLocations forKey:@"Sublocations"];
+    }
+    return aDict;
+}
+
 @end

@@ -57,14 +57,7 @@
             [alert setTag:1];
             [alert show];
     } failure:^(NSError *error, NSDictionary *response) {
-        if (response) {
-            
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
-        }
-        else {
-            alert(@"", @"There is an unexpected error occured, please try again later.");
-        }
-        
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
 
     

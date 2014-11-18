@@ -18,7 +18,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"%@", _mutArrCategoryHierarchy);
     if (!_dictSOPCategory) {
         [_btnSOPList setHidden:YES];
         [_lblTitle setText:@"Standard Operating Procedures"];
@@ -100,9 +99,13 @@
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
         _dictSOPCategory = response;
         mutArrSOPList = [response objectForKey:@"SopCategories"];
+        if ([mutArrSOPList count] == 0) {
+            [_lblNoRecords setHidden:NO];
+        }
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
-        
+        [_lblNoRecords setHidden:NO];
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
 }
 

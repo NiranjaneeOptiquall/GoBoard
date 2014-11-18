@@ -71,9 +71,14 @@
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_DETAIL, [_dictSopCategry objectForKey:@"Id"]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_DETAIL] complition:^(NSDictionary *response) {
         dictSOPDetails = response;
+        if ([dictSOPDetails count] == 0) {
+            [_lblNoRecords setHidden:NO];
+        }
         [_tblSOPList reloadData];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
+        [_lblNoRecords setHidden:NO];
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
 }

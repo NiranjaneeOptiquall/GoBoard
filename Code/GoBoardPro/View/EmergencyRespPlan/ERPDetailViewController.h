@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeStart;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeEnd;
 @property (weak, nonatomic) IBOutlet UITableView *tblActionsTaken;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 
 @property (nonatomic, weak) ERPSubcategory *erpSubcategory;
 @property (nonatomic, weak) NSDictionary *dictCategory;

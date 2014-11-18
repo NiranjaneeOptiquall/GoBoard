@@ -68,7 +68,6 @@
 - (void)getUserFacilities {
     if ([gblAppDelegate isNetworkReachable]) {
         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",USER_FACILITY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FACILITY] complition:^(NSDictionary *response) {
-            NSLog(@"%@", response);
             [self deleteAllFacilities];
         
             NSArray *aryFacility = [response objectForKey:@"Facilities"];
@@ -107,7 +106,7 @@
             }
             
         } failure:^(NSError *error, NSDictionary *response) {
-            NSLog(@"Error: %@\n%@", error, response);
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
     }
     else {

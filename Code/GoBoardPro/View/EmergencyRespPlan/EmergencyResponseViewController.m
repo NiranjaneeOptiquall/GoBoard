@@ -103,11 +103,13 @@
                 [_tblEmergencyList reloadData];
             }
         } failure:^(NSError *error, NSDictionary *response) {
-            
+            [self fetchOfflineERPData];
+            //alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
     }
     else {
         [self fetchOfflineERPData];
+        [_tblEmergencyList reloadData];
     }
 }
 
@@ -136,6 +138,10 @@
     NSArray *aryCategories = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
         [mutArrEmergencies addObjectsFromArray:aryCategories];
+    }
+    if ([mutArrEmergencies count] == 0) {
+        [_lblNoRecords setHidden:NO];
+        alert(@"", MSG_NO_INTERNET);
     }
 }
 

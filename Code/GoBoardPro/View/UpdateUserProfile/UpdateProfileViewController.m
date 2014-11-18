@@ -91,15 +91,10 @@
     NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
     NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG};
     [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
-        if ([response objectForKey:@"Success"]) {
-            [self updateUser];
-            [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-        }
-        else {
-            alert(@"", @"Unable to update profile at this time, Please try again later");
-        }
+        [self updateUser];
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", @"Unable to update profile at this time, Please try again later");
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
     
 }
@@ -168,7 +163,7 @@
             [self updateUser];
         }
     } failure:^(NSError *error, NSDictionary *response) {
-        
+        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
     
 }

@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate> {
-    NSMutableArray *mutArrTaskList;
-    NSMutableArray *mutArrFilteredTaskList;
+@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate, DropDownValueDelegate> {
+    NSArray *mutArrTaskList;
+    NSArray *mutArrFilteredTaskList;
     UIPopoverController *popOver;
     UIPopoverController *popOverMessage;
     NSInteger editingIndex;
@@ -19,10 +19,6 @@
     NSString *strPreviousText;
 }
 
-@property (weak, nonatomic) IBOutlet UILabel *lblUserName;
-@property (weak, nonatomic) IBOutlet UILabel *lblFacility;
-@property (weak, nonatomic) IBOutlet UILabel *lblLocation;
-@property (weak, nonatomic) IBOutlet UILabel *lblPosition;
 @property (weak, nonatomic) IBOutlet UITableView *tblTaskList;
 @property (weak, nonatomic) IBOutlet UIButton *btnHideCompleted;
 @property (weak, nonatomic) IBOutlet UILabel *lblTaskRemaining;
@@ -34,16 +30,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskLocation;
 @property (weak, nonatomic) IBOutlet UITextView *txvPopOverMessage;
-@property (weak, nonatomic) IBOutlet UIButton *btnTaskComment;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
-@property (weak, nonatomic) IBOutlet UIButton *btnGoBoardGroup;
-@property (weak, nonatomic) IBOutlet UIButton *btnBuildingSupervisor;
-@property (weak, nonatomic) IBOutlet UIButton *btnAreaSupervisor;
-@property (weak, nonatomic) IBOutlet UIButton *btnWorkOrder;
 @property (weak, nonatomic) IBOutlet UILabel *lblTask;
 @property (weak, nonatomic) IBOutlet UILabel *lblCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 
-
+@property (nonatomic, retain) IBOutlet UIButton *btnCommentTask;
+@property (nonatomic, retain) IBOutlet UIButton *btnCommentGoBoardGroup;
+@property (nonatomic, retain) IBOutlet UIButton *btnCommentBuildingSupervisor;
+@property (nonatomic, retain) IBOutlet UIButton *btnCommentAreaSupervisor;
+@property (nonatomic, retain) IBOutlet UIButton *btnCommentWorkOrder;
 
 - (IBAction)btnHideCompletedTapped:(UIButton *)sender;
 - (IBAction)btnToggleToCountTapped:(id)sender;
