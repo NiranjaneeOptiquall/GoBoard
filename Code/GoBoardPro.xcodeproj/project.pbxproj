@@ -134,9 +134,7 @@
 		33CD8DE31A1B0C10006A6EC2 /* UtilizationHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DE21A1B0C10006A6EC2 /* UtilizationHeaderView.m */; };
 		33CD8DE51A1B0C8E006A6EC2 /* UtilizationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CD8DE41A1B0C8E006A6EC2 /* UtilizationHeaderView.xib */; };
 		33CD8DEB1A1B11AE006A6EC2 /* UtilizationCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DEA1A1B11AE006A6EC2 /* UtilizationCount.m */; };
-		33CD8DF71A1B55AE006A6EC2 /* SubmitCountUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DF61A1B55AE006A6EC2 /* SubmitCountUser.m */; };
 		33CD8DFA1A1B59EC006A6EC2 /* SubmitUtilizationCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DF91A1B59EC006A6EC2 /* SubmitUtilizationCount.m */; };
-		33CD8DFD1A1B5F52006A6EC2 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DFC1A1B5F52006A6EC2 /* TaskList.m */; };
 		33CD8E001A1B5F53006A6EC2 /* TaskResponseTypeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CD8DFF1A1B5F53006A6EC2 /* TaskResponseTypeValues.m */; };
 		33CFBBB319D28A6C00D86E68 /* circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBB119D28A6C00D86E68 /* circle@2x.png */; };
 		33CFBBBA19D28B9800D86E68 /* checked_white_radiobutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBB619D28B9800D86E68 /* checked_white_radiobutton@2x.png */; };
@@ -245,6 +243,9 @@
 		33EB4A9A19D1A3A2008EF8FD /* text_box_email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9219D1A3A2008EF8FD /* text_box_email@2x.png */; };
 		33EB4A9C19D1A3A2008EF8FD /* text_box_mi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9419D1A3A2008EF8FD /* text_box_mi@2x.png */; };
 		33EB4A9E19D1A3A2008EF8FD /* text_box_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */; };
+		33FCAF891A1C70D9005EA0DB /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAF881A1C70D9005EA0DB /* TaskList.m */; };
+		33FCAF921A1C755A005EA0DB /* SubmitCountUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAF911A1C755A005EA0DB /* SubmitCountUser.m */; };
+		33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAF941A1C7778005EA0DB /* SubmittedTask.m */; };
 		33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FE66691A10D7090058BFB6 /* WebSerivceCall.m */; };
 /* End PBXBuildFile section */
 
@@ -464,12 +465,8 @@
 		33CD8DE41A1B0C8E006A6EC2 /* UtilizationHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UtilizationHeaderView.xib; sourceTree = "<group>"; };
 		33CD8DE91A1B11AE006A6EC2 /* UtilizationCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilizationCount.h; sourceTree = "<group>"; };
 		33CD8DEA1A1B11AE006A6EC2 /* UtilizationCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilizationCount.m; sourceTree = "<group>"; };
-		33CD8DF51A1B55AE006A6EC2 /* SubmitCountUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitCountUser.h; sourceTree = "<group>"; };
-		33CD8DF61A1B55AE006A6EC2 /* SubmitCountUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitCountUser.m; sourceTree = "<group>"; };
 		33CD8DF81A1B59EC006A6EC2 /* SubmitUtilizationCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitUtilizationCount.h; sourceTree = "<group>"; };
 		33CD8DF91A1B59EC006A6EC2 /* SubmitUtilizationCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitUtilizationCount.m; sourceTree = "<group>"; };
-		33CD8DFB1A1B5F52006A6EC2 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskList.h; sourceTree = "<group>"; };
-		33CD8DFC1A1B5F52006A6EC2 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskList.m; sourceTree = "<group>"; };
 		33CD8DFE1A1B5F53006A6EC2 /* TaskResponseTypeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskResponseTypeValues.h; sourceTree = "<group>"; };
 		33CD8DFF1A1B5F53006A6EC2 /* TaskResponseTypeValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskResponseTypeValues.m; sourceTree = "<group>"; };
 		33CFBBB119D28A6C00D86E68 /* circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circle@2x.png"; sourceTree = "<group>"; };
@@ -604,6 +601,12 @@
 		33EB4A9219D1A3A2008EF8FD /* text_box_email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_email@2x.png"; sourceTree = "<group>"; };
 		33EB4A9419D1A3A2008EF8FD /* text_box_mi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_mi@2x.png"; sourceTree = "<group>"; };
 		33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_box_name@2x.png"; sourceTree = "<group>"; };
+		33FCAF871A1C70D9005EA0DB /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskList.h; sourceTree = "<group>"; };
+		33FCAF881A1C70D9005EA0DB /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskList.m; sourceTree = "<group>"; };
+		33FCAF901A1C755A005EA0DB /* SubmitCountUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitCountUser.h; sourceTree = "<group>"; };
+		33FCAF911A1C755A005EA0DB /* SubmitCountUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitCountUser.m; sourceTree = "<group>"; };
+		33FCAF931A1C7778005EA0DB /* SubmittedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmittedTask.h; sourceTree = "<group>"; };
+		33FCAF941A1C7778005EA0DB /* SubmittedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmittedTask.m; sourceTree = "<group>"; };
 		33FE66681A10D7090058BFB6 /* WebSerivceCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSerivceCall.h; sourceTree = "<group>"; };
 		33FE66691A10D7090058BFB6 /* WebSerivceCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSerivceCall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -679,14 +682,16 @@
 		332B61031A14BDFE00B7C7EF /* CoreDataModel */ = {
 			isa = PBXGroup;
 			children = (
+				33FCAF931A1C7778005EA0DB /* SubmittedTask.h */,
+				33FCAF941A1C7778005EA0DB /* SubmittedTask.m */,
+				33FCAF901A1C755A005EA0DB /* SubmitCountUser.h */,
+				33FCAF911A1C755A005EA0DB /* SubmitCountUser.m */,
+				33FCAF871A1C70D9005EA0DB /* TaskList.h */,
+				33FCAF881A1C70D9005EA0DB /* TaskList.m */,
 				33CD8DFE1A1B5F53006A6EC2 /* TaskResponseTypeValues.h */,
 				33CD8DFF1A1B5F53006A6EC2 /* TaskResponseTypeValues.m */,
-				33CD8DFB1A1B5F52006A6EC2 /* TaskList.h */,
-				33CD8DFC1A1B5F52006A6EC2 /* TaskList.m */,
 				33CD8DF81A1B59EC006A6EC2 /* SubmitUtilizationCount.h */,
 				33CD8DF91A1B59EC006A6EC2 /* SubmitUtilizationCount.m */,
-				33CD8DF51A1B55AE006A6EC2 /* SubmitCountUser.h */,
-				33CD8DF61A1B55AE006A6EC2 /* SubmitCountUser.m */,
 				33CD8DE91A1B11AE006A6EC2 /* UtilizationCount.h */,
 				33CD8DEA1A1B11AE006A6EC2 /* UtilizationCount.m */,
 				3366BC201A17638C003FA3BF /* ERPHistory.h */,
@@ -1731,6 +1736,7 @@
 			files = (
 				332B60E51A146CB700B7C7EF /* AFImageRequestOperation.m in Sources */,
 				332E3A3519D535060088AB61 /* SOPDetailViewController.m in Sources */,
+				33FCAF891A1C70D9005EA0DB /* TaskList.m in Sources */,
 				3337809719E6B6EA00362F82 /* YAxisBand.m in Sources */,
 				3397CAD619D034C000788153 /* SplashViewController.m in Sources */,
 				3354198119E7A931009B2B20 /* SignatureView.m in Sources */,
@@ -1770,18 +1776,17 @@
 				332B60E31A146CB700B7C7EF /* AFHTTPClient.m in Sources */,
 				33EB4A5219D18F30008EF8FD /* ForgotPasswordViewController.m in Sources */,
 				3366BC101A1724B7003FA3BF /* ERPTask.m in Sources */,
-				33CD8DF71A1B55AE006A6EC2 /* SubmitCountUser.m in Sources */,
 				33CFBC4119D2E8BB00D86E68 /* IncidenceReportViewController.m in Sources */,
 				33EB4A5819D18F4F008EF8FD /* UserHomeViewController.m in Sources */,
 				33CD8DEB1A1B11AE006A6EC2 /* UtilizationCount.m in Sources */,
 				3366BC221A17638C003FA3BF /* ERPHistory.m in Sources */,
 				33B0C88819DAE02F00D1002E /* FinalSection.m in Sources */,
 				3337809C19E6B6EA00362F82 /* LineScrollView.m in Sources */,
+				33FCAF921A1C755A005EA0DB /* SubmitCountUser.m in Sources */,
 				3337809119E6B6EA00362F82 /* MIMMargin.m in Sources */,
 				332B60E81A146CB700B7C7EF /* AFPropertyListRequestOperation.m in Sources */,
 				3337809D19E6B6EA00362F82 /* MIMColor.m in Sources */,
 				3337809E19E6B6EA00362F82 /* MIMColorClass.m in Sources */,
-				33CD8DFD1A1B5F52006A6EC2 /* TaskList.m in Sources */,
 				3337808D19E6B6EA00362F82 /* AnchorInfo.m in Sources */,
 				3397CAD319D0347700788153 /* LoginViewController.m in Sources */,
 				33D5A5A619E40C0F00344278 /* ToolsViewController.m in Sources */,
@@ -1801,6 +1806,7 @@
 				33EB4A5B19D18F5E008EF8FD /* UserRegistrationViewController.m in Sources */,
 				332B60EF1A146D9C00B7C7EF /* Reachability.m in Sources */,
 				3337809019E6B6EA00362F82 /* MIMFloatingView.m in Sources */,
+				33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */,
 				3337809519E6B6EA00362F82 /* XAxisBand.m in Sources */,
 				33CD6B7419DABB380024A02D /* ThirdSection.m in Sources */,
 				3366BC161A1724B8003FA3BF /* ERPCategory.m in Sources */,

@@ -57,6 +57,15 @@
     [[User currentUser] setSelectedFacility:selectedFacility];
     [[User currentUser] setSelectedLocation:selectedLocation];
     [[User currentUser] setSelectedPosition:selectedPosition];
+    
+    [gblAppDelegate showActivityIndicator];
+    gblAppDelegate.shouldHideActivityIndicator = NO;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    [[WebSerivceCall webServiceObject] getAllData];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    gblAppDelegate.shouldHideActivityIndicator = YES;
+    [gblAppDelegate hideActivityIndicator];
+    
     [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];
 }
 

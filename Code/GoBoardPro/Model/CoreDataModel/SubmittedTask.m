@@ -1,29 +1,26 @@
 //
-//  TaskList.m
+//  SubmittedTask.m
 //  GoBoardPro
 //
 //  Created by ind558 on 19/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
-#import "TaskList.h"
-#import "TaskResponseTypeValues.h"
+#import "SubmittedTask.h"
+#import "SubmitCountUser.h"
 
 
-@implementation TaskList
+@implementation SubmittedTask
 
+@dynamic taskId;
 @dynamic comment;
-@dynamic desc;
+@dynamic response;
+@dynamic responseType;
 @dynamic isCommentAreaSupervisor;
 @dynamic isCommentBuildingSupervisor;
 @dynamic isCommentGoBoardGroup;
 @dynamic isCommentTask;
 @dynamic isCommentWorkOrder;
-@dynamic isCompleted;
-@dynamic name;
-@dynamic response;
-@dynamic responseType;
-@dynamic taskId;
-@dynamic responseTypeValues;
+@dynamic user;
 
 @end

@@ -175,6 +175,19 @@
         <attribute name="positionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="countLocation" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmitUtilizationCount" inverseName="user" inverseEntity="SubmitUtilizationCount" syncable="YES"/>
+        <relationship name="submittedTask" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmittedTask" inverseName="user" inverseEntity="SubmittedTask" syncable="YES"/>
+    </entity>
+    <entity name="SubmittedTask" representedClassName="SubmittedTask" syncable="YES">
+        <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommentAreaSupervisor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommentBuildingSupervisor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommentGoBoardGroup" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommentTask" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommentWorkOrder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubmitCountUser" inverseName="submittedTask" inverseEntity="SubmitCountUser" syncable="YES"/>
     </entity>
     <entity name="SubmitUtilizationCount" representedClassName="SubmitUtilizationCount" syncable="YES">
         <attribute name="capacity" optional="YES" attributeType="String" syncable="YES"/>
@@ -254,13 +267,14 @@
         <element name="Person" positionX="601" positionY="-18" width="128" height="478"/>
         <element name="Report" positionX="601" positionY="486" width="128" height="343"/>
         <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
+        <element name="SubmitCountUser" positionX="-200" positionY="-990" width="128" height="133"/>
+        <element name="SubmitUtilizationCount" positionX="-201" positionY="-817" width="128" height="178"/>
         <element name="TaskList" positionX="430" positionY="-972" width="128" height="238"/>
+        <element name="TaskResponseTypeValues" positionX="429" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="34" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-47" positionY="-828" width="128" height="88"/>
         <element name="UserPosition" positionX="106" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-198" positionY="-604" width="128" height="163"/>
-        <element name="SubmitUtilizationCount" positionX="-201" positionY="-817" width="128" height="178"/>
-        <element name="SubmitCountUser" positionX="-200" positionY="-972" width="128" height="118"/>
-        <element name="TaskResponseTypeValues" positionX="429" positionY="-679" width="128" height="103"/>
+        <element name="SubmittedTask" positionX="-362" positionY="-988" width="128" height="193"/>
     </elements>
 </model>

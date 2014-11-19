@@ -11,6 +11,9 @@
 #import "UtilizationCount.h"
 #import "TaskList.h"
 #import "TaskResponseTypeValues.h"
+#import "ERPCategory.h"
+#import "ERPSubcategory.h"
+#import "ERPTask.h"
 
 
 
@@ -26,20 +29,109 @@
 }
 
 
+#pragma mark - GetAllData
+
+- (void)getAllData {
+    [self callServiceForEmergencyResponsePlan:YES complition:nil];
+    [self callServiceForTaskList:YES complition:nil];
+    [self callServiceForUtilizationCount:YES complition:nil];
+}
+
+#pragma mark - Emergency Response Plan
+
+- (void)callServiceForEmergencyResponsePlan:(BOOL)waitUntilDone complition:(void (^)(void))completion {
+    __block BOOL isWSComplete = NO;
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
+        [self deleteAllERPData];
+        [self inserAllERPData:[response objectForKey:@"ErpCategories"]];
+        if ([gblAppDelegate.managedObjectContext save:nil]) {
+            isWSComplete = YES;
+        }
+        if (completion) {
+            completion();
+        }
+        
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (completion) {
+            completion();
+        }
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+- (void)deleteAllERPData {
+    NSFetchRequest * allCategory = [[NSFetchRequest alloc] init];
+    [allCategory setEntity:[NSEntityDescription entityForName:@"ERPCategory" inManagedObjectContext:gblAppDelegate.managedObjectContext]];
+    [allCategory setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    NSError * error = nil;
+    NSArray * categories = [gblAppDelegate.managedObjectContext executeFetchRequest:allCategory error:&error];
+    //error handling goes here
+    for (NSManagedObject * cate in categories) {
+        [gblAppDelegate.managedObjectContext deleteObject:cate];
+    }
+    NSError *saveError = nil;
+    [gblAppDelegate.managedObjectContext save:&saveError];
+}
+
+- (void)inserAllERPData:(NSArray *)aryResponse {
+    for (NSDictionary *aDict in aryResponse) {
+        ERPCategory *aCategory = [NSEntityDescription insertNewObjectForEntityForName:@"ERPCategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aCategory.title = [aDict objectForKey:@"Title"];
+        aCategory.categoryId = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
+        NSMutableSet *subcategories = [NSMutableSet set];
+        for (NSDictionary *aDictSubCate in [aDict objectForKey:@"Subcategories"]) {
+            ERPSubcategory *aSubCate = [NSEntityDescription insertNewObjectForEntityForName:@"ERPSubcategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            aSubCate.title = [aDictSubCate objectForKey:@"Title"];
+            aSubCate.subCateId = [NSString stringWithFormat:@"%ld", (long)[[aDictSubCate objectForKey:@"Id"] integerValue]];
+            NSMutableSet *taskList = [NSMutableSet set];
+            for (NSDictionary *aTask in [aDictSubCate objectForKey:@"Tasks"]) {
+                ERPTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"ERPTask" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                task.taskID = [NSString stringWithFormat:@"%ld", (long)[[aTask objectForKey:@"Id"] integerValue]];
+                task.task = [aTask objectForKey:@"Description"];
+                if (![aTask objectForKey:@"AttachmentLink"] || [[aTask objectForKey:@"AttachmentLink"] isKindOfClass:[NSNull class]]) {
+                    task.attachmentLink = @"";
+                }
+                else {
+                    task.attachmentLink = [aTask objectForKey:@"AttachmentLink"];
+                }
+                
+                task.erpTitle = aSubCate;
+                [taskList addObject:task];
+            }
+            aSubCate.erpTasks = taskList;
+            aSubCate.erpHeader = aCategory;
+            [subcategories addObject:aSubCate];
+        }
+        aCategory.erpTitles = subcategories;
+        [gblAppDelegate.managedObjectContext insertObject:aCategory];
+    }
+}
 #pragma mark - UtilizationCount
 
-- (BOOL)callServiceForUtilizationCount {
+- (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedLocation] value], [[[User currentUser] selectedPosition] value], [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
+        if (completion) {
+            completion();
+        }
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
         isWSComplete = YES;
+        if (completion) {
+            completion();
+        }
     }];
-    while (!isWSComplete) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
     }
     return isWSComplete;
 }
@@ -107,18 +199,26 @@
 
 #pragma mark - Task
 
-- (void)callServiceForTaskList {
+- (void)callServiceForTaskList:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", TASK, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedLocation] value], [[[User currentUser] selectedPosition] value], [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         NSLog(@"%@", response);
         [self deleteAllTask];
         [self insertAllTask:[response objectForKey:@"Tasks"]];
+        if (completion) {
+            completion();
+        }
         isWSComplete = YES;
     } failure:^(NSError *error, NSDictionary *response) {
         isWSComplete = YES;
+        if (completion) {
+            completion();
+        }
     }];
-    while (!isWSComplete) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
     }
 }
 

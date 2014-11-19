@@ -12,6 +12,7 @@
 #import "ERPHistoryTask.h"
 #import "SubmitCountUser.h"
 #import "SubmitUtilizationCount.h"
+#import "SubmittedTask.h"
 
 @interface UserHomeViewController ()
 
@@ -105,9 +106,10 @@
     gblAppDelegate.shouldHideActivityIndicator = NO;
     BOOL isSyncError = NO;
     isSyncError = [self syncERPHistory];
-    if (!isSyncError) {
+    if (!isSyncError)
         isSyncError = [self syncUtilizationCount];
-    }
+    if (!isSyncError)
+        [self syncSubmittedTask];
     if (!isSyncError) {
         alert(@"", @"All data are Synchronised with server.");
     }
@@ -150,6 +152,8 @@
 
 - (BOOL)syncUtilizationCount {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"countLocation.@count > 0"];
+    [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
     __block BOOL isSingleDataSaved = NO;
@@ -190,6 +194,40 @@
         [aDict setObject:subLocations forKey:@"Sublocations"];
     }
     return aDict;
+}
+
+
+- (BOOL)syncSubmittedTask {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"submittedTask.@count > 0"];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (SubmitCountUser *user in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSMutableArray *mutArrTask = [NSMutableArray array];
+        for (SubmittedTask *task in [user.submittedTask allObjects]) {
+            [mutArrTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":task.comment, @"IsCommentTask": task.isCommentTask, @"IsCommentGoBoardGroup":task.isCommentGoBoardGroup, @"IsCommentBuildingSupervisor":task.isCommentBuildingSupervisor, @"IsCommentAreaSupervisor":task.isCommentAreaSupervisor, @"IsCommentWorkOrder":task.isCommentWorkOrder}];
+        }
+        NSDictionary *aDict = @{@"FacilityId":user.facilityId, @"LocationId":user.locationId, @"PositionId":user.positionId, @"UserId":user.userId, @"Locations":mutArrTask};
+        [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:user];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
 }
 
 @end

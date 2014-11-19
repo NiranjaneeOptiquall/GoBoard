@@ -11,6 +11,8 @@
 #import "UtilizationCountViewController.h"
 #import "TaskList.h"
 #import "TaskResponseTypeValues.h"
+#import "SubmitCountUser.h"
+#import "SubmittedTask.h"
 
 @interface TaskListViewController ()
 
@@ -73,27 +75,85 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
+    [self submitTask:NO];
+}
+
+- (void)submitTask:(BOOL)showCount {
+    NSMutableArray *mutArrPostTask = [NSMutableArray array];
     for (TaskList *task in mutArrFilteredTaskList) {
-        if ([task.response length] > 0) {
+        if (![task.isCompleted boolValue] && [task.response length] > 0) {
+            NSString *comment = @"", *taskComment = @"false", *goboardGroup = @"false", *buildingSupervisor = @"false", *areaSupervisor = @"false", *workOrder = @"false";
+            if (task.comment)
+                comment = task.comment;
+            if (task.isCommentTask.boolValue)
+                taskComment = @"true";
+            if (task.isCommentGoBoardGroup.boolValue)
+                goboardGroup = @"true";
+            if (task.isCommentBuildingSupervisor.boolValue)
+                buildingSupervisor = @"true";
+            if (task.isCommentAreaSupervisor.boolValue)
+                areaSupervisor = @"true";
+            if (task.isCommentWorkOrder.boolValue)
+                workOrder = @"true";
+            [mutArrPostTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":comment, @"IsCommentTask": taskComment, @"IsCommentGoBoardGroup":goboardGroup, @"IsCommentBuildingSupervisor":buildingSupervisor, @"IsCommentAreaSupervisor":areaSupervisor, @"IsCommentWorkOrder":workOrder}];
             task.isCompleted = [NSNumber numberWithBool:YES];
         }
     }
-    [_tblTaskList reloadData];
+    if ([mutArrPostTask count] > 0) {
+        [gblAppDelegate.managedObjectContext save:nil];
+        
+        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":[[[User currentUser]selectedLocation] value], @"PositionId":[[[User currentUser]selectedPosition] value], @"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
+        [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            if (showCount) {
+                [alert setTag:1];
+            }
+            [alert show];
+        } failure:^(NSError *error, NSDictionary *response) {
+            [self saveCompletedTask:aDict];
+        }];
+    }
+    else if (showCount) {
+        [self showCount];
+    }
+    else {
+        alert(@"", @"Count is already updated.");
+    }
+}
+
+- (void)showCount {
+    [self.navigationController popViewControllerAnimated:NO];
+    [[[gblAppDelegate.navigationController viewControllers] lastObject] performSegueWithIdentifier:@"Count" sender:nil];
+}
+
+- (void)saveCompletedTask:(NSDictionary *)aDict {
+    SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    user.userId = [aDict objectForKey:@"UserId"];
+    user.facilityId = [aDict objectForKey:@"FacilityId"];
+    user.locationId = [aDict objectForKey:@"LocationId"];
+    user.positionId = [aDict objectForKey:@"PositionId"];
+    NSMutableSet *set = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"Tasks"]) {
+        SubmittedTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"SubmittedTask" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        task.taskId = [dict objectForKey:@"Id"];
+        task.comment = [dict objectForKey:@"Comment"];
+        task.responseType = [dict objectForKey:@"ResponseType"];
+        task.response = [dict objectForKey:@"Response"];
+        task.isCommentTask = [dict objectForKey:@"IsCommentTask"];
+        task.isCommentGoBoardGroup = [dict objectForKey:@"IsCommentGoBoardGroup"];
+        task.isCommentBuildingSupervisor = [dict objectForKey:@"IsCommentBuildingSupervisor"];
+        task.isCommentAreaSupervisor = [dict objectForKey:@"IsCommentAreaSupervisor"];
+        task.isCommentWorkOrder = [dict objectForKey:@"IsCommentWorkOrder"];
+        task.user = user;
+        [set addObject:task];
+    }
+    user.submittedTask = set;
+    [gblAppDelegate.managedObjectContext insertObject:user];
+    [gblAppDelegate.managedObjectContext save:nil];
 }
 
 - (IBAction)btnToggleTaskAndCountTapped:(id)sender {
-    NSArray *aryNavigationStack = [self.navigationController viewControllers];
-    BOOL isPoped = NO;
-    for (id obj in aryNavigationStack) {
-        if ([obj isKindOfClass:[UtilizationCountViewController class]]) {
-            isPoped = YES;
-            [self.navigationController popToViewController:obj animated:YES];
-            break;
-        }
-    }
-    if (!isPoped) {
-        [self performSegueWithIdentifier:@"TaskToCount" sender:self];
-    }
+    [self submitTask:YES];
 }
 
 - (IBAction)btnBackTapped:(id)sender {
@@ -200,12 +260,17 @@
 #pragma mark - Methods
 
 - (void)getAllTasks {
-    [[WebSerivceCall webServiceObject] callServiceForTaskList];
-    [self fetchAllTask];
+    [[WebSerivceCall webServiceObject] callServiceForTaskList:NO complition:^{
+        [self fetchAllTask];
+        [_tblTaskList reloadData];
+    }];
+    
 }
 
 - (void)fetchAllTask {
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    [allTask setSortDescriptors:@[descriptor]];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
@@ -469,8 +534,13 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [self.navigationController popViewControllerAnimated:YES];
+    if (alertView.tag == 1) {
+        [self showCount];
+    }
+    else {
+        if (buttonIndex == 0) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 

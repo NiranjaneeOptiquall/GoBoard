@@ -96,15 +96,8 @@
     if ([mutArrUpdatedCount count] > 0) {
         NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":[[[User currentUser]selectedLocation] value], @"PositionId":[[[User currentUser]selectedPosition] value], @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
         [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
-            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Count has been updated successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showTask) {
-                isUpdate = NO;
-                for (NSMutableDictionary *aDict in mutArrCount) {
-                    [aDict setObject:[aDict objectForKey:@"originalMessage"] forKey:@"Message"];
-                    [aDict setObject:[aDict objectForKey:@"originalCount"] forKey:@"LastCount"];
-                    [aDict setObject:[NSNumber numberWithBool:NO] forKey:@"CountRemainSame"];
-                }
                 [alert setTag:1];
             }
             [alert show];
@@ -155,18 +148,8 @@
 }
 
 - (void)showTask {
-    NSArray *aryNavigationStack = [self.navigationController viewControllers];
-    BOOL isPoped = NO;
-    for (id obj in aryNavigationStack) {
-        if ([obj isKindOfClass:[TaskListViewController class]]) {
-            isPoped = YES;
-            [self.navigationController popToViewController:obj animated:YES];
-            break;
-        }
-    }
-    if (!isPoped) {
-        [self performSegueWithIdentifier:@"CountToTask" sender:self];
-    }
+    [self.navigationController popViewControllerAnimated:NO];
+    [[[gblAppDelegate.navigationController viewControllers] lastObject] performSegueWithIdentifier:@"Tasks" sender:nil];
 }
 
 - (IBAction)btnCountCommentTapped:(UIButton *)sender {
@@ -214,12 +197,14 @@
             alert(@"Exceed Limit", strMsg);
         }
         location.location.isUpdateAvailable = YES;
+        location.location.lastCountDateTime = [self getCurrentDate];
     }
     else if (location.sublocations.count > 0) {
         for (UtilizationCount *subLoc in location.sublocations.allObjects) {
             subLoc.lastCount = 0;
         }
     }
+    location.lastCountDateTime = [self getCurrentDate];
     location.isUpdateAvailable = YES;
     [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
 //    [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -250,6 +235,7 @@
         if (location.location) {
             location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] - 1];
             location.location.isUpdateAvailable = YES;
+            location.location.lastCountDateTime = [self getCurrentDate];
         }
         else if (location.sublocations.count > 0) {
             for (UtilizationCount *subLoc in location.sublocations.allObjects) {
@@ -257,6 +243,7 @@
             }
         }
         location.isUpdateAvailable = YES;
+        location.lastCountDateTime = [self getCurrentDate];
         [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
     }
     
@@ -319,6 +306,11 @@
     }
     location.isCountRemainSame = YES;
     location.isUpdateAvailable = YES;
+    if (location.location) {
+        location.location.isUpdateAvailable = YES;
+        location.location.lastCountDateTime = [self getCurrentDate];
+    }
+    location.lastCountDateTime = [self getCurrentDate];
     isUpdate = YES;
 }
 
@@ -333,9 +325,11 @@
 }
 
 - (void)getAllCounts {
-    [[WebSerivceCall webServiceObject] callServiceForUtilizationCount];
-    [self fetchOfflineCountData];
-    [_tblCountList reloadData];
+    [[WebSerivceCall webServiceObject] callServiceForUtilizationCount:NO complition:^{
+        [self fetchOfflineCountData];
+        [_tblCountList reloadData];
+    }];
+    
 }
 
 - (void)fetchOfflineCountData {
@@ -359,25 +353,14 @@
             [location setInitialValues];
         }
     }
+    [self showTotalCount];
 }
 
-- (NSIndexPath *)indexPathForView:(id)view {
-    UtilizationCountTableViewCell *aCell = (UtilizationCountTableViewCell*)[view superview];
-    while (![aCell isKindOfClass:[UtilizationCountTableViewCell class]]) {
-        aCell = (UtilizationCountTableViewCell*)[aCell superview];
-    }
-    NSIndexPath *indexPath = [_tblCountList indexPathForCell:aCell];
-    return indexPath;
-}
-
-#pragma mark - UITableView Datasource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [mutArrCount count];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[[mutArrCount objectAtIndex:section] sublocations] count];
+- (NSString *)getCurrentDate {
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
+    return aStr;
 }
 
 - (NSString *)getLastUpdate:(NSString*)lastDate {
@@ -388,6 +371,16 @@
     NSDateComponents *components = [cal components:NSCalendarUnitMinute fromDate:lastDt toDate:[NSDate date] options:0];
     NSString *aStrTime = [NSString stringWithFormat:@"Last Count:%ld mins.", (long)components.minute];
     return aStrTime;
+}
+
+#pragma mark - UITableView Datasource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return [mutArrCount count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [[[mutArrCount objectAtIndex:section] sublocations] count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -424,6 +417,11 @@
     [aCell.txtCount setDelegate:self];
     [aCell.btnDecreaseCount addTarget:self action:@selector(btnDecreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnIncreaseCount addTarget:self action:@selector(btnIncreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aCell.btnCountRemainSame.layer setCornerRadius:3.0];
+    [aCell.btnCountRemainSame setClipsToBounds:YES];
+    [aCell.btnCountRemainSame addTarget:self action:@selector(btnCountRemainSameTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [aCell.btnCountRemainSame.titleLabel setNumberOfLines:2];
+    [aCell.btnCountRemainSame.titleLabel setTextAlignment:NSTextAlignmentCenter];
     if (aCurrent == 0) {
         [aCell.btnDecreaseCount setHidden:YES];
     }
@@ -498,10 +496,6 @@
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     popOverMessage.contentViewController.view = nil;
     popOverMessage = nil;
@@ -558,6 +552,7 @@
                     alert(@"Exceed Limit", strMsg);
                 }
                 location.location.isUpdateAvailable = YES;
+                location.location.lastCountDateTime = [self getCurrentDate];
             }
             else if (location.sublocations.count > 0) {
                 for (UtilizationCount *subLoc in location.sublocations.allObjects) {
@@ -565,6 +560,7 @@
                 }
             }
             location.isUpdateAvailable = YES;
+            location.lastCountDateTime = [self getCurrentDate];
             [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
         }
         else {

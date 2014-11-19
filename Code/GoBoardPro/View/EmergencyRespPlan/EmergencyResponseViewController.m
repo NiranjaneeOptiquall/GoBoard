@@ -64,68 +64,11 @@
 #pragma mark - Methods
 
 - (void)getAllEmergencyList {
-    if (gblAppDelegate.isNetworkReachable) {
-        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
-            [self deleteAllERPData];
-            for (NSDictionary *aDict in [response objectForKey:@"ErpCategories"]) {
-                ERPCategory *aCategory = [NSEntityDescription insertNewObjectForEntityForName:@"ERPCategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                aCategory.title = [aDict objectForKey:@"Title"];
-                aCategory.categoryId = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
-                NSMutableSet *subcategories = [NSMutableSet set];
-                for (NSDictionary *aDictSubCate in [aDict objectForKey:@"Subcategories"]) {
-                    ERPSubcategory *aSubCate = [NSEntityDescription insertNewObjectForEntityForName:@"ERPSubcategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                    aSubCate.title = [aDictSubCate objectForKey:@"Title"];
-                    aSubCate.subCateId = [NSString stringWithFormat:@"%ld", (long)[[aDictSubCate objectForKey:@"Id"] integerValue]];
-                    NSMutableSet *taskList = [NSMutableSet set];
-                    for (NSDictionary *aTask in [aDictSubCate objectForKey:@"Tasks"]) {
-                        ERPTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"ERPTask" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                        task.taskID = [NSString stringWithFormat:@"%ld", (long)[[aTask objectForKey:@"Id"] integerValue]];
-                        task.task = [aTask objectForKey:@"Description"];
-                        if (![aTask objectForKey:@"AttachmentLink"] || [[aTask objectForKey:@"AttachmentLink"] isKindOfClass:[NSNull class]]) {
-                            task.attachmentLink = @"";
-                        }
-                        else {
-                            task.attachmentLink = [aTask objectForKey:@"AttachmentLink"];
-                        }
-                        
-                        task.erpTitle = aSubCate;
-                        [taskList addObject:task];
-                    }
-                    aSubCate.erpTasks = taskList;
-                    aSubCate.erpHeader = aCategory;
-                    [subcategories addObject:aSubCate];
-                }
-                aCategory.erpTitles = subcategories;
-                [gblAppDelegate.managedObjectContext insertObject:aCategory];
-            }
-            if ([gblAppDelegate.managedObjectContext save:nil]) {
-                [self fetchOfflineERPData];
-                [_tblEmergencyList reloadData];
-            }
-        } failure:^(NSError *error, NSDictionary *response) {
-            [self fetchOfflineERPData];
-            //alert(@"", [response objectForKey:@"ErrorMessage"]);
-        }];
-    }
-    else {
+    [[WebSerivceCall webServiceObject] callServiceForEmergencyResponsePlan:NO complition:^{
         [self fetchOfflineERPData];
         [_tblEmergencyList reloadData];
-    }
-}
-
-
-- (void)deleteAllERPData {
-    NSFetchRequest * allCategory = [[NSFetchRequest alloc] init];
-    [allCategory setEntity:[NSEntityDescription entityForName:@"ERPCategory" inManagedObjectContext:gblAppDelegate.managedObjectContext]];
-    [allCategory setIncludesPropertyValues:NO]; //only fetch the managedObjectID
-    NSError * error = nil;
-    NSArray * categories = [gblAppDelegate.managedObjectContext executeFetchRequest:allCategory error:&error];
-    //error handling goes here
-    for (NSManagedObject * cate in categories) {
-        [gblAppDelegate.managedObjectContext deleteObject:cate];
-    }
-    NSError *saveError = nil;
-    [gblAppDelegate.managedObjectContext save:&saveError];
+    }];
+    
 }
 
 - (void)fetchOfflineERPData {

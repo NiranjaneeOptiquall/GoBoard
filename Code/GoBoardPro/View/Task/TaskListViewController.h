@@ -42,7 +42,6 @@
 @property (nonatomic, retain) IBOutlet UIButton *btnCommentWorkOrder;
 
 - (IBAction)btnHideCompletedTapped:(UIButton *)sender;
-- (IBAction)btnToggleToCountTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnToggleTaskAndCountTapped:(id)sender;
 - (IBAction)btnBackTapped:(id)sender;

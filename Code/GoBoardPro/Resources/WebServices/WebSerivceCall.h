@@ -17,11 +17,13 @@
 
 + (WebSerivceCall *)webServiceObject;
 
+- (void)getAllData;
 
+- (void)callServiceForEmergencyResponsePlan:(BOOL)waitUntilDone complition:(void (^)(void))completion;
 
-- (BOOL)callServiceForUtilizationCount;
+- (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion;
 
-- (void)callServiceForTaskList;
+- (void)callServiceForTaskList:(BOOL)waitUntilDone complition:(void (^)(void))completion;
 
 
 @end
