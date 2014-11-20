@@ -15,6 +15,14 @@
 #import "ERPSubcategory.h"
 #import "ERPTask.h"
 
+#import "IncidentReportInfo.h"
+#import "NatureList.h"
+#import "EquipmentList.h"
+#import "RequiredField.h"
+#import "ConditionList.h"
+#import "ActionTakenList.h"
+#import "ActivityList.h"
+
 
 
 @implementation WebSerivceCall
@@ -35,6 +43,7 @@
     [self callServiceForEmergencyResponsePlan:YES complition:nil];
     [self callServiceForTaskList:YES complition:nil];
     [self callServiceForUtilizationCount:YES complition:nil];
+    [self callServiceForIncidentReport:YES complition:nil];
 }
 
 #pragma mark - Emergency Response Plan
@@ -273,5 +282,147 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
 }
+
+#pragma mark - IncidentReport
+
+- (void)callServiceForIncidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+    __block BOOL isWSComplete = NO;
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
+        [self deleteAllIncidentReports];
+        [self insertIncidentReportSettings:[response objectForKey:@"IncidentReportSetups"]];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+- (void)deleteAllIncidentReports {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"IncidentReportInfo"];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+- (void)insertIncidentReportSettings:(NSArray*)arrReports {
+    for (NSDictionary *aDict in arrReports) {
+        IncidentReportInfo *report = [NSEntityDescription insertNewObjectForEntityForName:@"IncidentReportInfo" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        report.reportType = [aDict objectForKey:@"ReportType"];
+        report.instructions = [aDict objectForKey:@"Instructions"];
+        report.notificationField1 = [aDict objectForKey:@"NotificationField1"];
+        report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
+        report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
+        report.notificationField4 = [aDict objectForKey:@"NotificationField4"];
+        report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
+        report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
+        report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
+        report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberIdAndDriverLicense"] boolValue]];
+        report.showManagementFollowup = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowManagementFollowup"] boolValue]];
+        report.showDateOfBirth = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowDateOfBirth"] boolValue]];
+        report.showPhotoIcon = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowPhotoIcon"] boolValue]];
+        report.showMinor = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMinor"] boolValue]];
+        report.showConditions = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowConditions"] boolValue]];
+        // Add ActionTaker
+        NSMutableSet *actionSet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"ActionTakenList"]) {
+            ActionTakenList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ActionTakenList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.actionId = [[dict objectForKey:@"Id"] stringValue];
+            obj.name = [dict objectForKey:@"Name"];
+            obj.incidentType = report;
+            [actionSet addObject:obj];
+        }
+        report.actionList = actionSet;
+        
+        NSMutableSet *activitySet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"ActivityList"]) {
+            ActivityList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ActivityList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.activityId = [[dict objectForKey:@"Id"] stringValue];
+            obj.name = [dict objectForKey:@"Name"];
+            obj.incidentType = report;
+            [activitySet addObject:obj];
+        }
+        report.activityList = activitySet;
+        
+        NSMutableSet *conditionSet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"ConditionList"]) {
+            ConditionList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ConditionList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.conditionId = [[dict objectForKey:@"Id"] stringValue];
+            obj.name = [dict objectForKey:@"Name"];
+            obj.incidentType = report;
+            [conditionSet addObject:obj];
+        }
+        report.conditionList = conditionSet;
+        
+        NSMutableSet *equipmentSet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"EquipmentList"]) {
+            EquipmentList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"EquipmentList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.equipmentId = [[dict objectForKey:@"Id"] stringValue];
+            obj.name = [dict objectForKey:@"Name"];
+            obj.incidentType = report;
+            [equipmentSet addObject:obj];
+        }
+        report.equipmentList = equipmentSet;
+        
+        NSMutableSet *natureSet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"NatureList"]) {
+            NatureList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"NatureList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.natureId = [[dict objectForKey:@"Id"] stringValue];
+            obj.name = [dict objectForKey:@"Name"];
+            obj.incidentType = report;
+            [natureSet addObject:obj];
+        }
+        report.natureList = natureSet;
+        
+        NSMutableSet *requiredSet = [NSMutableSet set];
+        for (NSString *aStr in [aDict objectForKey:@"PersonInvolvedRequiredFields"]) {
+            RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.type = REQUIRED_TYPE_PERSON;
+            obj.name = aStr;
+            obj.incidentType = report;
+            [requiredSet addObject:obj];
+        }
+        for (NSString *aStr in [aDict objectForKey:@"EmergencyResponseRequiredFields"]) {
+            RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.type = REQUIRED_TYPE_EMERGENCY;
+            obj.name = aStr;
+            obj.incidentType = report;
+            [requiredSet addObject:obj];
+        }
+        for (NSString *aStr in [aDict objectForKey:@"WitnessRequiredFields"]) {
+            RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.type = REQUIRED_TYPE_WITNESS;
+            obj.name = aStr;
+            obj.incidentType = report;
+            [requiredSet addObject:obj];
+        }
+        for (NSString *aStr in [aDict objectForKey:@"EmployeeRequiredFields"]) {
+            RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.type = REQUIRED_TYPE_EMPLOYEE;
+            obj.name = aStr;
+            obj.incidentType = report;
+            [requiredSet addObject:obj];
+        }
+        report.requiredFields = requiredSet;
+        
+        [gblAppDelegate.managedObjectContext insertObject:report];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+#define REQUIRED_TYPE_PERSON    @"PersonInvolved"
+#define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
+#define REQUIRED_TYPE_WITNESS    @"Witness"
+#define REQUIRED_TYPE_EMPLOYEE    @"Employee"
 
 @end

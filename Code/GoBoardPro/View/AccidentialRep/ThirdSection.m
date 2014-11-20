@@ -106,7 +106,7 @@
 - (BOOL)isThirdSectionValidationSuccess {
     BOOL success = YES;
     for (EmergencyPersonnelView *view in mutArrEmergencyViews) {
-        if (![view isEmergencyPersonnelValidationSucceed]) {
+        if (![view isEmergencyPersonnelValidationSucceedFor:nil]) {
             success = NO;
             break;
         }

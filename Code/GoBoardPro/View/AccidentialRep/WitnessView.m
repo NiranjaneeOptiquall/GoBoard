@@ -28,31 +28,71 @@
     [sender setSelected:YES];
 }
 
-- (BOOL)isWitnessViewValidationSuccess {
+- (BOOL)isWitnessViewValidationSuccessFor:(NSArray*)fields {
     BOOL success = YES;
-    if ([_txtWitnessFName isTextFieldBlank] || [_txtWitnessMI isTextFieldBlank] || [_txtWitnessLName isTextFieldBlank] || [_txtWitnessHomePhone isTextFieldBlank]) {
-        success = NO;
-        alert(@"", MSG_REQUIRED_FIELDS);
+    if (fields) {
+        if ([fields containsObject:@"firstname"] && [_txtWitnessFName isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if ([fields containsObject:@"middleInital"] && [_txtWitnessMI isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if ([fields containsObject:@"lastname"] && [_txtWitnessLName isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if ([fields containsObject:@"phone"] && [_txtWitnessHomePhone isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if (![_txtWitnessHomePhone.text isValidPhoneNumber]) {
+            success = NO;
+            [_txtWitnessHomePhone becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid home phone number");
+        }
+        else if (![_txtWitnessAlternatePhone.text isValidPhoneNumber]) {
+            success = NO;
+            [_txtWitnessAlternatePhone becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid alternate phone number");
+        }
+        else if ([fields containsObject:@"email"] && [_txtWitnessEmailAddress isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
+            success = NO;
+            [_txtWitnessEmailAddress becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid email address");
+        }
     }
-    else if ([_txtWitnessHomePhone.text isValidPhoneNumber]) {
-        success = NO;
-        [_txtWitnessHomePhone becomeFirstResponder];
-        alert(@"", @"Please enter witness's valid home phone number");
+    else {
+        if ([_txtWitnessFName isTextFieldBlank] || [_txtWitnessMI isTextFieldBlank] || [_txtWitnessLName isTextFieldBlank] || [_txtWitnessHomePhone isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if (![_txtWitnessHomePhone.text isValidPhoneNumber]) {
+            success = NO;
+            [_txtWitnessHomePhone becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid home phone number");
+        }
+        else if (![_txtWitnessAlternatePhone.text isValidPhoneNumber]) {
+            success = NO;
+            [_txtWitnessAlternatePhone becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid alternate phone number");
+        }
+        else if ([_txtWitnessEmailAddress isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+        else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
+            success = NO;
+            [_txtWitnessEmailAddress becomeFirstResponder];
+            alert(@"", @"Please enter witness's valid email address");
+        }
     }
-    else if ([_txtWitnessAlternatePhone.text isValidPhoneNumber]) {
-        success = NO;
-        [_txtWitnessAlternatePhone becomeFirstResponder];
-        alert(@"", @"Please enter witness's valid alternate phone number");
-    }
-    else if ([_txtWitnessEmailAddress isTextFieldBlank]) {
-        success = NO;
-        alert(@"", MSG_REQUIRED_FIELDS);
-    }
-    else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
-        success = NO;
-        [_txtWitnessEmailAddress becomeFirstResponder];
-        alert(@"", @"Please enter witness's valid email address");
-    }
+    
     return success;
 }
 

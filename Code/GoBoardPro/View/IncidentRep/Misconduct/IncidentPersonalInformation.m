@@ -20,19 +20,14 @@
 */
 
 - (void)awakeFromNib {
-    [self btnPersonInvolvedTapped:_btnMember];
-    [self btnAffiliationTapped:_btnNonAssessedStudent];
-    [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
-    [self btnGenderTapped:_btnMale];
-    [self btnIsMinorTapped:_btnNotMinor];
+    
 }
+
 
 #pragma mark - IBActions
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender {
-    [_imvEmployeePosBG setHidden:YES];
-    [_txtEmployeePosition setHidden:YES];
-    [_lblEmpPosAsterisk setHidden:YES];
+    [_vwEmpPosition setHidden:YES];
     [_vwGuest setHidden:YES];
     [_vwEmployee setHidden:YES];
     [_btnEmployee setSelected:NO];
@@ -41,19 +36,20 @@
     [sender setSelected:YES];
     CGRect frame = _vwCommon.frame;
     if ([sender isEqual:_btnGuest]) {
+        if (!_isMemberIdVisible) [self hideMemberId:YES];
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
     }
     else if ([sender isEqual:_btnMember]) {
+        if (!_isMemberIdVisible) [self hideMemberId:YES];
         [_txtMemberId setPlaceholder:@"Member ID"];
         frame.origin.y = _vwEmployee.frame.origin.y;
     }
     else if ([sender isEqual:_btnEmployee]) {
+        [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Employee ID"];
-        [_imvEmployeePosBG setHidden:NO];
-        [_txtEmployeePosition setHidden:NO];
-        [_lblEmpPosAsterisk setHidden:NO];
+        [_vwEmpPosition setHidden:NO];
         [_vwEmployee setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwEmployee.frame);
     }
@@ -95,23 +91,60 @@
 
 #pragma mark - Methods
 
-- (BOOL)isPersonalInfoValidationSuccess {
+- (BOOL)isPersonalInfoValidationSuccessFor:(NSArray*)fields {
     BOOL success = YES;
-    if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
+    
+    if ([fields containsObject:@"memberid"] && [_txtMemberId isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
-    else if ([_txtHomePhone.text isValidPhoneNumber]) {
+    else if ([fields containsObject:@"employeePosition"] && ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank])) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"firstname"] && [_txtFirstName isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"middleInitial"] && [_txtMi isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"lastname"] && [_txtLastName isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"streetAddress"] && [_txtStreetAddress isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"city"] && [_txtCity isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"state"] && [_txtState isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"zip"] && [_txtZip isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"homePhone"] && [_txtHomePhone isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if (![_txtHomePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtHomePhone becomeFirstResponder];
         alert(@"", @"Please enter valid home phone number");
     }
-    else if ([_txtAlternatePhone.text isValidPhoneNumber]) {
+    else if (![_txtAlternatePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtAlternatePhone becomeFirstResponder];
         alert(@"", @"Please enter valid alternate phone number");
     }
-    else if ([_txtEmailAddress isTextFieldBlank]) {
+    else if ([fields containsObject:@"email"] && [_txtEmailAddress isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -120,11 +153,22 @@
         [_txtEmailAddress becomeFirstResponder];
         alert(@"", @"Please enter valid email address");
     }
-    else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
+    else if ([fields containsObject:@"dateOfBirth"] && [_txtDob isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    
+    else if ([fields containsObject:@"guestFirstName"] && ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"guestMiddleInitial"] && ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"guestLastName"] && ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
     return success;
 }
 
@@ -208,6 +252,94 @@
         [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];
     }
     
+}
+
+- (void)callInitialActions {
+    
+    if (!_isAffiliationVisible) [self hideAffiliation];
+    if (!_isDOBVisible) [self hideDateOfBirth];
+    if (!_isGenderVisible) [self hideGender];
+    if (!_isMinorVisible) [self hideMinor];
+    [self btnPersonInvolvedTapped:_btnMember];
+    [self btnAffiliationTapped:_btnNonAssessedStudent];
+    [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
+    [self btnGenderTapped:_btnMale];
+    [self btnIsMinorTapped:_btnNotMinor];
+}
+
+
+- (void)hideAffiliation {
+    [_vwAffiliation setHidden:YES];
+    CGRect frame = _vwMemberId.frame;
+    frame.origin.y = CGRectGetMinY(_vwAffiliation.frame);
+    _vwMemberId.frame = frame;
+    
+    frame = _vwEmpPosition.frame;
+    frame.origin.y = CGRectGetMinY(_vwAffiliation.frame);
+    _vwEmpPosition.frame = frame;
+    
+    frame = _vwPersonalInfo.frame;
+    frame.origin.y = CGRectGetMaxY(_vwMemberId.frame);
+    _vwPersonalInfo.frame = frame;
+    
+    frame = _vwEmployee.frame;
+    frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+    _vwEmployee.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwCommon.frame = frame;
+    
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+}
+
+
+- (void)hideMemberId:(BOOL)shouldHide {
+    [_vwMemberId setHidden:shouldHide];
+    CGRect frame = _vwPersonalInfo.frame;
+    if (shouldHide) {
+        frame.origin.y = _vwMemberId.frame.origin.y;
+    }
+    else {
+        frame.origin.y = CGRectGetMaxY(_vwMemberId.frame);
+    }
+    _vwPersonalInfo.frame = frame;
+    
+    frame = _vwEmployee.frame;
+    frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+    _vwEmployee.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwCommon.frame = frame;
+    
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+}
+
+- (void)hideDateOfBirth {
+    [_vwDob setHidden:YES];
+}
+
+- (void)hideGender {
+    [_vwGender setHidden:YES];
+    CGRect frame = _vwMinor.frame;
+    frame.origin.y = _vwGender.frame.origin.y;
+    _vwMinor.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.size.height = CGRectGetMaxY(_vwMinor.frame);
+    _vwCommon.frame = frame;
+}
+
+- (void)hideMinor {
+    [_vwMinor setHidden:YES];
+    CGRect frame = _vwCommon.frame;
+    frame.size.height = CGRectGetMinY(_vwMinor.frame);
+    _vwCommon.frame = frame;
 }
 
 

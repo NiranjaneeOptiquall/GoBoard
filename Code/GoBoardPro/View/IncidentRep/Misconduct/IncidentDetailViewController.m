@@ -11,6 +11,11 @@
 #import "IncidentPersonalInformation.h"
 #import "WitnessView.h"
 
+
+#define MISCONDUCT  @"misconduct"
+#define CUSTOMER_SERVICE    @"customerservice"
+#define OTHER   @"other"
+
 @interface IncidentDetailViewController ()
 
 @end
@@ -19,15 +24,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self fetchIncidentSetupInfo];
+    _lblInstruction.text = reportSetupInfo.instructions;
     [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
     [_vwAfterPersonalInfo setBackgroundColor:[UIColor clearColor]];
     mutArrIncidentPerson = [[NSMutableArray alloc] init];
     mutArrEmergencyPersonnel = [[NSMutableArray alloc] init];
     mutArrWitnessView = [[NSMutableArray alloc] init];
+    [self viewSetup];
     [self addIncidentPersonalInformationViews];
-    [self addEmergencyPersonnel];
+    if ([reportSetupInfo.showEmergencyPersonnel boolValue]) {
+        [self addEmergencyPersonnel];
+    }
     [self addWitnessView];
-    [self addActionTakenView];
+    if ([reportSetupInfo.showManagementFollowup boolValue]) {
+        [self addActionTakenView];
+    }
     [self btnNotificationTapped:_btnNone];
     if (_incidentType == 2) {
         _lblIncidentTitle.text = @"Customer Service Incident Report";
@@ -39,6 +51,59 @@
         [_imvIncidentIcon setImage:[UIImage imageNamed:@"other_incidents.png"]];
     }
     _isUpdate = NO;
+}
+
+- (void)viewSetup {
+    if (![reportSetupInfo.showPhotoIcon boolValue]) {
+        [_btnCapturePerson setHidden:YES];
+    }
+    if (![reportSetupInfo.showConditions boolValue]) {
+        [_vwConditions setHidden:YES];
+        CGRect frame = _vwNatureOfIncident.frame;
+        frame.origin.y = _vwConditions.frame.origin.y;
+        _vwNatureOfIncident.frame = frame;
+        
+        frame = _vwAfterPersonalInfo.frame;
+        frame.size.height = CGRectGetMaxY(_vwNatureOfIncident.frame);
+        _vwAfterPersonalInfo.frame = frame;
+    }
+    if (![reportSetupInfo.showEmergencyPersonnel boolValue]) {
+        CGRect frame = _vwEmergencyPersonnel.frame;
+        frame.size = CGSizeZero;
+        _vwEmergencyPersonnel.frame = frame;
+        [_vwEmergencyPersonnel setHidden:YES];
+    }
+    if (![reportSetupInfo.showManagementFollowup boolValue]) {
+        [_vwManagementFollowUp setHidden:YES];
+        CGRect frame = _vwSubmit.frame;
+        frame.origin.y = _vwManagementFollowUp.frame.origin.y;
+        _vwSubmit.frame = frame;
+    }
+}
+
+- (void)fetchIncidentSetupInfo {
+    NSString *type = @"";
+    switch (_incidentType) {
+        case 1:
+            type = MISCONDUCT;
+            break;
+        case 2:
+            type = CUSTOMER_SERVICE;
+            break;
+        case 3:
+            type = OTHER;
+            break;
+        default:
+            break;
+    }
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"IncidentReportInfo"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"reportType", type];
+    [request setPredicate:predicate];
+    NSArray *array = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    if ([array count] > 0) {
+        reportSetupInfo = [array firstObject];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -94,6 +159,12 @@
 
 - (void)addIncidentPersonalInformationViews {
     IncidentPersonalInformation *personalInfoView = (IncidentPersonalInformation*)[[[NSBundle mainBundle] loadNibNamed:@"IncidentPersonalInformation" owner:self options:nil] firstObject];
+    personalInfoView.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
+    personalInfoView.isMemberIdVisible = [reportSetupInfo.showMemberIdAndDriverLicense boolValue];
+    personalInfoView.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
+    personalInfoView.isGenderVisible = [reportSetupInfo.showGender boolValue];
+    personalInfoView.isMinorVisible = [reportSetupInfo.showMinor boolValue];
+    [personalInfoView callInitialActions];
     [personalInfoView setBackgroundColor:[UIColor clearColor]];
     CGRect frame = personalInfoView.frame;
     frame.origin.y = totalPersonCount * frame.size.height;
@@ -254,12 +325,20 @@
 
 - (BOOL)checkValidation {
     BOOL success = YES;
-    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtActivity isTextFieldBlank] || [_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
+    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![self validateIncidentPersonal]) {
         return NO;
+    }
+    else if ([_txtActivity isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([reportSetupInfo.showConditions boolValue] && ([_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![self validateEmergencyPersonnel]) {
         return NO;
@@ -267,13 +346,18 @@
     else if (![self validateWitnessView]) {
         return NO;
     }
-    
+    else if (![self validateEmployeeView]) {
+        return NO;
+    }
     return success;
 }
 
 - (BOOL)validateIncidentPersonal {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (IncidentPersonalInformation *person in mutArrIncidentPerson) {
-        if (![person isPersonalInfoValidationSuccess]) {
+        if (![person isPersonalInfoValidationSuccessFor:aryFields]) {
             return NO;
         }
     }
@@ -281,8 +365,11 @@
 }
 
 - (BOOL)validateEmergencyPersonnel {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (EmergencyPersonnelView *emergency in mutArrEmergencyPersonnel) {
-        if (![emergency isEmergencyPersonnelValidationSucceed]) {
+        if (![emergency isEmergencyPersonnelValidationSucceedFor:aryFields]) {
             return NO;
         }
     }
@@ -290,12 +377,58 @@
 }
 
 - (BOOL)validateWitnessView {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (WitnessView *witness in mutArrWitnessView) {
-        if (![witness isWitnessViewValidationSuccess]) {
+        if (![witness isWitnessViewValidationSuccessFor:aryFields]) {
             return NO;
         }
     }
     return YES;
+}
+
+- (BOOL)validateEmployeeView {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    BOOL success = YES;
+    if ([aryFields containsObject:@"firstname"] && [_txtEmpFName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"middleInital"] && [_txtEmpMI isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"lastname"] && [_txtEmpLName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"phone"] && [_txtEmpHomePhone isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if (![_txtEmpHomePhone.text isValidPhoneNumber]) {
+        success = NO;
+        [_txtEmpHomePhone becomeFirstResponder];
+        alert(@"", @"Please enter witness's valid home phone number");
+    }
+    else if (![_txtEmpAlternatePhone.text isValidPhoneNumber]) {
+        success = NO;
+        [_txtEmpAlternatePhone becomeFirstResponder];
+        alert(@"", @"Please enter witness's valid alternate phone number");
+    }
+    else if ([aryFields containsObject:@"email"] && [_txtEmpEmail isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if (![gblAppDelegate validateEmail:[_txtEmpEmail text]]) {
+        success = NO;
+        [_txtEmpEmail becomeFirstResponder];
+        alert(@"", @"Please enter witness's valid email address");
+    }
+    return success;
 }
 
 - (void)showPhotoLibrary {

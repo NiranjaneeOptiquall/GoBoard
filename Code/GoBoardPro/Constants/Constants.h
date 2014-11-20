@@ -54,6 +54,11 @@ typedef enum : NSUInteger {
 } PersonInvolved;
 
 
+#define REQUIRED_TYPE_PERSON    @"PersonInvolved"
+#define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
+#define REQUIRED_TYPE_WITNESS    @"Witness"
+#define REQUIRED_TYPE_EMPLOYEE    @"Employee"
+
 #define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
 
 
@@ -67,8 +72,10 @@ typedef enum : NSUInteger {
 #define ERP_HISTORY                 @"ErpHistory"
 #define UTILIZATION_COUNT           @"Count"
 #define TASK                        @"Task"
+#define INCIDENT_REPORT_SETUP       @"IncidentReportSetup"
 
-#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST"}
+
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET"}
 
 
 

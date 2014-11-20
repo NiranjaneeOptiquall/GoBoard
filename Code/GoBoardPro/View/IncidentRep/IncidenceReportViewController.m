@@ -17,7 +17,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    return;
+//    [[WebSerivceCall webServiceObject] callServiceForIncidentReport:NO complition:^{
+//        
+//    }];
     // Do any additional setup after loading the view.
 }
 

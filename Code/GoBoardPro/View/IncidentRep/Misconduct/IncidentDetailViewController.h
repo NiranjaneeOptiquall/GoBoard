@@ -10,20 +10,25 @@
 #import "IncidentActionTaken.h"
 #import "Constants.h"
 #import "TPKeyboardAvoidingScrollView.h"
+#import "IncidentReportInfo.h"
 
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalEmergencyPersonnelCount, totalWitnessCount;
     IncidentActionTaken *actionTaken;
     NSMutableArray *mutArrIncidentPerson, *mutArrEmergencyPersonnel, *mutArrWitnessView;
     UIPopoverController *popOver;
+    IncidentReportInfo *reportSetupInfo;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
+@property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) IBOutlet UIImageView *imvIncidentIcon;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 
 @property (weak, nonatomic) IBOutlet UIView *vwPersonalInfo;
 @property (weak, nonatomic) IBOutlet UIView *vwAfterPersonalInfo;
 @property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
+@property (weak, nonatomic) IBOutlet UIView *vwConditions;
+@property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
 @property (weak, nonatomic) IBOutlet UIView *vwWitnesses;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddWitness;
@@ -52,6 +57,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
 @property (weak, nonatomic) IBOutlet UITextField *txtChooseIncident;
 @property (weak, nonatomic) IBOutlet UITextField *txtActionTaken;
+@property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 
 @property (weak, nonatomic) IBOutlet UIButton *btn911Called;
 @property (weak, nonatomic) IBOutlet UIButton *btnPoliceCalled;

@@ -134,7 +134,7 @@
 - (BOOL)isFinalSectionValidationSuccess {
     BOOL success = YES;
     for (WitnessView *view in mutArrWitnessViews) {
-        if (![view isWitnessViewValidationSuccess]) {
+        if (![view isWitnessViewValidationSuccessFor:nil]) {
             success = NO;
             return success;
         }
@@ -143,12 +143,12 @@
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([_txtEmpHomePhone.text isValidPhoneNumber]) {
+    else if (![_txtEmpHomePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtEmpHomePhone becomeFirstResponder];
         alert(@"", @"Please enter employee's valid home phone number, who is completing report");
     }
-    else if ([_txtEmpAlternatePhone.text isValidPhoneNumber]) {
+    else if (![_txtEmpAlternatePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtEmpAlternatePhone becomeFirstResponder];
         alert(@"", @"Please enter employee's valid alternate phone number, who is completing report");

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="ActionTakenType" syncable="YES">
-        <attribute name="actionID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="14B25" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ActionTakenList" representedClassName="ActionTakenList" syncable="YES">
+        <attribute name="actionId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="actionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
-    <entity name="ActivityTypes" syncable="YES">
-        <attribute name="activityTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="ActivityList" representedClassName="ActivityList" syncable="YES">
+        <attribute name="activityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="activityList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="AffiliationType" syncable="YES">
         <attribute name="affiliationTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -24,11 +22,10 @@
         <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ConditionTypes" syncable="YES">
-        <attribute name="conditionTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="ConditionList" representedClassName="ConditionList" syncable="YES">
+        <attribute name="conditionId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="conditionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="Country" syncable="YES">
         <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,11 +44,10 @@
         <attribute name="middileInitial" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="EquipmentTypes" syncable="YES">
-        <attribute name="equipmentTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="EquipmentList" representedClassName="EquipmentList" syncable="YES">
+        <attribute name="equipmentId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="equipmentList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="ERPCategory" representedClassName="ERPCategory" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
@@ -84,30 +80,39 @@
         <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="erpTitle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPSubcategory" inverseName="erpTasks" inverseEntity="ERPSubcategory" syncable="YES"/>
     </entity>
-    <entity name="Facility" syncable="YES">
-        <attribute name="accountID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="stateCode" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
-    <entity name="FacilityLocation" syncable="YES">
-        <attribute name="clientDefaultLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facilityID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
-    </entity>
     <entity name="GenderTypes" representedClassName="GenderTypes" syncable="YES">
         <attribute name="facilityLocationID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="genderTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="ifDeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="IncidentReportInfo" representedClassName="IncidentReportInfo" syncable="YES">
+        <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reportType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="showAffiliation" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showConditions" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showDateOfBirth" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showGender" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showMinor" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="incidentType" inverseEntity="ActionTakenList" syncable="YES"/>
+        <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="incidentType" inverseEntity="ActivityList" syncable="YES"/>
+        <relationship name="conditionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConditionList" inverseName="incidentType" inverseEntity="ConditionList" syncable="YES"/>
+        <relationship name="equipmentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EquipmentList" inverseName="incidentType" inverseEntity="EquipmentList" syncable="YES"/>
+        <relationship name="natureList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NatureList" inverseName="incidentType" inverseEntity="NatureList" syncable="YES"/>
+        <relationship name="requiredFields" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RequiredField" inverseName="incidentType" inverseEntity="RequiredField" syncable="YES"/>
+    </entity>
+    <entity name="NatureList" representedClassName="NatureList" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="natureId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="natureList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="Person" syncable="YES">
         <attribute name="activityTypeID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -161,6 +166,11 @@
         <attribute name="signature" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="staffMemberWrittenStatement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time911Called" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="RequiredField" representedClassName="RequiredField" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="requiredFields" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="States" representedClassName="States" syncable="YES">
         <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
@@ -248,26 +258,21 @@
         <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="location" inverseEntity="UtilizationCount" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ActionTakenType" positionX="-252" positionY="-18" width="128" height="103"/>
-        <element name="ActivityTypes" positionX="-252" positionY="117" width="128" height="103"/>
-        <element name="AffiliationType" positionX="-254" positionY="252" width="128" height="103"/>
-        <element name="CareProvidedType" positionX="-252" positionY="392" width="128" height="103"/>
-        <element name="ConditionTypes" positionX="-83" positionY="-18" width="128" height="103"/>
-        <element name="Country" positionX="-83" positionY="117" width="128" height="103"/>
-        <element name="EmergencyPersonnel" positionX="-81" positionY="243" width="128" height="178"/>
-        <element name="EquipmentTypes" positionX="88" positionY="-18" width="128" height="103"/>
+        <element name="AffiliationType" positionX="-254" positionY="574" width="128" height="103"/>
+        <element name="CareProvidedType" positionX="-252" positionY="714" width="128" height="103"/>
+        <element name="Country" positionX="-92" positionY="574" width="128" height="103"/>
+        <element name="EmergencyPersonnel" positionX="-90" positionY="700" width="128" height="178"/>
         <element name="ERPCategory" positionX="261" positionY="-972" width="128" height="88"/>
         <element name="ERPHistory" positionX="259" positionY="-549" width="128" height="148"/>
         <element name="ERPHistoryTask" positionX="258" positionY="-358" width="128" height="88"/>
         <element name="ERPSubcategory" positionX="260" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="259" positionY="-688" width="128" height="103"/>
-        <element name="Facility" positionX="-84" positionY="453" width="128" height="208"/>
-        <element name="FacilityLocation" positionX="88" positionY="117" width="128" height="103"/>
-        <element name="GenderTypes" positionX="261" positionY="116" width="128" height="103"/>
-        <element name="Person" positionX="601" positionY="-18" width="128" height="478"/>
-        <element name="Report" positionX="601" positionY="486" width="128" height="343"/>
-        <element name="States" positionX="261" positionY="-17" width="128" height="118"/>
+        <element name="GenderTypes" positionX="81" positionY="708" width="128" height="103"/>
+        <element name="Person" positionX="241" positionY="574" width="128" height="478"/>
+        <element name="Report" positionX="241" positionY="1078" width="128" height="343"/>
+        <element name="States" positionX="81" positionY="575" width="128" height="118"/>
         <element name="SubmitCountUser" positionX="-200" positionY="-990" width="128" height="133"/>
+        <element name="SubmittedTask" positionX="-362" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-201" positionY="-817" width="128" height="178"/>
         <element name="TaskList" positionX="430" positionY="-972" width="128" height="238"/>
         <element name="TaskResponseTypeValues" positionX="429" positionY="-679" width="128" height="103"/>
@@ -275,6 +280,12 @@
         <element name="UserLocation" positionX="-47" positionY="-828" width="128" height="88"/>
         <element name="UserPosition" positionX="106" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-198" positionY="-604" width="128" height="163"/>
-        <element name="SubmittedTask" positionX="-362" positionY="-988" width="128" height="193"/>
+        <element name="IncidentReportInfo" positionX="-190" positionY="-252" width="128" height="358"/>
+        <element name="ActionTakenList" positionX="-387" positionY="-207" width="128" height="88"/>
+        <element name="ActivityList" positionX="-405" positionY="-106" width="128" height="88"/>
+        <element name="ConditionList" positionX="-416" positionY="11" width="128" height="88"/>
+        <element name="EquipmentList" positionX="-369" positionY="144" width="128" height="88"/>
+        <element name="NatureList" positionX="-20" positionY="36" width="128" height="88"/>
+        <element name="RequiredField" positionX="-29" positionY="-126" width="128" height="88"/>
     </elements>
 </model>

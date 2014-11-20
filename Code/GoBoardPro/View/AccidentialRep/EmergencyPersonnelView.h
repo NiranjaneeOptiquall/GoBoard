@@ -28,5 +28,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblAdditionalInfo;
 
 - (IBAction)btnEmergencyPersonnelTapped:(UIButton *)sender;
-- (BOOL)isEmergencyPersonnelValidationSucceed;
+- (BOOL)isEmergencyPersonnelValidationSucceedFor:(NSArray *)fields;
 @end

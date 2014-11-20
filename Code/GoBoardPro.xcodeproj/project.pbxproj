@@ -93,6 +93,13 @@
 		3354198219E7A931009B2B20 /* SignatureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3354198019E7A931009B2B20 /* SignatureView.xib */; };
 		3354198419E7DCFD009B2B20 /* graph_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3354198319E7DCFD009B2B20 /* graph_icon@2x.png */; };
 		3354198719E7DD7C009B2B20 /* GraphListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3354198619E7DD7C009B2B20 /* GraphListViewController.m */; };
+		33585F261A1DB70700B6D28A /* ActivityList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F251A1DB70700B6D28A /* ActivityList.m */; };
+		33585F291A1DB70800B6D28A /* ActionTakenList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F281A1DB70800B6D28A /* ActionTakenList.m */; };
+		33585F2C1A1DB70800B6D28A /* ConditionList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F2B1A1DB70800B6D28A /* ConditionList.m */; };
+		33585F2F1A1DB70800B6D28A /* RequiredField.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F2E1A1DB70800B6D28A /* RequiredField.m */; };
+		33585F321A1DB70800B6D28A /* IncidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F311A1DB70800B6D28A /* IncidentReportInfo.m */; };
+		33585F351A1DB70800B6D28A /* EquipmentList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F341A1DB70800B6D28A /* EquipmentList.m */; };
+		33585F381A1DB70800B6D28A /* NatureList.m in Sources */ = {isa = PBXBuildFile; fileRef = 33585F371A1DB70800B6D28A /* NatureList.m */; };
 		335DECBC19EBCDE200FFFD4D /* AdminTaskListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 335DECBB19EBCDE200FFFD4D /* AdminTaskListViewController.m */; };
 		3366BC101A1724B7003FA3BF /* ERPTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC0F1A1724B7003FA3BF /* ERPTask.m */; };
 		3366BC131A1724B8003FA3BF /* ERPSubcategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3366BC121A1724B8003FA3BF /* ERPSubcategory.m */; };
@@ -403,6 +410,20 @@
 		3354198319E7DCFD009B2B20 /* graph_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graph_icon@2x.png"; sourceTree = "<group>"; };
 		3354198519E7DD7C009B2B20 /* GraphListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphListViewController.h; sourceTree = "<group>"; };
 		3354198619E7DD7C009B2B20 /* GraphListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphListViewController.m; sourceTree = "<group>"; };
+		33585F241A1DB70700B6D28A /* ActivityList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityList.h; sourceTree = "<group>"; };
+		33585F251A1DB70700B6D28A /* ActivityList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityList.m; sourceTree = "<group>"; };
+		33585F271A1DB70800B6D28A /* ActionTakenList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionTakenList.h; sourceTree = "<group>"; };
+		33585F281A1DB70800B6D28A /* ActionTakenList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionTakenList.m; sourceTree = "<group>"; };
+		33585F2A1A1DB70800B6D28A /* ConditionList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConditionList.h; sourceTree = "<group>"; };
+		33585F2B1A1DB70800B6D28A /* ConditionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionList.m; sourceTree = "<group>"; };
+		33585F2D1A1DB70800B6D28A /* RequiredField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequiredField.h; sourceTree = "<group>"; };
+		33585F2E1A1DB70800B6D28A /* RequiredField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequiredField.m; sourceTree = "<group>"; };
+		33585F301A1DB70800B6D28A /* IncidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentReportInfo.h; sourceTree = "<group>"; };
+		33585F311A1DB70800B6D28A /* IncidentReportInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncidentReportInfo.m; sourceTree = "<group>"; };
+		33585F331A1DB70800B6D28A /* EquipmentList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EquipmentList.h; sourceTree = "<group>"; };
+		33585F341A1DB70800B6D28A /* EquipmentList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EquipmentList.m; sourceTree = "<group>"; };
+		33585F361A1DB70800B6D28A /* NatureList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NatureList.h; sourceTree = "<group>"; };
+		33585F371A1DB70800B6D28A /* NatureList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NatureList.m; sourceTree = "<group>"; };
 		335DECBA19EBCDE200FFFD4D /* AdminTaskListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminTaskListViewController.h; sourceTree = "<group>"; };
 		335DECBB19EBCDE200FFFD4D /* AdminTaskListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminTaskListViewController.m; sourceTree = "<group>"; };
 		3366BC0E1A1724B7003FA3BF /* ERPTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ERPTask.h; sourceTree = "<group>"; };
@@ -682,34 +703,11 @@
 		332B61031A14BDFE00B7C7EF /* CoreDataModel */ = {
 			isa = PBXGroup;
 			children = (
-				33FCAF931A1C7778005EA0DB /* SubmittedTask.h */,
-				33FCAF941A1C7778005EA0DB /* SubmittedTask.m */,
-				33FCAF901A1C755A005EA0DB /* SubmitCountUser.h */,
-				33FCAF911A1C755A005EA0DB /* SubmitCountUser.m */,
-				33FCAF871A1C70D9005EA0DB /* TaskList.h */,
-				33FCAF881A1C70D9005EA0DB /* TaskList.m */,
-				33CD8DFE1A1B5F53006A6EC2 /* TaskResponseTypeValues.h */,
-				33CD8DFF1A1B5F53006A6EC2 /* TaskResponseTypeValues.m */,
-				33CD8DF81A1B59EC006A6EC2 /* SubmitUtilizationCount.h */,
-				33CD8DF91A1B59EC006A6EC2 /* SubmitUtilizationCount.m */,
-				33CD8DE91A1B11AE006A6EC2 /* UtilizationCount.h */,
-				33CD8DEA1A1B11AE006A6EC2 /* UtilizationCount.m */,
-				3366BC201A17638C003FA3BF /* ERPHistory.h */,
-				3366BC211A17638C003FA3BF /* ERPHistory.m */,
-				3366BC1D1A17630F003FA3BF /* ERPHistoryTask.h */,
-				3366BC1E1A17630F003FA3BF /* ERPHistoryTask.m */,
-				3366BC141A1724B8003FA3BF /* ERPCategory.h */,
-				3366BC151A1724B8003FA3BF /* ERPCategory.m */,
-				3366BC111A1724B8003FA3BF /* ERPSubcategory.h */,
-				3366BC121A1724B8003FA3BF /* ERPSubcategory.m */,
-				3366BC0E1A1724B7003FA3BF /* ERPTask.h */,
-				3366BC0F1A1724B7003FA3BF /* ERPTask.m */,
-				332B610A1A14BE1300B7C7EF /* UserPosition.h */,
-				332B610B1A14BE1300B7C7EF /* UserPosition.m */,
-				332B61071A14BE1300B7C7EF /* UserFacility.h */,
-				332B61081A14BE1300B7C7EF /* UserFacility.m */,
-				332B61041A14BE1200B7C7EF /* UserLocation.h */,
-				332B61051A14BE1200B7C7EF /* UserLocation.m */,
+				33585F1D1A1DB69100B6D28A /* Report */,
+				33585F201A1DB6BA00B6D28A /* Task */,
+				33585F211A1DB6C600B6D28A /* Count */,
+				33585F221A1DB6D200B6D28A /* ERP */,
+				33585F231A1DB6E100B6D28A /* User */,
 			);
 			path = CoreDataModel;
 			sourceTree = "<group>";
@@ -897,6 +895,83 @@
 				3354198019E7A931009B2B20 /* SignatureView.xib */,
 			);
 			path = SignatureView;
+			sourceTree = "<group>";
+		};
+		33585F1D1A1DB69100B6D28A /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				33585F361A1DB70800B6D28A /* NatureList.h */,
+				33585F371A1DB70800B6D28A /* NatureList.m */,
+				33585F331A1DB70800B6D28A /* EquipmentList.h */,
+				33585F341A1DB70800B6D28A /* EquipmentList.m */,
+				33585F301A1DB70800B6D28A /* IncidentReportInfo.h */,
+				33585F311A1DB70800B6D28A /* IncidentReportInfo.m */,
+				33585F2D1A1DB70800B6D28A /* RequiredField.h */,
+				33585F2E1A1DB70800B6D28A /* RequiredField.m */,
+				33585F2A1A1DB70800B6D28A /* ConditionList.h */,
+				33585F2B1A1DB70800B6D28A /* ConditionList.m */,
+				33585F271A1DB70800B6D28A /* ActionTakenList.h */,
+				33585F281A1DB70800B6D28A /* ActionTakenList.m */,
+				33585F241A1DB70700B6D28A /* ActivityList.h */,
+				33585F251A1DB70700B6D28A /* ActivityList.m */,
+			);
+			name = Report;
+			sourceTree = "<group>";
+		};
+		33585F201A1DB6BA00B6D28A /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				33FCAF931A1C7778005EA0DB /* SubmittedTask.h */,
+				33FCAF941A1C7778005EA0DB /* SubmittedTask.m */,
+				33FCAF871A1C70D9005EA0DB /* TaskList.h */,
+				33FCAF881A1C70D9005EA0DB /* TaskList.m */,
+				33CD8DFE1A1B5F53006A6EC2 /* TaskResponseTypeValues.h */,
+				33CD8DFF1A1B5F53006A6EC2 /* TaskResponseTypeValues.m */,
+			);
+			name = Task;
+			sourceTree = "<group>";
+		};
+		33585F211A1DB6C600B6D28A /* Count */ = {
+			isa = PBXGroup;
+			children = (
+				33FCAF901A1C755A005EA0DB /* SubmitCountUser.h */,
+				33FCAF911A1C755A005EA0DB /* SubmitCountUser.m */,
+				33CD8DF81A1B59EC006A6EC2 /* SubmitUtilizationCount.h */,
+				33CD8DF91A1B59EC006A6EC2 /* SubmitUtilizationCount.m */,
+				33CD8DE91A1B11AE006A6EC2 /* UtilizationCount.h */,
+				33CD8DEA1A1B11AE006A6EC2 /* UtilizationCount.m */,
+			);
+			name = Count;
+			sourceTree = "<group>";
+		};
+		33585F221A1DB6D200B6D28A /* ERP */ = {
+			isa = PBXGroup;
+			children = (
+				3366BC201A17638C003FA3BF /* ERPHistory.h */,
+				3366BC211A17638C003FA3BF /* ERPHistory.m */,
+				3366BC1D1A17630F003FA3BF /* ERPHistoryTask.h */,
+				3366BC1E1A17630F003FA3BF /* ERPHistoryTask.m */,
+				3366BC141A1724B8003FA3BF /* ERPCategory.h */,
+				3366BC151A1724B8003FA3BF /* ERPCategory.m */,
+				3366BC111A1724B8003FA3BF /* ERPSubcategory.h */,
+				3366BC121A1724B8003FA3BF /* ERPSubcategory.m */,
+				3366BC0E1A1724B7003FA3BF /* ERPTask.h */,
+				3366BC0F1A1724B7003FA3BF /* ERPTask.m */,
+			);
+			name = ERP;
+			sourceTree = "<group>";
+		};
+		33585F231A1DB6E100B6D28A /* User */ = {
+			isa = PBXGroup;
+			children = (
+				332B610A1A14BE1300B7C7EF /* UserPosition.h */,
+				332B610B1A14BE1300B7C7EF /* UserPosition.m */,
+				332B61071A14BE1300B7C7EF /* UserFacility.h */,
+				332B61081A14BE1300B7C7EF /* UserFacility.m */,
+				332B61041A14BE1200B7C7EF /* UserLocation.h */,
+				332B61051A14BE1200B7C7EF /* UserLocation.m */,
+			);
+			name = User;
 			sourceTree = "<group>";
 		};
 		335DECB919EBCDC000FFFD4D /* AdminTaskList */ = {
@@ -1749,7 +1824,9 @@
 				33D5A59519E3F17C00344278 /* GraphDetailViewController.m in Sources */,
 				33CD8DFA1A1B59EC006A6EC2 /* SubmitUtilizationCount.m in Sources */,
 				33CFBC5019D2EC6300D86E68 /* ERPHeaderView.m in Sources */,
+				33585F381A1DB70800B6D28A /* NatureList.m in Sources */,
 				33B0C88119DADB6400D1002E /* WitnessView.m in Sources */,
+				33585F2C1A1DB70800B6D28A /* ConditionList.m in Sources */,
 				33D630AD19D3FE340090BE80 /* IncidentDetailViewController.m in Sources */,
 				33CD8DE31A1B0C10006A6EC2 /* UtilizationHeaderView.m in Sources */,
 				33CFBBC319D2947E00D86E68 /* AddCertificateView.m in Sources */,
@@ -1779,6 +1856,7 @@
 				33CFBC4119D2E8BB00D86E68 /* IncidenceReportViewController.m in Sources */,
 				33EB4A5819D18F4F008EF8FD /* UserHomeViewController.m in Sources */,
 				33CD8DEB1A1B11AE006A6EC2 /* UtilizationCount.m in Sources */,
+				33585F351A1DB70800B6D28A /* EquipmentList.m in Sources */,
 				3366BC221A17638C003FA3BF /* ERPHistory.m in Sources */,
 				33B0C88819DAE02F00D1002E /* FinalSection.m in Sources */,
 				3337809C19E6B6EA00362F82 /* LineScrollView.m in Sources */,
@@ -1791,6 +1869,7 @@
 				3397CAD319D0347700788153 /* LoginViewController.m in Sources */,
 				33D5A5A619E40C0F00344278 /* ToolsViewController.m in Sources */,
 				3366BC1F1A17630F003FA3BF /* ERPHistoryTask.m in Sources */,
+				33585F261A1DB70700B6D28A /* ActivityList.m in Sources */,
 				333780A119E6B6EA00362F82 /* TestLineClass.m in Sources */,
 				3337808C19E6B6EA00362F82 /* Anchor.m in Sources */,
 				3337808F19E6B6EA00362F82 /* MIM_MathClass.m in Sources */,
@@ -1802,9 +1881,11 @@
 				33CFBBDE19D2CA6300D86E68 /* UpdateProfileViewController.m in Sources */,
 				33DF9A4A19DC238F0055841D /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				333780A019E6B6EA00362F82 /* MultiLineLongGraph.m in Sources */,
+				33585F291A1DB70800B6D28A /* ActionTakenList.m in Sources */,
 				334585F819D98681000AB7E1 /* BodyPartInjury.m in Sources */,
 				33EB4A5B19D18F5E008EF8FD /* UserRegistrationViewController.m in Sources */,
 				332B60EF1A146D9C00B7C7EF /* Reachability.m in Sources */,
+				33585F321A1DB70800B6D28A /* IncidentReportInfo.m in Sources */,
 				3337809019E6B6EA00362F82 /* MIMFloatingView.m in Sources */,
 				33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */,
 				3337809519E6B6EA00362F82 /* XAxisBand.m in Sources */,
@@ -1822,6 +1903,7 @@
 				332B60E61A146CB700B7C7EF /* AFJSONRequestOperation.m in Sources */,
 				33CFBC4A19D2E8F400D86E68 /* UtilizationCountViewController.m in Sources */,
 				33DF9A4819DC238F0055841D /* TPKeyboardAvoidingScrollView.m in Sources */,
+				33585F2F1A1DB70800B6D28A /* RequiredField.m in Sources */,
 				3337809919E6B6EA00362F82 /* LineInfoBox.m in Sources */,
 				33CFBC3E19D2E8A400D86E68 /* AccidentReportViewController.m in Sources */,
 				335DECBC19EBCDE200FFFD4D /* AdminTaskListViewController.m in Sources */,

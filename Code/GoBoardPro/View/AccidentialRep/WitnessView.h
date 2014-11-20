@@ -24,6 +24,6 @@
 
 
 - (IBAction)btnWitnessStatusTapped:(UIButton*)sender;
-- (BOOL)isWitnessViewValidationSuccess;
+- (BOOL)isWitnessViewValidationSuccessFor:(NSArray*)fields;
 
 @end
