@@ -2,7 +2,7 @@
 //  IncidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind558 on 20/11/14.
+//  Created by ind558 on 21/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -10,26 +10,29 @@
 #import "ActionTakenList.h"
 #import "ActivityList.h"
 #import "ConditionList.h"
+#import "EquipmentList.h"
+#import "NatureList.h"
 #import "RequiredField.h"
 
 
 @implementation IncidentReportInfo
 
-@dynamic reportType;
 @dynamic instructions;
 @dynamic notificationField1;
 @dynamic notificationField2;
 @dynamic notificationField3;
 @dynamic notificationField4;
+@dynamic reportType;
 @dynamic showAffiliation;
-@dynamic showGender;
-@dynamic showEmergencyPersonnel;
-@dynamic showMemberIdAndDriverLicense;
 @dynamic showConditions;
-@dynamic showManagementFollowup;
 @dynamic showDateOfBirth;
-@dynamic showPhotoIcon;
+@dynamic showEmergencyPersonnel;
+@dynamic showGender;
+@dynamic showManagementFollowup;
+@dynamic showMemberIdAndDriverLicense;
 @dynamic showMinor;
+@dynamic showPhotoIcon;
+@dynamic showEmployeeId;
 @dynamic actionList;
 @dynamic activityList;
 @dynamic conditionList;

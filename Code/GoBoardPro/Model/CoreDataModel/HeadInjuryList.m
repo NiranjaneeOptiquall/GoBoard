@@ -1,20 +1,18 @@
 //
-//  RequiredField.m
+//  HeadInjuryList.m
 //  GoBoardPro
 //
 //  Created by ind558 on 24/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
-#import "RequiredField.h"
-#import "IncidentReportInfo.h"
+#import "HeadInjuryList.h"
 
 
-@implementation RequiredField
+@implementation HeadInjuryList
 
 @dynamic name;
-@dynamic type;
-@dynamic incidentType;
+@dynamic value;
 @dynamic accidentInfo;
 
 @end

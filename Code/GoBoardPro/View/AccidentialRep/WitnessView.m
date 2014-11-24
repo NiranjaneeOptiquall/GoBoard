@@ -31,7 +31,7 @@
 - (BOOL)isWitnessViewValidationSuccessFor:(NSArray*)fields {
     BOOL success = YES;
     if (fields) {
-        if ([fields containsObject:@"firstname"] && [_txtWitnessFName isTextFieldBlank]) {
+        if ([fields containsObject:@"firstName"] && [_txtWitnessFName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
@@ -39,7 +39,7 @@
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"lastname"] && [_txtWitnessLName isTextFieldBlank]) {
+        else if ([fields containsObject:@"lastName"] && [_txtWitnessLName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }

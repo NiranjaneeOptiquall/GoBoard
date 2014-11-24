@@ -2,32 +2,33 @@
 //  IncidentReportInfo.h
 //  GoBoardPro
 //
-//  Created by ind558 on 20/11/14.
+//  Created by ind558 on 21/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ActionTakenList, ActivityList, ConditionList, RequiredField;
+@class ActionTakenList, ActivityList, ConditionList, EquipmentList, NatureList, RequiredField;
 
 @interface IncidentReportInfo : NSManagedObject
 
-@property (nonatomic, retain) NSString * reportType;
 @property (nonatomic, retain) NSString * instructions;
 @property (nonatomic, retain) NSString * notificationField1;
 @property (nonatomic, retain) NSString * notificationField2;
 @property (nonatomic, retain) NSString * notificationField3;
 @property (nonatomic, retain) NSString * notificationField4;
+@property (nonatomic, retain) NSString * reportType;
 @property (nonatomic, retain) NSNumber * showAffiliation;
-@property (nonatomic, retain) NSNumber * showGender;
-@property (nonatomic, retain) NSNumber * showEmergencyPersonnel;
-@property (nonatomic, retain) NSNumber * showMemberIdAndDriverLicense;
 @property (nonatomic, retain) NSNumber * showConditions;
-@property (nonatomic, retain) NSNumber * showManagementFollowup;
 @property (nonatomic, retain) NSNumber * showDateOfBirth;
-@property (nonatomic, retain) NSNumber * showPhotoIcon;
+@property (nonatomic, retain) NSNumber * showEmergencyPersonnel;
+@property (nonatomic, retain) NSNumber * showGender;
+@property (nonatomic, retain) NSNumber * showManagementFollowup;
+@property (nonatomic, retain) NSNumber * showMemberIdAndDriverLicense;
 @property (nonatomic, retain) NSNumber * showMinor;
+@property (nonatomic, retain) NSNumber * showPhotoIcon;
+@property (nonatomic, retain) NSNumber * showEmployeeId;
 @property (nonatomic, retain) NSSet *actionList;
 @property (nonatomic, retain) NSSet *activityList;
 @property (nonatomic, retain) NSSet *conditionList;
@@ -53,13 +54,13 @@
 - (void)addConditionList:(NSSet *)values;
 - (void)removeConditionList:(NSSet *)values;
 
-- (void)addEquipmentListObject:(NSManagedObject *)value;
-- (void)removeEquipmentListObject:(NSManagedObject *)value;
+- (void)addEquipmentListObject:(EquipmentList *)value;
+- (void)removeEquipmentListObject:(EquipmentList *)value;
 - (void)addEquipmentList:(NSSet *)values;
 - (void)removeEquipmentList:(NSSet *)values;
 
-- (void)addNatureListObject:(NSManagedObject *)value;
-- (void)removeNatureListObject:(NSManagedObject *)value;
+- (void)addNatureListObject:(NatureList *)value;
+- (void)removeNatureListObject:(NatureList *)value;
 - (void)addNatureList:(NSSet *)values;
 - (void)removeNatureList:(NSSet *)values;
 

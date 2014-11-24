@@ -2,7 +2,7 @@
 //  EquipmentList.m
 //  GoBoardPro
 //
-//  Created by ind558 on 20/11/14.
+//  Created by ind558 on 24/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -12,8 +12,9 @@
 
 @implementation EquipmentList
 
-@dynamic name;
 @dynamic equipmentId;
+@dynamic name;
 @dynamic incidentType;
+@dynamic accidentInfo;
 
 @end

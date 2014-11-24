@@ -63,6 +63,11 @@
 @property (assign, nonatomic) BOOL isDOBVisible;
 @property (assign, nonatomic) BOOL isGenderVisible;
 @property (assign, nonatomic) BOOL isMinorVisible;
+@property (assign, nonatomic) BOOL isEmployeeIdVisible;
+
+@property (strong, nonatomic) NSString *strPersonInvolved;
+@property (strong, nonatomic) NSString *strAffiliationType;
+@property (strong, nonatomic) NSString *strGenderType;
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;

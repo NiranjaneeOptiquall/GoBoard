@@ -9,6 +9,7 @@
 #import "AccidentReportViewController.h"
 #import "AccidentFirstSection.h"
 
+
 @interface AccidentReportViewController ()
 
 @end
@@ -18,6 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     mutArrAccidentViews = [[NSMutableArray alloc] init];
+    [self fetchAccidentReportSetupInfo];
+    [self fetchFacilities];
     [self btnNotificationTapped:_btnNone];
     [self addViews];
     _isUpdate = NO;
@@ -33,6 +36,42 @@
     return UIStatusBarStyleLightContent;
 }
 
+
+#pragma mark - CoreData Methods
+
+- (void)fetchAccidentReportSetupInfo {
+    NSFetchRequest *aRequest = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportInfo"];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:aRequest error:nil];
+    reportSetupInfo = [aryRecords firstObject];
+}
+
+- (void)fetchFacilities {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserFacility"];
+    [request setPropertiesToFetch:@[@"name", @"value"]];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortByName]];
+    aryFacilities = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+}
+
+- (void)fetchLocation {
+    NSFetchRequest *requestLoc = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+    
+    NSPredicate *predicateLoc = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
+    [requestLoc setPredicate:predicateLoc];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [requestLoc setSortDescriptors:@[sortByName]];
+    [requestLoc setPropertiesToFetch:@[@"name", @"value"]];
+    aryLocation = [gblAppDelegate.managedObjectContext executeFetchRequest:requestLoc error:nil];
+    requestLoc = nil;
+}
+
+- (void)viewSetup {
+    [_btn911Called setTitle:reportSetupInfo.notificationField1 forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitle:reportSetupInfo.notificationField2 forState:UIControlStateNormal];
+    [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
+    [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
+    _lblInstruction.text = reportSetupInfo.instructions;
+}
 
 #pragma mark - Navigation
 
@@ -83,11 +122,11 @@
 #pragma mark - IBActions & Selectors
 
 - (IBAction)btnNotificationTapped:(UIButton *)sender {
-    [_btn911Called setSelected:NO];
-    [_btnPoliceCalled setSelected:NO];
-    [_btnManager setSelected:NO];
-    [_btnNone setSelected:NO];
-    [sender setSelected:YES];
+//    [_btn911Called setSelected:NO];
+//    [_btnPoliceCalled setSelected:NO];
+//    [_btnManager setSelected:NO];
+//    [_btnNone setSelected:NO];
+    [sender setSelected:!sender.isSelected];
     _isUpdate = YES;
 }
 
@@ -188,6 +227,17 @@
 
 - (void)addAccidentView {
     AccidentFirstSection *accidentView = (AccidentFirstSection*)[[[NSBundle mainBundle] loadNibNamed:@"AccidentFirstSection" owner:self options:nil] firstObject];
+    
+    accidentView.vwPersonalInfo.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
+    accidentView.vwPersonalInfo.isMemberIdVisible = [reportSetupInfo.showMemberIdAndDriverLicense boolValue];
+    accidentView.vwPersonalInfo.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
+    accidentView.vwPersonalInfo.isGenderVisible = [reportSetupInfo.showGender boolValue];
+    accidentView.vwPersonalInfo.isMinorVisible = [reportSetupInfo.showMinor boolValue];
+    accidentView.vwPersonalInfo.isMinorVisible = [reportSetupInfo.showEmployeeId boolValue];
+    accidentView.vwPersonalInfo.isConditionsVisible = [reportSetupInfo.showConditions boolValue];
+    [accidentView.vwPersonalInfo callInitialActions];
+    
+    
     accidentView.parentVC = self;
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);

@@ -92,6 +92,8 @@
     syncCount = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
     }

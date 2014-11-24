@@ -10,6 +10,9 @@
 #import "Constants.h"
 #import "ThirdSection.h"
 #import "FinalSection.h"
+#import "AccidentReportInfo.h"
+#import "UserLocation.h"
+#import "UserFacility.h"
 
 @interface AccidentReportViewController : UIViewController<DropDownValueDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
     ThirdSection *thirdSection;
@@ -18,9 +21,14 @@
     NSInteger totalAccidentFirstSectionCount;
     UIPopoverController *popOver;
     UIImageView *imgBodilyFluid;
+    AccidentReportInfo *reportSetupInfo;
+    NSArray *aryFacilities, *aryLocation;
+    UserFacility *selectedFacility;
+    UserLocation *selectedLocation;
 }
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
+@property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) IBOutlet UITextField *txtDateOfIncident;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeOfIncident;
 @property (weak, nonatomic) IBOutlet UITextField *txtFacility;

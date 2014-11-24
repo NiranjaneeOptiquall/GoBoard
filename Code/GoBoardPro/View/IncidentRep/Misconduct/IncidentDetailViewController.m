@@ -10,6 +10,10 @@
 #import "EmergencyPersonnelView.h"
 #import "IncidentPersonalInformation.h"
 #import "WitnessView.h"
+#import "Report.h"
+#import "Person.h"
+#import "Witness.h"
+#import "EmergencyPersonnel.h"
 
 
 #define MISCONDUCT  @"misconduct"
@@ -25,7 +29,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self fetchIncidentSetupInfo];
-    _lblInstruction.text = reportSetupInfo.instructions;
+    [self fetchFacilities];
+    [_txtLocation setEnabled:NO];
+    
     [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
     [_vwAfterPersonalInfo setBackgroundColor:[UIColor clearColor]];
     mutArrIncidentPerson = [[NSMutableArray alloc] init];
@@ -54,6 +60,11 @@
 }
 
 - (void)viewSetup {
+    [_btn911Called setTitle:reportSetupInfo.notificationField1 forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitle:reportSetupInfo.notificationField2 forState:UIControlStateNormal];
+    [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
+    [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
+    _lblInstruction.text = reportSetupInfo.instructions;
     if (![reportSetupInfo.showPhotoIcon boolValue]) {
         [_btnCapturePerson setHidden:YES];
     }
@@ -81,30 +92,6 @@
     }
 }
 
-- (void)fetchIncidentSetupInfo {
-    NSString *type = @"";
-    switch (_incidentType) {
-        case 1:
-            type = MISCONDUCT;
-            break;
-        case 2:
-            type = CUSTOMER_SERVICE;
-            break;
-        case 3:
-            type = OTHER;
-            break;
-        default:
-            break;
-    }
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"IncidentReportInfo"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"reportType", type];
-    [request setPredicate:predicate];
-    NSArray *array = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
-    if ([array count] > 0) {
-        reportSetupInfo = [array firstObject];
-    }
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -123,6 +110,7 @@
     
 }
 
+#pragma mark - IBActions and Selectors
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     _isUpdate = YES;
@@ -157,6 +145,215 @@
     }
 }
 
+- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender {
+    [self addEmergencyPersonnel];
+}
+
+- (IBAction)btnAddPersonTapped:(id)sender {
+    [self addIncidentPersonalInformationViews];
+}
+
+- (IBAction)btnAddWitnessTapped:(id)sender {
+    [self addWitnessView];
+}
+
+- (IBAction)btnFollowUpCallTapped:(UIButton *)sender {
+    _isUpdate = YES;
+    [_btnYesCall setSelected:NO];
+    [_btnNoCall setSelected:NO];
+    [_btnCallNotReq setSelected:NO];
+    [sender setSelected:YES];
+}
+
+- (IBAction)btnNotificationTapped:(UIButton *)sender {
+//    [_btn911Called setSelected:NO];
+//    [_btnPoliceCalled setSelected:NO];
+//    [_btnManager setSelected:NO];
+//    [_btnNone setSelected:NO];
+    _isUpdate = YES;
+    [sender setSelected:![sender isSelected]];
+}
+
+- (IBAction)btnSubmitTapped:(id)sender {
+    if (![self checkValidation]) {
+        return;
+    }
+    return;
+    Report *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"Report" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate *incidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
+    NSDate *managementFollowupDate = [aFormatter dateFromString:_txtManagementFollowUp.text];
+    [aFormatter setDateFormat:@"yyyy-MM-dd"];
+    aReport.dateOfIncident = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:incidentDate], _txtTimeOfIncident.text];
+    aReport.facilityId = selectedFacility.value;
+    aReport.locationId = selectedLocation.value;
+    aReport.incidentDesc = _txvIncidentDesc.text;
+    aReport.isNotification1Selected = (_btn911Called.isSelected) ? @"true":@"false";
+    aReport.isNotification2Selected = (_btnPoliceCalled.isSelected) ? @"true":@"false";
+    aReport.isNotification3Selected = (_btnManager.isSelected) ? @"true":@"false";
+    aReport.isNotification4Selected = (_btnNone.isSelected) ? @"true":@"false";
+    NSMutableSet *personSet = [NSMutableSet set];
+    for (IncidentPersonalInformation *vwPerson in mutArrIncidentPerson) {
+        Person *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aPerson.firstName = vwPerson.txtFirstName.text;
+        aPerson.memberId = vwPerson.txtMemberId.text;
+        aPerson.employeeTitle = vwPerson.txtEmployeePosition.text;
+        aPerson.personTypeID = vwPerson.strPersonInvolved;
+        aPerson.affiliationTypeID = vwPerson.strAffiliationType;
+        aPerson.middleInitial = vwPerson.txtMi.text;
+        aPerson.lastName = vwPerson.txtLastName.text;
+        aPerson.streetAddress = vwPerson.txtStreetAddress.text;
+        aPerson.apartmentNumber = vwPerson.txtAppartment.text;
+        aPerson.city = vwPerson.txtCity.text;
+        aPerson.state = vwPerson.txtState.text;
+        aPerson.zip = vwPerson.txtZip.text;
+        aPerson.primaryPhone = vwPerson.txtHomePhone.text;
+        aPerson.alternatePhone = vwPerson.txtAlternatePhone.text;
+        aPerson.email = vwPerson.txtEmailAddress.text;
+        aPerson.dateOfBirth = vwPerson.txtDob.text;
+        aPerson.guestOfFirstName = vwPerson.txtGuestFName.text;
+        aPerson.guestOfMiddleInitial = vwPerson.txtGuestMI.text;
+        aPerson.guestOfLastName = vwPerson.txtguestLName.text;
+        aPerson.genderTypeID = vwPerson.strGenderType;
+        aPerson.minor = (vwPerson.btnMinor.isSelected) ? @"true" : @"false";
+        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
+        aPerson.report = aReport;
+        [personSet addObject:aPerson];
+    }
+    aReport.persons = personSet;
+    
+    NSMutableSet *emergencySet = [NSMutableSet set];
+    for (EmergencyPersonnelView *vwEmergency in mutArrEmergencyPersonnel) {
+        EmergencyPersonnel *aEmergencyPersonnel = [NSEntityDescription insertNewObjectForEntityForName:@"EmergencyPersonnel" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aEmergencyPersonnel.time911Called = vwEmergency.txtTime911Called.text;
+        aEmergencyPersonnel.time911Arrival = vwEmergency.txtTimeOfArrival.text;
+        aEmergencyPersonnel.time911Departure = vwEmergency.txtTimeOfDeparture.text;
+        aEmergencyPersonnel.caseNumber = vwEmergency.txtCaseNo.text;
+        aEmergencyPersonnel.firstName = vwEmergency.txtFirstName.text;
+        aEmergencyPersonnel.middileInitial = vwEmergency.txtMI.text;
+        aEmergencyPersonnel.lastName = vwEmergency.txtLastName.text;
+        aEmergencyPersonnel.phone = vwEmergency.txtPhone.text;
+        aEmergencyPersonnel.badgeNumber = vwEmergency.txtBadge.text;
+        aEmergencyPersonnel.additionalInformation = vwEmergency.txvAdditionalInfo.text;
+        aEmergencyPersonnel.report = aReport;
+        [emergencySet addObject:aEmergencyPersonnel];
+    }
+    aReport.emergencyPersonnels = emergencySet;
+    
+    NSMutableSet *witnessSet = [NSMutableSet set];
+    for (WitnessView *vwWitness in mutArrWitnessView) {
+        Witness *aWitness = [NSEntityDescription insertNewObjectForEntityForName:@"Witness" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aWitness.firstName = vwWitness.txtWitnessFName.text;
+        aWitness.middleInitial = vwWitness.txtWitnessMI.text;
+        aWitness.lastName = vwWitness.txtWitnessLName.text;
+        aWitness.homePhone = vwWitness.txtWitnessHomePhone.text;
+        aWitness.alternatePhone = vwWitness.txtWitnessAlternatePhone.text;
+        aWitness.email = vwWitness.txtWitnessEmailAddress.text;
+        aWitness.witnessWrittenAccount = vwWitness.txvDescIncident.text;
+        aWitness.report = aReport;
+        [witnessSet addObject:aWitness];
+    }
+    aReport.witnesses = witnessSet;
+    
+    aReport.employeeFirstName = _txtEmpFName.text;
+    aReport.employeeMiddleInitial = _txtEmpMI.text;
+    aReport.employeeLastName = _txtEmpLName.text;
+    aReport.employeeHomePhone = _txtEmpHomePhone.text;
+    aReport.employeeAlternatePhone = _txtEmpAlternatePhone.text;
+    aReport.employeeEmail = _txtEmpEmail.text;
+    aReport.reportFilerAccount = _txtReportAccount.text;
+    aReport.managementFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
+    aReport.followUpCallType = @"";
+    aReport.additionalInfo = _txvAdditionalInfo.text;
+    [gblAppDelegate.managedObjectContext insertedObjects];
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+- (IBAction)btnCapturePersonPic:(UIButton*)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
+    CGRect rect = [_vwAfterPersonalInfo convertRect:sender.frame toView:self.view];
+    [actionSheet showFromRect:rect inView:self.view animated:YES];
+    _isUpdate = YES;
+}
+
+- (IBAction)btnBackTapped:(id)sender {
+    [self.view endEditing:YES];
+    if (_isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
+            [vw removeObserver:self forKeyPath:@"frame"];
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
+            [vw removeObserver:self forKeyPath:@"frame"];
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+
+#pragma mark - CoreData Methods
+
+- (void)fetchIncidentSetupInfo {
+    NSString *type = @"";
+    switch (_incidentType) {
+        case 1:
+            type = MISCONDUCT;
+            break;
+        case 2:
+            type = CUSTOMER_SERVICE;
+            break;
+        case 3:
+            type = OTHER;
+            break;
+        default:
+            break;
+    }
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"IncidentReportInfo"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"reportType", type];
+    [request setPredicate:predicate];
+    NSArray *array = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    if ([array count] > 0) {
+        reportSetupInfo = [array firstObject];
+    }
+}
+
+- (void)fetchFacilities {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserFacility"];
+    [request setPropertiesToFetch:@[@"name", @"value"]];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortByName]];
+    aryFacilities = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+}
+
+- (void)fetchLocation {
+    NSFetchRequest *requestLoc = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+    
+    NSPredicate *predicateLoc = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
+    [requestLoc setPredicate:predicateLoc];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [requestLoc setSortDescriptors:@[sortByName]];
+    [requestLoc setPropertiesToFetch:@[@"name", @"value"]];
+    aryLocation = [gblAppDelegate.managedObjectContext executeFetchRequest:requestLoc error:nil];
+    requestLoc = nil;
+}
+
+
+#pragma mark - Methods
+
+
+
 - (void)addIncidentPersonalInformationViews {
     IncidentPersonalInformation *personalInfoView = (IncidentPersonalInformation*)[[[NSBundle mainBundle] loadNibNamed:@"IncidentPersonalInformation" owner:self options:nil] firstObject];
     personalInfoView.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
@@ -164,6 +361,7 @@
     personalInfoView.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
     personalInfoView.isGenderVisible = [reportSetupInfo.showGender boolValue];
     personalInfoView.isMinorVisible = [reportSetupInfo.showMinor boolValue];
+    personalInfoView.isMinorVisible = [reportSetupInfo.showEmployeeId boolValue];
     [personalInfoView callInitialActions];
     [personalInfoView setBackgroundColor:[UIColor clearColor]];
     CGRect frame = personalInfoView.frame;
@@ -256,72 +454,6 @@
     }
 }
 
-- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender {
-    [self addEmergencyPersonnel];
-}
-
-- (IBAction)btnAddPersonTapped:(id)sender {
-    [self addIncidentPersonalInformationViews];
-}
-
-- (IBAction)btnAddWitnessTapped:(id)sender {
-    [self addWitnessView];
-}
-
-- (IBAction)btnFollowUpCallTapped:(UIButton *)sender {
-    _isUpdate = YES;
-    [_btnYesCall setSelected:NO];
-    [_btnNoCall setSelected:NO];
-    [_btnCallNotReq setSelected:NO];
-    [sender setSelected:YES];
-}
-
-- (IBAction)btnNotificationTapped:(UIButton *)sender {
-//    [_btn911Called setSelected:NO];
-//    [_btnPoliceCalled setSelected:NO];
-//    [_btnManager setSelected:NO];
-//    [_btnNone setSelected:NO];
-    _isUpdate = YES;
-    [sender setSelected:![sender isSelected]];
-}
-
-- (IBAction)btnSubmitTapped:(id)sender {
-    if (![self checkValidation]) {
-        return;
-    }
-}
-
-- (IBAction)btnCapturePersonPic:(UIButton*)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
-    CGRect rect = [_vwAfterPersonalInfo convertRect:sender.frame toView:self.view];
-    [actionSheet showFromRect:rect inView:self.view animated:YES];
-    _isUpdate = YES;
-}
-
-- (IBAction)btnBackTapped:(id)sender {
-    [self.view endEditing:YES];
-    if (_isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
-    }
-    else {
-        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
-            [vw removeObserver:self forKeyPath:@"frame"];
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
-            [vw removeObserver:self forKeyPath:@"frame"];
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-#pragma mark - Methods
 
 - (BOOL)checkValidation {
     BOOL success = YES;
@@ -393,7 +525,7 @@
     NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     BOOL success = YES;
-    if ([aryFields containsObject:@"firstname"] && [_txtEmpFName isTextFieldBlank]) {
+    if ([aryFields containsObject:@"firstName"] && [_txtEmpFName isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -401,7 +533,7 @@
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([aryFields containsObject:@"lastname"] && [_txtEmpLName isTextFieldBlank]) {
+    else if ([aryFields containsObject:@"lastName"] && [_txtEmpLName isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -470,6 +602,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     _isUpdate = YES;
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     if ([textField isEqual:_txtDateOfIncident]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -486,49 +619,54 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:FACILITY_VALUES view:textField key:@"title"];
+        [dropDown showDropDownWith:aryFacilities view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtLocation]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        [dropDown showDropDownWith:aryLocation view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtActivity]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[reportSetupInfo.activityList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtWeather]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[reportSetupInfo.conditionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtEquipment]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[reportSetupInfo.equipmentList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtChooseIncident]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[reportSetupInfo.natureList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtActionTaken]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[reportSetupInfo.actionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtManagementFollowUp]) {
@@ -621,7 +759,19 @@
 #pragma mark - DropDownValueDelegate
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
-    [sender setText:[value objectForKey:@"title"]];
+    if ([sender isEqual:_txtFacility]) {
+        [_txtLocation setEnabled:YES];
+        if (![selectedFacility isEqual:value]) {
+            selectedFacility = value;
+            selectedLocation = nil;
+            [_txtLocation setText:@""];
+            [self fetchLocation];
+        }
+    }
+    else if ([sender isEqual:_txtLocation]) {
+        selectedLocation = value;
+    }
+    [sender setText:[value valueForKey:@"name"]];
 }
 
 #pragma mark - UIActionSheet Delegate

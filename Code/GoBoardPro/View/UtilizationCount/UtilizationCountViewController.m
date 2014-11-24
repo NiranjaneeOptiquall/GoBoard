@@ -191,7 +191,11 @@
     }
     location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
     if (location.location) {
-        location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] + 1];
+        NSInteger totalCount = 0;
+        for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+            totalCount += [loc.lastCount integerValue];
+        }
+        location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
         if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
             NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
             alert(@"Exceed Limit", strMsg);
@@ -201,7 +205,7 @@
     }
     else if (location.sublocations.count > 0) {
         for (UtilizationCount *subLoc in location.sublocations.allObjects) {
-            subLoc.lastCount = 0;
+            subLoc.lastCount = @"0";
         }
     }
     location.lastCountDateTime = [self getCurrentDate];
@@ -233,13 +237,17 @@
     if (current >= 0) {
         location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
         if (location.location) {
-            location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] - 1];
+            NSInteger totalCount = 0;
+            for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+                totalCount += [loc.lastCount integerValue];
+            }
+            location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
             location.location.isUpdateAvailable = YES;
             location.location.lastCountDateTime = [self getCurrentDate];
         }
         else if (location.sublocations.count > 0) {
             for (UtilizationCount *subLoc in location.sublocations.allObjects) {
-                subLoc.lastCount = 0;
+                subLoc.lastCount = @"0";
             }
         }
         location.isUpdateAvailable = YES;
@@ -358,7 +366,7 @@
 
 - (NSString *)getCurrentDate {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
     return aStr;
 }
@@ -542,21 +550,26 @@
                 NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
                 alert(@"Exceed Limit", strMsg);
             }
-            int previousCount = [location.lastCount intValue];
+//            int previousCount = [location.lastCount intValue];
             location.lastCount = [NSString stringWithFormat:@"%d", current];
-            int newCount = [location.lastCount intValue];
+//            int newCount = [location.lastCount intValue];
             if (location.location) {
-                location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)[location.location.lastCount integerValue] + newCount - previousCount];
+                NSInteger totalCount = 0;
+                for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+                    totalCount += [loc.lastCount integerValue];
+                }
+                location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
                 if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
                     NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
                     alert(@"Exceed Limit", strMsg);
                 }
                 location.location.isUpdateAvailable = YES;
                 location.location.lastCountDateTime = [self getCurrentDate];
+
             }
             else if (location.sublocations.count > 0) {
                 for (UtilizationCount *subLoc in location.sublocations.allObjects) {
-                    subLoc.lastCount = 0;
+                    subLoc.lastCount = @"0";
                 }
             }
             location.isUpdateAvailable = YES;

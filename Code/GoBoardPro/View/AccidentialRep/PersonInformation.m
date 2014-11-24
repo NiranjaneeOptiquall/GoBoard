@@ -31,9 +31,7 @@
 #pragma mark - IBActions
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender {
-    [_imvEmployeePosBG setHidden:YES];
-    [_txtEmployeePosition setHidden:YES];
-    [_lblEmpPosAsterisk setHidden:YES];
+    [_vwEmpPosition setHidden:YES];
     [_vwGuest setHidden:YES];
     [_vwEmployee setHidden:YES];
     [_btnEmployee setSelected:NO];
@@ -42,21 +40,25 @@
     [sender setSelected:YES];
     CGRect frame = _vwCommon.frame;
     if ([sender isEqual:_btnGuest]) {
+        if (!_isMemberIdVisible) [self hideMemberId:YES];
+        else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
         [_parentVC setPersonInvolved:PERSON_GUEST];
     }
     else if ([sender isEqual:_btnMember]) {
+        if (!_isMemberIdVisible) [self hideMemberId:YES];
+        else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Member ID"];
         frame.origin.y = _vwEmployee.frame.origin.y;
         [_parentVC setPersonInvolved:PERSON_MEMBER];
     }
     else if ([sender isEqual:_btnEmployee]) {
+        [self hideMemberId:NO];
+        if (!_isMemberIdVisible) [_vwMemberId setHidden:YES];
         [_txtMemberId setPlaceholder:@"Employee ID"];
-        [_imvEmployeePosBG setHidden:NO];
-        [_txtEmployeePosition setHidden:NO];
-        [_lblEmpPosAsterisk setHidden:NO];
+        [_vwEmpPosition setHidden:NO];
         [_vwEmployee setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwEmployee.frame);
         [_parentVC setPersonInvolved:PERSON_EMPLOYEE];
@@ -130,6 +132,123 @@
     }
     return success;
 }
+
+
+- (void)callInitialActions {
+    
+    if (!_isAffiliationVisible) [self hideAffiliation];
+    if (!_isDOBVisible) [self hideDateOfBirth];
+    if (!_isGenderVisible) [self hideGender];
+    if (!_isMinorVisible) [self hideMinor];
+    if (!_isConditionsVisible) [self hideConditions];
+    [self btnPersonInvolvedTapped:_btnMember];
+    [self btnAffiliationTapped:_btnNonAssessedStudent];
+    [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
+    [self btnGenderTapped:_btnMale];
+    [self btnIsMinorTapped:_btnNotMinor];
+}
+
+
+- (void)hideAffiliation {
+    [_vwAffiliation setHidden:YES];
+    CGRect frame = _vwMemberId.frame;
+    frame.origin.y = CGRectGetMinY(_vwAffiliation.frame);
+    _vwMemberId.frame = frame;
+    
+    frame = _vwEmpPosition.frame;
+    frame.origin.y = CGRectGetMinY(_vwAffiliation.frame);
+    _vwEmpPosition.frame = frame;
+    
+    frame = _vwPersonalInfo.frame;
+    frame.origin.y = CGRectGetMaxY(_vwMemberId.frame);
+    _vwPersonalInfo.frame = frame;
+    
+    frame = _vwEmployee.frame;
+    frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+    _vwEmployee.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwCommon.frame = frame;
+    
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+}
+
+
+- (void)hideMemberId:(BOOL)shouldHide {
+    [_vwMemberId setHidden:shouldHide];
+    CGRect frame = _vwPersonalInfo.frame;
+    if (shouldHide) {
+        frame.origin.y = _vwMemberId.frame.origin.y;
+    }
+    else {
+        frame.origin.y = CGRectGetMaxY(_vwMemberId.frame);
+    }
+    _vwPersonalInfo.frame = frame;
+    
+    frame = _vwEmployee.frame;
+    frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+    _vwEmployee.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwCommon.frame = frame;
+    
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+}
+
+- (void)hideDateOfBirth {
+    [_vwDob setHidden:YES];
+}
+
+- (void)hideGender {
+    [_vwGender setHidden:YES];
+    CGRect frame = _vwMinor.frame;
+    frame.origin.y = _vwGender.frame.origin.y;
+    _vwMinor.frame = frame;
+    
+    frame = _vwActivity.frame;
+    frame.origin.y = CGRectGetMaxY(_vwMinor.frame);
+    _vwActivity.frame = frame;
+    
+    frame = _vwConditions.frame;
+    frame.origin.y = CGRectGetMaxY(_vwActivity.frame);
+    _vwConditions.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.size.height = CGRectGetMaxY(_vwConditions.frame);
+    _vwCommon.frame = frame;
+}
+
+- (void)hideMinor {
+    [_vwMinor setHidden:YES];
+    
+    CGRect frame = _vwActivity.frame;
+    frame.origin.y = CGRectGetMinY(_vwMinor.frame);
+    _vwActivity.frame = frame;
+    
+    frame = _vwConditions.frame;
+    frame.origin.y = CGRectGetMaxY(_vwActivity.frame);
+    _vwConditions.frame = frame;
+    
+    frame = _vwCommon.frame;
+    frame.size.height = CGRectGetMinY(_vwConditions.frame);
+    _vwCommon.frame = frame;
+}
+
+- (void)hideConditions {
+    [_vwConditions setHidden:YES];
+    CGRect frame = _vwCommon.frame;
+    frame.size.height = CGRectGetMinY(_vwConditions.frame);
+    _vwCommon.frame = frame;
+}
+
+
+
 
 #pragma mark - UITextField Delegate 
 

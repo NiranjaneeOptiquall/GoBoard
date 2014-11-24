@@ -11,6 +11,8 @@
 #import "Constants.h"
 #import "TPKeyboardAvoidingScrollView.h"
 #import "IncidentReportInfo.h"
+#import "UserLocation.h"
+#import "UserFacility.h"
 
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalEmergencyPersonnelCount, totalWitnessCount;
@@ -18,6 +20,9 @@
     NSMutableArray *mutArrIncidentPerson, *mutArrEmergencyPersonnel, *mutArrWitnessView;
     UIPopoverController *popOver;
     IncidentReportInfo *reportSetupInfo;
+    NSArray *aryFacilities, *aryLocation;
+    UserFacility *selectedFacility;
+    UserLocation *selectedLocation;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;

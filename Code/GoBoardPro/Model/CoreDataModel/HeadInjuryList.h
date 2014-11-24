@@ -1,5 +1,5 @@
 //
-//  ActivityList.h
+//  HeadInjuryList.h
 //  GoBoardPro
 //
 //  Created by ind558 on 24/11/14.
@@ -9,13 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class IncidentReportInfo;
 
-@interface ActivityList : NSManagedObject
+@interface HeadInjuryList : NSManagedObject
 
-@property (nonatomic, retain) NSString * activityId;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) IncidentReportInfo *incidentType;
+@property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSManagedObject *accidentInfo;
 
 @end

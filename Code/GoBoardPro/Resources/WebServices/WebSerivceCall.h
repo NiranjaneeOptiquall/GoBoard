@@ -26,4 +26,6 @@
 - (void)callServiceForTaskList:(BOOL)waitUntilDone complition:(void (^)(void))completion;
 
 - (void)callServiceForIncidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition;
+
+- (void)callServiceForAccidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 @end

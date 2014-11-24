@@ -52,7 +52,7 @@
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"firstname"] && [_txtFirstName isTextFieldBlank]) {
+        else if ([fields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
@@ -60,7 +60,7 @@
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"lastname"] && [_txtLastName isTextFieldBlank]) {
+        else if ([fields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }

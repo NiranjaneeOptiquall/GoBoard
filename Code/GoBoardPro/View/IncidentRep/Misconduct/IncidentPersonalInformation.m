@@ -37,17 +37,21 @@
     CGRect frame = _vwCommon.frame;
     if ([sender isEqual:_btnGuest]) {
         if (!_isMemberIdVisible) [self hideMemberId:YES];
+        else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
     }
     else if ([sender isEqual:_btnMember]) {
         if (!_isMemberIdVisible) [self hideMemberId:YES];
+        else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Member ID"];
         frame.origin.y = _vwEmployee.frame.origin.y;
     }
     else if ([sender isEqual:_btnEmployee]) {
         [self hideMemberId:NO];
+        if (!_isMemberIdVisible) [_vwMemberId setHidden:YES];
+        
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_vwEmpPosition setHidden:NO];
         [_vwEmployee setHidden:NO];
@@ -102,7 +106,7 @@
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
-    else if ([fields containsObject:@"firstname"] && [_txtFirstName isTextFieldBlank]) {
+    else if ([fields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
@@ -110,7 +114,7 @@
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
-    else if ([fields containsObject:@"lastname"] && [_txtLastName isTextFieldBlank]) {
+    else if ([fields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }
@@ -170,88 +174,6 @@
         alert(@"", MSG_REQUIRED_FIELDS);
     }
     return success;
-}
-
-#pragma mark - UITextField Delegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return YES;
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    BOOL allowEditing = YES;
-    if ([textField isEqual:_txtDob]) {
-        [self setKeepViewInFrame:textField];
-        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
-        allowEditing = NO;
-    }
-    return allowEditing;
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if ([string isEqualToString:@""]) {
-        if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
-            if (textField.text.length == 5) {
-                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
-                textField.text = aStr;
-                return NO;
-            }
-            else if (textField.text.length == 7) {
-                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
-                textField.text = aStr;
-                return NO;
-            }
-            else if (textField.text.length == 11) {
-                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
-                textField.text = aStr;
-                return NO;
-            }
-        }
-        return YES;
-    }
-    if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
-            return NO;
-        }
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
-            return NO;
-        }
-        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        if (aStr.length == 3) {
-            aStr = [NSString stringWithFormat:@"(%@)", aStr];
-            textField.text = aStr;
-            return NO;
-        }
-        else if (aStr.length == 6) {
-            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
-            textField.text = aStr;
-            return NO;
-        }
-        else if (aStr.length == 10) {
-            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
-            textField.text = aStr;
-            return NO;
-        }
-    }
-    else if ([_txtMi isEqual:textField]) {
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 5) {
-            return NO;
-        }
-    }
-    
-    return YES;
-}
-
-- (void)setKeepViewInFrame:(UIView*)vw {
-    TPKeyboardAvoidingScrollView *scrollView = (TPKeyboardAvoidingScrollView*)[self superview];
-    CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:scrollView];
-    if (point.y <scrollView.contentOffset.y || point.y > scrollView.contentOffset.y + scrollView.frame.size.height) {
-        [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];
-    }
-    
 }
 
 - (void)callInitialActions {
@@ -341,6 +263,90 @@
     frame.size.height = CGRectGetMinY(_vwMinor.frame);
     _vwCommon.frame = frame;
 }
+
+
+#pragma mark - UITextField Delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    BOOL allowEditing = YES;
+    if ([textField isEqual:_txtDob]) {
+        [self setKeepViewInFrame:textField];
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
+        allowEditing = NO;
+    }
+    return allowEditing;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([string isEqualToString:@""]) {
+        if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+            if (textField.text.length == 5) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(1, 2)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 7) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 5)];
+                textField.text = aStr;
+                return NO;
+            }
+            else if (textField.text.length == 11) {
+                NSString *aStr = [textField.text substringWithRange:NSMakeRange(0, 9)];
+                textField.text = aStr;
+                return NO;
+            }
+        }
+        return YES;
+    }
+    if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 14) {
+            return NO;
+        }
+        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if (aStr.length == 3) {
+            aStr = [NSString stringWithFormat:@"(%@)", aStr];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 6) {
+            aStr = [NSString stringWithFormat:@"%@ %@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+        else if (aStr.length == 10) {
+            aStr = [NSString stringWithFormat:@"%@-%@",textField.text, string];
+            textField.text = aStr;
+            return NO;
+        }
+    }
+    else if ([_txtMi isEqual:textField]) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 5) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+- (void)setKeepViewInFrame:(UIView*)vw {
+    TPKeyboardAvoidingScrollView *scrollView = (TPKeyboardAvoidingScrollView*)[self superview];
+    CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:scrollView];
+    if (point.y <scrollView.contentOffset.y || point.y > scrollView.contentOffset.y + scrollView.frame.size.height) {
+        [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];
+    }
+    
+}
+
 
 
 
