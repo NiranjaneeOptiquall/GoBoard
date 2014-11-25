@@ -103,10 +103,10 @@
     [self resetSelfFrame];
 }
 
-- (BOOL)isThirdSectionValidationSuccess {
+- (BOOL)isThirdSectionValidationSuccessWith:(NSArray *)fields {
     BOOL success = YES;
     for (EmergencyPersonnelView *view in mutArrEmergencyViews) {
-        if (![view isEmergencyPersonnelValidationSucceedFor:nil]) {
+        if (![view isEmergencyPersonnelValidationSucceedFor:fields]) {
             success = NO;
             break;
         }

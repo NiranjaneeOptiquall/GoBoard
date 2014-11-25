@@ -88,7 +88,7 @@
     }
     else {
         [aDict setObject:@"Body Part" forKey:@"type"];
-        [aDict setObject:[[mutArrBodyPart objectAtIndex:bodyPartIndex] objectAtIndex:selectedBodyPart] forKey:@"part"];
+        [aDict setObject:[mutArrBodyPart objectAtIndex:selectedBodyPart] forKey:@"part"];
     }
     
     if ([_txtOtherInjury isEnabled]) {
@@ -109,21 +109,27 @@
 
 - (IBAction)btnInjureadBodyPartTapped:(UIButton *)sender {
     if ([sender isEqual:_btnHead]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.headInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_head.png"]];
     }
     else if ([sender isEqual:_btnMidBody]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.abdomenInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_midbody.png"]];
     }
     else if ([sender isEqual:_btnLeftHand]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.armInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_leftHand.png"]];
     }
     else if ([sender isEqual:_btnRightHand]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.armInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_rightHand.png"]];
     }
     else if ([sender isEqual:_btnLeftLeg]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.legInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_leftLeg.png"]];
     }
     else if ([sender isEqual:_btnRightLeg]) {
+        mutArrBodyPart = [_parentVC.reportSetupInfo.legInjuryList allObjects];
         [_imvBodyPart setImage:[UIImage imageNamed:@"figure_rightLeg.png"]];
     }
     bodyPartIndex = [sender tag];
@@ -131,11 +137,11 @@
 }
 
 - (void)manageData {
-    mutArrBodyPart = [[NSMutableArray alloc] init];
-    [mutArrBodyPart addObject:HEAD_INJURY];
-    [mutArrBodyPart addObject:CHEST_INJURY];
-    [mutArrBodyPart addObject:ARM_INJURY];
-    [mutArrBodyPart addObject:LEG_INJURY];
+//    mutArrBodyPart = [[NSMutableArray alloc] init];
+//    [mutArrBodyPart addObject:HEAD_INJURY];
+//    [mutArrBodyPart addObject:CHEST_INJURY];
+//    [mutArrBodyPart addObject:ARM_INJURY];
+//    [mutArrBodyPart addObject:LEG_INJURY];
     [_tblInjuredBodyPartList registerNib:[UINib nibWithNibName:@"BodyInjuryBodyPartCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"cell"];
     [_tblAddedInjuryList registerNib:[UINib nibWithNibName:@"InjuryListCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"cell"];
 }
@@ -145,7 +151,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger rows = 0;
     if ([tableView isEqual:_tblInjuredBodyPartList]) {
-        rows = [[mutArrBodyPart objectAtIndex:bodyPartIndex] count];
+        rows = [mutArrBodyPart count];
     }
     else {
         rows = [_mutArrInjuryList count];
@@ -176,7 +182,7 @@
         UILabel *aLbl1 = (UILabel *)[aCell.contentView viewWithTag:3];
         if ([[_mutArrInjuryList objectAtIndex:indexPath.row] objectForKey:@"part"]) {
             
-            [aLbl1 setText:[[_mutArrInjuryList objectAtIndex:indexPath.row] objectForKey:@"part"]];
+            [aLbl1 setText:[[[_mutArrInjuryList objectAtIndex:indexPath.row] objectForKey:@"part"] name]];
         }
         else {
             [aLbl1 setText:@""];
@@ -196,7 +202,7 @@
             [(UIImageView*)[aCell.contentView viewWithTag:2] setImage:[UIImage imageNamed:@"unchecked_white_radiobutton.png"]];
         }
         UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:3];
-        [aLbl setText:[[mutArrBodyPart objectAtIndex:bodyPartIndex] objectAtIndex:indexPath.row]];
+        [aLbl setText:[[mutArrBodyPart objectAtIndex:indexPath.row] name]];
     }
     [aCell setBackgroundColor:[UIColor clearColor]];
     return aCell;
@@ -237,31 +243,35 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     _parentVC.isUpdate = YES;
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     if ([textField isEqual:_txtEnjuryType]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
+        NSArray *ary;
         if ([_btnGeneralInjury isSelected]) {
-            [dropDown showDropDownWith:INJURY_TYPE_GENERAL view:textField key:@"title"];
+            ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]];
         }
         else {
-            [dropDown showDropDownWith:INJURY_TYPE_BODY_PART view:textField key:@"title"];
+            ary = [[_parentVC.reportSetupInfo.bodypartInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]];
         }
-        
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtActionTaken]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:ACTION_TAKEN view:textField key:@"title"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.actionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtCareProvided]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:CARE_PROVIDED_BY view:textField key:@"title"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     
@@ -281,7 +291,7 @@
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     if ([sender isEqual:_txtEnjuryType]) {
-        if ([[value objectForKey:@"id"] isEqualToString:@"10"]) {
+        if ([[[value valueForKey:@"name"] lowercaseString] isEqualToString:@"other"]) {
             [_txtOtherInjury setEnabled:YES];
         }
         else {
@@ -289,9 +299,9 @@
         }
     }
     else if ([sender isEqual:_txtCareProvided]) {
-        self.careProvided = [[value objectForKey:@"id"] integerValue];
+        self.careProvided = [[value valueForKey:@"value"] integerValue];
     }
-    [sender setText:[value objectForKey:@"title"]];
+    [sender setText:[value valueForKey:@"name"]];
 }
 
 

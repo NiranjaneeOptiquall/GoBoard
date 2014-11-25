@@ -25,5 +25,5 @@
 //- (IBAction)btnAddMoreBodilyFluidTapped:(id)sender;
 - (IBAction)btnAddEmergencyPersonnel:(id)sender;
 - (void)initialSetUp;
-- (BOOL)isThirdSectionValidationSuccess;
+- (BOOL)isThirdSectionValidationSuccessWith:(NSArray*)fields;
 @end

@@ -106,9 +106,46 @@
 
 #pragma mark - Methods
 
-- (BOOL)isPersonalInfoValidationSuccess {
+- (BOOL)isPersonalInfoValidationSuccessWith:(NSArray*)fields {
     BOOL success = YES;
-    if ([_txtMemberId isTextFieldBlank] || ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank]) || [_txtFirstName isTextFieldBlank] || [_txtMi isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtStreetAddress isTextFieldBlank] || [_txtCity isTextFieldBlank] || [_txtState isTextFieldBlank] || [_txtZip isTextFieldBlank] || [_txtHomePhone isTextFieldBlank]) {
+    
+    if ([fields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"employeePosition"] && ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"middleInitial"] && [_txtMi isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"streetAddress"] && [_txtStreetAddress isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"city"] && [_txtCity isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"state"] && [_txtState isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"zip"] && [_txtZip isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"phone"] && [_txtHomePhone isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -117,7 +154,7 @@
         [_txtHomePhone becomeFirstResponder];
         alert(@"", @"Please enter valid home phone number");
     }
-    else if ([_txtEmailAddress isTextFieldBlank]) {
+    else if ([fields containsObject:@"email"] && [_txtEmailAddress isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -126,10 +163,35 @@
         [_txtEmailAddress becomeFirstResponder];
         alert(@"", @"Please enter valid email address");
     }
-    else if ([_txtDob isTextFieldBlank] || ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank]) || ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank]) || [_txtActivity isTextFieldBlank] || [_txtWheather isTextFieldBlank] || [_txtEquipment isTextFieldBlank]) {
+    else if ([fields containsObject:@"dateOfBirth"] && [_txtDob isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
+    else if ([fields containsObject:@"guestFirstName"] && ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"guestMiddleInitial"] && ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([fields containsObject:@"guestLastName"] && ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+//    else if ([fields containsObject:@"dateOfBirth"] && [_txtActivity isTextFieldBlank]) {
+//        success = NO;
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//    }
+//    else if ([fields containsObject:@"dateOfBirth"] && [_txtWheather isTextFieldBlank]) {
+//        success = NO;
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//    }
+//    else if ([fields containsObject:@"dateOfBirth"] && [_txtEquipment isTextFieldBlank]) {
+//        success = NO;
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//    }
+    
     return success;
 }
 
@@ -260,6 +322,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     _parentVC.isUpdate = YES;
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     if ([textField isEqual:_txtDob]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -270,21 +333,24 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.activityList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtWheather]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.conditionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtEquipment]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.equipmentList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     return allowEditing;
@@ -303,7 +369,7 @@
 }
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
-    [sender setText:[value objectForKey:@"title"]];
+    [sender setText:[value valueForKey:@"name"]];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

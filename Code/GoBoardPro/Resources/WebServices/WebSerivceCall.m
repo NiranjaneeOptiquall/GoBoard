@@ -1,4 +1,4 @@
-//
+ //
 //  WebSerivceCall.m
 //  GoBoardPro
 //
@@ -32,7 +32,11 @@
 #import "GeneralInjuryType.h"
 #import "LegInjuryList.h"
 
-
+#define REQUIRED_TYPE_PERSON    @"PersonInvolved"
+#define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
+#define REQUIRED_TYPE_WITNESS    @"Witness"
+#define REQUIRED_TYPE_EMPLOYEE    @"Employee"
+#define REQUIRED_TYPE_FIRST_AID     @"FirstAid"
 
 @implementation WebSerivceCall
 
@@ -616,6 +620,13 @@
         obj.accidentInfo = report;
         [requiredSet addObject:obj];
     }
+    for (NSString *aStr in [aDict objectForKey:@"FirstAidRequiredFields"]) {
+        RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        obj.type = REQUIRED_TYPE_FIRST_AID;
+        obj.name = aStr;
+        obj.accidentInfo = report;
+        [requiredSet addObject:obj];
+    }
     for (NSString *aStr in [aDict objectForKey:@"WitnessRequiredFields"]) {
         RequiredField *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RequiredField" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.type = REQUIRED_TYPE_WITNESS;
@@ -636,9 +647,6 @@
     [gblAppDelegate.managedObjectContext save:nil];
 }
 
-#define REQUIRED_TYPE_PERSON    @"PersonInvolved"
-#define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
-#define REQUIRED_TYPE_WITNESS    @"Witness"
-#define REQUIRED_TYPE_EMPLOYEE    @"Employee"
+
 
 @end

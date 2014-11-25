@@ -12,7 +12,7 @@
 #import "AccidentReportViewController.h"
 
 @interface BodilyFluidView : UIView <UITextFieldDelegate>
-
+@property (weak, nonatomic) IBOutlet UIView *vwBloodbornePathogens;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodPresent;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodNotPresent;
 @property (weak, nonatomic) IBOutlet UITextField *txtFName;
@@ -31,7 +31,13 @@
 @property (strong, nonatomic) SignatureView *signatureView;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 @property (weak, nonatomic) IBOutlet UIView *vwRefuseCare;
+@property (weak, nonatomic) IBOutlet UILabel *lblRefuseCareText;
+@property (weak, nonatomic) IBOutlet UIView *vwParticipantSignature;
 @property (weak, nonatomic) IBOutlet UIView *vwStaffMember;
+
+@property (assign, nonatomic) BOOL isBloodBornePathogenVisible;
+@property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
+@property (assign, nonatomic) BOOL isParticipantSignatureVisible;
 
 - (IBAction)btnBloodbornePathogenTapped:(id)sender;
 - (IBAction)btnExposedToBloodTapped:(UIButton *)sender;

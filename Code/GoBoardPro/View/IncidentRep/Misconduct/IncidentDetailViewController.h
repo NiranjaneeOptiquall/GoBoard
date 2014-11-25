@@ -23,6 +23,7 @@
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
+    UIImage *imgIncidentPerson;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;

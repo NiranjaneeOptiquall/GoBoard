@@ -20,5 +20,5 @@
 @property (weak, nonatomic) IBOutlet BodilyFluidView *vwBodilyFluid;
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
-- (BOOL)validateAccidentFirstSection;
+- (BOOL)validateAccidentFirstSectionWith:(NSArray*)personArray;
 @end

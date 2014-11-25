@@ -98,7 +98,7 @@
 - (BOOL)isPersonalInfoValidationSuccessFor:(NSArray*)fields {
     BOOL success = YES;
     
-    if ([fields containsObject:@"memberid"] && [_txtMemberId isTextFieldBlank]) {
+    if ([fields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }

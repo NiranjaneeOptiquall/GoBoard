@@ -11,7 +11,7 @@
 #import "AccidentReportViewController.h"
 
 @interface BodyPartInjury : UIView<UITableViewDataSource, UITableViewDelegate, DropDownValueDelegate> {
-    NSMutableArray *mutArrBodyPart;
+    NSArray *mutArrBodyPart;
     NSInteger bodyPartIndex;
     NSInteger selectedBodyPart;
     

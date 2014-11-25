@@ -21,7 +21,6 @@
     NSInteger totalAccidentFirstSectionCount;
     UIPopoverController *popOver;
     UIImageView *imgBodilyFluid;
-    AccidentReportInfo *reportSetupInfo;
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
@@ -45,6 +44,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
 @property (assign, nonatomic) NSInteger personInvolved;
 
+@property (strong, nonatomic) AccidentReportInfo *reportSetupInfo;
 @property (assign, nonatomic) BOOL isUpdate;
 
 - (IBAction)btnAttachPhotoTapped:(UIButton *)sender;

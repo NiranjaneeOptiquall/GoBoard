@@ -19,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     mutArrAccidentViews = [[NSMutableArray alloc] init];
+    [_txtLocation setEnabled:NO];
     [self fetchAccidentReportSetupInfo];
     [self fetchFacilities];
     [self btnNotificationTapped:_btnNone];
@@ -42,7 +43,7 @@
 - (void)fetchAccidentReportSetupInfo {
     NSFetchRequest *aRequest = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportInfo"];
     NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:aRequest error:nil];
-    reportSetupInfo = [aryRecords firstObject];
+    _reportSetupInfo = [aryRecords firstObject];
 }
 
 - (void)fetchFacilities {
@@ -66,11 +67,14 @@
 }
 
 - (void)viewSetup {
-    [_btn911Called setTitle:reportSetupInfo.notificationField1 forState:UIControlStateNormal];
-    [_btnPoliceCalled setTitle:reportSetupInfo.notificationField2 forState:UIControlStateNormal];
-    [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
-    [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
-    _lblInstruction.text = reportSetupInfo.instructions;
+    [_btn911Called setTitle:_reportSetupInfo.notificationField1 forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitle:_reportSetupInfo.notificationField2 forState:UIControlStateNormal];
+    [_btnManager setTitle:_reportSetupInfo.notificationField3 forState:UIControlStateNormal];
+    [_btnNone setTitle:_reportSetupInfo.notificationField4 forState:UIControlStateNormal];
+    _lblInstruction.text = _reportSetupInfo.instructions;
+    if (![_reportSetupInfo.showPhotoIcon boolValue]) {
+        [_btnCaptureImage setHidden:YES];
+    }
 }
 
 #pragma mark - Navigation
@@ -92,22 +96,30 @@
         CGRect newFrame = _vwFirstSection.frame;
         newFrame.size.height = CGRectGetMaxY(frame);
         _vwFirstSection.frame = newFrame;
+        float nextY = CGRectGetMaxY(_vwFirstSection.frame);
+        if (thirdSection) {
+            frame = thirdSection.frame;
+            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+            thirdSection.frame = frame;
+            nextY = CGRectGetMaxY(thirdSection.frame);
+        }
         
-        frame = thirdSection.frame;
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-        thirdSection.frame = frame;
         
         frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+        frame.origin.y = nextY;
         finalSection.frame = frame;
     }
     else if ([object isEqual:_vwFirstSection]) {
-        CGRect frame = thirdSection.frame;
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-        thirdSection.frame = frame;
-        
+        float nextY = CGRectGetMaxY(_vwFirstSection.frame);
+        CGRect frame = CGRectZero;
+        if (thirdSection) {
+            frame = thirdSection.frame;
+            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+            thirdSection.frame = frame;
+            nextY = CGRectGetMaxY(thirdSection.frame);
+        }
         frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+        frame.origin.y = nextY;
         finalSection.frame = frame;
     }
     else if ([object isEqual:thirdSection]) {
@@ -135,28 +147,35 @@
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
-//    if (![personalInfoView isPersonalInfoValidationSuccess]) {
-//        return;
-//    }
-//    else if (![bodyPartView isBodyPartInjuredInfoValidationSuccess]) {
-//        return;
-//    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryEmergencyFields = [fields valueForKeyPath:@"name"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
+    NSArray *fields1 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate1];
+    NSArray *aryWitnessFields = [fields1 valueForKeyPath:@"name"];
+    
+    NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMPLOYEE];
+    NSArray *fields2 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate2];
+    NSArray *aryEmpFields = [fields2 valueForKeyPath:@"name"];
     if (![self validateFirstSection]) {
         return;
     }
-    else if (![thirdSection isThirdSectionValidationSuccess]) {
+    else if (![thirdSection isThirdSectionValidationSuccessWith:aryEmergencyFields]) {
         return;
     }
-    else if (![finalSection isFinalSectionValidationSuccess]) {
+    else if (![finalSection isFinalSectionValidationSuccessWith:aryWitnessFields emp:aryEmpFields]) {
         return;
     }
 }
 
 - (BOOL)validateFirstSection {
     BOOL isSuccess = YES;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
+    NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (AccidentFirstSection *view in _vwFirstSection.subviews) {
         if ([view isKindOfClass:[AccidentFirstSection class]]) {
-            isSuccess = [view validateAccidentFirstSection];
+            isSuccess = [view validateAccidentFirstSectionWith:aryFields];
             if (!isSuccess) {
                 break;
             }
@@ -188,6 +207,7 @@
             [vw removeObserver:self forKeyPath:@"frame"];
             [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"frame"];
             [vw.vwBodyPartInjury removeObserver:vw forKeyPath:@"careProvided"];
+            [vw.vwBodilyFluid removeObserver:vw forKeyPath:@"frame"];
             [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
         }
     }
@@ -228,16 +248,18 @@
 - (void)addAccidentView {
     AccidentFirstSection *accidentView = (AccidentFirstSection*)[[[NSBundle mainBundle] loadNibNamed:@"AccidentFirstSection" owner:self options:nil] firstObject];
     
-    accidentView.vwPersonalInfo.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
-    accidentView.vwPersonalInfo.isMemberIdVisible = [reportSetupInfo.showMemberIdAndDriverLicense boolValue];
-    accidentView.vwPersonalInfo.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
-    accidentView.vwPersonalInfo.isGenderVisible = [reportSetupInfo.showGender boolValue];
-    accidentView.vwPersonalInfo.isMinorVisible = [reportSetupInfo.showMinor boolValue];
-    accidentView.vwPersonalInfo.isMinorVisible = [reportSetupInfo.showEmployeeId boolValue];
-    accidentView.vwPersonalInfo.isConditionsVisible = [reportSetupInfo.showConditions boolValue];
+    accidentView.vwPersonalInfo.isAffiliationVisible = [_reportSetupInfo.showAffiliation boolValue];
+    accidentView.vwPersonalInfo.isMemberIdVisible = [_reportSetupInfo.showMemberIdAndDriverLicense boolValue];
+    accidentView.vwPersonalInfo.isDOBVisible = [_reportSetupInfo.showDateOfBirth boolValue];
+    accidentView.vwPersonalInfo.isGenderVisible = [_reportSetupInfo.showGender boolValue];
+    accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showMinor boolValue];
+    accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showEmployeeId boolValue];
+    accidentView.vwPersonalInfo.isConditionsVisible = [_reportSetupInfo.showConditions boolValue];
     [accidentView.vwPersonalInfo callInitialActions];
-    
-    
+    accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
+    accidentView.vwBodilyFluid.isRefuseCareStatementVisible = [_reportSetupInfo.showRefusedSelfCareText boolValue];
+    accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
+    accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
     accidentView.parentVC = self;
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
@@ -267,21 +289,32 @@
 
 - (void)addViews {
     [self addAccidentView];
-    thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
-    CGRect frame = thirdSection.frame;
-    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-    thirdSection.frame = frame;
-    [_scrlMainView addSubview:thirdSection];
-    [thirdSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    CGRect frame;
+    if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
+        thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+        CGRect frame = thirdSection.frame;
+        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+        thirdSection.frame = frame;
+        [_scrlMainView addSubview:thirdSection];
+        [thirdSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+        
+    }
     
     
     finalSection = (FinalSection*)[[[NSBundle mainBundle] loadNibNamed:@"FinalSection" owner:self options:nil] firstObject];
     [finalSection setBackgroundColor:[UIColor clearColor]];
     frame = finalSection.frame;
-    frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+    if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
+        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+    }
+    else {
+        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+    }
     finalSection.frame = frame;
     [_scrlMainView addSubview:finalSection];
     [finalSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    finalSection.isCommunicationVisible = [_reportSetupInfo.showCommunicationAndNotification boolValue];
+    finalSection.isManagementFollowUpVisible = [_reportSetupInfo.showManagementFollowup boolValue];
     [finalSection.btnFinalSubmit addTarget:self action:@selector(btnFinalSubmitTapped:) forControlEvents:UIControlEventTouchUpInside];
     [finalSection PersonInvolved:_personInvolved];
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
@@ -377,21 +410,20 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:FACILITY_VALUES view:textField key:@"title"];
+        [dropDown showDropDownWith:aryFacilities view:textField key:@"name"];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtLocation]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
+        [dropDown showDropDownWith:aryLocation view:textField key:@"name"];
         allowEditing = NO;
     }
     return allowEditing;
 }
 
 - (void)setKeepViewInFrame:(UIView*)vw {
-    ;
     CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:_scrlMainView];
     if (point.y <_scrlMainView.contentOffset.y || point.y > _scrlMainView.contentOffset.y + _scrlMainView.frame.size.height) {
         [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, point.y - 50) animated:NO];
@@ -400,7 +432,19 @@
 }
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
-    [sender setText:[value objectForKey:@"title"]];
+    if ([sender isEqual:_txtFacility]) {
+        [_txtLocation setEnabled:YES];
+        if (![selectedFacility isEqual:value]) {
+            selectedFacility = value;
+            selectedLocation = nil;
+            [_txtLocation setText:@""];
+            [self fetchLocation];
+        }
+    }
+    else if ([sender isEqual:_txtLocation]) {
+        selectedLocation = value;
+    }
+    [sender setText:[value valueForKey:@"name"]];
 }
 
 

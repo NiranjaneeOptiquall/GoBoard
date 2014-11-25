@@ -193,6 +193,7 @@
     aReport.isNotification2Selected = (_btnPoliceCalled.isSelected) ? @"true":@"false";
     aReport.isNotification3Selected = (_btnManager.isSelected) ? @"true":@"false";
     aReport.isNotification4Selected = (_btnNone.isSelected) ? @"true":@"false";
+//    aReport.personPhoto =
     NSMutableSet *personSet = [NSMutableSet set];
     for (IncidentPersonalInformation *vwPerson in mutArrIncidentPerson) {
         Person *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -222,6 +223,9 @@
         [personSet addObject:aPerson];
     }
     aReport.persons = personSet;
+    if (imgIncidentPerson) {
+        aReport.personPhoto = UIImageJPEGRepresentation(imgIncidentPerson, 1.0);
+    }
     
     NSMutableSet *emergencySet = [NSMutableSet set];
     for (EmergencyPersonnelView *vwEmergency in mutArrEmergencyPersonnel) {
@@ -796,7 +800,7 @@
 #pragma mark - UIImagePickerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-//    _imgBodilyFluid = [info objectForKey:UIImagePickerControllerEditedImage];
+    imgIncidentPerson = [info objectForKey:UIImagePickerControllerEditedImage];
     if (popOver) {
         [popOver dismissPopoverAnimated:YES];
     }

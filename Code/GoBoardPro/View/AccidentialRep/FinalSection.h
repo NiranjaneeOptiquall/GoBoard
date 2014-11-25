@@ -40,8 +40,11 @@
 @property (weak, nonatomic) IBOutlet UIView *vwFollowup;
 @property (weak, nonatomic) IBOutlet UITextField *txtManagementFollowUpDate;
 @property (weak, nonatomic) IBOutlet UIView *vwSubmit;
+@property (weak, nonatomic) IBOutlet UIView *vwCommunication;
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 
+@property (assign, nonatomic) BOOL isCommunicationVisible;
+@property (assign, nonatomic) BOOL isManagementFollowUpVisible;
 
 @property (strong, nonatomic) SignatureView *signatureView;
 
@@ -53,6 +56,6 @@
 - (IBAction)btnSignatureTapped:(id)sender;
 - (void)PersonInvolved:(NSInteger)person;
 
-- (BOOL)isFinalSectionValidationSuccess;
+- (BOOL)isFinalSectionValidationSuccessWith:(NSArray*)witness emp:(NSArray*)aryFields;
 - (void)addWitnessView;
 @end

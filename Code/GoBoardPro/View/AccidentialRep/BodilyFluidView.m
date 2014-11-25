@@ -19,10 +19,7 @@
 */
 
 - (void)awakeFromNib {
-    [self btnWasBloodPresentTapped:_btnBloodPresent];
-    [self btnBloodbornePathogenTapped:_btnSelfTreated];
-    [self btnExposedToBloodTapped:_btnExposedToBlood];
-    [self btnBloodCleanUpRequiredTapped:_btnBloodCleanupRequired];
+    
 }
 
 - (IBAction)btnBloodbornePathogenTapped:(UIButton*)sender {
@@ -100,6 +97,68 @@
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([textView.text length] == 0) {
         [_lblStaffMemberAccount setHidden:NO];
+    }
+}
+
+
+- (void)setIsBloodBornePathogenVisible:(BOOL)isBloodBornePathogenVisible {
+    _isBloodBornePathogenVisible = isBloodBornePathogenVisible;
+    if (_isBloodBornePathogenVisible) {
+        [self btnWasBloodPresentTapped:_btnBloodPresent];
+        [self btnBloodbornePathogenTapped:_btnSelfTreated];
+        [self btnExposedToBloodTapped:_btnExposedToBlood];
+        [self btnBloodCleanUpRequiredTapped:_btnBloodCleanupRequired];
+    }
+    else {
+        [_vwBloodbornePathogens setHidden:YES];
+        CGRect frame = _vwRefuseCare.frame;
+        frame.origin.y = CGRectGetMinY(_vwBloodbornePathogens.frame);
+        _vwRefuseCare.frame = frame;
+        
+        frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+        _vwParticipantSignature.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+}
+
+- (void)setIsRefuseCareStatementVisible:(BOOL)isRefuseCareStatementVisible {
+    _isRefuseCareStatementVisible = isRefuseCareStatementVisible;
+    if (!_isRefuseCareStatementVisible) {
+        [_vwRefuseCare setHidden:YES];
+        
+        CGRect frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
+        _vwParticipantSignature.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+}
+
+- (void)setIsParticipantSignatureVisible:(BOOL)isParticipantSignatureVisible {
+    _isParticipantSignatureVisible = isParticipantSignatureVisible;
+    if (!_isParticipantSignatureVisible) {
+        [_vwParticipantSignature setHidden:YES];
+        CGRect frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMinY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
     }
 }
 

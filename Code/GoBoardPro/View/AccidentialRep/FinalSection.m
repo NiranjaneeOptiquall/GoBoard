@@ -131,28 +131,51 @@
     self.frame = frame;
 }
 
-- (BOOL)isFinalSectionValidationSuccess {
+- (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)witness emp:(NSArray *)aryFields {
     BOOL success = YES;
     for (WitnessView *view in mutArrWitnessViews) {
-        if (![view isWitnessViewValidationSuccessFor:nil]) {
+        if (![view isWitnessViewValidationSuccessFor:witness]) {
             success = NO;
             return success;
         }
     }
-    if ([_txtEmpFName isTextFieldBlank] || [_txtEmpMI isTextFieldBlank] || [_txtEmpLName isTextFieldBlank] || [_txtEmpHomePhone isTextFieldBlank]) {
+    
+    if ([aryFields containsObject:@"firstName"] && [_txtEmpFName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"middleInital"] && [_txtEmpMI isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"lastName"] && [_txtEmpLName isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if ([aryFields containsObject:@"phone"] && [_txtEmpHomePhone isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
     else if (![_txtEmpHomePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtEmpHomePhone becomeFirstResponder];
-        alert(@"", @"Please enter employee's valid home phone number, who is completing report");
+        alert(@"", @"Please enter witness's valid home phone number");
     }
     else if (![_txtEmpAlternatePhone.text isValidPhoneNumber]) {
         success = NO;
         [_txtEmpAlternatePhone becomeFirstResponder];
-        alert(@"", @"Please enter employee's valid alternate phone number, who is completing report");
+        alert(@"", @"Please enter witness's valid alternate phone number");
     }
+    else if ([aryFields containsObject:@"email"] && [_txtEmpEmailAddr isTextFieldBlank]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    else if (![gblAppDelegate validateEmail:[_txtEmpEmailAddr text]]) {
+        success = NO;
+        [_txtEmpEmailAddr becomeFirstResponder];
+        alert(@"", @"Please enter witness's valid email address");
+    }
+    
     return success;
 }
 
@@ -231,6 +254,39 @@
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([textView.text length] == 0) {
         [_lblAdditionalInfo setHidden:NO];
+    }
+}
+
+- (void)setIsCommunicationVisible:(BOOL)isCommunicationVisible {
+    _isCommunicationVisible = isCommunicationVisible;
+    if (!isCommunicationVisible) {
+        [_vwCommunication setHidden:YES];
+        CGRect frame = _vwManagementFollowUp.frame;
+        frame.origin.y = _vwCommunication.frame.origin.y;
+        _vwManagementFollowUp.frame = frame;
+        
+        frame = _vwSubmit.frame;
+        frame.origin.y = CGRectGetMaxY(_vwManagementFollowUp.frame);
+        _vwSubmit.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        self.frame = frame;
+    }
+}
+
+
+- (void)setIsManagementFollowUpVisible:(BOOL)isManagementFollowUpVisible {
+    _isManagementFollowUpVisible = isManagementFollowUpVisible;
+    if (!_isManagementFollowUpVisible) {
+        [_vwManagementFollowUp setHidden:YES];
+        CGRect frame = _vwSubmit.frame;
+        frame.origin.y = CGRectGetMinY(_vwManagementFollowUp.frame);
+        _vwSubmit.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        self.frame = frame;
     }
 }
 @end

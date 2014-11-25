@@ -22,6 +22,7 @@
     [_vwBodyPartInjury addObserver:self forKeyPath:@"careProvided" options:NSKeyValueObservingOptionNew context:NULL];
     [_vwBodyPartInjury addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     [_vwBodilyFluid setBackgroundColor:[UIColor clearColor]];
+    [_vwBodilyFluid addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     
 }
 
@@ -74,8 +75,8 @@
     self.frame = frame;
 }
 
-- (BOOL)validateAccidentFirstSection {
-    if (![_vwPersonalInfo isPersonalInfoValidationSuccess] || ![_vwBodyPartInjury isBodyPartInjuredInfoValidationSuccess] || ![_vwBodilyFluid isBodilyFluidValidationSucceed]) {
+- (BOOL)validateAccidentFirstSectionWith:(NSArray *)personArray {
+    if (![_vwPersonalInfo isPersonalInfoValidationSuccessWith:personArray] || ![_vwBodyPartInjury isBodyPartInjuredInfoValidationSuccess] || ![_vwBodilyFluid isBodilyFluidValidationSucceed]) {
         return NO;
     }
     return YES;
