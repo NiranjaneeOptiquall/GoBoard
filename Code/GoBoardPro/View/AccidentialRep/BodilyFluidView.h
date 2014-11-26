@@ -39,11 +39,13 @@
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
 @property (assign, nonatomic) BOOL isParticipantSignatureVisible;
 
+@property (strong, nonatomic) NSString *strBloodBornePathogen;
+
 - (IBAction)btnBloodbornePathogenTapped:(id)sender;
 - (IBAction)btnExposedToBloodTapped:(UIButton *)sender;
 - (IBAction)btnBloodCleanUpRequiredTapped:(id)sender;
 - (IBAction)btnWasBloodPresentTapped:(UIButton *)sender;
 - (IBAction)btnSignatureTapped:(id)sender;
 
-- (BOOL)isBodilyFluidValidationSucceed;
+- (BOOL)isBodilyFluidValidationSucceedWith:(NSArray*)fields;
 @end

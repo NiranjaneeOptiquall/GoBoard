@@ -8,6 +8,7 @@
 
 #import "AccidentFirstSection.h"
 #import "AccidentReportViewController.h"
+#import "InjuryDetail.h"
 
 
 @implementation AccidentFirstSection
@@ -75,11 +76,95 @@
     self.frame = frame;
 }
 
-- (BOOL)validateAccidentFirstSectionWith:(NSArray *)personArray {
-    if (![_vwPersonalInfo isPersonalInfoValidationSuccessWith:personArray] || ![_vwBodyPartInjury isBodyPartInjuredInfoValidationSuccess] || ![_vwBodilyFluid isBodilyFluidValidationSucceed]) {
+- (BOOL)validateAccidentFirstSectionWith:(NSArray *)personArray firstAidFields:(NSArray*)firstAid {
+    if (![_vwPersonalInfo isPersonalInfoValidationSuccessWith:personArray] || ![_vwBodyPartInjury isBodyPartInjuredInfoValidationSuccess] || ![_vwBodilyFluid isBodilyFluidValidationSucceedWith:firstAid]) {
         return NO;
     }
     return YES;
+}
+
+- (AccidentPerson*)getAccidentPerson {
+    AccidentPerson *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentPerson" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    
+    aPerson.firstName = _vwPersonalInfo.txtFirstName.text;
+    aPerson.memberId = _vwPersonalInfo.txtMemberId.text;
+    aPerson.employeeTitle = _vwPersonalInfo.txtEmployeePosition.text;
+#warning
+    aPerson.personTypeID = _vwPersonalInfo.strPersonInvolved;
+    aPerson.affiliationTypeID = _vwPersonalInfo.strAffiliationType;
+    
+    aPerson.middleInitial = _vwPersonalInfo.txtMi.text;
+    aPerson.lastName = _vwPersonalInfo.txtLastName.text;
+    aPerson.streetAddress = _vwPersonalInfo.txtStreetAddress.text;
+    aPerson.apartmentNumber = _vwPersonalInfo.txtAppartment.text;
+    aPerson.city = _vwPersonalInfo.txtCity.text;
+    aPerson.state = _vwPersonalInfo.txtState.text;
+    aPerson.zip = _vwPersonalInfo.txtZip.text;
+    aPerson.primaryPhone = _vwPersonalInfo.txtHomePhone.text;
+    aPerson.alternatePhone = _vwPersonalInfo.txtAlternatePhone.text;
+    aPerson.email = _vwPersonalInfo.txtEmailAddress.text;
+    aPerson.dateOfBirth = _vwPersonalInfo.txtDob.text;
+    aPerson.guestOfFirstName = _vwPersonalInfo.txtGuestFName.text;
+    aPerson.guestOfMiddleInitial = _vwPersonalInfo.txtGuestMI.text;
+    aPerson.guestOfLastName = _vwPersonalInfo.txtguestLName.text;
+#warning
+    aPerson.genderTypeID = _vwPersonalInfo.strGenderType;
+    aPerson.minor = (_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false";
+    aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
+    
+    aPerson.firstAidFirstName = _vwBodilyFluid.txtFName.text;
+    aPerson.firstAidMiddleInitial = _vwBodilyFluid.txtMI.text;
+    aPerson.firstAidLastName = _vwBodilyFluid.txtLName.text;
+    aPerson.firstAidPosition = _vwBodilyFluid.txtPosition.text;
+#warning
+    aPerson.bloodBornePathogenType = _vwBodilyFluid.strBloodBornePathogen;
+    aPerson.bloodCleanUpRequired = (_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false";
+    aPerson.wasExposedToBlood = (_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false";
+    aPerson.participantSignature = UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0);
+    aPerson.staffMemberWrittenAccount = _vwBodilyFluid.txvStaffMemberAccount.text;
+    aPerson.participantName = _vwBodilyFluid.signatureView.txtName.text;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
+    NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] filteredArrayUsingPredicate:predicate];
+    aPerson.careProvidedBy = [[ary firstObject] valueForKey:@"careProvidedID"];
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtActivity.text];
+    ary = [[_parentVC.reportSetupInfo.activityList allObjects] filteredArrayUsingPredicate:predicate];
+    aPerson.activityTypeID = [[ary firstObject] valueForKey:@"activityId"];
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtWheather.text];
+    ary = [[_parentVC.reportSetupInfo.conditionList allObjects] filteredArrayUsingPredicate:predicate];
+    aPerson.conditionTypeID = [[ary firstObject] valueForKey:@"conditionId"];
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtEquipment.text];
+    ary = [[_parentVC.reportSetupInfo.equipmentList allObjects] filteredArrayUsingPredicate:predicate];
+    aPerson.equipmentTypeID = [[ary firstObject] valueForKey:@"equipmentId"];
+    NSMutableSet *injuryList = [NSMutableSet set];
+    for (NSDictionary *aDict in _vwBodyPartInjury.mutArrInjuryList) {
+        InjuryDetail *aInjury = [NSEntityDescription insertNewObjectForEntityForName:@"InjuryDetail" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aInjury.natureOfInjury = [aDict objectForKey:@"type"];
+        aInjury.bodyPartInjury = [[aDict objectForKey:@"part"] name];
+
+        
+        if ([_vwBodyPartInjury.txtOtherInjury isEnabled]) {
+            aInjury.otherInjuryText = [aDict objectForKey:@"injury"];
+        }
+        else {
+            aInjury.otherInjuryText = @"";
+        }
+        
+        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", [aDict objectForKey:@"injury"]];
+        ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] filteredArrayUsingPredicate:predicate];
+        aInjury.injuryType = [aDict objectForKey:@"injury"];
+        
+        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", [aDict objectForKey:@"action"]];
+        ary = [[_parentVC.reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:predicate];
+        aInjury.actionTakenId = [[ary firstObject] valueForKey:@"actionId"];
+        aInjury.accidentPerson = aPerson;
+        [injuryList addObject:aInjury];
+    }
+    aPerson.injuryList = injuryList;
+    return aPerson;
 }
 
 @end

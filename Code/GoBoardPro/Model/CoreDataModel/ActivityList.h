@@ -10,12 +10,13 @@
 #import <CoreData/CoreData.h>
 
 @class IncidentReportInfo;
+@class  AccidentReportInfo;
 
 @interface ActivityList : NSManagedObject
 
 @property (nonatomic, retain) NSString * activityId;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) IncidentReportInfo *incidentType;
-@property (nonatomic, retain) NSManagedObject *accidentInfo;
+@property (nonatomic, retain) AccidentReportInfo *accidentInfo;
 
 @end

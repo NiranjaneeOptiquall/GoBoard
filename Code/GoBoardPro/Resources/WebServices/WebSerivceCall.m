@@ -32,11 +32,7 @@
 #import "GeneralInjuryType.h"
 #import "LegInjuryList.h"
 
-#define REQUIRED_TYPE_PERSON    @"PersonInvolved"
-#define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
-#define REQUIRED_TYPE_WITNESS    @"Witness"
-#define REQUIRED_TYPE_EMPLOYEE    @"Employee"
-#define REQUIRED_TYPE_FIRST_AID     @"FirstAid"
+
 
 @implementation WebSerivceCall
 

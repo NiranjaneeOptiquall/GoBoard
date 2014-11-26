@@ -54,9 +54,21 @@
     [_signatureView showPopOverWithSender:sender];
 }
 
-- (BOOL)isBodilyFluidValidationSucceed {
+- (BOOL)isBodilyFluidValidationSucceedWith:(NSArray*)fields {
     BOOL success = YES;
-    if ([_txtFName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLName isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
+    if ([fields containsObject:@"firstName"] && [_txtFName isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"middleInitial"] && [_txtMI isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"lastName"] && [_txtLName isTextFieldBlank]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
+    }
+    else if ([fields containsObject:@"position"] && [_txtPosition isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         success = NO;
     }

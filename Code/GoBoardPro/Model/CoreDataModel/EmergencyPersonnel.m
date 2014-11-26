@@ -2,11 +2,12 @@
 //  EmergencyPersonnel.m
 //  GoBoardPro
 //
-//  Created by ind558 on 21/11/14.
+//  Created by ind558 on 26/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
 #import "EmergencyPersonnel.h"
+#import "AccidentReportSubmit.h"
 #import "Report.h"
 
 
@@ -14,14 +15,15 @@
 
 @dynamic additionalInformation;
 @dynamic badgeNumber;
+@dynamic caseNumber;
 @dynamic firstName;
 @dynamic lastName;
 @dynamic middileInitial;
 @dynamic phone;
-@dynamic time911Called;
 @dynamic time911Arrival;
+@dynamic time911Called;
 @dynamic time911Departure;
-@dynamic caseNumber;
 @dynamic report;
+@dynamic accidentInfo;
 
 @end

@@ -10,6 +10,7 @@
 #import "PersonInformation.h"
 #import "BodyPartInjury.h"
 #import "BodilyFluidView.h"
+#import "AccidentPerson.h"
 
 @class AccidentReportViewController;
 
@@ -20,5 +21,7 @@
 @property (weak, nonatomic) IBOutlet BodilyFluidView *vwBodilyFluid;
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
-- (BOOL)validateAccidentFirstSectionWith:(NSArray*)personArray;
+- (BOOL)validateAccidentFirstSectionWith:(NSArray*)personArray firstAidFields:(NSArray*)firstAid;
+
+- (AccidentPerson*)getAccidentPerson;
 @end

@@ -8,6 +8,13 @@
 
 #import "AccidentReportViewController.h"
 #import "AccidentFirstSection.h"
+#import "AccidentReportSubmit.h"
+#import "AccidentPerson.h"
+#import "InjuryDetail.h"
+#import "Witness.h"
+#import "EmergencyPersonnel.h"
+#import "EmergencyPersonnelView.h"
+#import "WitnessView.h"
 
 
 @interface AccidentReportViewController ()
@@ -150,6 +157,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
     NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryEmergencyFields = [fields valueForKeyPath:@"name"];
+    
     NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
     NSArray *fields1 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate1];
     NSArray *aryWitnessFields = [fields1 valueForKeyPath:@"name"];
@@ -157,6 +165,7 @@
     NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMPLOYEE];
     NSArray *fields2 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate2];
     NSArray *aryEmpFields = [fields2 valueForKeyPath:@"name"];
+    
     if (![self validateFirstSection]) {
         return;
     }
@@ -168,14 +177,89 @@
     }
 }
 
+- (void)saveAccidentReportToLocal {
+    AccidentReportSubmit *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate *incidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
+//    NSDate *managementFollowupDate = [aFormatter dateFromString:_txtManagementFollowUp.text];
+    [aFormatter setDateFormat:@"yyyy-MM-dd"];
+    aReport.dateOfIncident = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:incidentDate], _txtTimeOfIncident.text];
+    aReport.facilityId = selectedFacility.value;
+    aReport.locationId = selectedLocation.value;
+    aReport.desc = _txvDescription.text;
+    aReport.isNotification1Selected = (_btn911Called.isSelected) ? @"true":@"false";
+    aReport.isNotification2Selected = (_btnPoliceCalled.isSelected) ? @"true":@"false";
+    aReport.isNotification3Selected = (_btnManager.isSelected) ? @"true":@"false";
+    aReport.isNotification4Selected = (_btnNone.isSelected) ? @"true":@"false";
+    NSMutableSet *personSet = [NSMutableSet set];
+    for (AccidentFirstSection *view in _vwFirstSection.subviews) {
+        if ([view isKindOfClass:[AccidentFirstSection class]]) {
+            AccidentPerson *aPerson = [view getAccidentPerson];
+            aPerson.accidentInfo = aReport;
+            [personSet addObject:aPerson];
+        }
+    }
+    NSMutableSet *emergencySet = [NSMutableSet set];
+    for (EmergencyPersonnelView *vwEmergency in thirdSection.mutArrEmergencyViews) {
+        EmergencyPersonnel *aEmergencyPersonnel = [NSEntityDescription insertNewObjectForEntityForName:@"EmergencyPersonnel" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aEmergencyPersonnel.time911Called = vwEmergency.txtTime911Called.text;
+        aEmergencyPersonnel.time911Arrival = vwEmergency.txtTimeOfArrival.text;
+        aEmergencyPersonnel.time911Departure = vwEmergency.txtTimeOfDeparture.text;
+        aEmergencyPersonnel.caseNumber = vwEmergency.txtCaseNo.text;
+        aEmergencyPersonnel.firstName = vwEmergency.txtFirstName.text;
+        aEmergencyPersonnel.middileInitial = vwEmergency.txtMI.text;
+        aEmergencyPersonnel.lastName = vwEmergency.txtLastName.text;
+        aEmergencyPersonnel.phone = vwEmergency.txtPhone.text;
+        aEmergencyPersonnel.badgeNumber = vwEmergency.txtBadge.text;
+        aEmergencyPersonnel.additionalInformation = vwEmergency.txvAdditionalInfo.text;
+        aEmergencyPersonnel.accidentInfo = aReport;
+        [emergencySet addObject:aEmergencyPersonnel];
+    }
+    aReport.emergencyPersonnels = emergencySet;
+    
+    NSMutableSet *witnessSet = [NSMutableSet set];
+    for (WitnessView *vwWitness in finalSection.mutArrWitnessViews) {
+        Witness *aWitness = [NSEntityDescription insertNewObjectForEntityForName:@"Witness" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aWitness.firstName = vwWitness.txtWitnessFName.text;
+        aWitness.middleInitial = vwWitness.txtWitnessMI.text;
+        aWitness.lastName = vwWitness.txtWitnessLName.text;
+        aWitness.homePhone = vwWitness.txtWitnessHomePhone.text;
+        aWitness.alternatePhone = vwWitness.txtWitnessAlternatePhone.text;
+        aWitness.email = vwWitness.txtWitnessEmailAddress.text;
+        aWitness.witnessWrittenAccount = vwWitness.txvDescIncident.text;
+        aWitness.accidentInfo = aReport;
+        [witnessSet addObject:aWitness];
+    }
+    aReport.witnesses = witnessSet;
+    
+    aReport.employeeFirstName = finalSection.txtEmpFName.text;
+    aReport.employeeMiddleInitial = finalSection.txtEmpMI.text;
+    aReport.employeeLastName = finalSection.txtEmpLName.text;
+    aReport.employeeHomePhone = finalSection.txtEmpHomePhone.text;
+    aReport.employeeAlternatePhone = finalSection.txtEmpAlternatePhone.text;
+    aReport.employeeEmail = finalSection.txtEmpEmailAddr.text;
+#warning //    aReport.reportFilerAccount = finalSection.txt.text;
+//    aReport.managementFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
+//    aReport.followUpCallType = @"";
+    aReport.additionalInfo = finalSection.txvAdditionalInformation.text;
+//    aReport.com
+    [gblAppDelegate.managedObjectContext insertedObjects];
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
 - (BOOL)validateFirstSection {
     BOOL isSuccess = YES;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
     NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_FIRST_AID];
+    NSArray *fields1 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate1];
+    NSArray *aryAidFields = [fields1 valueForKeyPath:@"name"];
     for (AccidentFirstSection *view in _vwFirstSection.subviews) {
         if ([view isKindOfClass:[AccidentFirstSection class]]) {
-            isSuccess = [view validateAccidentFirstSectionWith:aryFields];
+            isSuccess = [view validateAccidentFirstSectionWith:aryFields firstAidFields:aryAidFields];
             if (!isSuccess) {
                 break;
             }

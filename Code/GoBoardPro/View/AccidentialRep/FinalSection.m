@@ -20,7 +20,7 @@
 */
 
 - (void)awakeFromNib {
-    mutArrWitnessViews = [[NSMutableArray alloc] init];
+    _mutArrWitnessViews = [[NSMutableArray alloc] init];
     [self addWitnessView];
     [self btnCommunicationTapped:_btnAdmin];
     [self btnSentToInsuranceTapped:_btnYesInsurance];
@@ -122,7 +122,7 @@
     aWitnessView.frame = frame;
     [self addSubview:aWitnessView];
     totalWitnessCount ++;
-    [mutArrWitnessViews addObject:aWitnessView];
+    [_mutArrWitnessViews addObject:aWitnessView];
     frame = _vwFixedContent.frame;
     frame.origin.y = CGRectGetMaxY(aWitnessView.frame);
     _vwFixedContent.frame = frame;
@@ -133,7 +133,7 @@
 
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)witness emp:(NSArray *)aryFields {
     BOOL success = YES;
-    for (WitnessView *view in mutArrWitnessViews) {
+    for (WitnessView *view in _mutArrWitnessViews) {
         if (![view isWitnessViewValidationSuccessFor:witness]) {
             success = NO;
             return success;

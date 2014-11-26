@@ -10,11 +10,11 @@
 
 @interface ThirdSection : UIView<UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
     NSInteger totalBodilyFluidCount, totalEmergencyPersonnelCount;
-    NSMutableArray *mutArrEmergencyViews;
+    
 //    NSMutableArray *mutArrBodilyFluidViews;
     UIPopoverController *popOver;
 }
-
+@property (strong, nonatomic) NSMutableArray *mutArrEmergencyViews;
 @property (weak, nonatomic) IBOutlet UIView *vwFixedContent;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddEmergencyPersonnel;
 //@property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
@@ -25,5 +25,5 @@
 //- (IBAction)btnAddMoreBodilyFluidTapped:(id)sender;
 - (IBAction)btnAddEmergencyPersonnel:(id)sender;
 - (void)initialSetUp;
-- (BOOL)isThirdSectionValidationSuccessWith:(NSArray*)fields;
+- (BOOL)isThirdSectionValidationSuccessWith:(NSArray *)fields;
 @end

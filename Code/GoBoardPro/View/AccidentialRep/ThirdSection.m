@@ -78,7 +78,7 @@
     frame = _btnAddEmergencyPersonnel.frame;
     frame.origin.y = CGRectGetMaxY(objEmergency.frame);
     _btnAddEmergencyPersonnel.frame = frame;
-    [mutArrEmergencyViews addObject:objEmergency];
+    [_mutArrEmergencyViews addObject:objEmergency];
     [self bringSubviewToFront:_btnAddEmergencyPersonnel];
 }
 
@@ -96,7 +96,7 @@
 }
 
 - (void)initialSetUp {
-    mutArrEmergencyViews = [[NSMutableArray alloc] init];
+    _mutArrEmergencyViews = [[NSMutableArray alloc] init];
 //    mutArrBodilyFluidViews = [[NSMutableArray alloc] init];
 //    [self addBodilyFluidView];
     [self addEmergencyPersonnel];
@@ -105,7 +105,7 @@
 
 - (BOOL)isThirdSectionValidationSuccessWith:(NSArray *)fields {
     BOOL success = YES;
-    for (EmergencyPersonnelView *view in mutArrEmergencyViews) {
+    for (EmergencyPersonnelView *view in _mutArrEmergencyViews) {
         if (![view isEmergencyPersonnelValidationSucceedFor:fields]) {
             success = NO;
             break;

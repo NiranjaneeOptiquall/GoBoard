@@ -193,6 +193,7 @@
     aReport.isNotification2Selected = (_btnPoliceCalled.isSelected) ? @"true":@"false";
     aReport.isNotification3Selected = (_btnManager.isSelected) ? @"true":@"false";
     aReport.isNotification4Selected = (_btnNone.isSelected) ? @"true":@"false";
+    
 //    aReport.personPhoto =
     NSMutableSet *personSet = [NSMutableSet set];
     for (IncidentPersonalInformation *vwPerson in mutArrIncidentPerson) {

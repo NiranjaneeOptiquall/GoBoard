@@ -58,6 +58,8 @@ typedef enum : NSUInteger {
 #define REQUIRED_TYPE_EMERGENCY    @"EmergencyResponse"
 #define REQUIRED_TYPE_WITNESS    @"Witness"
 #define REQUIRED_TYPE_EMPLOYEE    @"Employee"
+#define REQUIRED_TYPE_FIRST_AID     @"FirstAid"
+
 
 #define SERVICE_URL                 @"http://goboardapi.azurewebsites.net/api/"
 

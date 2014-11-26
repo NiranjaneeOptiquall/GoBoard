@@ -11,7 +11,6 @@
 
 @interface FinalSection : UIView<UITextFieldDelegate> {
     NSInteger totalWitnessCount;
-    NSMutableArray *mutArrWitnessViews;
 }
 
 @property (weak, nonatomic) IBOutlet UIView *vwFixedContent;
@@ -42,6 +41,8 @@
 @property (weak, nonatomic) IBOutlet UIView *vwSubmit;
 @property (weak, nonatomic) IBOutlet UIView *vwCommunication;
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
+
+@property (strong, nonatomic) NSMutableArray *mutArrWitnessViews;
 
 @property (assign, nonatomic) BOOL isCommunicationVisible;
 @property (assign, nonatomic) BOOL isManagementFollowUpVisible;
