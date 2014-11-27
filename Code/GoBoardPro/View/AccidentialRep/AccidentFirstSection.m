@@ -89,9 +89,8 @@
     aPerson.firstName = _vwPersonalInfo.txtFirstName.text;
     aPerson.memberId = _vwPersonalInfo.txtMemberId.text;
     aPerson.employeeTitle = _vwPersonalInfo.txtEmployeePosition.text;
-#warning
-    aPerson.personTypeID = _vwPersonalInfo.strPersonInvolved;
-    aPerson.affiliationTypeID = _vwPersonalInfo.strAffiliationType;
+    aPerson.personTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved];
+    aPerson.affiliationTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType];
     
     aPerson.middleInitial = _vwPersonalInfo.txtMi.text;
     aPerson.lastName = _vwPersonalInfo.txtLastName.text;
@@ -107,8 +106,7 @@
     aPerson.guestOfFirstName = _vwPersonalInfo.txtGuestFName.text;
     aPerson.guestOfMiddleInitial = _vwPersonalInfo.txtGuestMI.text;
     aPerson.guestOfLastName = _vwPersonalInfo.txtguestLName.text;
-#warning
-    aPerson.genderTypeID = _vwPersonalInfo.strGenderType;
+    aPerson.genderTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType];
     aPerson.minor = (_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false";
     aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
     
@@ -116,13 +114,13 @@
     aPerson.firstAidMiddleInitial = _vwBodilyFluid.txtMI.text;
     aPerson.firstAidLastName = _vwBodilyFluid.txtLName.text;
     aPerson.firstAidPosition = _vwBodilyFluid.txtPosition.text;
-#warning
     aPerson.bloodBornePathogenType = _vwBodilyFluid.strBloodBornePathogen;
     aPerson.bloodCleanUpRequired = (_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false";
     aPerson.wasExposedToBlood = (_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false";
     aPerson.participantSignature = UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0);
     aPerson.staffMemberWrittenAccount = _vwBodilyFluid.txvStaffMemberAccount.text;
     aPerson.participantName = _vwBodilyFluid.signatureView.txtName.text;
+    aPerson.wasBloodPresent = (_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false";
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
     NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] filteredArrayUsingPredicate:predicate];

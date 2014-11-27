@@ -110,7 +110,7 @@
             }
             [alert show];
         } failure:^(NSError *error, NSDictionary *response) {
-            [self saveCompletedTask:aDict];
+            [self saveCompletedTask:aDict showCount:showCount];
         }];
     }
     else if (showCount) {
@@ -126,7 +126,7 @@
     [[[gblAppDelegate.navigationController viewControllers] lastObject] performSegueWithIdentifier:@"Count" sender:nil];
 }
 
-- (void)saveCompletedTask:(NSDictionary *)aDict {
+- (void)saveCompletedTask:(NSDictionary *)aDict showCount:(BOOL)showCount {
     SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     user.userId = [aDict objectForKey:@"UserId"];
     user.facilityId = [aDict objectForKey:@"FacilityId"];
@@ -149,7 +149,13 @@
     }
     user.submittedTask = set;
     [gblAppDelegate.managedObjectContext insertObject:user];
-    [gblAppDelegate.managedObjectContext save:nil];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        if (showCount) {
+            [alert setTag:1];
+        }
+        [alert show];
+    }
 }
 
 - (IBAction)btnToggleTaskAndCountTapped:(id)sender {

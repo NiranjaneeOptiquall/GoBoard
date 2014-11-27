@@ -31,6 +31,7 @@
 #pragma mark - IBActions
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender {
+    _intPersonInvolved = sender.tag;
     [_vwEmpPosition setHidden:YES];
     [_vwGuest setHidden:YES];
     [_vwEmployee setHidden:YES];
@@ -71,6 +72,7 @@
 }
 
 - (IBAction)btnAffiliationTapped:(UIButton *)sender {
+    _intAffiliationType = sender.tag;
     [_btnNonAssessedStudent setSelected:NO];
     [_btnAssessedStudent setSelected:NO];
     [_btnAlumni setSelected:NO];
@@ -89,6 +91,7 @@
 }
 
 - (IBAction)btnGenderTapped:(UIButton *)sender {
+    _intGenderType = sender.tag;
     [_btnMale setSelected:NO];
     [_btnFemale setSelected:NO];
     [_btnNeutral setSelected:NO];
@@ -326,6 +329,7 @@
     if ([textField isEqual:_txtDob]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
         allowEditing = NO;
     }

@@ -299,7 +299,7 @@
         }
     }
     else if ([sender isEqual:_txtCareProvided]) {
-        self.careProvided = [[value valueForKey:@"value"] integerValue];
+        self.careProvided = [[value valueForKey:@"name"] integerValue];
     }
     [sender setText:[value valueForKey:@"name"]];
 }

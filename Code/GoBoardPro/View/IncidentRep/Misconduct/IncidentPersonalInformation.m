@@ -35,6 +35,7 @@
     [_btnMember setSelected:NO];
     [sender setSelected:YES];
     CGRect frame = _vwCommon.frame;
+    _intPersonInvolved = sender.tag;
     if ([sender isEqual:_btnGuest]) {
         if (!_isMemberIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
@@ -64,6 +65,7 @@
 }
 
 - (IBAction)btnAffiliationTapped:(UIButton *)sender {
+    _intAffiliationType = sender.tag;
     [_btnNonAssessedStudent setSelected:NO];
     [_btnAssessedStudent setSelected:NO];
     [_btnAlumni setSelected:NO];
@@ -80,6 +82,7 @@
 }
 
 - (IBAction)btnGenderTapped:(UIButton *)sender {
+    _intGenderType = sender.tag;
     [_btnMale setSelected:NO];
     [_btnFemale setSelected:NO];
     [_btnNeutral setSelected:NO];

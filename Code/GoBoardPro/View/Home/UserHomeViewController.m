@@ -13,6 +13,10 @@
 #import "SubmitCountUser.h"
 #import "SubmitUtilizationCount.h"
 #import "SubmittedTask.h"
+#import "Report.h"
+#import "Person.h"
+#import "EmergencyPersonnel.h"
+#import "Witness.h"
 
 @interface UserHomeViewController ()
 
@@ -112,6 +116,8 @@
         isSyncError = [self syncUtilizationCount];
     if (!isSyncError)
         [self syncSubmittedTask];
+    if (!isSyncError)
+        [self syncIncidentReport];
     if (!isSyncError) {
         alert(@"", @"All data are Synchronised with server.");
     }
@@ -215,6 +221,52 @@
         NSDictionary *aDict = @{@"FacilityId":user.facilityId, @"LocationId":user.locationId, @"PositionId":user.positionId, @"UserId":user.userId, @"Locations":mutArrTask};
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:user];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
+
+
+- (BOOL)syncIncidentReport {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (Report *aReport in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSMutableArray *mutArrPerson = [NSMutableArray array];
+        for (Person *obj in [aReport.persons allObjects]) {
+            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":obj.memberId, @"DateOfBirth":obj.dateOfBirth};
+            [mutArrPerson addObject:aDict];
+        }
+        
+        NSMutableArray *mutArrEmergency = [NSMutableArray array];
+        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":obj.time911Called, @"ArrivalTime":obj.time911Arrival, @"DepartureTime":obj.time911Departure};
+            [mutArrEmergency addObject:aDict];
+        }
+        
+        NSMutableArray *mutArrWitness = [NSMutableArray array];
+        for (Witness *obj in [aReport.witnesses allObjects]) {
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount};
+            [mutArrWitness addObject:aDict];
+        }
+        
+        NSDictionary *aDict = @{@"IncidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"IncidentDescription":aReport.incidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"ReportFilerAccount":aReport.reportFilerAccount, @"ManagementFollowupDate":aReport.managementFollowUpDate, @"AdditionalInformation": aReport.additionalInfo, @"ManagementFollowupCallMadeType":aReport.followUpCallType, @"ActivityTypeId": aReport.activityTypeID, @"EquipmentTypeId": aReport.equipmentTypeID, @"NatureId": aReport.natureId, @"ActionTakenId": aReport.actionId, @"ConditionId": aReport.conditionTypeID, @"PersonPhoto":@"", @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+        [gblAppDelegate callWebService:INCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:aReport];
             isSingleDataSaved = YES;
         } failure:^(NSError *error, NSDictionary *response) {
             isSingleDataSaved = YES;

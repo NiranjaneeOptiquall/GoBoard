@@ -2,7 +2,7 @@
 //  AccidentPerson.m
 //  GoBoardPro
 //
-//  Created by ind558 on 26/11/14.
+//  Created by ind558 on 27/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -13,15 +13,24 @@
 
 @implementation AccidentPerson
 
-@dynamic personTypeID;
+@dynamic activityTypeID;
 @dynamic affiliationTypeID;
 @dynamic alternatePhone;
 @dynamic apartmentNumber;
+@dynamic bloodBornePathogenType;
+@dynamic bloodCleanUpRequired;
+@dynamic careProvidedBy;
 @dynamic city;
+@dynamic conditionTypeID;
 @dynamic dateOfBirth;
 @dynamic duringWorkHours;
 @dynamic email;
 @dynamic employeeTitle;
+@dynamic equipmentTypeID;
+@dynamic firstAidFirstName;
+@dynamic firstAidLastName;
+@dynamic firstAidMiddleInitial;
+@dynamic firstAidPosition;
 @dynamic firstName;
 @dynamic genderTypeID;
 @dynamic guestOfFirstName;
@@ -31,25 +40,17 @@
 @dynamic memberId;
 @dynamic middleInitial;
 @dynamic minor;
+@dynamic participantName;
+@dynamic participantSignature;
+@dynamic personTypeID;
 @dynamic primaryPhone;
+@dynamic staffMemberWrittenAccount;
 @dynamic state;
 @dynamic streetAddress;
-@dynamic zip;
-@dynamic careProvidedBy;
-@dynamic firstAidFirstName;
-@dynamic firstAidMiddleInitial;
-@dynamic firstAidLastName;
-@dynamic firstAidPosition;
-@dynamic bloodBornePathogenType;
-@dynamic bloodCleanUpRequired;
 @dynamic wasExposedToBlood;
-@dynamic participantSignature;
-@dynamic staffMemberWrittenAccount;
-@dynamic participantName;
-@dynamic activityTypeID;
-@dynamic conditionTypeID;
-@dynamic equipmentTypeID;
-@dynamic injuryList;
+@dynamic zip;
+@dynamic wasBloodPresent;
 @dynamic accidentInfo;
+@dynamic injuryList;
 
 @end

@@ -19,7 +19,6 @@
 @property (nonatomic, retain) NSString * locationId;
 @property (nonatomic, retain) NSString * incidentDesc;
 @property (nonatomic, retain) NSString * isNotification1Selected;
-@property (nonatomic, retain) NSString * desc;
 @property (nonatomic, retain) NSString * isNotification2Selected;
 @property (nonatomic, retain) NSString * isNotification3Selected;
 @property (nonatomic, retain) NSString * isNotification4Selected;

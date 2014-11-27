@@ -21,7 +21,6 @@
 
 - (void)awakeFromNib {
     [self btnEmergencyPersonnelTapped:_btnPublicSafety];
-    [_txtTimeOfArrival setEnabled:NO];
     [_txtTimeOfDeparture setEnabled:NO];
 }
 
@@ -127,11 +126,13 @@
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
         [datePopOver setDelegate:self];
-        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-        [aFormatter setDateFormat:@"dd/MM/yyyy"];
-        NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
-        [aFormatter setDateFormat:@"dd/MM/yyyy hh:mm a"];
-        [datePopOver.datePicker setMinimumDate:[aFormatter dateFromString:[NSString stringWithFormat:@"%@ %@", aStr, _txtTime911Called.text]]];
+        if (_txtTime911Called.text.length > 0) {
+            NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+            [aFormatter setDateFormat:@"dd/MM/yyyy"];
+            NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
+            [aFormatter setDateFormat:@"dd/MM/yyyy hh:mm a"];
+            [datePopOver.datePicker setMinimumDate:[aFormatter dateFromString:[NSString stringWithFormat:@"%@ %@", aStr, _txtTime911Called.text]]];
+        }
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
         allowEditing = NO;
     }
@@ -208,7 +209,6 @@
 
 - (void)datePickerDidSelect:(NSDate*)date forObject:(id)field {
     if ([field isEqual:_txtTime911Called]) {
-        [_txtTimeOfArrival setEnabled:YES];
         [_txtTimeOfArrival setText:@""];
         [_txtTimeOfDeparture setText:@""];
     }

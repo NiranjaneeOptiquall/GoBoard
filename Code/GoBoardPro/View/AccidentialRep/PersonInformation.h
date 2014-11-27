@@ -80,9 +80,11 @@
 @property (assign, nonatomic) BOOL isEmployeeIdVisible;
 @property (assign, nonatomic) BOOL isConditionsVisible;
 
-@property (strong, nonatomic) NSString *strPersonInvolved;
-@property (strong, nonatomic) NSString *strAffiliationType;
-@property (strong, nonatomic) NSString *strGenderType;
+@property (assign, nonatomic) NSInteger intPersonInvolved;
+@property (assign, nonatomic) NSInteger intAffiliationType;
+@property (assign, nonatomic) NSInteger intGenderType;
+
+
 
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;

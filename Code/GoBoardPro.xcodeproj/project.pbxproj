@@ -128,9 +128,9 @@
 		3397CAD619D034C000788153 /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3397CAD519D034C000788153 /* SplashViewController.m */; };
 		33AC809B1A25E19000FA77A1 /* Witness.m in Sources */ = {isa = PBXBuildFile; fileRef = 33AC809A1A25E19000FA77A1 /* Witness.m */; };
 		33AC809E1A25E19000FA77A1 /* EmergencyPersonnel.m in Sources */ = {isa = PBXBuildFile; fileRef = 33AC809D1A25E19000FA77A1 /* EmergencyPersonnel.m */; };
-		33AC80A41A25E66800FA77A1 /* AccidentPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 33AC80A31A25E66800FA77A1 /* AccidentPerson.m */; };
 		33AC80A71A25F14E00FA77A1 /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 33AC80A61A25F14E00FA77A1 /* InjuryDetail.m */; };
 		33AC80AA1A25F82C00FA77A1 /* AccidentReportSubmit.m in Sources */ = {isa = PBXBuildFile; fileRef = 33AC80A91A25F82C00FA77A1 /* AccidentReportSubmit.m */; };
+		33B03F321A26F56600EA0E85 /* AccidentPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B03F311A26F56600EA0E85 /* AccidentPerson.m */; };
 		33B0C88119DADB6400D1002E /* WitnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B0C88019DADB6400D1002E /* WitnessView.m */; };
 		33B0C88319DADB7500D1002E /* WitnessView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33B0C88219DADB7500D1002E /* WitnessView.xib */; };
 		33B0C88519DAE02200D1002E /* FinalSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33B0C88419DAE02200D1002E /* FinalSection.xib */; };
@@ -492,12 +492,12 @@
 		33AC809A1A25E19000FA77A1 /* Witness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Witness.m; sourceTree = "<group>"; };
 		33AC809C1A25E19000FA77A1 /* EmergencyPersonnel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyPersonnel.h; sourceTree = "<group>"; };
 		33AC809D1A25E19000FA77A1 /* EmergencyPersonnel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyPersonnel.m; sourceTree = "<group>"; };
-		33AC80A21A25E66800FA77A1 /* AccidentPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentPerson.h; sourceTree = "<group>"; };
-		33AC80A31A25E66800FA77A1 /* AccidentPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentPerson.m; sourceTree = "<group>"; };
 		33AC80A51A25F14E00FA77A1 /* InjuryDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryDetail.h; sourceTree = "<group>"; };
 		33AC80A61A25F14E00FA77A1 /* InjuryDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryDetail.m; sourceTree = "<group>"; };
 		33AC80A81A25F82C00FA77A1 /* AccidentReportSubmit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportSubmit.h; sourceTree = "<group>"; };
 		33AC80A91A25F82C00FA77A1 /* AccidentReportSubmit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportSubmit.m; sourceTree = "<group>"; };
+		33B03F301A26F56500EA0E85 /* AccidentPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentPerson.h; sourceTree = "<group>"; };
+		33B03F311A26F56600EA0E85 /* AccidentPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentPerson.m; sourceTree = "<group>"; };
 		33B0C87F19DADB6400D1002E /* WitnessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WitnessView.h; sourceTree = "<group>"; };
 		33B0C88019DADB6400D1002E /* WitnessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WitnessView.m; sourceTree = "<group>"; };
 		33B0C88219DADB7500D1002E /* WitnessView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WitnessView.xib; sourceTree = "<group>"; };
@@ -806,12 +806,12 @@
 		332F543A1A23438E00F2A40A /* AccidentReport */ = {
 			isa = PBXGroup;
 			children = (
+				33B03F301A26F56500EA0E85 /* AccidentPerson.h */,
+				33B03F311A26F56600EA0E85 /* AccidentPerson.m */,
 				33AC80A81A25F82C00FA77A1 /* AccidentReportSubmit.h */,
 				33AC80A91A25F82C00FA77A1 /* AccidentReportSubmit.m */,
 				33AC80A51A25F14E00FA77A1 /* InjuryDetail.h */,
 				33AC80A61A25F14E00FA77A1 /* InjuryDetail.m */,
-				33AC80A21A25E66800FA77A1 /* AccidentPerson.h */,
-				33AC80A31A25E66800FA77A1 /* AccidentPerson.m */,
 				332F54681A234BD800F2A40A /* CareProvidedType.h */,
 				332F54691A234BD800F2A40A /* CareProvidedType.m */,
 				332F54651A2347A700F2A40A /* BodyPartInjuryType.h */,
@@ -1937,8 +1937,8 @@
 				33CFBC3B19D2E7D000D86E68 /* EmergencyResponseViewController.m in Sources */,
 				33CFBC4719D2E8DF00D86E68 /* TaskListViewController.m in Sources */,
 				33EB4A5519D18F41008EF8FD /* GuestFormViewController.m in Sources */,
+				33B03F321A26F56600EA0E85 /* AccidentPerson.m in Sources */,
 				3337809319E6B6EA00362F82 /* MIMProperties.m in Sources */,
-				33AC80A41A25E66800FA77A1 /* AccidentPerson.m in Sources */,
 				3337809219E6B6EA00362F82 /* MIMMeter.m in Sources */,
 				332F543D1A2344B900F2A40A /* LegInjuryList.m in Sources */,
 				332B60E31A146CB700B7C7EF /* AFHTTPClient.m in Sources */,

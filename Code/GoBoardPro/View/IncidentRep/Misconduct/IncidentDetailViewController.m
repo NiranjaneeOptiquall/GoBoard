@@ -15,7 +15,6 @@
 #import "Witness.h"
 #import "EmergencyPersonnel.h"
 
-
 #define MISCONDUCT  @"misconduct"
 #define CUSTOMER_SERVICE    @"customerservice"
 #define OTHER   @"other"
@@ -31,7 +30,6 @@
     [self fetchIncidentSetupInfo];
     [self fetchFacilities];
     [_txtLocation setEnabled:NO];
-    
     [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
     [_vwAfterPersonalInfo setBackgroundColor:[UIColor clearColor]];
     mutArrIncidentPerson = [[NSMutableArray alloc] init];
@@ -159,6 +157,7 @@
 
 - (IBAction)btnFollowUpCallTapped:(UIButton *)sender {
     _isUpdate = YES;
+    intFollowUpCallType = sender.tag;
     [_btnYesCall setSelected:NO];
     [_btnNoCall setSelected:NO];
     [_btnCallNotReq setSelected:NO];
@@ -178,101 +177,79 @@
     if (![self checkValidation]) {
         return;
     }
-    return;
-    Report *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"Report" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"MM/dd/yyyy"];
     NSDate *incidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
     NSDate *managementFollowupDate = [aFormatter dateFromString:_txtManagementFollowUp.text];
     [aFormatter setDateFormat:@"yyyy-MM-dd"];
-    aReport.dateOfIncident = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:incidentDate], _txtTimeOfIncident.text];
-    aReport.facilityId = selectedFacility.value;
-    aReport.locationId = selectedLocation.value;
-    aReport.incidentDesc = _txvIncidentDesc.text;
-    aReport.isNotification1Selected = (_btn911Called.isSelected) ? @"true":@"false";
-    aReport.isNotification2Selected = (_btnPoliceCalled.isSelected) ? @"true":@"false";
-    aReport.isNotification3Selected = (_btnManager.isSelected) ? @"true":@"false";
-    aReport.isNotification4Selected = (_btnNone.isSelected) ? @"true":@"false";
     
-//    aReport.personPhoto =
-    NSMutableSet *personSet = [NSMutableSet set];
+    NSString *aStrDate = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:incidentDate], _txtTimeOfIncident.text];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _txtActivity.text];
+    NSArray *ary = [[reportSetupInfo.activityList allObjects] filteredArrayUsingPredicate:predicate];
+    NSString *activityTypeID = [[ary firstObject] valueForKey:@"activityId"];
+    if (!activityTypeID) activityTypeID = @"";
+    
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _txtEquipment.text];
+    ary = [[reportSetupInfo.equipmentList allObjects] filteredArrayUsingPredicate:predicate];
+    NSString *equipmentTypeID = [[ary firstObject] valueForKey:@"equipmentId"];
+    if (!equipmentTypeID) equipmentTypeID = @"";
+    
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _txtWeather.text];
+    ary = [[reportSetupInfo.conditionList allObjects] filteredArrayUsingPredicate:predicate];
+    NSString* conditionTypeID = [[ary firstObject] valueForKey:@"conditionId"];
+    if (!conditionTypeID) conditionTypeID = @"";
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _txtActionTaken.text];
+    ary = [[reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:predicate];
+    NSString* actionId = [[ary firstObject] valueForKey:@"actionId"];
+    if (!actionId) actionId = @"";
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _txtChooseIncident.text];
+    ary = [[reportSetupInfo.natureList allObjects] filteredArrayUsingPredicate:predicate];
+    NSString* natureId = [[ary firstObject] valueForKey:@"natureId"];
+    if (!natureId) natureId = @"";
+    
+    NSMutableArray *mutArrPersons = [NSMutableArray array];
     for (IncidentPersonalInformation *vwPerson in mutArrIncidentPerson) {
-        Person *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        aPerson.firstName = vwPerson.txtFirstName.text;
-        aPerson.memberId = vwPerson.txtMemberId.text;
-        aPerson.employeeTitle = vwPerson.txtEmployeePosition.text;
-        aPerson.personTypeID = vwPerson.strPersonInvolved;
-        aPerson.affiliationTypeID = vwPerson.strAffiliationType;
-        aPerson.middleInitial = vwPerson.txtMi.text;
-        aPerson.lastName = vwPerson.txtLastName.text;
-        aPerson.streetAddress = vwPerson.txtStreetAddress.text;
-        aPerson.apartmentNumber = vwPerson.txtAppartment.text;
-        aPerson.city = vwPerson.txtCity.text;
-        aPerson.state = vwPerson.txtState.text;
-        aPerson.zip = vwPerson.txtZip.text;
-        aPerson.primaryPhone = vwPerson.txtHomePhone.text;
-        aPerson.alternatePhone = vwPerson.txtAlternatePhone.text;
-        aPerson.email = vwPerson.txtEmailAddress.text;
-        aPerson.dateOfBirth = vwPerson.txtDob.text;
-        aPerson.guestOfFirstName = vwPerson.txtGuestFName.text;
-        aPerson.guestOfMiddleInitial = vwPerson.txtGuestMI.text;
-        aPerson.guestOfLastName = vwPerson.txtguestLName.text;
-        aPerson.genderTypeID = vwPerson.strGenderType;
-        aPerson.minor = (vwPerson.btnMinor.isSelected) ? @"true" : @"false";
-        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
-        aPerson.report = aReport;
-        [personSet addObject:aPerson];
-    }
-    aReport.persons = personSet;
-    if (imgIncidentPerson) {
-        aReport.personPhoto = UIImageJPEGRepresentation(imgIncidentPerson, 1.0);
+        NSString *strDob = @"";
+        
+        if (vwPerson.txtDob.text.length > 0) {
+            [aFormatter setDateFormat:@"MM/dd/yyyy"];
+            NSDate *aDob = [aFormatter dateFromString:vwPerson.txtDob.text];
+            [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            strDob = [aFormatter stringFromDate:aDob];
+        }
+        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":vwPerson.txtMemberId.text, @"DateOfBirth":strDob};
+//        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
+        
+        [mutArrPersons addObject:aDict];
     }
     
-    NSMutableSet *emergencySet = [NSMutableSet set];
+    NSMutableArray *mutArrEmergency = [NSMutableArray array];
     for (EmergencyPersonnelView *vwEmergency in mutArrEmergencyPersonnel) {
-        EmergencyPersonnel *aEmergencyPersonnel = [NSEntityDescription insertNewObjectForEntityForName:@"EmergencyPersonnel" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        aEmergencyPersonnel.time911Called = vwEmergency.txtTime911Called.text;
-        aEmergencyPersonnel.time911Arrival = vwEmergency.txtTimeOfArrival.text;
-        aEmergencyPersonnel.time911Departure = vwEmergency.txtTimeOfDeparture.text;
-        aEmergencyPersonnel.caseNumber = vwEmergency.txtCaseNo.text;
-        aEmergencyPersonnel.firstName = vwEmergency.txtFirstName.text;
-        aEmergencyPersonnel.middileInitial = vwEmergency.txtMI.text;
-        aEmergencyPersonnel.lastName = vwEmergency.txtLastName.text;
-        aEmergencyPersonnel.phone = vwEmergency.txtPhone.text;
-        aEmergencyPersonnel.badgeNumber = vwEmergency.txtBadge.text;
-        aEmergencyPersonnel.additionalInformation = vwEmergency.txvAdditionalInfo.text;
-        aEmergencyPersonnel.report = aReport;
-        [emergencySet addObject:aEmergencyPersonnel];
+        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.text, @"MiddleInitial":vwEmergency.txtMI.text, @"LastName":vwEmergency.txtLastName.text, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.text, @"BadgeNumber":vwEmergency.txtBadge.text, @"Time911Called":vwEmergency.txtTime911Called.text, @"ArrivalTime":vwEmergency.txtTimeOfArrival.text, @"DepartureTime":vwEmergency.txtTimeOfDeparture.text};
+        [mutArrEmergency addObject:aDict];
     }
-    aReport.emergencyPersonnels = emergencySet;
     
-    NSMutableSet *witnessSet = [NSMutableSet set];
+    NSMutableArray *mutArrWitness = [NSMutableArray array];
     for (WitnessView *vwWitness in mutArrWitnessView) {
-        Witness *aWitness = [NSEntityDescription insertNewObjectForEntityForName:@"Witness" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        aWitness.firstName = vwWitness.txtWitnessFName.text;
-        aWitness.middleInitial = vwWitness.txtWitnessMI.text;
-        aWitness.lastName = vwWitness.txtWitnessLName.text;
-        aWitness.homePhone = vwWitness.txtWitnessHomePhone.text;
-        aWitness.alternatePhone = vwWitness.txtWitnessAlternatePhone.text;
-        aWitness.email = vwWitness.txtWitnessEmailAddress.text;
-        aWitness.witnessWrittenAccount = vwWitness.txvDescIncident.text;
-        aWitness.report = aReport;
-        [witnessSet addObject:aWitness];
+        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.text, @"MiddleInitial":vwWitness.txtWitnessMI.text, @"LastName":vwWitness.txtWitnessLName.text, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
+        [mutArrWitness addObject:aDict];
     }
-    aReport.witnesses = witnessSet;
-    
-    aReport.employeeFirstName = _txtEmpFName.text;
-    aReport.employeeMiddleInitial = _txtEmpMI.text;
-    aReport.employeeLastName = _txtEmpLName.text;
-    aReport.employeeHomePhone = _txtEmpHomePhone.text;
-    aReport.employeeAlternatePhone = _txtEmpAlternatePhone.text;
-    aReport.employeeEmail = _txtEmpEmail.text;
-    aReport.reportFilerAccount = _txtReportAccount.text;
-    aReport.managementFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
-    aReport.followUpCallType = @"";
-    aReport.additionalInfo = _txvAdditionalInfo.text;
-    [gblAppDelegate.managedObjectContext insertedObjects];
-    [gblAppDelegate.managedObjectContext save:nil];
+    NSString *strFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
+    if (!strFollowUpDate) strFollowUpDate = @"";
+    NSDictionary *aDict = @{@"IncidentDate":aStrDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"IncidentDescription":_txvIncidentDesc.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false", @"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":_txtEmpFName.trimText, @"EmployeeMiddleInitial": _txtEmpMI.trimText, @"EmployeeLastName":_txtEmpLName.trimText, @"EmployeeHomePhone":_txtEmpHomePhone.trimText, @"EmployeeAlternatePhone":_txtEmpAlternatePhone.text, @"EmployeeEmail":_txtEmpEmail.text, @"ReportFilerAccount":_txtReportAccount.text, @"ManagementFollowupDate":strFollowUpDate, @"AdditionalInformation": _txvAdditionalInfo.text, @"ManagementFollowupCallMadeType":[NSString stringWithFormat:@"%ld",(long)intFollowUpCallType], @"ActivityTypeId": activityTypeID, @"EquipmentTypeId": equipmentTypeID, @"NatureId": natureId, @"ActionTakenId": actionId, @"ConditionId": conditionTypeID, @"PersonPhoto":@"", @"PersonsInvolved":mutArrPersons, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+
+    [gblAppDelegate callWebService:INCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    } failure:^(NSError *error, NSDictionary *response) {
+        [self saveIncidentToOffline:aDict];
+    }];
 }
 
 - (IBAction)btnCapturePersonPic:(UIButton*)sender {
@@ -355,9 +332,112 @@
 }
 
 
+- (void)saveIncidentToOffline:(NSDictionary*)aDict {
+    Report *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"Report" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    aReport.dateOfIncident = [aDict objectForKey:@"IncidentDate"];
+    aReport.facilityId = [aDict objectForKey:@"FacilityId"];
+    aReport.locationId = [aDict objectForKey:@"LocationId"];
+    aReport.incidentDesc = [aDict objectForKey:@"IncidentDescription"];
+    aReport.isNotification1Selected = [aDict objectForKey:@"IsNotificationField1Selected"];
+    aReport.isNotification2Selected = [aDict objectForKey:@"IsNotificationField2Selected"];
+    aReport.isNotification3Selected = [aDict objectForKey:@"IsNotificationField3Selected"];
+    aReport.isNotification4Selected = [aDict objectForKey:@"IsNotificationField4Selected"];
+    aReport.employeeFirstName = [aDict objectForKey:@"EmployeeFirstName"];
+    aReport.employeeMiddleInitial = [aDict objectForKey:@"EmployeeMiddleInitial"];
+    aReport.employeeLastName = [aDict objectForKey:@"EmployeeLastName"];
+    aReport.employeeHomePhone = [aDict objectForKey:@"EmployeeHomePhone"];
+    aReport.employeeAlternatePhone = [aDict objectForKey:@"EmployeeAlternatePhone"];
+    aReport.employeeEmail = [aDict objectForKey:@"EmployeeEmail"];
+    aReport.reportFilerAccount = [aDict objectForKey:@"ReportFilerAccount"];
+    aReport.managementFollowUpDate = [aDict objectForKey:@"ManagementFollowupDate"];
+    aReport.additionalInfo = [aDict objectForKey:@"AdditionalInformation"];
+    aReport.followUpCallType = [aDict objectForKey:@"ManagementFollowupCallMadeType"];
+    
+    aReport.activityTypeID = [aDict objectForKey:@"ActivityTypeId"];
+    aReport.equipmentTypeID = [aDict objectForKey:@"EquipmentTypeId"];
+    aReport.natureId = [aDict objectForKey:@"NatureId"];
+    aReport.actionId = [aDict objectForKey:@"ActionTakenId"];
+    aReport.conditionTypeID = [aDict objectForKey:@"ConditionId"];
+    
+    NSMutableSet *personSet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"PersonsInvolved"]) {
+        Person *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aPerson.firstName = [dict objectForKey:@"FirstName"];
+        aPerson.middleInitial = [dict objectForKey:@"MiddleInitial"];
+        aPerson.lastName = [dict objectForKey:@"LastName"];
+        aPerson.primaryPhone = [dict objectForKey:@"PrimaryPhone"];
+        aPerson.alternatePhone = [dict objectForKey:@"AlternatePhone"];
+        aPerson.email = [dict objectForKey:@"Email"];
+        aPerson.streetAddress = [dict objectForKey:@"Address1"];
+        aPerson.apartmentNumber = [dict objectForKey:@"Address2"];
+        aPerson.city = [dict objectForKey:@"City"];
+        aPerson.state = [dict objectForKey:@"State"];
+        aPerson.zip = [dict objectForKey:@"Zip"];
+        aPerson.employeeTitle = [dict objectForKey:@"EmployeeTitle"];
+        aPerson.memberId = [dict objectForKey:@"EmployeId"];
+        aPerson.dateOfBirth = [dict objectForKey:@"DateOfBirth"];
+        aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
+        aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];
+        aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
+        
+        
+        aPerson.guestOfFirstName = [aDict objectForKey:@"GuestOfFirstName"];
+        aPerson.guestOfMiddleInitial = [aDict objectForKey:@"GuestOfMiddleInitial"];
+        aPerson.guestOfLastName = [aDict objectForKey:@"GuestOfLastName"];
+        
+        aPerson.minor = [aDict objectForKey:@"IsMinor"];
+        //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
+        aPerson.report = aReport;
+        [personSet addObject:aPerson];
+    }
+    aReport.persons = personSet;
+    if (imgIncidentPerson) {
+        aReport.personPhoto = UIImageJPEGRepresentation(imgIncidentPerson, 1.0);
+    }
+    
+    NSMutableSet *emergencySet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"EmergencyPersonnel"]) {
+        EmergencyPersonnel *aEmergencyPersonnel = [NSEntityDescription insertNewObjectForEntityForName:@"EmergencyPersonnel" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aEmergencyPersonnel.firstName = [dict objectForKey:@"FirstName"];
+        aEmergencyPersonnel.middileInitial = [dict objectForKey:@"MiddleInitial"];
+        aEmergencyPersonnel.lastName = [dict objectForKey:@"LastName"];
+        aEmergencyPersonnel.phone = [dict objectForKey:@"Phone"];
+        aEmergencyPersonnel.additionalInformation = [dict objectForKey:@"AdditionalInformation"];
+        aEmergencyPersonnel.caseNumber = [dict objectForKey:@"CaseNumber"];
+        aEmergencyPersonnel.badgeNumber = [dict objectForKey:@"BadgeNumber"];
+        aEmergencyPersonnel.time911Called = [dict objectForKey:@"Time911Called"];
+        aEmergencyPersonnel.time911Arrival = [dict objectForKey:@"ArrivalTime"];
+        aEmergencyPersonnel.time911Departure = [dict objectForKey:@"DepartureTime"];
+        aEmergencyPersonnel.report = aReport;
+        [emergencySet addObject:aEmergencyPersonnel];
+    }
+    aReport.emergencyPersonnels = emergencySet;
+    
+    NSMutableSet *witnessSet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"Witnesses"]) {
+        Witness *aWitness = [NSEntityDescription insertNewObjectForEntityForName:@"Witness" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aWitness.firstName = [dict objectForKey:@"FirstName"];
+        aWitness.middleInitial = [dict objectForKey:@"MiddleInitial"];
+        aWitness.lastName = [dict objectForKey:@"LastName"];
+        aWitness.homePhone = [dict objectForKey:@"HomePhone"];
+        aWitness.alternatePhone = [dict objectForKey:@"AlternatePhone"];
+        aWitness.email = [dict objectForKey:@"Email"];
+        aWitness.witnessWrittenAccount = [dict objectForKey:@"IncidentDescription"];
+        aWitness.report = aReport;
+        [witnessSet addObject:aWitness];
+    }
+    aReport.witnesses = witnessSet;
+    
+    
+    [gblAppDelegate.managedObjectContext insertedObjects];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    }
+    
+}
+
 #pragma mark - Methods
-
-
 
 - (void)addIncidentPersonalInformationViews {
     IncidentPersonalInformation *personalInfoView = (IncidentPersonalInformation*)[[[NSBundle mainBundle] loadNibNamed:@"IncidentPersonalInformation" owner:self options:nil] firstObject];

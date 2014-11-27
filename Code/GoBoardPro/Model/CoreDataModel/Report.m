@@ -20,7 +20,6 @@
 @dynamic locationId;
 @dynamic incidentDesc;
 @dynamic isNotification1Selected;
-@dynamic desc;
 @dynamic isNotification2Selected;
 @dynamic isNotification3Selected;
 @dynamic isNotification4Selected;

@@ -40,6 +40,7 @@
         <attribute name="staffMemberWrittenAccount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="streetAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wasBloodPresent" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wasExposedToBlood" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportSubmit" inverseName="accidentPerson" inverseEntity="AccidentReportSubmit" syncable="YES"/>
@@ -81,9 +82,9 @@
         <relationship name="requiredFields" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RequiredField" inverseName="accidentInfo" inverseEntity="RequiredField" syncable="YES"/>
     </entity>
     <entity name="AccidentReportSubmit" representedClassName="AccidentReportSubmit" syncable="YES">
+        <attribute name="accidentDesc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="additionalInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateOfIncident" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeAlternatePhone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeEmail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeFirstName" optional="YES" attributeType="String" syncable="YES"/>
@@ -273,7 +274,6 @@
         <attribute name="additionalInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="conditionTypeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateOfIncident" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeAlternatePhone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeEmail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeFirstName" optional="YES" attributeType="String" syncable="YES"/>
@@ -394,7 +394,9 @@
     </entity>
     <elements>
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="88"/>
+        <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="628"/>
         <element name="AccidentReportInfo" positionX="-209" positionY="71" width="128" height="538"/>
+        <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="388"/>
         <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="103"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="103"/>
         <element name="ArmInjuryList" positionX="-189" positionY="641" width="128" height="88"/>
@@ -411,10 +413,11 @@
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="88"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="88"/>
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="373"/>
+        <element name="InjuryDetail" positionX="423" positionY="623" width="128" height="148"/>
         <element name="LegInjuryList" positionX="-389" positionY="560" width="128" height="88"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
         <element name="Person" positionX="133" positionY="-540" width="128" height="388"/>
-        <element name="Report" positionX="297" positionY="-540" width="128" height="463"/>
+        <element name="Report" positionX="297" positionY="-540" width="128" height="448"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="133"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
@@ -426,8 +429,5 @@
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="163"/>
         <element name="Witness" positionX="261" positionY="-36" width="128" height="178"/>
-        <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="388"/>
-        <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="613"/>
-        <element name="InjuryDetail" positionX="423" positionY="623" width="128" height="148"/>
     </elements>
 </model>

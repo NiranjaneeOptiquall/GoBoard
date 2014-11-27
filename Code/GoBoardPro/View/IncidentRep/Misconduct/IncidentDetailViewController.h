@@ -24,6 +24,7 @@
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
     UIImage *imgIncidentPerson;
+    NSInteger intFollowUpCallType;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;

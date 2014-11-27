@@ -103,7 +103,7 @@
             [alert show];
         } failure:^(NSError *error, NSDictionary *response) {
             alert(@"", [response objectForKey:@"ErrorMessage"]);
-            [self saveSubmitToLocal:aDict];
+            [self saveSubmitToLocal:aDict showTask:showTask];
         }];
     }
     else if (showTask) {
@@ -114,7 +114,7 @@
     }
 }
 
-- (void)saveSubmitToLocal:(NSDictionary *)aDict {
+- (void)saveSubmitToLocal:(NSDictionary *)aDict showTask:(BOOL)showTask {
     SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     user.facilityId = [aDict objectForKey:@"FacilityId"];
     user.locationId = [aDict objectForKey:@"LocationId"];
@@ -144,7 +144,13 @@
     }
     user.countLocation = locSet;
     [gblAppDelegate.managedObjectContext insertObject:user];
-    [gblAppDelegate.managedObjectContext save:nil];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        if (showTask) {
+            [alert setTag:1];
+        }
+        [alert show];
+    }
 }
 
 - (void)showTask {

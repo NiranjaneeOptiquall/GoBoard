@@ -65,9 +65,9 @@
 @property (assign, nonatomic) BOOL isMinorVisible;
 @property (assign, nonatomic) BOOL isEmployeeIdVisible;
 
-@property (strong, nonatomic) NSString *strPersonInvolved;
-@property (strong, nonatomic) NSString *strAffiliationType;
-@property (strong, nonatomic) NSString *strGenderType;
+@property (assign, nonatomic) NSInteger intPersonInvolved;
+@property (assign, nonatomic) NSInteger intAffiliationType;
+@property (assign, nonatomic) NSInteger intGenderType;
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;
