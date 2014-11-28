@@ -11,6 +11,7 @@
 #import "InjuryDetail.h"
 
 
+
 @implementation AccidentFirstSection
 
 - (void)awakeFromNib {
@@ -71,9 +72,14 @@
         frame.size.height = CGRectGetMaxY(_vwBodilyFluid.vwStaffMember.frame);
         _vwBodilyFluid.frame = frame;
     }
-    CGRect frame = self.frame;
-    frame.size.height = CGRectGetMaxY(_vwBodilyFluid.frame);
+    CGRect frame = _btnCaptureImage.frame;
+    frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.frame);
+    _btnCaptureImage.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_btnCaptureImage.frame);
     self.frame = frame;
+    
 }
 
 - (BOOL)validateAccidentFirstSectionWith:(NSArray *)personArray firstAidFields:(NSArray*)firstAid {
@@ -83,86 +89,155 @@
     return YES;
 }
 
-- (AccidentPerson*)getAccidentPerson {
-    AccidentPerson *aPerson = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentPerson" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+- (NSDictionary*)getAccidentPerson {
+    NSMutableArray *injuryList = [NSMutableArray array];
+    for (NSDictionary *aDict in _vwBodyPartInjury.mutArrInjuryList) {
+        NSMutableDictionary *aMutDict = [NSMutableDictionary dictionary];
+        [aMutDict setObject:[aDict objectForKey:@"nature"] forKey:@"NatureId"];
+        if ([aDict objectForKey:@"GeneralInjuryType"]) {
+            [aMutDict setObject:[[aDict objectForKey:@"GeneralInjuryType"] valueForKey:@"typeId"] forKey:@"GeneralInjuryTypeId"];
+            [aMutDict setObject:[aDict objectForKey:@"generalOther"] forKey:@"GeneralInjuryOther"];
+        }
+        else {
+            [aMutDict setObject:@"" forKey:@"GeneralInjuryTypeId"];
+            [aMutDict setObject:@"" forKey:@"GeneralInjuryOther"];
+        }
+        if ([aDict objectForKey:@"BodyPartInjuryType"]) {
+            [aMutDict setObject:[[aDict objectForKey:@"BodyPartInjuryType"] valueForKey:@"typeId"] forKey:@"BodyPartInjuryTypeId"];
+            [aMutDict setObject:[[aDict objectForKey:@"part"] valueForKey:@"value"] forKey:@"BodyPartInjuredId"];
+        }
+        else {
+            [aMutDict setObject:@"" forKey:@"BodyPartInjuryTypeId"];
+            [aMutDict setObject:@"" forKey:@"BodyPartInjuredId"];
+        }
+        if ([aDict objectForKey:@"action"]) {
+            [aMutDict setObject:[[aDict objectForKey:@"action"] valueForKey:@"actionId"] forKey:@"ActionTakenId"];
+        }
+        else {
+            [aMutDict setObject:@"" forKey:@"ActionTakenId"];
+        }
+        
+        [injuryList addObject:aMutDict];
+    }
     
-    aPerson.firstName = _vwPersonalInfo.txtFirstName.text;
-    aPerson.memberId = _vwPersonalInfo.txtMemberId.text;
-    aPerson.employeeTitle = _vwPersonalInfo.txtEmployeePosition.text;
-    aPerson.personTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved];
-    aPerson.affiliationTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType];
-    
-    aPerson.middleInitial = _vwPersonalInfo.txtMi.text;
-    aPerson.lastName = _vwPersonalInfo.txtLastName.text;
-    aPerson.streetAddress = _vwPersonalInfo.txtStreetAddress.text;
-    aPerson.apartmentNumber = _vwPersonalInfo.txtAppartment.text;
-    aPerson.city = _vwPersonalInfo.txtCity.text;
-    aPerson.state = _vwPersonalInfo.txtState.text;
-    aPerson.zip = _vwPersonalInfo.txtZip.text;
-    aPerson.primaryPhone = _vwPersonalInfo.txtHomePhone.text;
-    aPerson.alternatePhone = _vwPersonalInfo.txtAlternatePhone.text;
-    aPerson.email = _vwPersonalInfo.txtEmailAddress.text;
-    aPerson.dateOfBirth = _vwPersonalInfo.txtDob.text;
-    aPerson.guestOfFirstName = _vwPersonalInfo.txtGuestFName.text;
-    aPerson.guestOfMiddleInitial = _vwPersonalInfo.txtGuestMI.text;
-    aPerson.guestOfLastName = _vwPersonalInfo.txtguestLName.text;
-    aPerson.genderTypeID = [NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType];
-    aPerson.minor = (_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false";
-    aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
-    
-    aPerson.firstAidFirstName = _vwBodilyFluid.txtFName.text;
-    aPerson.firstAidMiddleInitial = _vwBodilyFluid.txtMI.text;
-    aPerson.firstAidLastName = _vwBodilyFluid.txtLName.text;
-    aPerson.firstAidPosition = _vwBodilyFluid.txtPosition.text;
-    aPerson.bloodBornePathogenType = _vwBodilyFluid.strBloodBornePathogen;
-    aPerson.bloodCleanUpRequired = (_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false";
-    aPerson.wasExposedToBlood = (_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false";
-    aPerson.participantSignature = UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0);
-    aPerson.staffMemberWrittenAccount = _vwBodilyFluid.txvStaffMemberAccount.text;
-    aPerson.participantName = _vwBodilyFluid.signatureView.txtName.text;
-    aPerson.wasBloodPresent = (_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false";
-    
+    NSString *strDob = @"";
+    if (_vwPersonalInfo.txtDob.text.length > 0) {
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *aDob = [aFormatter dateFromString:_vwPersonalInfo.txtDob.text];
+        [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        strDob = [aFormatter stringFromDate:aDob];
+    }
+    NSString *employeeId = @"", *memberId = @"";
+    if (_vwPersonalInfo.intPersonInvolved == 3) {
+        employeeId = _vwPersonalInfo.txtMemberId.text;
+    }
+    else {
+        memberId = _vwPersonalInfo.txtMemberId.text;
+    }
+
+    NSString *strPhoto = @"", *strSignature = @"";
+    if (imgBodilyFluid) {
+        strPhoto = [UIImageJPEGRepresentation(imgBodilyFluid, 1.0) base64EncodedStringWithOptions:0];
+    }
+    if (_vwBodilyFluid.signatureView.tempDrawImage.image) {
+        strSignature = [UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0) base64EncodedStringWithOptions:0];
+    }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
     NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] filteredArrayUsingPredicate:predicate];
-    aPerson.careProvidedBy = [[ary firstObject] valueForKey:@"careProvidedID"];
+    NSString *careProvidedBy = [[ary firstObject] valueForKey:@"careProvidedID"];
     
     predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtActivity.text];
     ary = [[_parentVC.reportSetupInfo.activityList allObjects] filteredArrayUsingPredicate:predicate];
-    aPerson.activityTypeID = [[ary firstObject] valueForKey:@"activityId"];
+    NSString *activityTypeID = [[ary firstObject] valueForKey:@"activityId"];
     
     predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtWheather.text];
     ary = [[_parentVC.reportSetupInfo.conditionList allObjects] filteredArrayUsingPredicate:predicate];
-    aPerson.conditionTypeID = [[ary firstObject] valueForKey:@"conditionId"];
+    NSString *conditionTypeID = [[ary firstObject] valueForKey:@"conditionId"];
     
     predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtEquipment.text];
     ary = [[_parentVC.reportSetupInfo.equipmentList allObjects] filteredArrayUsingPredicate:predicate];
-    aPerson.equipmentTypeID = [[ary firstObject] valueForKey:@"equipmentId"];
-    NSMutableSet *injuryList = [NSMutableSet set];
-    for (NSDictionary *aDict in _vwBodyPartInjury.mutArrInjuryList) {
-        InjuryDetail *aInjury = [NSEntityDescription insertNewObjectForEntityForName:@"InjuryDetail" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        aInjury.natureOfInjury = [aDict objectForKey:@"type"];
-        aInjury.bodyPartInjury = [[aDict objectForKey:@"part"] name];
-
-        
-        if ([_vwBodyPartInjury.txtOtherInjury isEnabled]) {
-            aInjury.otherInjuryText = [aDict objectForKey:@"injury"];
-        }
-        else {
-            aInjury.otherInjuryText = @"";
-        }
-        
-        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", [aDict objectForKey:@"injury"]];
-        ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] filteredArrayUsingPredicate:predicate];
-        aInjury.injuryType = [aDict objectForKey:@"injury"];
-        
-        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", [aDict objectForKey:@"action"]];
-        ary = [[_parentVC.reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:predicate];
-        aInjury.actionTakenId = [[ary firstObject] valueForKey:@"actionId"];
-        aInjury.accidentPerson = aPerson;
-        [injuryList addObject:aInjury];
-    }
-    aPerson.injuryList = injuryList;
-    return aPerson;
+    NSString *equipmentTypeID = [[ary firstObject] valueForKey:@"equipmentId"];
+    
+    NSDictionary *aDict = @{@"FirstName":_vwPersonalInfo.txtFirstName.trimText, @"MiddleInitial":_vwPersonalInfo.txtMi.trimText, @"LastName":_vwPersonalInfo.txtLastName.trimText, @"PrimaryPhone":_vwPersonalInfo.txtHomePhone.text, @"AlternatePhone":_vwPersonalInfo.txtAlternatePhone.text, @"Email":_vwPersonalInfo.txtEmailAddress.text, @"Address1":_vwPersonalInfo.txtStreetAddress.trimText, @"Address2":_vwPersonalInfo.txtAppartment.trimText, @"City":_vwPersonalInfo.txtCity.trimText, @"State":_vwPersonalInfo.txtState.trimText, @"Zip":_vwPersonalInfo.txtZip.trimText, @"EmployeeTitle":_vwPersonalInfo.txtEmployeePosition.text, @"EmployeeId":employeeId, @"MemberId":memberId, @"DateOfBirth":strDob, @"FirstAidFirstName":_vwBodilyFluid.txtFName.text, @"FirstAidMiddleInitial":_vwBodilyFluid.txtMI.text, @"FirstAidLastName":_vwBodilyFluid.txtLName.text, @"FirstAidPosition":_vwBodilyFluid.txtPosition.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved], @"GuestOfFirstName":_vwPersonalInfo.txtGuestFName.text, @"GuestOfMiddleInitial":_vwPersonalInfo.txtGuestMI.text, @"GuestOfLastName":_vwPersonalInfo.txtguestLName.text, @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false", @"ActivityTypeId":activityTypeID, @"EquipmentTypeId":equipmentTypeID, @"ConditionId":conditionTypeID, @"CareProvidedById":careProvidedBy, @"PersonPhoto": strPhoto, @"PersonSignature": strSignature, @"PersonName": _vwBodilyFluid.signatureView.txtName.trimText, @"BloodbornePathogenTypeId":[NSString stringWithFormat:@"%ld", (long)_vwBodilyFluid.intBloodBornePathogen], @"StaffMemberWrittenAccount": _vwBodilyFluid.txvStaffMemberAccount.text, @"WasBloodOrBodilyFluidPresent":(_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false", @"WasBloodCleanupRequired":(_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false", @"WasCaregiverExposedToBlood":(_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false", @"Injuries": injuryList};
+    return aDict;
+    
+//    aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
 }
 
+
+
+- (IBAction)btnAttachPhotoTapped:(UIButton *)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
+    CGRect rect = [self convertRect:sender.frame toView:self.superview];
+    rect = [self.superview convertRect:rect toView:_parentVC.view];
+    [actionSheet showFromRect:rect inView:_parentVC.view animated:YES];
+}
+
+- (void)showPhotoLibrary {
+    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
+    [imgPicker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    [imgPicker setDelegate:self];
+    [imgPicker setAllowsEditing:YES];
+    popOver = [[UIPopoverController alloc] initWithContentViewController:imgPicker];
+    [popOver setPopoverContentSize:CGSizeMake(320, 480)];
+    [popOver setDelegate:self];
+    [popOver presentPopoverFromRect:_btnCaptureImage.frame inView:_btnCaptureImage.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)showCamera {
+    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
+    [imgPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    [imgPicker setDelegate:self];
+    [imgPicker setAllowsEditing:YES];
+    [gblAppDelegate.navigationController presentViewController:imgPicker animated:YES completion:^{
+        
+    }];
+}
+
+#pragma mark - UIActionSheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        if (buttonIndex == 0) {
+            [self showPhotoLibrary];
+        }
+        else if (buttonIndex == 1) {
+            [self showCamera];
+        }
+    }];
+}
+
+
+#pragma mark - UIPopOverControllerDelegate
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    popOver = nil;
+}
+
+#pragma mark - UIImagePickerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    imgBodilyFluid = [info objectForKey:UIImagePickerControllerEditedImage];
+    if (popOver) {
+        [popOver dismissPopoverAnimated:YES];
+    }
+    else {
+        [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
+        }];
+    }
+}
+
+- (void)setIsCaptureCameraVisible:(BOOL)isCaptureCameraVisible {
+    _isCaptureCameraVisible = isCaptureCameraVisible;
+    if (!_isCaptureCameraVisible) {
+        CGRect frame = _btnCaptureImage.frame;
+        frame.size = CGSizeZero;
+        _btnCaptureImage.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_btnCaptureImage.frame);
+        self.frame = frame;
+    }
+}
 @end

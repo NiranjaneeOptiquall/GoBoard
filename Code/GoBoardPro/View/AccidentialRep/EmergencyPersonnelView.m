@@ -32,52 +32,51 @@
     [sender setSelected:YES];
 }
 
-- (BOOL)isEmergencyPersonnelValidationSucceedFor:(NSArray *)fields {
+- (void)setRequiredFields:(NSArray*)fields {
+    requiredFields = fields;
+    if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
+    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
+    if ([requiredFields containsObject:@"phone"]) [_markerPhone setHidden:NO];
+    if ([requiredFields containsObject:@"911called"]) [_marker911Called setHidden:NO];
+    if ([requiredFields containsObject:@"911arrival"]) [_markerArrivalTime setHidden:NO];
+    if ([requiredFields containsObject:@"911departure"]) [_markerDepartureTime setHidden:NO];
+    if ([requiredFields containsObject:@"caseNumber"]) [_markerCaseNumber setHidden:NO];
+    if ([requiredFields containsObject:@"badge"]) [_markerBadgeNumber setHidden:NO];
+}
+
+- (BOOL)isEmergencyPersonnelValidationSucceed {
     BOOL success = YES;
-    if (fields) {
-        if ([fields containsObject:@"911called"] && [_txtTime911Called isTextFieldBlank]) {
+    if (requiredFields) {
+        if ([requiredFields containsObject:@"911called"] && [_txtTime911Called isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"911arrival"] && [_txtTimeOfArrival isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"911arrival"] && [_txtTimeOfArrival isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"911departure"] && [_txtTimeOfDeparture isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"911departure"] && [_txtTimeOfDeparture isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"caseNumber"] && [_txtCaseNo isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"caseNumber"] && [_txtCaseNo isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"middleInitial"] && [_txtMI isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"middleInitial"] && [_txtMI isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"phone"] && [_txtPhone isTextFieldBlank]) {
-            success = NO;
-            alert(@"", MSG_REQUIRED_FIELDS);
-        }
-        else if (![_txtPhone.text isValidPhoneNumber]) {
-            success = NO;
-            [_txtPhone becomeFirstResponder];
-            alert(@"", @"Please enter valid phone number");
-        }
-        else if ([fields containsObject:@"badge"] && [_txtBadge isTextFieldBlank]) {
-            alert(@"", MSG_REQUIRED_FIELDS);
-        }
-    }
-    else {
-        if ([_txtTime911Called isTextFieldBlank] || [_txtTimeOfArrival isTextFieldBlank] || [_txtTimeOfDeparture isTextFieldBlank] || [_txtCaseNo isTextFieldBlank] || [_txtFirstName isTextFieldBlank] || [_txtMI isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtPhone isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"phone"] && [_txtPhone isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
@@ -86,11 +85,10 @@
             [_txtPhone becomeFirstResponder];
             alert(@"", @"Please enter valid phone number");
         }
-        else if ([_txtBadge isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"badge"] && [_txtBadge isTextFieldBlank]) {
             alert(@"", MSG_REQUIRED_FIELDS);
         }
     }
-    
     return success;
 }
 

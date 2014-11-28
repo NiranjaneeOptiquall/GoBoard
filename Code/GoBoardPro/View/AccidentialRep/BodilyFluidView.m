@@ -23,6 +23,7 @@
 }
 
 - (IBAction)btnBloodbornePathogenTapped:(UIButton*)sender {
+    _intBloodBornePathogen = sender.tag;
     [_btnSelfTreated setSelected:NO];
     [_btnEmployeeTreated setSelected:NO];
     [_btnMedicalPersonnelTreated setSelected:NO];

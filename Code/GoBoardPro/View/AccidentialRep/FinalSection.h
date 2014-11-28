@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SignatureView.h"
 
+@class AccidentReportViewController;
 @interface FinalSection : UIView<UITextFieldDelegate> {
     NSInteger totalWitnessCount;
 }
@@ -47,6 +48,8 @@
 @property (assign, nonatomic) BOOL isCommunicationVisible;
 @property (assign, nonatomic) BOOL isManagementFollowUpVisible;
 
+@property (weak, nonatomic) AccidentReportViewController *parentVC;
+
 @property (strong, nonatomic) SignatureView *signatureView;
 
 - (IBAction)btnAddMoreWitnessTapped:(id)sender;
@@ -57,6 +60,6 @@
 - (IBAction)btnSignatureTapped:(id)sender;
 - (void)PersonInvolved:(NSInteger)person;
 
-- (BOOL)isFinalSectionValidationSuccessWith:(NSArray*)witness emp:(NSArray*)aryFields;
+- (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields;
 - (void)addWitnessView;
 @end

@@ -1991,16 +1991,6 @@
                                                             <action selector="btnAddMoreBodilyFluidTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="XTm-eH-oQO"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RMW-6G-emh">
-                                                        <rect key="frame" x="544" y="1" width="169" height="66"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                        <state key="normal" title="attach photo" image="camera_icon.png">
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
-                                                        <connections>
-                                                            <action selector="btnAttachPhotoTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="Lym-89-5cG"/>
-                                                        </connections>
-                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </view>
@@ -2022,7 +2012,6 @@
                     <navigationItem key="navigationItem" id="01V-yP-ucP"/>
                     <connections>
                         <outlet property="btn911Called" destination="rBD-8H-XIu" id="pe9-u0-e3U"/>
-                        <outlet property="btnCaptureImage" destination="RMW-6G-emh" id="iX9-sA-Vpo"/>
                         <outlet property="btnManager" destination="bbD-4O-AZ2" id="Dwt-4m-lMz"/>
                         <outlet property="btnNone" destination="Pfq-2B-Fn3" id="2BD-1P-ZG1"/>
                         <outlet property="btnPoliceCalled" destination="c3A-OQ-4qW" id="1WA-HQ-bNO"/>
@@ -4953,18 +4942,6 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="XSK-oX-RPn">
-                                                <rect key="frame" x="614" y="-9" width="110" height="84"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <inset key="titleEdgeInsets" minX="-67" minY="0.0" maxX="0.0" maxY="-50"/>
-                                                <inset key="imageEdgeInsets" minX="17" minY="-25" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Take Photo" image="camera_icon.png">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="btnCapturePersonPic:" destination="75u-mX-Fgc" eventType="touchUpInside" id="4yA-lJ-v4k"/>
-                                                </connections>
-                                            </button>
                                             <view contentMode="scaleToFill" id="CSc-9C-tVh">
                                                 <rect key="frame" x="0.0" y="191" width="768" height="119"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -5352,7 +5329,6 @@
                         <outlet property="btnAddEmergency" destination="hH1-eT-aWU" id="Ifx-rb-KOt"/>
                         <outlet property="btnAddWitness" destination="k5S-iO-bOA" id="hBU-Lo-8Oa"/>
                         <outlet property="btnCallNotReq" destination="gHW-bX-SnY" id="ksb-b6-ClW"/>
-                        <outlet property="btnCapturePerson" destination="XSK-oX-RPn" id="i91-K1-Rfu"/>
                         <outlet property="btnManager" destination="URP-TR-xFe" id="Vqe-bk-eju"/>
                         <outlet property="btnNoCall" destination="8fU-dE-6rF" id="Z29-Ao-neB"/>
                         <outlet property="btnNone" destination="ts4-en-g34" id="F6h-Cj-AOH"/>
@@ -5993,7 +5969,6 @@
         <image name="background.png" width="768" height="1024"/>
         <image name="building_supervisor.png" width="66" height="65"/>
         <image name="building_supervisor_sel.png" width="66" height="65"/>
-        <image name="camera_icon.png" width="66" height="66"/>
         <image name="change_server_backup_text_box.png" width="607" height="43"/>
         <image name="check_box.png" width="44" height="44"/>
         <image name="checked.png" width="49" height="49"/>

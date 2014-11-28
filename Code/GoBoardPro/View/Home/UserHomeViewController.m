@@ -17,6 +17,9 @@
 #import "Person.h"
 #import "EmergencyPersonnel.h"
 #import "Witness.h"
+#import "AccidentReportSubmit.h"
+#import "AccidentPerson.h"
+#import "InjuryDetail.h"
 
 @interface UserHomeViewController ()
 
@@ -97,6 +100,8 @@
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
@@ -248,7 +253,19 @@
         isSingleDataSaved = NO;
         NSMutableArray *mutArrPerson = [NSMutableArray array];
         for (Person *obj in [aReport.persons allObjects]) {
-            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":obj.memberId, @"DateOfBirth":obj.dateOfBirth};
+            NSString *memberId = @"", *employeeId = @"";
+            if ([obj.personTypeID integerValue] == 3) {
+                employeeId = obj.memberId;
+            }
+            else {
+                memberId = obj.memberId;
+            }
+            NSString *aStrPhoto = @"";
+            if (obj.personPhoto) {
+                aStrPhoto = [obj.personPhoto base64EncodedStringWithOptions:0];
+            }
+            
+            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"PersonPhoto":aStrPhoto};
             [mutArrPerson addObject:aDict];
         }
         
@@ -264,8 +281,79 @@
             [mutArrWitness addObject:aDict];
         }
         
-        NSDictionary *aDict = @{@"IncidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"IncidentDescription":aReport.incidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"ReportFilerAccount":aReport.reportFilerAccount, @"ManagementFollowupDate":aReport.managementFollowUpDate, @"AdditionalInformation": aReport.additionalInfo, @"ManagementFollowupCallMadeType":aReport.followUpCallType, @"ActivityTypeId": aReport.activityTypeID, @"EquipmentTypeId": aReport.equipmentTypeID, @"NatureId": aReport.natureId, @"ActionTakenId": aReport.actionId, @"ConditionId": aReport.conditionTypeID, @"PersonPhoto":@"", @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+        NSDictionary *aDict = @{@"IncidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"IncidentDescription":aReport.incidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"ReportFilerAccount":aReport.reportFilerAccount, @"ManagementFollowupDate":aReport.managementFollowUpDate, @"AdditionalInformation": aReport.additionalInfo, @"ManagementFollowupCallMadeType":aReport.followUpCallType, @"ActivityTypeId": aReport.activityTypeID, @"EquipmentTypeId": aReport.equipmentTypeID, @"NatureId": aReport.natureId, @"ActionTakenId": aReport.actionId, @"ConditionId": aReport.conditionTypeID, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
         [gblAppDelegate callWebService:INCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:aReport];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+            alert(@"", [response objectForKey:@"ErrorMessage"]);
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
+
+- (BOOL)syncAccidentReport {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (AccidentReportSubmit *aReport in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSMutableArray *mutArrPerson = [NSMutableArray array];
+        for (AccidentPerson *obj in [aReport.accidentPerson allObjects]) {
+            NSString *memberId = @"", *employeeId = @"";
+            if ([obj.personTypeID integerValue] == 3) {
+                employeeId = obj.memberId;
+            }
+            else {
+                memberId = obj.memberId;
+            }
+            NSString *aStrPhoto = @"";
+            if (obj.personPhoto) {
+                aStrPhoto = [obj.personPhoto base64EncodedStringWithOptions:0];
+            }
+            NSString *strSignature = @"";
+            if (obj.participantSignature) {
+                strSignature = [obj.participantSignature base64EncodedStringWithOptions:0];
+            }
+
+            
+            NSMutableArray *injuryList = [NSMutableArray array];
+            for (InjuryDetail *aInjury in obj.injuryList.allObjects) {
+                NSDictionary *aDict = @{@"NatureId":aInjury.natureId, @"GeneralInjuryTypeId":aInjury.generalInjuryTypeId, @"GeneralInjuryOther":aInjury.generalInjuryOther, @"BodyPartInjuryTypeId":aInjury.bodyPartInjuryTypeId, @"BodyPartInjuredId":aInjury.bodyPartInjuredId, @"ActionTakenId":aInjury.actionTakenId};
+                [injuryList addObject:aDict];
+            }
+            
+            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"PersonPhoto":aStrPhoto, @"FirstAidFirstName":obj.firstAidFirstName, @"FirstAidMiddleInitial":obj.firstAidMiddleInitial, @"FirstAidLastName":obj.firstAidLastName, @"FirstAidPosition":obj.firstAidPosition, @"ActivityTypeId":obj.activityTypeID, @"EquipmentTypeId":obj.equipmentTypeID, @"ConditionId":obj.conditionTypeID, @"":obj.conditionTypeID, @"PersonSignature":strSignature, @"PersonName":obj.participantName, @"BloodbornePathogenTypeId":obj.bloodBornePathogenType, @"StaffMemberWrittenAccount":obj.staffMemberWrittenAccount, @"WasBloodOrBodilyFluidPresent":obj.wasBloodPresent, @"WasBloodCleanupRequired":obj.bloodCleanUpRequired, @"WasCaregiverExposedToBlood":obj.wasExposedToBlood, @"Injuries":injuryList};
+            [mutArrPerson addObject:aDict];
+        }
+        
+        NSMutableArray *mutArrEmergency = [NSMutableArray array];
+        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":obj.time911Called, @"ArrivalTime":obj.time911Arrival, @"DepartureTime":obj.time911Departure};
+            [mutArrEmergency addObject:aDict];
+        }
+        
+        NSMutableArray *mutArrWitness = [NSMutableArray array];
+        for (Witness *obj in [aReport.witnesses allObjects]) {
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount};
+            [mutArrWitness addObject:aDict];
+        }
+
+
+#warning missing this commented line
+//@"ReportFilerAccount":aReport.reportFilerAccount,
+        NSDictionary *aDict = @{@"AccidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"AccidentDescription":aReport.accidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"AdditionalInformation": aReport.additionalInfo, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+        [gblAppDelegate callWebService:ACCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:aReport];
             isSingleDataSaved = YES;
         } failure:^(NSError *error, NSDictionary *response) {

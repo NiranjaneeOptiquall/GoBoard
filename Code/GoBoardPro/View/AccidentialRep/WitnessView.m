@@ -28,47 +28,32 @@
     [sender setSelected:YES];
 }
 
-- (BOOL)isWitnessViewValidationSuccessFor:(NSArray*)fields {
+- (void)setRequiredFields:(NSArray*)fields {
+    requiredFields = fields;
+    if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
+    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
+    if ([requiredFields containsObject:@"phone"]) [_markerPhone setHidden:NO];
+    if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
+    if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
+}
+
+- (BOOL)isWitnessViewValidationSuccess {
     BOOL success = YES;
-    if (fields) {
-        if ([fields containsObject:@"firstName"] && [_txtWitnessFName isTextFieldBlank]) {
+    if (requiredFields) {
+        if ([requiredFields containsObject:@"firstName"] && [_txtWitnessFName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"middleInital"] && [_txtWitnessMI isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"middleInital"] && [_txtWitnessMI isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"lastName"] && [_txtWitnessLName isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"lastName"] && [_txtWitnessLName isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([fields containsObject:@"phone"] && [_txtWitnessHomePhone isTextFieldBlank]) {
-            success = NO;
-            alert(@"", MSG_REQUIRED_FIELDS);
-        }
-        else if (![_txtWitnessHomePhone.text isValidPhoneNumber]) {
-            success = NO;
-            [_txtWitnessHomePhone becomeFirstResponder];
-            alert(@"", @"Please enter witness's valid home phone number");
-        }
-        else if (![_txtWitnessAlternatePhone.text isValidPhoneNumber]) {
-            success = NO;
-            [_txtWitnessAlternatePhone becomeFirstResponder];
-            alert(@"", @"Please enter witness's valid alternate phone number");
-        }
-        else if ([fields containsObject:@"email"] && [_txtWitnessEmailAddress isTextFieldBlank]) {
-            success = NO;
-            alert(@"", MSG_REQUIRED_FIELDS);
-        }
-        else if (![gblAppDelegate validateEmail:[_txtWitnessEmailAddress text]]) {
-            success = NO;
-            [_txtWitnessEmailAddress becomeFirstResponder];
-            alert(@"", @"Please enter witness's valid email address");
-        }
-    }
-    else {
-        if ([_txtWitnessFName isTextFieldBlank] || [_txtWitnessMI isTextFieldBlank] || [_txtWitnessLName isTextFieldBlank] || [_txtWitnessHomePhone isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"phone"] && [_txtWitnessHomePhone isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
@@ -82,7 +67,7 @@
             [_txtWitnessAlternatePhone becomeFirstResponder];
             alert(@"", @"Please enter witness's valid alternate phone number");
         }
-        else if ([_txtWitnessEmailAddress isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"email"] && [_txtWitnessEmailAddress isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }

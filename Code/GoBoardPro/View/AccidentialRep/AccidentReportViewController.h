@@ -14,13 +14,11 @@
 #import "UserLocation.h"
 #import "UserFacility.h"
 
-@interface AccidentReportViewController : UIViewController<DropDownValueDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+@interface AccidentReportViewController : UIViewController<DropDownValueDelegate> {
     ThirdSection *thirdSection;
     FinalSection *finalSection;
     NSMutableArray *mutArrAccidentViews;
     NSInteger totalAccidentFirstSectionCount;
-    UIPopoverController *popOver;
-    UIImageView *imgBodilyFluid;
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
@@ -41,13 +39,13 @@
 @property (weak, nonatomic) IBOutlet UIView *vwBasicDetail;
 @property (weak, nonatomic) IBOutlet UIView *vwFirstSection;
 @property (weak, nonatomic) IBOutlet UIView *vwAddMoreFirstSection;
-@property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
+
 @property (assign, nonatomic) NSInteger personInvolved;
 
 @property (strong, nonatomic) AccidentReportInfo *reportSetupInfo;
 @property (assign, nonatomic) BOOL isUpdate;
 
-- (IBAction)btnAttachPhotoTapped:(UIButton *)sender;
+
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender;
 - (IBAction)btnBackTapped:(id)sender;
 

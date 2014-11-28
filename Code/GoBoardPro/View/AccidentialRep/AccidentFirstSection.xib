@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AccidentFirstSection">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="3189"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="3256"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" id="Z35-1Q-5nL" customClass="PersonInformation">
@@ -1494,20 +1494,32 @@
                         <outlet property="vwStaffMember" destination="ub4-Kk-beL" id="Wlw-QP-Ilx"/>
                     </connections>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="94J-A4-4i5">
+                    <rect key="frame" x="578" y="3190" width="169" height="66"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="attach photo" image="camera_icon.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="btnAttachPhotoTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="xQZ-zF-ldE"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="btnCaptureImage" destination="94J-A4-4i5" id="ktQ-2I-Ra7"/>
                 <outlet property="vwBodilyFluid" destination="v5Q-PM-O4f" id="Q6J-43-IEk"/>
                 <outlet property="vwBodyPartInjury" destination="dv9-eE-FaQ" id="bor-4k-Fcw"/>
                 <outlet property="vwPersonalInfo" destination="Z35-1Q-5nL" id="cM2-L1-eyy"/>
             </connections>
-            <point key="canvasLocation" x="565" y="1509.5"/>
+            <point key="canvasLocation" x="565" y="1543"/>
         </view>
     </objects>
     <resources>
         <image name="add_icon.png" width="65" height="65"/>
         <image name="arrow.png" width="26" height="26"/>
+        <image name="camera_icon.png" width="66" height="66"/>
         <image name="checked_Member.png" width="44" height="44"/>
         <image name="checked_white_radiobutton.png" width="44" height="44"/>
         <image name="figure_head.png" width="630" height="1036"/>

@@ -2,7 +2,7 @@
 //  Report.m
 //  GoBoardPro
 //
-//  Created by ind558 on 21/11/14.
+//  Created by ind558 on 28/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -14,32 +14,31 @@
 
 @implementation Report
 
+@dynamic actionId;
+@dynamic activityTypeID;
+@dynamic additionalInfo;
+@dynamic conditionTypeID;
 @dynamic dateOfIncident;
+@dynamic employeeAlternatePhone;
+@dynamic employeeEmail;
+@dynamic employeeFirstName;
 @dynamic employeeHomePhone;
+@dynamic employeeLastName;
+@dynamic employeeMiddleInitial;
+@dynamic equipmentTypeID;
 @dynamic facilityId;
-@dynamic locationId;
+@dynamic followUpCallType;
 @dynamic incidentDesc;
 @dynamic isNotification1Selected;
 @dynamic isNotification2Selected;
 @dynamic isNotification3Selected;
 @dynamic isNotification4Selected;
-@dynamic personPhoto;
-@dynamic activityTypeID;
-@dynamic conditionTypeID;
-@dynamic equipmentTypeID;
-@dynamic natureId;
-@dynamic actionId;
-@dynamic employeeFirstName;
-@dynamic employeeLastName;
-@dynamic employeeMiddleInitial;
-@dynamic employeeAlternatePhone;
-@dynamic employeeEmail;
-@dynamic reportFilerAccount;
+@dynamic locationId;
 @dynamic managementFollowUpDate;
-@dynamic followUpCallType;
-@dynamic additionalInfo;
-@dynamic persons;
+@dynamic natureId;
+@dynamic reportFilerAccount;
 @dynamic emergencyPersonnels;
+@dynamic persons;
 @dynamic witnesses;
 
 @end

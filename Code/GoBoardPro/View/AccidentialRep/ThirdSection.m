@@ -9,6 +9,7 @@
 #import "ThirdSection.h"
 #import "BodilyFluidView.h"
 #import "EmergencyPersonnelView.h"
+#import "AccidentReportViewController.h"
 
 @implementation ThirdSection
 
@@ -70,6 +71,10 @@
 - (void)addEmergencyPersonnel {
     EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
     [objEmergency setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [objEmergency setRequiredFields:aryFields];
     CGRect frame = objEmergency.frame;
     frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
     objEmergency.frame = frame;
@@ -103,10 +108,10 @@
     [self resetSelfFrame];
 }
 
-- (BOOL)isThirdSectionValidationSuccessWith:(NSArray *)fields {
+- (BOOL)isThirdSectionValidationSuccess {
     BOOL success = YES;
     for (EmergencyPersonnelView *view in _mutArrEmergencyViews) {
-        if (![view isEmergencyPersonnelValidationSucceedFor:fields]) {
+        if (![view isEmergencyPersonnelValidationSucceed]) {
             success = NO;
             break;
         }

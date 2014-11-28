@@ -14,16 +14,16 @@
 #import "UserLocation.h"
 #import "UserFacility.h"
 
-@interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate> {
+@interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalEmergencyPersonnelCount, totalWitnessCount;
     IncidentActionTaken *actionTaken;
     NSMutableArray *mutArrIncidentPerson, *mutArrEmergencyPersonnel, *mutArrWitnessView;
-    UIPopoverController *popOver;
+    
     IncidentReportInfo *reportSetupInfo;
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
-    UIImage *imgIncidentPerson;
+    
     NSInteger intFollowUpCallType;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
@@ -70,7 +70,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnPoliceCalled;
 @property (weak, nonatomic) IBOutlet UIButton *btnManager;
 @property (weak, nonatomic) IBOutlet UIButton *btnNone;
-@property (weak, nonatomic) IBOutlet UIButton *btnCapturePerson;
+
 @property (weak, nonatomic) IBOutlet UILabel *lblReportFilerPlaceHolder;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpAlternatePhone;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpHomePhone;
@@ -86,6 +86,6 @@
 - (IBAction)btnFollowUpCallTapped:(UIButton *)sender;
 - (IBAction)btnNotificationTapped:(UIButton *)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
-- (IBAction)btnCapturePersonPic:(id)sender;
+
 - (IBAction)btnBackTapped:(id)sender;
 @end

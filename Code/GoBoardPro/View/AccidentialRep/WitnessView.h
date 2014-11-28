@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface WitnessView : UIView
+@interface WitnessView : UIView {
+    NSArray *requiredFields;
+}
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuest;
 @property (weak, nonatomic) IBOutlet UIButton *btnEmployee;
@@ -21,9 +23,15 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtWitnessEmailAddress;
 @property (weak, nonatomic) IBOutlet UITextView *txvDescIncident;
 @property (weak, nonatomic) IBOutlet UILabel *lblWitnessWrittenAccount;
+@property (weak, nonatomic) IBOutlet UILabel *markerFirstName;
+@property (weak, nonatomic) IBOutlet UILabel *markerMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerLastName;
+@property (weak, nonatomic) IBOutlet UILabel *markerPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerAlternatePhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmail;
 
 
 - (IBAction)btnWitnessStatusTapped:(UIButton*)sender;
-- (BOOL)isWitnessViewValidationSuccessFor:(NSArray*)fields;
-
+- (BOOL)isWitnessViewValidationSuccess;
+- (void)setRequiredFields:(NSArray*)fields;
 @end

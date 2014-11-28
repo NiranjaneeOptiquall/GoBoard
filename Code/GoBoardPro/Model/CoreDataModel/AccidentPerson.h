@@ -2,7 +2,7 @@
 //  AccidentPerson.h
 //  GoBoardPro
 //
-//  Created by ind558 on 27/11/14.
+//  Created by ind558 on 28/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -47,9 +47,10 @@
 @property (nonatomic, retain) NSString * staffMemberWrittenAccount;
 @property (nonatomic, retain) NSString * state;
 @property (nonatomic, retain) NSString * streetAddress;
+@property (nonatomic, retain) NSString * wasBloodPresent;
 @property (nonatomic, retain) NSString * wasExposedToBlood;
 @property (nonatomic, retain) NSString * zip;
-@property (nonatomic, retain) NSString * wasBloodPresent;
+@property (nonatomic, retain) NSData * personPhoto;
 @property (nonatomic, retain) AccidentReportSubmit *accidentInfo;
 @property (nonatomic, retain) NSSet *injuryList;
 @end

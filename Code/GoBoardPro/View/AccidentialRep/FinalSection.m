@@ -8,6 +8,7 @@
 
 #import "FinalSection.h"
 #import "WitnessView.h"
+#import "AccidentReportViewController.h"
 
 @implementation FinalSection
 
@@ -117,6 +118,10 @@
 - (void)addWitnessView {
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
     [aWitnessView setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
+    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [aWitnessView setRequiredFields:aryFields];
     CGRect frame = aWitnessView.frame;
     frame.origin.y = totalWitnessCount * frame.size.height;
     aWitnessView.frame = frame;
@@ -131,10 +136,10 @@
     self.frame = frame;
 }
 
-- (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)witness emp:(NSArray *)aryFields {
+- (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields {
     BOOL success = YES;
     for (WitnessView *view in _mutArrWitnessViews) {
-        if (![view isWitnessViewValidationSuccessFor:witness]) {
+        if (![view isWitnessViewValidationSuccess]) {
             success = NO;
             return success;
         }

@@ -39,7 +39,7 @@
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
 @property (assign, nonatomic) BOOL isParticipantSignatureVisible;
 
-@property (strong, nonatomic) NSString *strBloodBornePathogen;
+@property (assign, nonatomic) NSInteger intBloodBornePathogen;
 
 - (IBAction)btnBloodbornePathogenTapped:(id)sender;
 - (IBAction)btnExposedToBloodTapped:(UIButton *)sender;

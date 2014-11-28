@@ -63,9 +63,7 @@
     [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
     [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
     _lblInstruction.text = reportSetupInfo.instructions;
-    if (![reportSetupInfo.showPhotoIcon boolValue]) {
-        [_btnCapturePerson setHidden:YES];
-    }
+    
     if (![reportSetupInfo.showConditions boolValue]) {
         [_vwConditions setHidden:YES];
         CGRect frame = _vwNatureOfIncident.frame;
@@ -223,7 +221,18 @@
             [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
             strDob = [aFormatter stringFromDate:aDob];
         }
-        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":vwPerson.txtMemberId.text, @"DateOfBirth":strDob};
+        NSString *memberId = @"", *employeeId = @"";
+        if (vwPerson.intPersonInvolved == 3) {
+            employeeId = vwPerson.txtMemberId.text;
+        }
+        else {
+            memberId = vwPerson.txtMemberId.text;
+        }
+        NSString *strPhoto = @"";
+        if (vwPerson.imgIncidentPerson) {
+            strPhoto = [UIImageJPEGRepresentation(vwPerson.imgIncidentPerson, 1.0) base64EncodedStringWithOptions:0];
+        }
+        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":strDob, @"PersonPhoto":strPhoto};
 //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         
         [mutArrPersons addObject:aDict];
@@ -242,7 +251,7 @@
     }
     NSString *strFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
     if (!strFollowUpDate) strFollowUpDate = @"";
-    NSDictionary *aDict = @{@"IncidentDate":aStrDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"IncidentDescription":_txvIncidentDesc.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false", @"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":_txtEmpFName.trimText, @"EmployeeMiddleInitial": _txtEmpMI.trimText, @"EmployeeLastName":_txtEmpLName.trimText, @"EmployeeHomePhone":_txtEmpHomePhone.trimText, @"EmployeeAlternatePhone":_txtEmpAlternatePhone.text, @"EmployeeEmail":_txtEmpEmail.text, @"ReportFilerAccount":_txtReportAccount.text, @"ManagementFollowupDate":strFollowUpDate, @"AdditionalInformation": _txvAdditionalInfo.text, @"ManagementFollowupCallMadeType":[NSString stringWithFormat:@"%ld",(long)intFollowUpCallType], @"ActivityTypeId": activityTypeID, @"EquipmentTypeId": equipmentTypeID, @"NatureId": natureId, @"ActionTakenId": actionId, @"ConditionId": conditionTypeID, @"PersonPhoto":@"", @"PersonsInvolved":mutArrPersons, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+    NSDictionary *aDict = @{@"IncidentDate":aStrDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"IncidentDescription":_txvIncidentDesc.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false", @"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":_txtEmpFName.trimText, @"EmployeeMiddleInitial": _txtEmpMI.trimText, @"EmployeeLastName":_txtEmpLName.trimText, @"EmployeeHomePhone":_txtEmpHomePhone.trimText, @"EmployeeAlternatePhone":_txtEmpAlternatePhone.text, @"EmployeeEmail":_txtEmpEmail.text, @"ReportFilerAccount":_txtReportAccount.text, @"ManagementFollowupDate":strFollowUpDate, @"AdditionalInformation": _txvAdditionalInfo.text, @"ManagementFollowupCallMadeType":[NSString stringWithFormat:@"%ld",(long)intFollowUpCallType], @"ActivityTypeId": activityTypeID, @"EquipmentTypeId": equipmentTypeID, @"NatureId": natureId, @"ActionTakenId": actionId, @"ConditionId": conditionTypeID, @"PersonsInvolved":mutArrPersons, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
 
     [gblAppDelegate callWebService:INCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
@@ -252,12 +261,7 @@
     }];
 }
 
-- (IBAction)btnCapturePersonPic:(UIButton*)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
-    CGRect rect = [_vwAfterPersonalInfo convertRect:sender.frame toView:self.view];
-    [actionSheet showFromRect:rect inView:self.view animated:YES];
-    _isUpdate = YES;
-}
+
 
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
@@ -374,26 +378,26 @@
         aPerson.state = [dict objectForKey:@"State"];
         aPerson.zip = [dict objectForKey:@"Zip"];
         aPerson.employeeTitle = [dict objectForKey:@"EmployeeTitle"];
-        aPerson.memberId = [dict objectForKey:@"EmployeId"];
+        aPerson.memberId =  ([[dict objectForKey:@"PersonTypeId"] intValue] == 3) ? [dict objectForKey:@"EmployeId"] : [dict objectForKey:@"MemberId"];
         aPerson.dateOfBirth = [dict objectForKey:@"DateOfBirth"];
         aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
         aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];
         aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
         
-        
+
         aPerson.guestOfFirstName = [aDict objectForKey:@"GuestOfFirstName"];
         aPerson.guestOfMiddleInitial = [aDict objectForKey:@"GuestOfMiddleInitial"];
         aPerson.guestOfLastName = [aDict objectForKey:@"GuestOfLastName"];
         
+        if (![[aDict objectForKey:@"PersonPhoto"] isEqualToString:@""]) {
+            aPerson.personPhoto = [[aDict objectForKey:@"PersonPhoto"] base64EncodedDataWithOptions:0];
+        }
         aPerson.minor = [aDict objectForKey:@"IsMinor"];
         //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         aPerson.report = aReport;
         [personSet addObject:aPerson];
     }
     aReport.persons = personSet;
-    if (imgIncidentPerson) {
-        aReport.personPhoto = UIImageJPEGRepresentation(imgIncidentPerson, 1.0);
-    }
     
     NSMutableSet *emergencySet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"EmergencyPersonnel"]) {
@@ -441,6 +445,7 @@
 
 - (void)addIncidentPersonalInformationViews {
     IncidentPersonalInformation *personalInfoView = (IncidentPersonalInformation*)[[[NSBundle mainBundle] loadNibNamed:@"IncidentPersonalInformation" owner:self options:nil] firstObject];
+    personalInfoView.isCapturePhotoVisible = [reportSetupInfo.showPhotoIcon boolValue];
     personalInfoView.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
     personalInfoView.isMemberIdVisible = [reportSetupInfo.showMemberIdAndDriverLicense boolValue];
     personalInfoView.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
@@ -480,6 +485,10 @@
 - (void)addEmergencyPersonnel {
     EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
     [objEmergency setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [objEmergency setRequiredFields:aryFields];
     CGRect frame = objEmergency.frame;
     frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
     objEmergency.frame = frame;
@@ -506,6 +515,10 @@
 - (void)addWitnessView {
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
     [aWitnessView setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [aWitnessView setRequiredFields:aryFields];
     CGRect frame = aWitnessView.frame;
     frame.origin.y = totalWitnessCount * frame.size.height;
     aWitnessView.frame = frame;
@@ -582,11 +595,8 @@
 }
 
 - (BOOL)validateEmergencyPersonnel {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
-    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (EmergencyPersonnelView *emergency in mutArrEmergencyPersonnel) {
-        if (![emergency isEmergencyPersonnelValidationSucceedFor:aryFields]) {
+        if (![emergency isEmergencyPersonnelValidationSucceed]) {
             return NO;
         }
     }
@@ -594,11 +604,8 @@
 }
 
 - (BOOL)validateWitnessView {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
-    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (WitnessView *witness in mutArrWitnessView) {
-        if (![witness isWitnessViewValidationSuccessFor:aryFields]) {
+        if (![witness isWitnessViewValidationSuccess]) {
             return NO;
         }
     }
@@ -646,28 +653,6 @@
         alert(@"", @"Please enter witness's valid email address");
     }
     return success;
-}
-
-- (void)showPhotoLibrary {
-    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
-    [imgPicker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-    [imgPicker setDelegate:self];
-    [imgPicker setAllowsEditing:YES];
-    popOver = [[UIPopoverController alloc] initWithContentViewController:imgPicker];
-    [popOver setPopoverContentSize:CGSizeMake(320, 480)];
-    [popOver setDelegate:self];
-    CGRect rect = [_vwAfterPersonalInfo convertRect:_btnCapturePerson.frame toView:self.view];
-    [popOver presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-}
-
-- (void)showCamera {
-    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
-    [imgPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
-    [imgPicker setDelegate:self];
-    [imgPicker setAllowsEditing:YES];
-    [gblAppDelegate.navigationController presentViewController:imgPicker animated:YES completion:^{
-        
-    }];
 }
 
 - (void)setKeepViewInFrame:(UIView*)vw {
@@ -859,37 +844,7 @@
     [sender setText:[value valueForKey:@"name"]];
 }
 
-#pragma mark - UIActionSheet Delegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        if (buttonIndex == 0) {
-            [self showPhotoLibrary];
-        }
-        else if (buttonIndex == 1) {
-            [self showCamera];
-        }
-    }];
-}
-
-#pragma mark - UIPopOverControllerDelegate
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    popOver = nil;
-}
-
-#pragma mark - UIImagePickerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    imgIncidentPerson = [info objectForKey:UIImagePickerControllerEditedImage];
-    if (popOver) {
-        [popOver dismissPopoverAnimated:YES];
-    }
-    else {
-        [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        }];
-    }
-}
 
 
 

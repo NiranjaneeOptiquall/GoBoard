@@ -2,7 +2,7 @@
 //  AccidentPerson.m
 //  GoBoardPro
 //
-//  Created by ind558 on 27/11/14.
+//  Created by ind558 on 28/11/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -47,9 +47,10 @@
 @dynamic staffMemberWrittenAccount;
 @dynamic state;
 @dynamic streetAddress;
+@dynamic wasBloodPresent;
 @dynamic wasExposedToBlood;
 @dynamic zip;
-@dynamic wasBloodPresent;
+@dynamic personPhoto;
 @dynamic accidentInfo;
 @dynamic injuryList;
 

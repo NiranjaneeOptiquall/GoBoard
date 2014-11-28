@@ -59,6 +59,11 @@
         frame.origin.y = CGRectGetMaxY(_vwEmployee.frame);
     }
     _vwCommon.frame = frame;
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _btnCapturePerson.frame = frame;
+    
     CGRect mainFrame = self.frame;
     mainFrame.size.height = CGRectGetMaxY(frame);
     [self setFrame:mainFrame];
@@ -96,7 +101,57 @@
     [sender setSelected:YES];
 }
 
+- (IBAction)btnCapturePersonPic:(UIButton*)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
+    CGRect rect = [self convertRect:sender.frame toView:self.superview];
+    [actionSheet showFromRect:rect inView:self.superview animated:YES];
+}
+
 #pragma mark - Methods
+
+- (void)showPhotoLibrary {
+    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
+    [imgPicker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    [imgPicker setDelegate:self];
+    [imgPicker setAllowsEditing:YES];
+    popOver = [[UIPopoverController alloc] initWithContentViewController:imgPicker];
+    [popOver setPopoverContentSize:CGSizeMake(320, 480)];
+    [popOver setDelegate:self];
+    CGRect rect = [self convertRect:_btnCapturePerson.frame toView:self.superview];
+    [popOver presentPopoverFromRect:rect inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)showCamera {
+    UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
+    [imgPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    [imgPicker setDelegate:self];
+    [imgPicker setAllowsEditing:YES];
+    [gblAppDelegate.navigationController presentViewController:imgPicker animated:YES completion:^{
+        
+    }];
+}
+
+- (void)setRequiredFields:(NSArray*)fields {
+    requiredFields = fields;
+   
+    if ([requiredFields containsObject:@"memberId"]) [_markerMemberId setHidden:NO];
+    if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
+    if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
+    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
+    if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
+    if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
+    if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
+    if ([requiredFields containsObject:@"streetAddress"]) [_markerAddress1 setHidden:NO];
+    if ([requiredFields containsObject:@"email"]) [_markerAddress2 setHidden:NO];
+    if ([requiredFields containsObject:@"city"]) [_markerCity setHidden:NO];
+    if ([requiredFields containsObject:@"state"]) [_markerState setHidden:NO];
+    if ([requiredFields containsObject:@"zip"]) [_markerZip setHidden:NO];
+    if ([requiredFields containsObject:@"dateOfBirth"]) [_markerDOB setHidden:NO];
+    if ([requiredFields containsObject:@"guestFirstName"]) [_markerGuestFName setHidden:NO];
+    if ([requiredFields containsObject:@"guestMiddleInitial"]) [_markerGuestMI setHidden:NO];
+    if ([requiredFields containsObject:@"guestLastName"]) [_markerGuestLName setHidden:NO];
+}
 
 - (BOOL)isPersonalInfoValidationSuccessFor:(NSArray*)fields {
     BOOL success = YES;
@@ -185,6 +240,7 @@
     if (!_isDOBVisible) [self hideDateOfBirth];
     if (!_isGenderVisible) [self hideGender];
     if (!_isMinorVisible) [self hideMinor];
+    if (!_isCapturePhotoVisible) [self hideCaptureButton];
     [self btnPersonInvolvedTapped:_btnMember];
     [self btnAffiliationTapped:_btnNonAssessedStudent];
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
@@ -265,6 +321,13 @@
     CGRect frame = _vwCommon.frame;
     frame.size.height = CGRectGetMinY(_vwMinor.frame);
     _vwCommon.frame = frame;
+}
+
+- (void)hideCaptureButton {
+    [_btnCapturePerson setHidden:YES];
+    CGRect frame = _btnCapturePerson.frame;
+    frame.size = CGSizeZero;
+    _btnCapturePerson.frame = frame;
 }
 
 
@@ -350,7 +413,37 @@
     
 }
 
+#pragma mark - UIActionSheet Delegate
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        if (buttonIndex == 0) {
+            [self showPhotoLibrary];
+        }
+        else if (buttonIndex == 1) {
+            [self showCamera];
+        }
+    }];
+}
+
+#pragma mark - UIPopOverControllerDelegate
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    popOver = nil;
+}
+
+#pragma mark - UIImagePickerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    _imgIncidentPerson = [info objectForKey:UIImagePickerControllerEditedImage];
+    if (popOver) {
+        [popOver dismissPopoverAnimated:YES];
+    }
+    else {
+        [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
+        }];
+    }
+}
 
 
 @end

@@ -83,22 +83,36 @@
     }
     
     NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES %@", @"name", _txtEnjuryType.text];
     if ([_btnGeneralInjury isSelected]) {
-        [aDict setObject:@"General" forKey:@"type"];
+        [aDict setObject:[NSString stringWithFormat:@"%ld", (long)_btnGeneralInjury.tag] forKey:@"nature"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] filteredArrayUsingPredicate:predicate];
+        if ([ary count] > 0) {
+            [aDict setObject:[ary firstObject] forKey:@"GeneralInjuryType"];
+        }
+        
     }
     else {
-        [aDict setObject:@"Body Part" forKey:@"type"];
+        [aDict setObject:[NSString stringWithFormat:@"%ld", (long)_btnBodyPartInjury.tag] forKey:@"nature"];
         [aDict setObject:[mutArrBodyPart objectAtIndex:selectedBodyPart] forKey:@"part"];
+        NSArray *ary = [[_parentVC.reportSetupInfo.bodypartInjuryType allObjects] filteredArrayUsingPredicate:predicate];
+        if ([ary count] > 0) {
+            [aDict setObject:[ary firstObject] forKey:@"BodyPartInjuryType"];
+        }
     }
     
     if ([_txtOtherInjury isEnabled]) {
         [aDict setObject:_txtOtherInjury.trimText forKey:@"injury"];
+        [aDict setObject:_txtOtherInjury.trimText forKey:@"generalOther"];
     }
     else {
         [aDict setObject:_txtEnjuryType.trimText forKey:@"injury"];
     }
+    NSArray *ary = [[_parentVC.reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:predicate];
+    if ([ary count] > 0) {
+        [aDict setObject:[ary firstObject] forKey:@"action"];
+    }
     
-    [aDict setObject:_txtActionTaken.text forKey:@"action"];
     [_mutArrInjuryList addObject:aDict];
     [_tblAddedInjuryList reloadData];
     _txtActionTaken.text = @"";
@@ -188,7 +202,7 @@
             [aLbl1 setText:@""];
         }
         UILabel *aLbl2 = (UILabel *)[aCell.contentView viewWithTag:4];
-        [aLbl2 setText:[[_mutArrInjuryList objectAtIndex:indexPath.row] objectForKey:@"action"]];
+        [aLbl2 setText:[[[_mutArrInjuryList objectAtIndex:indexPath.row] objectForKey:@"action"] name]];
         UIView *aView = [aCell.contentView viewWithTag:5];
         CGRect frame = aView.frame;
         frame.origin.y = aCell.frame.size.height - 3;

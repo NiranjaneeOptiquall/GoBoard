@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface EmergencyPersonnelView : UIView <DatePickerDelegate>
+@interface EmergencyPersonnelView : UIView <DatePickerDelegate> {
+    NSArray *requiredFields;
+}
 
 @property (weak, nonatomic) IBOutlet UITextField *txtTime911Called;
 @property (weak, nonatomic) IBOutlet UITextField *txtTimeOfArrival;
@@ -27,6 +29,18 @@
 @property (weak, nonatomic) IBOutlet UITextView *txvAdditionalInfo;
 @property (weak, nonatomic) IBOutlet UILabel *lblAdditionalInfo;
 
+@property (weak, nonatomic) IBOutlet UILabel *marker911Called;
+@property (weak, nonatomic) IBOutlet UILabel *markerArrivalTime;
+@property (weak, nonatomic) IBOutlet UILabel *markerDepartureTime;
+@property (weak, nonatomic) IBOutlet UILabel *markerCaseNumber;
+@property (weak, nonatomic) IBOutlet UILabel *markerFirstName;
+@property (weak, nonatomic) IBOutlet UILabel *markerMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerLastName;
+@property (weak, nonatomic) IBOutlet UILabel *markerPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerBadgeNumber;
+
+
 - (IBAction)btnEmergencyPersonnelTapped:(UIButton *)sender;
-- (BOOL)isEmergencyPersonnelValidationSucceedFor:(NSArray *)fields;
+- (BOOL)isEmergencyPersonnelValidationSucceed;
+- (void)setRequiredFields:(NSArray*)fields;
 @end
