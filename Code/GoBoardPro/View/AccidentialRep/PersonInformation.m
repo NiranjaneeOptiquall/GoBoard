@@ -109,46 +109,68 @@
 
 #pragma mark - Methods
 
-- (BOOL)isPersonalInfoValidationSuccessWith:(NSArray*)fields {
+- (void)setRequiredFields:(NSArray*)fields {
+    requiredFields = fields;
+    
+    if ([requiredFields containsObject:@"memberId"]) [_markerMemberId setHidden:NO];
+    if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
+    if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
+    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
+    if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
+    if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
+    if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
+    if ([requiredFields containsObject:@"streetAddress"]) [_markerAddress1 setHidden:NO];
+    if ([requiredFields containsObject:@"email"]) [_markerAddress2 setHidden:NO];
+    if ([requiredFields containsObject:@"city"]) [_markerCity setHidden:NO];
+    if ([requiredFields containsObject:@"state"]) [_markerState setHidden:NO];
+    if ([requiredFields containsObject:@"zip"]) [_markerZip setHidden:NO];
+    if ([requiredFields containsObject:@"dateOfBirth"]) [_markerDOB setHidden:NO];
+    if ([requiredFields containsObject:@"guestFirstName"]) [_markerGuestFName setHidden:NO];
+    if ([requiredFields containsObject:@"guestMiddleInitial"]) [_markerGuestMI setHidden:NO];
+    if ([requiredFields containsObject:@"guestLastName"]) [_markerGuestLName setHidden:NO];
+}
+
+- (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
     
-    if ([fields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
+    if ([requiredFields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"employeePosition"] && ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank])) {
+    else if ([requiredFields containsObject:@"employeePosition"] && ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank])) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"firstName"] && [_txtFirstName isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"middleInitial"] && [_txtMi isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"middleInitial"] && [_txtMi isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"lastName"] && [_txtLastName isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"streetAddress"] && [_txtStreetAddress isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"streetAddress"] && [_txtStreetAddress isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"city"] && [_txtCity isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"city"] && [_txtCity isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"state"] && [_txtState isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"state"] && [_txtState isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"zip"] && [_txtZip isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"zip"] && [_txtZip isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"phone"] && [_txtHomePhone isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"phone"] && [_txtHomePhone isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -157,7 +179,7 @@
         [_txtHomePhone becomeFirstResponder];
         alert(@"", @"Please enter valid home phone number");
     }
-    else if ([fields containsObject:@"email"] && [_txtEmailAddress isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"email"] && [_txtEmailAddress isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
@@ -166,19 +188,19 @@
         [_txtEmailAddress becomeFirstResponder];
         alert(@"", @"Please enter valid email address");
     }
-    else if ([fields containsObject:@"dateOfBirth"] && [_txtDob isTextFieldBlank]) {
+    else if ([requiredFields containsObject:@"dateOfBirth"] && [_txtDob isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"guestFirstName"] && ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank])) {
+    else if ([requiredFields containsObject:@"guestFirstName"] && ([_btnGuest isSelected] && [_txtGuestFName isTextFieldBlank])) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"guestMiddleInitial"] && ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank])) {
+    else if ([requiredFields containsObject:@"guestMiddleInitial"] && ([_btnGuest isSelected] && [_txtGuestMI isTextFieldBlank])) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([fields containsObject:@"guestLastName"] && ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
+    else if ([requiredFields containsObject:@"guestLastName"] && ([_btnGuest isSelected] && [_txtguestLName isTextFieldBlank])) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }

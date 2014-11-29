@@ -11,7 +11,9 @@
 #import "SignatureView.h"
 #import "AccidentReportViewController.h"
 
-@interface BodilyFluidView : UIView <UITextFieldDelegate>
+@interface BodilyFluidView : UIView <UITextFieldDelegate> {
+    
+}
 @property (weak, nonatomic) IBOutlet UIView *vwBloodbornePathogens;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodPresent;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodNotPresent;
@@ -35,6 +37,11 @@
 @property (weak, nonatomic) IBOutlet UIView *vwParticipantSignature;
 @property (weak, nonatomic) IBOutlet UIView *vwStaffMember;
 
+@property (weak, nonatomic) IBOutlet UILabel *markerFName;
+@property (weak, nonatomic) IBOutlet UILabel *markerMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerLName;
+@property (weak, nonatomic) IBOutlet UILabel *markerPosition;
+
 @property (assign, nonatomic) BOOL isBloodBornePathogenVisible;
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
 @property (assign, nonatomic) BOOL isParticipantSignatureVisible;
@@ -46,6 +53,6 @@
 - (IBAction)btnBloodCleanUpRequiredTapped:(id)sender;
 - (IBAction)btnWasBloodPresentTapped:(UIButton *)sender;
 - (IBAction)btnSignatureTapped:(id)sender;
-
+- (void)setRequiredFields:(NSArray*)fields;
 - (BOOL)isBodilyFluidValidationSucceedWith:(NSArray*)fields;
 @end

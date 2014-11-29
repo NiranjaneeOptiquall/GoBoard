@@ -107,7 +107,9 @@
     }
     else {
         [aDict setObject:_txtEnjuryType.trimText forKey:@"injury"];
+        [aDict setObject:@"" forKey:@"generalOther"];
     }
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES %@", @"name", _txtActionTaken.text];
     NSArray *ary = [[_parentVC.reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:predicate];
     if ([ary count] > 0) {
         [aDict setObject:[ary firstObject] forKey:@"action"];

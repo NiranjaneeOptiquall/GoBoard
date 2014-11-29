@@ -99,7 +99,7 @@
 - (IBAction)btnGenderTapped:(UIButton *)sender;
 - (IBAction)btnIsMinorTapped:(UIButton *)sender;
 - (IBAction)btnCapturePersonPic:(id)sender;
-- (BOOL)isPersonalInfoValidationSuccessFor:(NSArray*)fields;
+- (BOOL)isPersonalInfoValidationSuccess;
 - (void)setRequiredFields:(NSArray*)fields;
 
 - (void)callInitialActions;

@@ -76,6 +76,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpHomePhone;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpEmail;
 
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpFName;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpLName;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpAltPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpEmail;
 
 @property (assign, nonatomic) BOOL isUpdate;
 @property (nonatomic, assign) NSInteger incidentType;

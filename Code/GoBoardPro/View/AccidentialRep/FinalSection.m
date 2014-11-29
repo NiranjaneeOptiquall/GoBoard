@@ -136,6 +136,15 @@
     self.frame = frame;
 }
 
+- (void)setupEmployeeRequiredFields:(NSArray*)aryFields {
+    if ([aryFields containsObject:@"firstName"]) [_markerEmpFName setHidden:NO];
+    if ([aryFields containsObject:@"middleInital"]) [_markerEmpMI setHidden:NO];
+    if ([aryFields containsObject:@"lastName"]) [_markerEmpLName setHidden:NO];
+    if ([aryFields containsObject:@"homePhone"]) [_markerEmpPhone setHidden:NO];
+    if ([aryFields containsObject:@"alternatePhone"]) [_markerEmpAltPhone setHidden:NO];
+    if ([aryFields containsObject:@"email"]) [_markerEmpEmail setHidden:NO];
+}
+
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields {
     BOOL success = YES;
     for (WitnessView *view in _mutArrWitnessViews) {

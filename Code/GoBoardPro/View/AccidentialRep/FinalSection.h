@@ -43,6 +43,13 @@
 @property (weak, nonatomic) IBOutlet UIView *vwCommunication;
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpFName;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpLName;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpAltPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmpEmail;
+
 @property (strong, nonatomic) NSMutableArray *mutArrWitnessViews;
 
 @property (assign, nonatomic) BOOL isCommunicationVisible;
@@ -59,7 +66,7 @@
 - (IBAction)btnCallMadeTapped:(UIButton *)sender;
 - (IBAction)btnSignatureTapped:(id)sender;
 - (void)PersonInvolved:(NSInteger)person;
-
+- (void)setupEmployeeRequiredFields:(NSArray*)aryFields;
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields;
 - (void)addWitnessView;
 @end

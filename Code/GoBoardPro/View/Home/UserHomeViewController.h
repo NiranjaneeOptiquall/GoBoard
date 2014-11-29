@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
 @property (weak, nonatomic) IBOutlet UILabel *lblPendingCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblWelcomeUser;
 
 
 - (IBAction)btnStartSyncCount:(id)sender;

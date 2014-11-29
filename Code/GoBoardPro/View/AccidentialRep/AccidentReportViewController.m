@@ -318,6 +318,7 @@
     aPerson.wasBloodPresent = [dict objectForKey:@"WasBloodOrBodilyFluidPresent"];
     aPerson.bloodCleanUpRequired = [dict objectForKey:@"WasBloodCleanupRequired"];
     aPerson.wasExposedToBlood = [dict objectForKey:@"WasCaregiverExposedToBlood"];
+    aPerson.duringWorkHours = [dict objectForKey:@"OccuredDuringBusinessHours"];
     
     NSMutableSet *injuryList = [NSMutableSet set];
     for (NSDictionary *aDict in [dict objectForKey:@"Injuries"]) {
@@ -337,16 +338,12 @@
 
 - (BOOL)validateFirstSection {
     BOOL isSuccess = YES;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_FIRST_AID];
     NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
-    
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_FIRST_AID];
-    NSArray *fields1 = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate1];
-    NSArray *aryAidFields = [fields1 valueForKeyPath:@"name"];
+    NSArray *aryAidFields = [fields valueForKeyPath:@"name"];
     for (AccidentFirstSection *view in _vwFirstSection.subviews) {
         if ([view isKindOfClass:[AccidentFirstSection class]]) {
-            isSuccess = [view validateAccidentFirstSectionWith:aryFields firstAidFields:aryAidFields];
+            isSuccess = [view validateAccidentFirstSectionWith:aryAidFields];
             if (!isSuccess) {
                 break;
             }
@@ -400,6 +397,16 @@
     accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showEmployeeId boolValue];
     accidentView.vwPersonalInfo.isConditionsVisible = [_reportSetupInfo.showConditions boolValue];
     [accidentView.vwPersonalInfo callInitialActions];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
+    NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [accidentView.vwPersonalInfo setRequiredFields:aryFields];
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_FIRST_AID];
+    fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryAidFields = [fields valueForKeyPath:@"name"];
+    [accidentView.vwBodilyFluid setRequiredFields:aryAidFields];
+    
     accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
     accidentView.vwBodilyFluid.isRefuseCareStatementVisible = [_reportSetupInfo.showRefusedSelfCareText boolValue];
     accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
@@ -456,6 +463,10 @@
         frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
     }
     finalSection.frame = frame;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMPLOYEE];
+    NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [finalSection setupEmployeeRequiredFields:aryFields];
     [_scrlMainView addSubview:finalSection];
     [finalSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     finalSection.isCommunicationVisible = [_reportSetupInfo.showCommunicationAndNotification boolValue];

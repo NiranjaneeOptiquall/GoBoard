@@ -27,7 +27,7 @@
 @property (assign, nonatomic) BOOL isCaptureCameraVisible;
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
-- (BOOL)validateAccidentFirstSectionWith:(NSArray*)personArray firstAidFields:(NSArray*)firstAid;
+- (BOOL)validateAccidentFirstSectionWith:(NSArray*)firstAid;
 
 - (IBAction)btnAttachPhotoTapped:(UIButton *)sender;
 - (NSDictionary*)getAccidentPerson;

@@ -86,6 +86,15 @@
         frame.origin.y = _vwManagementFollowUp.frame.origin.y;
         _vwSubmit.frame = frame;
     }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMPLOYEE];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    if ([aryFields containsObject:@"firstName"]) [_markerEmpFName setHidden:NO];
+    if ([aryFields containsObject:@"middleInital"]) [_markerEmpMI setHidden:NO];
+    if ([aryFields containsObject:@"lastName"]) [_markerEmpLName setHidden:NO];
+    if ([aryFields containsObject:@"phone"]) [_markerEmpPhone setHidden:NO];
+    if ([aryFields containsObject:@"alternatePhone"]) [_markerEmpAltPhone setHidden:NO];
+    if ([aryFields containsObject:@"email"]) [_markerEmpEmail setHidden:NO];
 }
 
 
@@ -232,7 +241,7 @@
         if (vwPerson.imgIncidentPerson) {
             strPhoto = [UIImageJPEGRepresentation(vwPerson.imgIncidentPerson, 1.0) base64EncodedStringWithOptions:0];
         }
-        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":strDob, @"PersonPhoto":strPhoto};
+        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":employeeId, @"MemberId":memberId, @"OccuredDuringBusinessHours":(vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"DateOfBirth":strDob, @"PersonPhoto":strPhoto};
 //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         
         [mutArrPersons addObject:aDict];
@@ -383,7 +392,7 @@
         aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
         aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];
         aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
-        
+        aPerson.duringWorkHours = [dict objectForKey:@"OccuredDuringBusinessHours"];
 
         aPerson.guestOfFirstName = [aDict objectForKey:@"GuestOfFirstName"];
         aPerson.guestOfMiddleInitial = [aDict objectForKey:@"GuestOfMiddleInitial"];
@@ -453,6 +462,10 @@
     personalInfoView.isMinorVisible = [reportSetupInfo.showMinor boolValue];
     personalInfoView.isMinorVisible = [reportSetupInfo.showEmployeeId boolValue];
     [personalInfoView callInitialActions];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
+    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [personalInfoView setRequiredFields:aryFields];
     [personalInfoView setBackgroundColor:[UIColor clearColor]];
     CGRect frame = personalInfoView.frame;
     frame.origin.y = totalPersonCount * frame.size.height;
@@ -562,14 +575,14 @@
     else if (![self validateIncidentPersonal]) {
         return NO;
     }
-    else if ([_txtActivity isTextFieldBlank]) {
-        success = NO;
-        alert(@"", MSG_REQUIRED_FIELDS);
-    }
-    else if ([reportSetupInfo.showConditions boolValue] && ([_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank])) {
-        success = NO;
-        alert(@"", MSG_REQUIRED_FIELDS);
-    }
+//    else if ([_txtActivity isTextFieldBlank]) {
+//        success = NO;
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//    }
+//    else if ([reportSetupInfo.showConditions boolValue] && ([_txtWeather isTextFieldBlank] || [_txtEquipment isTextFieldBlank])) {
+//        success = NO;
+//        alert(@"", MSG_REQUIRED_FIELDS);
+//    }
     else if (![self validateEmergencyPersonnel]) {
         return NO;
     }
@@ -583,11 +596,8 @@
 }
 
 - (BOOL)validateIncidentPersonal {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
-    NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
     for (IncidentPersonalInformation *person in mutArrIncidentPerson) {
-        if (![person isPersonalInfoValidationSuccessFor:aryFields]) {
+        if (![person isPersonalInfoValidationSuccess]) {
             return NO;
         }
     }

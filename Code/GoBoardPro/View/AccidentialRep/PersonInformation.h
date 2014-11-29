@@ -11,7 +11,9 @@
 #import "AccidentReportViewController.h"
 
 
-@interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate>
+@interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate> {
+     NSArray *requiredFields;
+}
 
 
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
@@ -72,6 +74,27 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtWheather;
 @property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
 
+
+
+@property (weak, nonatomic) IBOutlet UILabel *markerMemberId;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmployeeTitle;
+@property (weak, nonatomic) IBOutlet UILabel *markerFirstName;
+@property (weak, nonatomic) IBOutlet UILabel *markerMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerLastName;
+@property (weak, nonatomic) IBOutlet UILabel *markerAddress1;
+@property (weak, nonatomic) IBOutlet UILabel *markerAddress2;
+@property (weak, nonatomic) IBOutlet UILabel *markerCity;
+@property (weak, nonatomic) IBOutlet UILabel *markerState;
+@property (weak, nonatomic) IBOutlet UILabel *markerZip;
+@property (weak, nonatomic) IBOutlet UILabel *markerPhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerAlternatePhone;
+@property (weak, nonatomic) IBOutlet UILabel *markerEmail;
+@property (weak, nonatomic) IBOutlet UILabel *markerDOB;
+@property (weak, nonatomic) IBOutlet UILabel *markerGuestFName;
+@property (weak, nonatomic) IBOutlet UILabel *markerGuestMI;
+@property (weak, nonatomic) IBOutlet UILabel *markerGuestLName;
+
+
 @property (assign, nonatomic) BOOL isAffiliationVisible;
 @property (assign, nonatomic) BOOL isMemberIdVisible;
 @property (assign, nonatomic) BOOL isDOBVisible;
@@ -94,7 +117,7 @@
 - (IBAction)btnWasEmployeeOnWorkTapped:(UIButton *)sender;
 - (IBAction)btnGenderTapped:(UIButton *)sender;
 - (IBAction)btnIsMinorTapped:(UIButton *)sender;
-
-- (BOOL)isPersonalInfoValidationSuccessWith:(NSArray*)fields;
+- (void)setRequiredFields:(NSArray*)fields;
+- (BOOL)isPersonalInfoValidationSuccess;
 - (void)callInitialActions;
 @end

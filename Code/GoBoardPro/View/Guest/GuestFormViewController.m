@@ -29,15 +29,16 @@
     return UIStatusBarStyleLightContent;
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"SurveyLinkDetail"]) {
+        
+    }
 }
-*/
+
 
 #pragma mark - Methods
 
@@ -70,7 +71,13 @@
         // Configure for User Forms
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Survey Forms"];
-        mutArrFormList = [NSMutableArray arrayWithObjects:@"Fitness Center Survey", @"Swimming Pool Survey", nil];;
+        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", SURVEY_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+            mutArrFormList = [response objectForKey:@"Surveys"];
+            [_tblFormList reloadData];
+        } failure:^(NSError *error, NSDictionary *response) {
+            NSLog(@"%@", response);
+        }];
+       
     }
 }
 
@@ -79,6 +86,10 @@
 
 - (IBAction)btnBackTapped:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)btnLinkTapped:(UIButton*)btn {
+    [self performSegueWithIdentifier:@"SurveyLinkDetail" sender:nil];
 }
 
 #pragma mark - UITableViewDataSource
@@ -95,8 +106,12 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
+    NSDictionary *dictObject = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-    [aLbl setText:[mutArrFormList objectAtIndex:indexPath.row]];
+    [aLbl setText:[dictObject objectForKey:@"Name"]];
+    UIButton *btnLink = (UIButton*)[aCell.contentView viewWithTag:5];
+    [btnLink addTarget:self action:@selector(btnLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
@@ -108,7 +123,10 @@
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    alert(@"", @"As all forms are dynamic forms created from web service response, we have not covered them in Static App Delivery Milestone.");
+    NSDictionary *dictObject = [mutArrFormList objectAtIndex:indexPath.row];
+    if (![[dictObject objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+        [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+    }
 }
 
 @end
