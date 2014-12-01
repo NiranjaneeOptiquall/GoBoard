@@ -42,7 +42,7 @@
 
 @property (strong, nonatomic) NSMutableArray *mutArrInjuryList;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
-@property (assign, nonatomic) NSInteger careProvided;
+@property (assign, nonatomic) NSString *careProvided;
 
 - (IBAction)btnInjuryTypeGeneralTapped:(UIButton *)sender;
 - (IBAction)btnInjuryTypeBodyPartTapped:(UIButton *)sender;

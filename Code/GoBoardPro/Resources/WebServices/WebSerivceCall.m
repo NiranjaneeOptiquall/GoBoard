@@ -32,7 +32,9 @@
 #import "GeneralInjuryType.h"
 #import "LegInjuryList.h"
 
-
+#import "SurveyList.h"
+#import "SurveyQuestions.h"
+#import "SurveyResponseTypeValues.h"
 
 
 
@@ -646,5 +648,86 @@
 }
 
 
+
+#pragma mark - Survey
+
+- (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+    __block BOOL isWSComplete = NO;
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", SURVEY_SETUP, aStrClientId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+        [self deleteAllSurveys];
+        [self insertSurvey:[response objectForKey:@"Surveys"]];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+
+- (void)deleteAllSurveys {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+- (void)insertSurvey:(NSArray*)array {
+    for (NSDictionary *aDict in array) {
+        SurveyList *survey = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        survey.surveyId = [[aDict objectForKey:@"Id"] stringValue];
+        if (![[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
+            survey.instructions = [aDict objectForKey:@"Instructions"];
+        }
+        else {
+            survey.instructions = @"";
+        }
+        if (![[aDict objectForKey:@"Link"] isKindOfClass:[NSNull class]]) {
+            survey.link = [aDict objectForKey:@"Link"];
+        }
+        else {
+            survey.link = @"";
+        }
+        survey.name = [aDict objectForKey:@"Name"];
+        survey.surveyTypeId = [[aDict objectForKey:@"SurveyTypeId"] stringValue];
+        survey.surveyUserTypeId = [[aDict objectForKey:@"SurveyUserTypeId"] stringValue];
+        NSMutableSet *aSetQuestions = [NSMutableSet set];
+        if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+            for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
+                SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                aQuestion.questionId = [[dictQuest objectForKey:@"Id"] stringValue];
+                aQuestion.question = [dictQuest objectForKey:@"Question"];
+                aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
+                aQuestion.sequence = [dictQuest objectForKey:@"Sequence"];
+                NSMutableSet *responseTypeSet = [NSMutableSet set];
+                if (![[dictQuest objectForKey:@"ResponseTypeValues"] isKindOfClass:[NSNull class]]) {
+                    for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"ResponseTypeValues"]) {
+                        SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                        responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
+                        responseType.name = [dictResponseType objectForKey:@"Name"];
+                        responseType.question = aQuestion;
+                        [responseTypeSet addObject:responseType];
+                    }
+                }
+                aQuestion.responseList = responseTypeSet;
+                aQuestion.survey = survey;
+                [aSetQuestions addObject:aQuestion];
+            }
+        }
+        survey.questionList = aSetQuestions;
+        [gblAppDelegate.managedObjectContext insertObject:survey];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
 
 @end

@@ -334,6 +334,28 @@
         <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmitUtilizationCount" inverseName="location" inverseEntity="SubmitUtilizationCount" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubmitCountUser" inverseName="countLocation" inverseEntity="SubmitCountUser" syncable="YES"/>
     </entity>
+    <entity name="SurveyList" representedClassName="SurveyList" syncable="YES">
+        <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="surveyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="surveyTypeId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="surveyUserTypeId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="survey" inverseEntity="SurveyQuestions" syncable="YES"/>
+    </entity>
+    <entity name="SurveyQuestions" representedClassName="SurveyQuestions" syncable="YES">
+        <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="questionId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="responseList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyResponseTypeValues" inverseName="question" inverseEntity="SurveyResponseTypeValues" syncable="YES"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyList" inverseName="questionList" inverseEntity="SurveyList" syncable="YES"/>
+    </entity>
+    <entity name="SurveyResponseTypeValues" representedClassName="SurveyResponseTypeValues" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="question" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestions" inverseName="responseList" inverseEntity="SurveyQuestions" syncable="YES"/>
+    </entity>
     <entity name="TaskList" representedClassName="TaskList" syncable="YES">
         <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
@@ -429,5 +451,8 @@
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="163"/>
         <element name="Witness" positionX="261" positionY="-36" width="128" height="178"/>
+        <element name="SurveyList" positionX="-621" positionY="720" width="128" height="148"/>
+        <element name="SurveyQuestions" positionX="-450" positionY="720" width="128" height="133"/>
+        <element name="SurveyResponseTypeValues" positionX="-281" positionY="749" width="128" height="88"/>
     </elements>
 </model>

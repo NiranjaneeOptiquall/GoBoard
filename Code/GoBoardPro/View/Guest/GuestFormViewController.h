@@ -11,6 +11,7 @@
 
 @interface GuestFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate> {
     NSMutableArray *mutArrFormList;
+    NSInteger selectedIndex;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *imvIcon;

@@ -42,6 +42,8 @@
 @property (weak, nonatomic) IBOutlet UIView *vwSubmit;
 @property (weak, nonatomic) IBOutlet UIView *vwCommunication;
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
+@property (weak, nonatomic) IBOutlet UILabel *lblReportFilerAccount;
+@property (weak, nonatomic) IBOutlet UITextView *txvReportFilerAccount;
 
 @property (weak, nonatomic) IBOutlet UILabel *markerEmpFName;
 @property (weak, nonatomic) IBOutlet UILabel *markerEmpMI;
@@ -64,7 +66,6 @@
 - (IBAction)btnSentToInsuranceTapped:(UIButton *)sender;
 - (IBAction)btnProcedureFollowedTapped:(UIButton *)sender;
 - (IBAction)btnCallMadeTapped:(UIButton *)sender;
-- (IBAction)btnSignatureTapped:(id)sender;
 - (void)PersonInvolved:(NSInteger)person;
 - (void)setupEmployeeRequiredFields:(NSArray*)aryFields;
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields;

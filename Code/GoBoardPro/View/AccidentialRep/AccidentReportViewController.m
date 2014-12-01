@@ -204,7 +204,7 @@
         [mutArrWitness addObject:aDict];
     }
     
-    NSDictionary *aDict = @{@"AccidentDate":astrAccidentDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+    NSDictionary *aDict = @{@"AccidentDate":astrAccidentDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
     return aDict;
 }
 
@@ -266,7 +266,7 @@
     aReport.employeeHomePhone = [aDict objectForKey:@"EmployeeHomePhone"];
     aReport.employeeAlternatePhone = [aDict objectForKey:@"EmployeeAlternatePhone"];
     aReport.employeeEmail = [aDict objectForKey:@"EmployeeEmail"];
-#warning //    aReport.reportFilerAccount = finalSection.txt.text;
+    aReport.reportFilerAccount = [aDict objectForKey:@"ReportFilerAccount"];
     //    aReport.managementFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
     //    aReport.followUpCallType = @"";
     aReport.additionalInfo = [aDict objectForKey:@"AdditionalInformation"];

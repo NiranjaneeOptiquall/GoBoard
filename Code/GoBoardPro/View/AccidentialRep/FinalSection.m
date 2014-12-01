@@ -262,12 +262,19 @@
 #pragma mark - UITextViewDelegate
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    [_lblAdditionalInfo setHidden:YES];
+    _parentVC.isUpdate = YES;
+    if ([textView isEqual:_txvAdditionalInformation])
+        [_lblAdditionalInfo setHidden:YES];
+    if ([textView isEqual:_txvReportFilerAccount])
+        [_lblReportFilerAccount setHidden:YES];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if ([textView.text length] == 0) {
-        [_lblAdditionalInfo setHidden:NO];
+        if ([textView isEqual:_txvAdditionalInformation])
+            [_lblAdditionalInfo setHidden:NO];
+        if ([textView isEqual:_txvReportFilerAccount])
+            [_lblReportFilerAccount setHidden:NO];
     }
 }
 
@@ -303,4 +310,5 @@
         self.frame = frame;
     }
 }
+
 @end

@@ -17,10 +17,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    [[WebSerivceCall webServiceObject] callServiceForIncidentReport:NO complition:^{
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    }];
     // Do any additional setup after loading the view.
 }
 

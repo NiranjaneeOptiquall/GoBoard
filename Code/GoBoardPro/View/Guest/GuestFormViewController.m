@@ -7,6 +7,9 @@
 //
 
 #import "GuestFormViewController.h"
+#import"WebViewController.h"
+#import "DynamicFormsViewController.h"
+#import "SurveyList.h"
 
 @interface GuestFormViewController ()
 
@@ -16,7 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setUpInitials];
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    [self setUpInitials:aStrClientId];
     // Do any additional setup after loading the view.
 }
 
@@ -35,14 +39,19 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SurveyLinkDetail"]) {
-        
+        WebViewController *webView = (WebViewController*)segue.destinationViewController;
+        webView.strRequestURL = [[mutArrFormList objectAtIndex:selectedIndex] link];
+    }
+    else if ([segue.identifier isEqualToString:@"ShowDynamicForm"]) {
+        DynamicFormsViewController *aDynamicView = (DynamicFormsViewController*)segue.destinationViewController;
+        aDynamicView.survey = [mutArrFormList objectAtIndex:selectedIndex];
     }
 }
 
 
 #pragma mark - Methods
 
-- (void)setUpInitials {
+- (void)setUpInitials:(NSString*)aStrClientId {
     if (_guestFormType == 1) {
         // Configure for Take a Survey screen
         [_imvIcon setImage:[UIImage imageNamed:@"take_a_survey.png"]];
@@ -71,14 +80,19 @@
         // Configure for User Forms
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Survey Forms"];
-        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", SURVEY_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
-            mutArrFormList = [response objectForKey:@"Surveys"];
+        
+        [[WebSerivceCall webServiceObject] callServiceForSurvey:NO complition:^{
+            [self fetchSurveyList];
             [_tblFormList reloadData];
-        } failure:^(NSError *error, NSDictionary *response) {
-            NSLog(@"%@", response);
         }];
-       
     }
+}
+
+- (void)fetchSurveyList {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sort]];
+    mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
 }
 
 #pragma mark - IBActions
@@ -89,6 +103,11 @@
 }
 
 - (void)btnLinkTapped:(UIButton*)btn {
+    UITableViewCell *aCell = (UITableViewCell*)[btn superview];
+    while (![aCell isKindOfClass:[UITableViewCell class]]) {
+        aCell = (UITableViewCell*)[aCell superview];
+    }
+    selectedIndex = [[_tblFormList indexPathForCell:aCell] row];
     [self performSegueWithIdentifier:@"SurveyLinkDetail" sender:nil];
 }
 
@@ -106,10 +125,16 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
-    NSDictionary *dictObject = [mutArrFormList objectAtIndex:indexPath.row];
+    SurveyList *survey = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-    [aLbl setText:[dictObject objectForKey:@"Name"]];
+    [aLbl setText:survey.name];
     UIButton *btnLink = (UIButton*)[aCell.contentView viewWithTag:5];
+    if (![survey.link isEqualToString:@""]) {
+        [btnLink setHidden:NO];
+    }
+    else {
+        [btnLink setHidden:YES];
+    }
     [btnLink addTarget:self action:@selector(btnLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *aView = [aCell.contentView viewWithTag:4];
@@ -123,8 +148,9 @@
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *dictObject = [mutArrFormList objectAtIndex:indexPath.row];
-    if (![[dictObject objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+    SurveyList *survey = [mutArrFormList objectAtIndex:indexPath.row];
+    if ([[survey.questionList allObjects] count] > 0) {
+        selectedIndex = indexPath.row;
         [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
     }
 }

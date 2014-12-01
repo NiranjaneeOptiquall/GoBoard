@@ -55,7 +55,7 @@
     }
     else if ([keyPath isEqualToString:@"careProvided"]) {
         CGRect frame = CGRectZero;
-        if (_vwBodyPartInjury.careProvided == 5) {
+        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self treated"]) {
             [_vwBodilyFluid.vwRefuseCare setHidden:YES];
             frame = _vwBodilyFluid.vwParticipantSignature.frame;
             frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
