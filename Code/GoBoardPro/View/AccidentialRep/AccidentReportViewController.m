@@ -212,7 +212,7 @@
     
     
     AccidentReportSubmit *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-    
+
     aReport.dateOfIncident = [aDict objectForKey:@"AccidentDate"];
     aReport.facilityId = [aDict objectForKey:@"FacilityId"];
     aReport.locationId = [aDict objectForKey:@"LocationId"];
@@ -294,7 +294,7 @@
     aPerson.dateOfBirth = [dict objectForKey:@"DateOfBirth"];
     aPerson.firstAidFirstName = [dict objectForKey:@"FirstAidFirstName"];
     aPerson.firstAidMiddleInitial = [dict objectForKey:@"FirstAidMiddleInitial"];
-    aPerson.firstAidLastName = [dict objectForKey:@"FirstAidLastName"];
+    aPerson.firstAidLastName = dict[@"FirstAidLastName"];
     aPerson.firstAidPosition = [dict objectForKey:@"FirstAidPosition"];
     aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
     aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];

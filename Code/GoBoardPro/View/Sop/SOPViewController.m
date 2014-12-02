@@ -162,7 +162,7 @@
     if (!_mutArrCategoryHierarchy) {
         _mutArrCategoryHierarchy = [NSMutableArray array];
     }
-    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] ) {
+    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Categories"] count] == 0 ) {
         [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
     }
     else {

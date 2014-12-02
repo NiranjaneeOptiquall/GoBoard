@@ -30,4 +30,6 @@
 - (void)callServiceForAccidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 
 - (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition;
+
+- (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 @end

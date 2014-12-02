@@ -9,14 +9,27 @@
 #import "User.h"
 
 @implementation User
+static User *user;
 
 + (User *)currentUser {
-    static User *user;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        user = [[User alloc] init];
-    });
+    
+    @synchronized(self) {
+        if (!user) {
+            user = [[User alloc] init];
+        }
+    }
     return user;
 }
 
+
++ (void)destroyCurrentUser {
+    user = nil;
+}
+
++ (BOOL)checkUserExist {
+    if(user) {
+        return YES;
+    }
+    return NO;
+}
 @end

@@ -10,14 +10,15 @@
 #import "Constants.h"
 
 
-@class SurveyList;
+
 @interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate> {
     NSMutableArray *mutArrQuestions;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblForm;
 
-@property (weak, nonatomic) SurveyList *survey;
+@property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
 
 - (IBAction)btnBackTapped:(id)sender;
+- (IBAction)btnSubmitTapped:(id)sender;
 @end

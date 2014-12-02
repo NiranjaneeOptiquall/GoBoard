@@ -29,6 +29,7 @@
     [super viewWillAppear:animated];
     _txtUserId.text = @"";
     _txtPassword.text = @"";
+    [User destroyCurrentUser];
 }
 
 
@@ -51,10 +52,10 @@
         guestForm.guestFormType = 1;
     }
     else if ([[segue identifier] isEqualToString:@"makeSuggestion"]) {
-        guestForm.guestFormType = 2;
+        guestForm.guestFormType = 3;
     }
     else if ([[segue identifier] isEqualToString:@"completeForm"]) {
-        guestForm.guestFormType = 3;
+        guestForm.guestFormType = 2;
     }
 }
 

@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIView *vwTextArea;
 @property (weak, nonatomic) IBOutlet UITextField *txtField;
 @property (weak, nonatomic) IBOutlet UIImageView *imvTypeIcon;
+@property (weak, nonatomic) IBOutlet UIView *vwButtonList;
 @property (weak, nonatomic) IBOutlet UILabel *lblDevider;
 @end

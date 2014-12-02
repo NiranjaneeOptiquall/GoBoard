@@ -27,5 +27,6 @@
 @property (strong, nonatomic) UserLocation *selectedLocation;
 @property (strong, nonatomic) UserPosition *selectedPosition;
 + (User *)currentUser;
-
++ (void)destroyCurrentUser;
++ (BOOL)checkUserExist;
 @end

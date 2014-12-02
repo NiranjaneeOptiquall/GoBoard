@@ -1,5 +1,5 @@
 //
-//  SurveyList.h
+//  FormsList.h
 //  GoBoardPro
 //
 //  Created by ind558 on 02/12/14.
@@ -11,18 +11,18 @@
 
 @class SurveyQuestions;
 
-@interface SurveyList : NSManagedObject
+@interface FormsList : NSManagedObject
 
+@property (nonatomic, retain) NSString * typeId;
+@property (nonatomic, retain) NSString * userTypeId;
+@property (nonatomic, retain) NSString * formId;
 @property (nonatomic, retain) NSString * instructions;
 @property (nonatomic, retain) NSString * link;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSString * surveyId;
-@property (nonatomic, retain) NSString * typeId;
-@property (nonatomic, retain) NSString * userTypeId;
 @property (nonatomic, retain) NSSet *questionList;
 @end
 
-@interface SurveyList (CoreDataGeneratedAccessors)
+@interface FormsList (CoreDataGeneratedAccessors)
 
 - (void)addQuestionListObject:(SurveyQuestions *)value;
 - (void)removeQuestionListObject:(SurveyQuestions *)value;

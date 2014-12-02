@@ -1,23 +1,23 @@
 //
-//  SurveyList.m
+//  FormsList.m
 //  GoBoardPro
 //
 //  Created by ind558 on 02/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
-#import "SurveyList.h"
+#import "FormsList.h"
 #import "SurveyQuestions.h"
 
 
-@implementation SurveyList
+@implementation FormsList
 
+@dynamic typeId;
+@dynamic userTypeId;
+@dynamic formId;
 @dynamic instructions;
 @dynamic link;
 @dynamic name;
-@dynamic surveyId;
-@dynamic typeId;
-@dynamic userTypeId;
 @dynamic questionList;
 
 @end
