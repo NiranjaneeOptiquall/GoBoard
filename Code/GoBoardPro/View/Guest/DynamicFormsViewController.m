@@ -8,8 +8,8 @@
 
 #import "DynamicFormsViewController.h"
 #import "SurveyQuestions.h"
-#import "SurveyList.h"
-#import "SurveyResponseTypeValues.h"
+#import "SubmitFormAndSurvey.h"
+#import "QuestionDetails.h"
 #import "DynamicFormCell.h"
 
 @interface DynamicFormsViewController ()
@@ -67,33 +67,101 @@
 */
 
 - (IBAction)btnBackTapped:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (isUpdate) {
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
+    [self.view endEditing:YES];
     NSMutableArray *mutArrReq = [NSMutableArray array];
     for (NSDictionary *aDict in mutArrQuestions) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
-        [dict setObject:aDict[@"responseType"] forKey:@"ResponseType"];
-        if ([aDict[@"responseType"] isEqualToString:@"dropdown"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
-            NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name MATCHES[cd] %@", [aDict objectForKey:@"answer"]]] firstObject];
-            [dict setObject:resp[@"value"] forKey:@"Answer"];
+        if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
+            // create separate entry for each option selected. So if 2 options are selected then two entries of same question will be there with different response.
+            NSArray *arySelectedOptions = [aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isSelected == YES"]];
+            for (NSDictionary *dictResponse in arySelectedOptions) {
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
+                [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
+                [dict setObject:dictResponse[@"name"] forKey:@"ResponseText"];
+                [dict setObject:dictResponse[@"value"] forKey:@"ResponseId"];
+                [mutArrReq addObject:dict];
+            }
         }
-        else if ([aDict[@"responseType"] isEqualToString:@"date"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
-            NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-            [aFormatter setDateFormat:@"MM/dd/yyyy"];
-            NSDate *aDate = [aFormatter dateFromString:aDict[@"answer"]];
-            [aFormatter setDateFormat:@"yyyy-MM-dd"];
-            [dict setObject:[aFormatter stringFromDate:aDate] forKey:@"Answer"];
+        else if (![aDict[@"answer"] isEqualToString:@""]) {
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
+            [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
+            if ([aDict[@"responseType"] isEqualToString:@"dropdown"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
+                NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name MATCHES[cd] %@", [aDict objectForKey:@"answer"]]] firstObject];
+                [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
+                [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+            }
+            else if ([aDict[@"responseType"] isEqualToString:@"date"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
+                NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+                [aFormatter setDateFormat:@"MM/dd/yyyy"];
+                NSDate *aDate = [aFormatter dateFromString:aDict[@"answer"]];
+                [aFormatter setDateFormat:@"yyyy-MM-dd"];
+                [dict setObject:[aFormatter stringFromDate:aDate] forKey:@"ResponseText"];
+            }
+            else if ([aDict[@"responseType"] isEqualToString:@"radioButtonList"]) {
+                NSDictionary *resp = [aDict[@"responseList"] objectAtIndex:[aDict[@"answer"] integerValue]];
+                [dict setObject:resp[@"name"] forKey:@"ResponseText"];
+                [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+            }
+            else {
+                [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
+            }
+            [mutArrReq addObject:dict];
         }
-        else if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
-        }
-        else {
-            [dict setObject:aDict[@"answer"] forKey:@"Answer"];
-        }
-        
     }
+    NSString *strUserId = @"", *strIDKeyName, *strIdValue, *strWebServiceName = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    if (!_isSurvey) {
+        strIDKeyName = @"FormId";
+        strIdValue = [_objFormOrSurvey valueForKey:@"formId"];
+        strWebServiceName = FORM_HISTORY_POST;
+    }
+    else {
+        strIdValue = [_objFormOrSurvey valueForKey:@"surveyId"];
+        strIDKeyName = @"SurveyId";
+        strWebServiceName = SURVEY_HISTORY_POST;
+    }
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
+    [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+    } failure:^(NSError *error, NSDictionary *response) {
+        [self saveDataToLocal:dictReq];
+    }];
+}
+
+- (void)saveDataToLocal:(NSDictionary*)aDict {
+    SubmitFormAndSurvey *objRecord = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitFormAndSurvey" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    objRecord.type = (_isSurvey) ? @"1":@"2";
+    objRecord.typeId = (_isSurvey) ? [_objFormOrSurvey valueForKey:@"surveyId"]:[_objFormOrSurvey valueForKey:@"formId"];
+    objRecord.userId = [aDict objectForKey:@"UserId"];
+    objRecord.clientId = [aDict objectForKey:@"ClientId"];
+    
+    NSMutableSet *questionSet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"Details"]) {
+        QuestionDetails *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"QuestionDetails" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aQuestion.questionId = [dict objectForKey:@"QuestionId"];
+        aQuestion.questionText = [dict objectForKey:@"QuestionText"];
+        aQuestion.responseText = [dict objectForKey:@"ResponseText"];
+        aQuestion.responseId = [dict objectForKey:@"ResponseId"];
+        aQuestion.formOrSurvey = objRecord;
+        [questionSet addObject:aQuestion];
+    }
+    objRecord.questionList = questionSet;
+    [gblAppDelegate.managedObjectContext insertObject:objRecord];
+    [gblAppDelegate.managedObjectContext save:nil];
+    [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
 }
 
 - (void)btnCheckMarkTapped:(UIButton *)sender {
@@ -109,6 +177,7 @@
 }
 
 - (void)btnListTypeTapped:(UIButton*)sender {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForView:sender];
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
@@ -120,7 +189,7 @@
             [aBtn setSelected:NO];
         }
         [sender setSelected:YES];
-        [aDict setObject:[aDict[@"responseList"][sender.tag] objectForKey:@"value"] forKey:@"answer"];
+        [aDict setObject:[NSString stringWithFormat:@"%ld", (long)sender.tag] forKey:@"answer"];
     }
 }
 #pragma mark - UITableViewDataSource
@@ -131,13 +200,6 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-//    if (indexPath.row == 0 || indexPath.row % 2 == 0) {
-//        [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
-//    }
-//    else {
-//        [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
-//    }
-    
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
     [aCell.btnCheckMark setHidden:YES];
@@ -180,17 +242,17 @@
             [aBtn setImage:[UIImage imageNamed:strImageName] forState:UIControlStateNormal];
             [aBtn setImage:[UIImage imageNamed:strSelectedImageName] forState:UIControlStateSelected];
             [aBtn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
-            if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"]) {
-                [aBtn setSelected:[dict[@"isSelected"] boolValue]];
-            }
-            else if ([aDict[@"answer"] isEqualToString:dict[@"value"]]) {
-                [aBtn setSelected:YES];
-            }
             [aBtn.titleLabel setFont:[UIFont systemFontOfSize:15.0]];
             [aBtn addTarget:self action:@selector(btnListTypeTapped:) forControlEvents:UIControlEventTouchUpInside];
             [aBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             [aBtn setTag:index];
             [aCell.vwButtonList addSubview:aBtn];
+            if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"]) {
+                [aBtn setSelected:[dict[@"isSelected"] boolValue]];
+            }
+            else if ([aDict[@"answer"] integerValue] == index) {
+                [self btnListTypeTapped:aBtn];
+            }
             index++;
         }
     }
@@ -272,9 +334,11 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     NSIndexPath *indexPath = [self indexPathForView:textField];
+    currentIndex = indexPath.row;
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"time"]) {
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver setDelegate:self];
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
         return NO;
     }
@@ -286,17 +350,53 @@
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"date"]) {
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver setDelegate:self];
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_DATE_ONLY updateField:textField];
         return NO;
     }
     return YES;
 }
 
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    isUpdate = YES;
+    NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
+    [aDict setObject:textField.text forKey:@"answer"];
+    return YES;
+}
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
+    if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
+    isUpdate = YES;
     NSIndexPath *indexPath = [self indexPathForView:sender];
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     [aDict setObject:[value valueForKey:@"name"] forKey:@"answer"];
     [sender setText:[value valueForKey:@"name"]];
 }
 
+
+- (void)datePickerDidSelect:(NSDate*)date forObject:(id)field {
+    isUpdate = YES;
+    NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
+    [aDict setObject:[field text] forKey:@"answer"];
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 @end

@@ -105,12 +105,12 @@
         currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
         currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
         currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
-        NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-        if (prevUserId) {
-            if (![prevUserId isEqualToString:currentUser.userId]) {
-                [self resetLocalDatabaseForNewUser];
-            }
-        }
+//        NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+//        if (prevUserId) {
+//            if (![prevUserId isEqualToString:currentUser.userId]) {
+//                [self resetLocalDatabaseForNewUser];
+//            }
+//        }
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"clientId"];
         [[NSUserDefaults standardUserDefaults] synchronize];

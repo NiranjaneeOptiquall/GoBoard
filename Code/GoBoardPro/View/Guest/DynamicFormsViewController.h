@@ -11,13 +11,16 @@
 
 
 
-@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate> {
+@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate, DatePickerDelegate> {
     NSMutableArray *mutArrQuestions;
+    NSInteger currentIndex;
+    BOOL isUpdate;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblForm;
 
 @property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
+@property (assign, nonatomic) BOOL isSurvey;
 
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

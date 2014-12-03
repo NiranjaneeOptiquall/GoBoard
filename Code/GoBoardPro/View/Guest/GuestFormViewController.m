@@ -40,6 +40,12 @@
     if ([segue.identifier isEqualToString:@"ShowDynamicForm"]) {
         DynamicFormsViewController *aDynamicView = (DynamicFormsViewController*)segue.destinationViewController;
         aDynamicView.objFormOrSurvey = [mutArrFormList objectAtIndex:selectedIndex];
+        if (_guestFormType == 1 || _guestFormType == 5) {
+            aDynamicView.isSurvey = YES;
+        }
+        else {
+            aDynamicView.isSurvey = NO;
+        }
     }
 }
 

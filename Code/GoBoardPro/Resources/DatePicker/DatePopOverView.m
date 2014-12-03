@@ -38,9 +38,7 @@
 }
 
 - (IBAction)btnDoneTapped:(id)sender {
-    if (_delegate && [_delegate respondsToSelector:@selector(datePickerDidSelect:forObject:)]) {
-        [_delegate datePickerDidSelect:_datePicker.date forObject:tempTextField];
-    }
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     if (!_desireDateFormat) {
         if (dateOption == DATE_SELECTION_DATE_ONLY) {
@@ -56,9 +54,13 @@
     
     [formatter setDateFormat:_desireDateFormat];
     tempTextField.text = [formatter stringFromDate:_datePicker.date];
+    if (_delegate && [_delegate respondsToSelector:@selector(datePickerDidSelect:forObject:)]) {
+        [_delegate datePickerDidSelect:_datePicker.date forObject:tempTextField];
+    }
     if (popOver) {
         [popOver dismissPopoverAnimated:YES];
     }
+    
     tempTextField = nil;
 }
 

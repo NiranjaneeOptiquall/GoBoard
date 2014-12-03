@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		330010711A2EF16500239D8D /* SubmitFormAndSurvey.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */; };
+		330010741A2EF16600239D8D /* QuestionDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010731A2EF16600239D8D /* QuestionDetails.m */; };
 		3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */; };
 		3302B8F11A2DC79A00FC7591 /* SurveyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F01A2DC79A00FC7591 /* SurveyList.m */; };
 		3302B8F41A2DC79B00FC7591 /* FormsList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F31A2DC79B00FC7591 /* FormsList.m */; };
@@ -288,6 +290,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3300106F1A2EF16500239D8D /* SubmitFormAndSurvey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitFormAndSurvey.h; sourceTree = "<group>"; };
+		330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitFormAndSurvey.m; sourceTree = "<group>"; };
+		330010721A2EF16600239D8D /* QuestionDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionDetails.h; sourceTree = "<group>"; };
+		330010731A2EF16600239D8D /* QuestionDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionDetails.m; sourceTree = "<group>"; };
 		3302B8E91A2DBC8900FC7591 /* SurveyQuestions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyQuestions.h; sourceTree = "<group>"; };
 		3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyQuestions.m; sourceTree = "<group>"; };
 		3302B8EF1A2DC79A00FC7591 /* SurveyList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyList.h; sourceTree = "<group>"; };
@@ -731,6 +737,10 @@
 		332B31E11A2C3EB1001DE737 /* Survey&Forms */ = {
 			isa = PBXGroup;
 			children = (
+				330010721A2EF16600239D8D /* QuestionDetails.h */,
+				330010731A2EF16600239D8D /* QuestionDetails.m */,
+				3300106F1A2EF16500239D8D /* SubmitFormAndSurvey.h */,
+				330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */,
 				3302B8F21A2DC79B00FC7591 /* FormsList.h */,
 				3302B8F31A2DC79B00FC7591 /* FormsList.m */,
 				3302B8EF1A2DC79A00FC7591 /* SurveyList.h */,
@@ -1982,6 +1992,7 @@
 				3337809219E6B6EA00362F82 /* MIMMeter.m in Sources */,
 				332B31EA1A2C453D001DE737 /* SurveyResponseTypeValues.m in Sources */,
 				332F543D1A2344B900F2A40A /* LegInjuryList.m in Sources */,
+				330010711A2EF16500239D8D /* SubmitFormAndSurvey.m in Sources */,
 				332B60E31A146CB700B7C7EF /* AFHTTPClient.m in Sources */,
 				332F54401A2344BA00F2A40A /* GeneralInjuryType.m in Sources */,
 				33EB4A5219D18F30008EF8FD /* ForgotPasswordViewController.m in Sources */,
@@ -2003,6 +2014,7 @@
 				33AC809B1A25E19000FA77A1 /* Witness.m in Sources */,
 				3337808D19E6B6EA00362F82 /* AnchorInfo.m in Sources */,
 				3397CAD319D0347700788153 /* LoginViewController.m in Sources */,
+				330010741A2EF16600239D8D /* QuestionDetails.m in Sources */,
 				33D5A5A619E40C0F00344278 /* ToolsViewController.m in Sources */,
 				3366BC1F1A17630F003FA3BF /* ERPHistoryTask.m in Sources */,
 				333780A119E6B6EA00362F82 /* TestLineClass.m in Sources */,

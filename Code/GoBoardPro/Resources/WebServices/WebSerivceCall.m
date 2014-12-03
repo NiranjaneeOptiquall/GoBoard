@@ -713,8 +713,8 @@
                 aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
                 aQuestion.sequence = [dictQuest objectForKey:@"Sequence"];
                 NSMutableSet *responseTypeSet = [NSMutableSet set];
-                if (![[dictQuest objectForKey:@"ResponseTypeValues"] isKindOfClass:[NSNull class]]) {
-                    for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"ResponseTypeValues"]) {
+                if (![[dictQuest objectForKey:@"Responses"] isKindOfClass:[NSNull class]]) {
+                    for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"Responses"]) {
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];

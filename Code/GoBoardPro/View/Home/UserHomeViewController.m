@@ -20,6 +20,8 @@
 #import "AccidentReportSubmit.h"
 #import "AccidentPerson.h"
 #import "InjuryDetail.h"
+#import "SubmitFormAndSurvey.h"
+#import "QuestionDetails.h"
 
 @interface UserHomeViewController ()
 
@@ -104,6 +106,8 @@
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
     }
@@ -121,9 +125,11 @@
     if (!isSyncError)
         isSyncError = [self syncUtilizationCount];
     if (!isSyncError)
-        [self syncSubmittedTask];
+        isSyncError = [self syncSubmittedTask];
     if (!isSyncError)
-        [self syncIncidentReport];
+        isSyncError = [self syncIncidentReport];
+    if (!isSyncError)
+        isSyncError = [self syncSurveysAndForms];
     if (!isSyncError) {
         alert(@"", @"All data are Synchronised with server.");
     }
@@ -163,6 +169,7 @@
     [gblAppDelegate.managedObjectContext save:nil];
     return isErrorOccurred;
 }
+
 
 - (BOOL)syncUtilizationCount {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
@@ -302,6 +309,7 @@
     return isErrorOccurred;
 }
 
+
 - (BOOL)syncAccidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
@@ -350,10 +358,7 @@
             [mutArrWitness addObject:aDict];
         }
 
-
-#warning missing this commented line
-//@"ReportFilerAccount":aReport.reportFilerAccount,
-        NSDictionary *aDict = @{@"AccidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"AccidentDescription":aReport.accidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"AdditionalInformation": aReport.additionalInfo, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+        NSDictionary *aDict = @{@"AccidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"AccidentDescription":aReport.accidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"AdditionalInformation": aReport.additionalInfo, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness, @"ReportFilerAccount":aReport.reportFilerAccount};
         [gblAppDelegate callWebService:ACCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:aReport];
             isSingleDataSaved = YES;
@@ -373,4 +378,49 @@
     return isErrorOccurred;
 }
 
+
+- (BOOL)syncSurveysAndForms {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type MATCHES[cd] %@", @"2"];
+//    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (SubmitFormAndSurvey *record in aryOfflineData) {
+        NSMutableArray *mutArrReq = [NSMutableArray array];
+        for (QuestionDetails *obj in record.questionList.allObjects) {
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            [dict setObject:obj.questionId forKey:@"QuestionId"];
+            [dict setObject:obj.questionText forKey:@"QuestionText"];
+            [dict setObject:obj.responseText forKey:@"ResponseText"];
+            [dict setObject:obj.responseId forKey:@"ResponseId"];
+            [mutArrReq addObject:dict];
+        }
+        NSString *strIDKeyName, *strWebServiceName = @"";
+        if ([record.type isEqualToString:@"2"]) {
+            strIDKeyName = @"FormId";
+            strWebServiceName = FORM_HISTORY_POST;
+        }
+        else {
+            strIDKeyName = @"SurveyId";
+            strWebServiceName = SURVEY_HISTORY_POST;
+        }
+        NSDictionary *dictReq = @{@"UserId":record.userId, strIDKeyName:record.typeId, @"Details":mutArrReq, @"ClientId":record.clientId};
+        [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:record];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
 @end
