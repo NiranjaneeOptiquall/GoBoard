@@ -1326,7 +1326,7 @@ static NSInteger firstNumSort(id str1, id str2, void *context) {
                         view.dColor=[barcolorArray objectAtIndex:i+_yValElements.count];
                         view.lColor=[barcolorArray objectAtIndex:i];
                     }
-                    else view.color = [barcolorArray objectAtIndex:i];
+                    else view.color = [barcolorArray objectAtIndex:i];//[MIMColorClass colorWithRed:1.0 Green:0.0 Blue:0.0 Alpha:1.0];//[barcolorArray objectAtIndex:i];
                     
                 }
                 view.borderColor=[UIColor whiteColor];

@@ -9,7 +9,7 @@
 #import "GraphView.h"
 
 @implementation GraphView
--(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors {
+-(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors groupTitle:(NSArray*)groupTitle {
     
 }
 @end

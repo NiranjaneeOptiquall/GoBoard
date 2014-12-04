@@ -19,14 +19,14 @@
 */
 
 
--(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors
+-(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors groupTitle:(NSArray*)groupTitle
 {
     horizontalLinesProperties=[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:25.0] forKey:@"gap"];
     anchorPropertiesArray=nil;
     verticalLinesProperties=nil;
     
-    NSArray *tempTitles = @[@"January", @"February", @"March"];
-    xTitlesArray=[[NSArray alloc]initWithArray:tempTitles];
+//    NSArray *tempTitles = @[@"January", @"February", @"March"];
+    xTitlesArray=[[NSArray alloc]initWithArray:groupTitle];
     
     xValuesArray=[[NSArray alloc]initWithArray:myxtitle];
     
@@ -72,20 +72,24 @@
 
 -(NSArray *)titlesForXAxis:(id)graph
 {
-    
-    NSArray *aTitleArray=[[NSArray alloc]initWithObjects:[NSArray arrayWithObjects:@"",@"",@"", nil],[NSArray arrayWithObjects:@"",@"",@"", nil],[NSArray arrayWithObjects: @"",@"",@"", nil], nil];
+    NSMutableArray *mutArr = [NSMutableArray array];
+    for (int i = 0; i < [xValuesArray count]; i++) {
+        NSMutableArray *mutA = [NSMutableArray array];
+        for (int j = 0; j < [xValuesArray[i] count]; j++) {
+            [mutA addObject:@""];
+        }
+        [mutArr addObject:mutA];
+    }
+    return mutArr;
+//    NSArray *aTitleArray=[[NSArray alloc]initWithObjects:[NSArray arrayWithObjects:@"",@"",@"", nil],[NSArray arrayWithObjects:@"",@"",@"", nil],[NSArray arrayWithObjects: @"",@"",@"", nil], nil];
 
-    return aTitleArray;
+//    return aTitleArray;
     
 }
 
 -(NSArray *)grouptitlesForXAxis:(id)graph
 {
-    NSArray *gValuesArray=nil;
-    gValuesArray=[[NSArray alloc]initWithObjects:@"January",@"Febuary",@"March", nil];
-    
-    return gValuesArray;
-    
+    return xTitlesArray;
 }
 
 -(NSDictionary *)barProperties:(id)graph;

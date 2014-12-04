@@ -18,7 +18,7 @@
 }
 */
 
--(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors
+-(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors groupTitle:(NSArray*)groupTitle
 {
     horizontalLinesProperties=[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:40.0] forKey:@"gap"];
     anchorPropertiesArray=nil;

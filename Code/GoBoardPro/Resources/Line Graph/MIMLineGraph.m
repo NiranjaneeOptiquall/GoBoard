@@ -669,7 +669,7 @@
     for (int i=0; i<[myPathArray count]; i++) 
     {
         MIMColorClass *c=[lineColorA objectAtIndex:i];
-        UIColor *_color=[[UIColor alloc]initWithRed:c.red green:c.green blue:c.blue alpha:c.alpha]; 
+        UIColor *_color=[[UIColor alloc]initWithRed:c.red green:c.green blue:c.blue alpha:c.alpha];
         [_color setStroke];  
         UIBezierPath *myP=[myPathArray objectAtIndex:i];
         [myP strokeWithBlendMode:kCGBlendModeNormal alpha:1.0];

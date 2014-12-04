@@ -70,8 +70,13 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    row = indexPath.row;
-    [self performSegueWithIdentifier:@"goToGraphDetail" sender:self];
+    if (gblAppDelegate.isNetworkReachable) {
+        row = indexPath.row;
+        [self performSegueWithIdentifier:@"goToGraphDetail" sender:self];
+    }
+    else {
+        alert(@"", MSG_NO_INTERNET);
+    }
 }
 
 

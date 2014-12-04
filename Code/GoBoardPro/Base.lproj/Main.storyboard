@@ -325,6 +325,13 @@
                                             <action selector="btnUserSignInTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="86R-oU-QhY"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.0.1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dUt-qQ-4HX">
+                                        <rect key="frame" x="601" y="460" width="80" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -337,6 +344,7 @@
                         <outlet property="imvGuestIndicator" destination="amr-cL-8Eg" id="fKQ-bT-qOa"/>
                         <outlet property="imvLogo" destination="UA2-rL-bD4" id="G6c-Mz-bOA"/>
                         <outlet property="imvUserIndicator" destination="nZK-TQ-9fK" id="P8b-fM-Jov"/>
+                        <outlet property="lblVersionNumber" destination="dUt-qQ-4HX" id="642-Ws-nTc"/>
                         <outlet property="txtGuestName" destination="VKD-vu-Fzd" id="c30-oN-aTb"/>
                         <outlet property="txtPassword" destination="HTr-tZ-j5T" id="CA6-oN-aWr"/>
                         <outlet property="txtUserId" destination="ROl-CD-kGU" id="4Bw-7Z-ok1"/>
@@ -471,7 +479,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YdP-uW-KJl">
-                                                    <rect key="frame" x="0.0" y="247" width="768" height="3"/>
+                                                    <rect key="frame" x="0.0" y="372" width="768" height="3"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1434,7 +1442,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GdK-lU-aoN">
-                                                    <rect key="frame" x="0.0" y="1217" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1264" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1629,7 +1637,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7zc-mS-vLg">
-                                                    <rect key="frame" x="0.0" y="1734" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1792" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921568627447" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2214,7 +2222,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ddM-Zv-SgB">
-                                                    <rect key="frame" x="0.0" y="681" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="734" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2730,7 +2738,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9h0-WS-Igr">
-                                                    <rect key="frame" x="0.0" y="1638" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1691" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -3127,7 +3135,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rfj-SN-Cl8">
-                                                    <rect key="frame" x="0.0" y="447" width="3840" height="3"/>
+                                                    <rect key="frame" x="0.0" y="537" width="4608" height="3"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -6218,8 +6226,8 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="pPR-kw-p2J"/>
-        <segue reference="x81-eT-qMM"/>
+        <segue reference="nXf-Vb-N5P"/>
+        <segue reference="Fxz-1K-EFG"/>
         <segue reference="vif-Tr-xCv"/>
         <segue reference="v6e-GR-DHO"/>
     </inferredMetricsTieBreakers>

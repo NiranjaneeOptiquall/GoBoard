@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface GraphView : UIView
--(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors;
+-(void)showStaticGraphWithValues :(NSArray *)myvalues andWithTitle :(NSArray *)myxtitle withColors:(NSArray*)colors groupTitle:(NSArray*)groupTitle;
 @end

@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface GraphDetailViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate,DropDownValueDelegate> {
+@interface GraphDetailViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate,DropDownValueDelegate, DatePickerDelegate> {
     NSMutableArray *mutArrGraphTypes;
     NSMutableArray *mutArrDataSource;
-    NSArray *xTitles;
+    NSArray *xTitles, *xAxisTitles;
+    NSArray *aryLocation;
+    NSString *selectedLocationValue;
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *txtStartDate;

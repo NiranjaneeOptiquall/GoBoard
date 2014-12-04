@@ -19,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
 //    _txtUserId.text = @"kapil";
 //    _txtPassword.text = @"Goboardpro1";
     [self initialUIConfig];
