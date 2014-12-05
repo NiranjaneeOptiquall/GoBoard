@@ -30,7 +30,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    mutArrGraphTypes = [[NSMutableArray alloc] init];
+    
+    [_lblXValue setText:@""];
     if (_graphType == 0) {
         [_vwDropDownBack setHidden:YES];
         CGRect frame = _vwGraphBack.frame;
@@ -49,8 +50,6 @@
         [self fetchLocation];
         [self dropDownControllerDidSelectValue:[aryLocation objectAtIndex:0] atIndex:0 sender:_txtLocation];
     }
-//    [self setDataSource];
-//    [self showGraph];
 }
 
 - (void)callIncidentStatisticsWebService {
@@ -70,28 +69,9 @@
             [aDict setObject:mutArrYValye forKey:@"xValue"];
             [mutArrDataSource addObject:aDict];
         }
+        aryColumns = mutArrDataSource[0][@"xTitle"];
         
-        
-        
-        
-        
-        
-       /* NSArray *aryIncidentCount = [aryAllRecords valueForKeyPath:@"Counts.@unionOfObjects.Count"];
-        NSArray *aryIncidentNames = [[aryAllRecords valueForKeyPath:@"Counts.@distinctUnionOfObjects.IncidentReportName"] firstObject];
-        mutArrDataSource = [NSMutableArray array];
-        for (NSInteger i = 0; i < [aryIncidentNames count]; i++) {
-            
-            NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
-            [aDict setObject:aryXAxis forKey:@"xTitle"];
-            [aDict setObject:aryIncidentNames[i] forKey:@"type"];
-            NSMutableArray *mutAry = [NSMutableArray array];
-            for (NSArray *ary in aryIncidentCount) {
-                [mutAry addObject:ary[i]];
-            }
-            [aDict setObject:mutAry forKey:@"xValue"];
-            [mutArrDataSource addObject:aDict];
-        }*/
-        [self showGraph:mutArrDataSource[0][@"xTitle"]];
+        [self showGraph];
             
     } failure:^(NSError *error, NSDictionary *response) {
         
@@ -107,44 +87,26 @@
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@&startDate=%@&endDate=%@&locationId=%@",UTILIZATION_GRAPH, [[User currentUser] userId], [aFormatter stringFromDate:aStartDate], [aFormatter stringFromDate:aEndDate], selectedLocationValue] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:UTILIZATION_GRAPH] complition:^(NSDictionary *response) {
         NSArray *aryAllRecords = [response objectForKey:@"Utilizations"];
         xAxisTitles = [aryAllRecords valueForKeyPath:@"Time"];
-       /* mutArrDataSource = [NSMutableArray array];
-        for (int i = 0; i < [aryAllRecords count]; i++) {
-            NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
-            NSMutableArray *mutArrXTitle = [NSMutableArray array];
-            NSMutableArray *mutArrYValye = [NSMutableArray array];
-            for (NSDictionary *dict in aryAllRecords[i][@"Counts"]) {
-                [mutArrXTitle addObject:dict[@"Location"]];
-                [mutArrYValye addObject:dict[@"Count"]];
-            }
-            [aDict setObject:mutArrXTitle forKey:@"xTitle"];
-            [aDict setObject:mutArrYValye forKey:@"xValue"];
-            [mutArrDataSource addObject:aDict];
-        }*/
-        
-        
-        NSArray *aryIncidentCount = [aryAllRecords valueForKeyPath:@"Counts.@unionOfObjects.Count"];
-        NSArray *aryIncidentNames = [[aryAllRecords valueForKeyPath:@"Counts.@distinctUnionOfObjects.Location"] firstObject];
+
+        NSArray *aryCount = [aryAllRecords valueForKeyPath:@"Counts.@unionOfObjects.Count"];
+        NSArray *aryNames = [[aryAllRecords valueForKeyPath:@"Counts.@distinctUnionOfObjects.Location"] firstObject];
         mutArrDataSource = [NSMutableArray array];
-        for (NSInteger i = 0; i < [aryIncidentNames count]; i++) {
+        for (NSInteger i = 0; i < [aryNames count]; i++) {
             
             NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
             NSMutableArray *mutArrXTitle = [NSMutableArray array];
-//            NSMutableArray *mutArrYValye = [NSMutableArray array];
-//            for (NSDictionary *dict in aryAllRecords[i][@"Counts"]) {
-                [mutArrXTitle addObject:xAxisTitles];
-//                [mutArrYValye addObject:dict[@"Count"]];
-//            }
+            [mutArrXTitle addObject:xAxisTitles];
             [aDict setObject:mutArrXTitle forKey:@"xTitle"];
-//            [aDict setObject:mutArrYValye forKey:@"xValue"];
             NSMutableArray *mutAry = [NSMutableArray array];
-            for (NSArray *ary in aryIncidentCount) {
+            for (NSArray *ary in aryCount) {
                 [mutAry addObject:[ary[i] stringValue]];
             }
             [aDict setObject:mutAry forKey:@"xValue"];
             [mutArrDataSource addObject:aDict];
         }
+        aryColumns = aryNames;
         
-        [self showGraph:aryIncidentNames];
+        [self showGraph];
         
     } failure:^(NSError *error, NSDictionary *response) {
         NSLog(@"%@", response);
@@ -172,10 +134,34 @@
 }
 */
 
+- (void)createHeader {
+    float width = 150; // CollectionView's cell width
+    float x = 5, y = 0;
+    float height = 22;
+    for (int i = 0; i < [aryColumns count]; i++) {
+        UILabel *aLbl = [[UILabel alloc] initWithFrame:CGRectMake(x, y, width, height)];
+        [aLbl setFont:[UIFont systemFontOfSize:17.0]];
+        [aLbl setTextColor:[UIColor whiteColor]];
+        [aLbl setBackgroundColor:[UIColor clearColor]];
+        [aLbl setText:[aryColumns objectAtIndex:i]];
+        [_scrlColHeader addSubview:aLbl];
+        x += width;
+    }
+    [_scrlColHeader setContentSize:CGSizeMake(x, 0)];
+}
 
--(void)showGraph:(NSArray*)categoryList
+-(void)showGraph
 {
+    CGRect frame = _tblStatistics.frame;
+    frame.size.height = [xAxisTitles count] * 40;
+    _tblStatistics.frame = frame;
+    frame = _colViewData.frame;
+    frame.size.height = _tblStatistics.frame.size.height;
+    _colViewData.frame = frame;
     [_tblStatistics reloadData];
+    [self createHeader];
+    [_colViewData reloadData];
+    [_scrlStatistics setContentSize:CGSizeMake(_scrlStatistics.frame.size.width, frame.size.height)];
     for (UIView *vw in _vwGraphDisplay.subviews) {
         [vw removeFromSuperview];
     }
@@ -183,9 +169,10 @@
     
     NSMutableArray *myvalues = [NSMutableArray array];
     NSMutableArray *myxtitle = [NSMutableArray array];
-    NSArray *colors = [self generateColors:[categoryList count]];
+    NSArray *colors = [self generateColors:[aryColumns count]];
     int index = 0;
-    for (NSString *str in categoryList) {
+    mutArrGraphTypes = [NSMutableArray array];
+    for (NSString *str in aryColumns) {
         [mutArrGraphTypes addObject:@{@"type":str, @"color":[colors objectAtIndex:index]}];
         index++;
     }
@@ -195,10 +182,12 @@
     }
     GraphView *graphView = nil;
     if (_graphType == 0) {
+        [_lblXValue setText:@"Month"];
         graphView = [[BarGraphView alloc] initWithFrame:_vwGraphDisplay.bounds];
         xTitles = myxtitle;
     }
     else {
+        [_lblXValue setText:@"Time"];
         graphView = [[LineGraphView alloc] initWithFrame:_vwGraphDisplay.bounds];
         xTitles = xAxisTitles;//[[mutArrDataSource firstObject] objectForKey:@"xTitle"];
     }
@@ -241,12 +230,7 @@
         row = [mutArrGraphTypes count];
     }
     else {
-        if (_graphType == 0) {
-            row = [mutArrDataSource count];
-        }
-        else {
-            row = [xAxisTitles count];
-        }
+        row = [xAxisTitles count];
     }
     return row;
 }
@@ -271,37 +255,65 @@
         else {
             [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
         }
-        if (indexPath.row == 9) {
-            NSLog(@"%@", indexPath);
-        }
         UILabel *aLblXValue = (UILabel *)[aCell.contentView viewWithTag:2];
-        UILabel *aLblFistValue = (UILabel *)[aCell.contentView viewWithTag:3];
-        UILabel *aLblSecondValue = (UILabel *)[aCell.contentView viewWithTag:4];
-        UILabel *aLblThirdValue = (UILabel *)[aCell.contentView viewWithTag:5];
-        UILabel *aLblTotalValue = (UILabel *)[aCell.contentView viewWithTag:6];
-        NSArray *lbl = @[aLblFistValue, aLblSecondValue, aLblThirdValue];
-        if (_graphType == 0) {
-            [aLblXValue setText:[xAxisTitles objectAtIndex:indexPath.row]];
-            NSDictionary *aDict = [mutArrDataSource objectAtIndex:indexPath.row];
-            for (int i = 0; i < [lbl count]; i++) {
-                [(UILabel *)[lbl objectAtIndex:i] setText:[[aDict objectForKey:@"xValue"] objectAtIndex:i]];
-            }
-            [aLblTotalValue setText:[NSString stringWithFormat:@"%ld", (long)([aLblFistValue.text integerValue] + [aLblSecondValue.text integerValue] + [aLblThirdValue.text integerValue])]];
-        }
-        else {
-            [aLblXValue setText:[xAxisTitles objectAtIndex:indexPath.row]];
-            for (int i = 0; i < [lbl count]; i++) {
-                NSDictionary *aDict = [mutArrDataSource objectAtIndex:i];
-                [(UILabel *)[lbl objectAtIndex:i] setText:[[aDict objectForKey:@"xValue"] objectAtIndex:indexPath.row]];
-            }
-            [aLblTotalValue setText:[NSString stringWithFormat:@"%ld", (long)([aLblFistValue.text integerValue] + [aLblSecondValue.text integerValue] + [aLblThirdValue.text integerValue])]];
-        }
-        
+        [aLblXValue setText:[xAxisTitles objectAtIndex:indexPath.row]];
     }
    
     return aCell;
 }
 
+
+#pragma mark - UICollectionViewDatasource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    NSInteger items = 0;
+    if (_graphType == 0) {
+        NSInteger count = [[[mutArrDataSource objectAtIndex:0] objectForKey:@"xValue"] count];
+        if (count < 4) {
+            count = 4;
+        }
+        items = [mutArrDataSource count] * count;
+    }
+    else {
+        NSInteger count = [mutArrDataSource count];
+        if (count < 4) {
+            count = 4;
+        }
+        items = count * [[[mutArrDataSource objectAtIndex:0] objectForKey:@"xValue"] count];
+    }
+    return items;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *aCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    UILabel *aLblData = (UILabel*)[aCell.contentView viewWithTag:2];
+    [aLblData setText:@""];
+    NSInteger index = 0;
+    if (_graphType == 0) {
+        index = (indexPath.item % mutArrDataSource.count);
+        if (indexPath.item < [mutArrDataSource count] * [[[mutArrDataSource objectAtIndex:0] objectForKey:@"xValue"] count]) {
+            aLblData.text = [[[mutArrDataSource objectAtIndex:indexPath.item % mutArrDataSource.count] objectForKey:@"xValue"] objectAtIndex:indexPath.item / mutArrDataSource.count];
+        }
+    }
+    else {
+        NSInteger count = [mutArrDataSource[0][@"xValue"] count];
+        index = (indexPath.item % count);
+        if (indexPath.item < [mutArrDataSource count] * [[[mutArrDataSource objectAtIndex:0] objectForKey:@"xValue"] count]) {
+            aLblData.text = [[[mutArrDataSource objectAtIndex:indexPath.item / count] objectForKey:@"xValue"] objectAtIndex:indexPath.item % count];
+        }
+    }
+    if (index % 2 == 0) {
+        [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
+    }
+    else {
+        [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
+    }
+    return aCell;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    _scrlColHeader.contentOffset = CGPointMake(_colViewData.contentOffset.x, 0);
+}
 
 #pragma mark - UITextFieldDelegate
 
@@ -322,15 +334,19 @@
     else if ([textField isEqual:_txtLocation]) {
         DropDownPopOver *dropDown = (DropDownPopOver *)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         [dropDown setDelegate:self];
-        [dropDown showDropDownWith:aryLocation view:_txtLocation key:@"title"];
+        [dropDown showDropDownWith:aryLocation view:_txtLocation key:@"name"];
     }
     return NO;
 }
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     [sender setText:[value valueForKey:@"name"]];
-    selectedLocationValue = [value valueForKey:@"value"];
-    [self callUtilizationCountStatisticsWebService];
+    if (![selectedLocationValue isEqualToString:[value valueForKey:@"value"]]) {
+        selectedLocationValue = [value valueForKey:@"value"];
+        [self callUtilizationCountStatisticsWebService];
+    }
+        
+    
 }
 
 - (void)datePickerDidSelect:(NSDate *)date forObject:(id)field {
