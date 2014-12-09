@@ -37,9 +37,7 @@ AppDelegate *gblAppDelegate;
 
 #define CARE_PROVIDED_BY                        @[@{@"title":@"Staff", @"id": @"1"}, @{@"title":@"Medical Personnel", @"id": @"2"}, @{@"title":@"Security", @"id": @"3"}, @{@"title":@"911", @"id":@"4"}, @{@"title":@"Refused Care", @"id":@"5"}]
 
-#define WEEKDAYS                                @[@{@"title":@"Sunday", @"id": @"1"}, @{@"title":@"Monday", @"id": @"2"}, @{@"title":@"Tuesday", @"id": @"3"}, @{@"title":@"Wednesday", @"id": @"4"}, @{@"title":@"Thursday", @"id": @"5"}, @{@"title":@"Friday", @"id": @"6"}, @{@"title":@"Saturday", @"id": @"7"}]
-
-#define MONTHS                                  @[@{@"title":@"Jan", @"id": @"1"}, @{@"title":@"Feb", @"id": @"2"}, @{@"title":@"Mar", @"id": @"3"}, @{@"title":@"Apr", @"id": @"4"}, @{@"title":@"May", @"id": @"5"}, @{@"title":@"Jun", @"id": @"6"}, @{@"title":@"Jul", @"id": @"7"}, @{@"title":@"Aug", @"id": @"8"}, @{@"title":@"Sep", @"id": @"9"}, @{@"title":@"Oct", @"id": @"10"}, @{@"title":@"Nov", @"id": @"11"}, @{@"title":@"Dec", @"id": @"12"}]
+#define MONTHS                                  @[@{@"name":@"Jan", @"id": @"1"}, @{@"name":@"Feb", @"id": @"2"}, @{@"name":@"Mar", @"id": @"3"}, @{@"name":@"Apr", @"id": @"4"}, @{@"name":@"May", @"id": @"5"}, @{@"name":@"Jun", @"id": @"6"}, @{@"name":@"Jul", @"id": @"7"}, @{@"name":@"Aug", @"id": @"8"}, @{@"name":@"Sep", @"id": @"9"}, @{@"name":@"Oct", @"id": @"10"}, @{@"name":@"Nov", @"id": @"11"}, @{@"name":@"Dec", @"id": @"12"}]
 
 #define HEAD_INJURY                             @[@"Eye", @"Ear", @"Head", @"Jaw", @"Mouth", @"Neck", @"Nose", @"Tooth"]
 #define ARM_INJURY                              @[@"Arm", @"Elbow", @"Finger/Thumb", @"Forearm", @"Hand", @"Shoulder", @"Wrist"]
@@ -84,6 +82,8 @@ typedef enum : NSUInteger {
 #define FORM_HISTORY_POST           @"FormHistory"
 #define INCIDENT_GRAPH              @"IncidentGraph"
 #define UTILIZATION_GRAPH           @"UtilizationGraph"
+#define TASK_SETUP                  @"TaskSetup"
+#define NOTIFY_EMAIL_GROUP          @"NotificationEmailGroup"
 
 
 #define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET"}

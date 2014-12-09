@@ -18,6 +18,7 @@
     NSArray *aryColumns;
 }
 
+@property (weak, nonatomic) IBOutlet UILabel *lblGraphTitle;
 @property (weak, nonatomic) IBOutlet UITextField *txtStartDate;
 @property (weak, nonatomic) IBOutlet UITextField *txtEndDate;
 @property (weak, nonatomic) IBOutlet UITextField *txtLocation;

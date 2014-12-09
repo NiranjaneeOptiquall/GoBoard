@@ -33,9 +33,7 @@
     [super viewDidLoad];
     if (![[User currentUser] isAdmin]) {
         [_btnTools setHidden:YES];
-        CGPoint center = _btnSurvey.center;
-        center.x = self.view.center.x;
-        [_btnSurvey setCenter:center];
+        [_btnSurvey setCenter:_btnTools.center];
     }
     [_lblWelcomeUser setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
     [_lblPendingCount.layer setCornerRadius:5.0];

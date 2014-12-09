@@ -8,15 +8,27 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "UserFacility.h"
+#import "UserLocation.h"
+#import "UserPosition.h"
 
 @interface ToolsViewController : UIViewController <UITextFieldDelegate, DropDownValueDelegate> {
     NSInteger totalDropDownFields;
+    NSArray *aryTaskList, *aryPositions, *aryLocation, *aryFacilities, *aryEmailGroup;
+    NSInteger selectedTaskIndex;
+    NSMutableDictionary *dictTaskDetail;
+    UserFacility *selectedFacility;
+    UserLocation *selectedLocation;
+    UserPosition *selectedPosition;
+    NSInteger selectedNotificationType;
+    NSString *strRecurrence;
 }
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 @property (weak, nonatomic) IBOutlet UIButton *btnSetUpActionAdd;
 @property (weak, nonatomic) IBOutlet UIButton *btnSetUpActionEdit;
 @property (weak, nonatomic) IBOutlet UIButton *btnSetUpActionCopy;
+@property (weak, nonatomic) IBOutlet UIImageView *imvDropDownArrow;
 @property (weak, nonatomic) IBOutlet UITextField *txtSelectTask;
 @property (weak, nonatomic) IBOutlet UIImageView *imvSelectTaskBG;
 @property (weak, nonatomic) IBOutlet UITextField *txtPosition;

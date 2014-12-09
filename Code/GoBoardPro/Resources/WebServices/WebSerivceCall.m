@@ -304,7 +304,7 @@
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllIncidentReports];
-        [self insertIncidentReportSettings:[response objectForKey:@"IncidentReportSetups"]];
+        [self insertIncidentReportSettings:[response objectForKey:@"IncidentReportSetup"]];
         isWSComplete = YES;
         if (complition)
             complition();

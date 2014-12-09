@@ -180,7 +180,7 @@
 		33CFBBDA19D2C28300D86E68 /* update_profile_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBD819D2C28300D86E68 /* update_profile_btn@2x.png */; };
 		33CFBBDE19D2CA6300D86E68 /* UpdateProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33CFBBDD19D2CA6300D86E68 /* UpdateProfileViewController.m */; };
 		33CFBBEC19D2D21300D86E68 /* accident_report@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE019D2D21300D86E68 /* accident_report@2x.png */; };
-		33CFBBED19D2D21300D86E68 /* daily_log_icon@@x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE119D2D21300D86E68 /* daily_log_icon@@x.png */; };
+		33CFBBED19D2D21300D86E68 /* daily_log_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE119D2D21300D86E68 /* daily_log_icon@2x.png */; };
 		33CFBBEE19D2D21300D86E68 /* emergency_response_plan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE219D2D21300D86E68 /* emergency_response_plan@2x.png */; };
 		33CFBBEF19D2D21300D86E68 /* forms@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE319D2D21300D86E68 /* forms@2x.png */; };
 		33CFBBF019D2D21300D86E68 /* graphs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CFBBE419D2D21300D86E68 /* graphs@2x.png */; };
@@ -576,7 +576,7 @@
 		33CFBBDC19D2CA6300D86E68 /* UpdateProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateProfileViewController.h; sourceTree = "<group>"; };
 		33CFBBDD19D2CA6300D86E68 /* UpdateProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateProfileViewController.m; sourceTree = "<group>"; };
 		33CFBBE019D2D21300D86E68 /* accident_report@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accident_report@2x.png"; sourceTree = "<group>"; };
-		33CFBBE119D2D21300D86E68 /* daily_log_icon@@x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daily_log_icon@@x.png"; sourceTree = "<group>"; };
+		33CFBBE119D2D21300D86E68 /* daily_log_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daily_log_icon@2x.png"; sourceTree = "<group>"; };
 		33CFBBE219D2D21300D86E68 /* emergency_response_plan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emergency_response_plan@2x.png"; sourceTree = "<group>"; };
 		33CFBBE319D2D21300D86E68 /* forms@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "forms@2x.png"; sourceTree = "<group>"; };
 		33CFBBE419D2D21300D86E68 /* graphs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graphs@2x.png"; sourceTree = "<group>"; };
@@ -1331,7 +1331,7 @@
 			children = (
 				3366BC231A176808003FA3BF /* sync_icon@2x.png */,
 				33CFBBE019D2D21300D86E68 /* accident_report@2x.png */,
-				33CFBBE119D2D21300D86E68 /* daily_log_icon@@x.png */,
+				33CFBBE119D2D21300D86E68 /* daily_log_icon@2x.png */,
 				33CFBBE219D2D21300D86E68 /* emergency_response_plan@2x.png */,
 				33CFBBE319D2D21300D86E68 /* forms@2x.png */,
 				33CFBBE419D2D21300D86E68 /* graphs@2x.png */,
@@ -1903,7 +1903,7 @@
 				3337805119E6537300362F82 /* building_supervisor@2x.png in Resources */,
 				332E3A4719D541950088AB61 /* faded_n@2x.png in Resources */,
 				33D5A5AC19E40F1A00344278 /* DropDownField.xib in Resources */,
-				33CFBBED19D2D21300D86E68 /* daily_log_icon@@x.png in Resources */,
+				33CFBBED19D2D21300D86E68 /* daily_log_icon@2x.png in Resources */,
 				33CD6B5E19DA7E840024A02D /* figure_leftHand.png in Resources */,
 				33EB4A9E19D1A3A2008EF8FD /* text_box_name@2x.png in Resources */,
 				33EB4A7419D19A65008EF8FD /* sign_in_btn@2x.png in Resources */,
@@ -2147,7 +2147,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "8ee0261d-b1a8-4fd2-9346-702963382311";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -2184,7 +2184,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "8ee0261d-b1a8-4fd2-9346-702963382311";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -2209,7 +2209,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8ee0261d-b1a8-4fd2-9346-702963382311";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 			};
 			name = Debug;
 		};
@@ -2231,7 +2231,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8ee0261d-b1a8-4fd2-9346-702963382311";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 			};
 			name = Release;
 		};
@@ -2250,6 +2250,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Debug;
@@ -2265,6 +2266,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b2ea18b5-ec41-42bc-86d3-b5c75bfbd167";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Release;

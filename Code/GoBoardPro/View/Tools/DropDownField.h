@@ -10,6 +10,9 @@
 
 @interface DropDownField : UIView
 @property (weak, nonatomic) IBOutlet UITextField *txtDropdownField;
+@property (weak, nonatomic) IBOutlet UITextField *txtCode;
 @property (weak, nonatomic) IBOutlet UIButton *btnRemoveDropdown;
+
+@property (strong, nonatomic) NSString *strDorpdownId;
 
 @end

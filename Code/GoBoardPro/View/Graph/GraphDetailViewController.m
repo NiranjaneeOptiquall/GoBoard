@@ -37,12 +37,27 @@
         CGRect frame = _vwGraphBack.frame;
         frame.origin.y = _vwDropDownBack.frame.origin.y;
         _vwGraphBack.frame = frame;
-        _lblXValue.text = @"Month";
+        
+        float y = CGRectGetMaxY(frame) + 31;
+        frame = _lblXValue.frame;
+        frame.origin.y = y;
+        _lblXValue.frame = frame;
+        
+        frame = _scrlColHeader.frame;
+        frame.origin.y = y;
+        _scrlColHeader.frame = frame;
+        
+        frame = _scrlStatistics.frame;
+        frame.origin.y = CGRectGetMaxY(_scrlColHeader.frame);
+        frame.size.height = self.view.frame.size.height - frame.origin.y;
+        _scrlStatistics.frame = frame;
+        
+        [_lblGraphTitle setText:@"Incident Graph"];
         [self callIncidentStatisticsWebService];
     }
     else {
         [_vwDropDownBack setHidden:NO];
-        _lblXValue.text = @"Time";
+        [_lblGraphTitle setText:@"Utilization Graph"];
         NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         _txtStartDate.text = [aFormatter stringFromDate:[NSDate date]];
