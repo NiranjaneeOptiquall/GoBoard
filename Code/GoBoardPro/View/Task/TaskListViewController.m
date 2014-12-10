@@ -280,7 +280,7 @@
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
-        alert(@"", MSG_NO_INTERNET);
+//        alert(@"", MSG_NO_INTERNET);
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
     NSArray *a =[mutArrTaskList filteredArrayUsingPredicate:predicate];

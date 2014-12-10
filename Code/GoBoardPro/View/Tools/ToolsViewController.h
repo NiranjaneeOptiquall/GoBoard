@@ -24,6 +24,7 @@
     NSString *strRecurrence;
 }
 
+@property (weak, nonatomic) IBOutlet UITextField *txtStatus;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 @property (weak, nonatomic) IBOutlet UIButton *btnSetUpActionAdd;
 @property (weak, nonatomic) IBOutlet UIButton *btnSetUpActionEdit;

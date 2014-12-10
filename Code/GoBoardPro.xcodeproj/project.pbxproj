@@ -148,6 +148,8 @@
 		33C4D0221A28460C005EC3FA /* AccidentPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0211A28460C005EC3FA /* AccidentPerson.m */; };
 		33C4D0251A28460D005EC3FA /* AccidentReportSubmit.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0241A28460D005EC3FA /* AccidentReportSubmit.m */; };
 		33C4D0281A289441005EC3FA /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0271A289441005EC3FA /* InjuryDetail.m */; };
+		33C7957D1A3859CB0029FA21 /* DailyLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C7957C1A3859CB0029FA21 /* DailyLogViewController.m */; };
+		33C795801A3879FA0029FA21 /* DailyLogReviewProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C7957F1A3879FA0029FA21 /* DailyLogReviewProgressViewController.m */; };
 		33CD6B5D19DA7E840024A02D /* figure_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CD6B5619DA7E840024A02D /* figure_head.png */; };
 		33CD6B5E19DA7E840024A02D /* figure_leftHand.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CD6B5719DA7E840024A02D /* figure_leftHand.png */; };
 		33CD6B5F19DA7E840024A02D /* figure_leftLeg.png in Resources */ = {isa = PBXBuildFile; fileRef = 33CD6B5819DA7E840024A02D /* figure_leftLeg.png */; };
@@ -534,6 +536,10 @@
 		33C4D0241A28460D005EC3FA /* AccidentReportSubmit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportSubmit.m; sourceTree = "<group>"; };
 		33C4D0261A289441005EC3FA /* InjuryDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryDetail.h; sourceTree = "<group>"; };
 		33C4D0271A289441005EC3FA /* InjuryDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryDetail.m; sourceTree = "<group>"; };
+		33C7957B1A3859CB0029FA21 /* DailyLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyLogViewController.h; sourceTree = "<group>"; };
+		33C7957C1A3859CB0029FA21 /* DailyLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyLogViewController.m; sourceTree = "<group>"; };
+		33C7957E1A3879FA0029FA21 /* DailyLogReviewProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyLogReviewProgressViewController.h; sourceTree = "<group>"; };
+		33C7957F1A3879FA0029FA21 /* DailyLogReviewProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyLogReviewProgressViewController.m; sourceTree = "<group>"; };
 		33CD6B5619DA7E840024A02D /* figure_head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = figure_head.png; sourceTree = "<group>"; };
 		33CD6B5719DA7E840024A02D /* figure_leftHand.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = figure_leftHand.png; sourceTree = "<group>"; };
 		33CD6B5819DA7E840024A02D /* figure_leftLeg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = figure_leftLeg.png; sourceTree = "<group>"; };
@@ -1206,6 +1212,7 @@
 			children = (
 				335DECB919EBCDC000FFFD4D /* AdminTaskList */,
 				33CFBC3319D2E77900D86E68 /* AccidentialRep */,
+				33C7957A1A3859A50029FA21 /* DailyLog */,
 				33CFBC3419D2E77900D86E68 /* EmergencyRespPlan */,
 				33EB4A4D19D18F03008EF8FD /* ForgotPassword */,
 				33D5A59219E3F13000344278 /* Graph */,
@@ -1213,6 +1220,7 @@
 				33EB4A4F19D18F03008EF8FD /* Home */,
 				33CFBC3519D2E77900D86E68 /* IncidentRep */,
 				3397CACE19D0347700788153 /* LoginVC */,
+				33C795791A3859A50029FA21 /* MemoBoard */,
 				33EB4A4C19D18F03008EF8FD /* Registration */,
 				3397CAD119D0347700788153 /* Splash */,
 				33CFBC3619D2E77900D86E68 /* Sop */,
@@ -1263,6 +1271,24 @@
 				33B6368619D9327800875A1D /* UtilizationCountTableViewCell.m */,
 			);
 			name = UtilizationCell;
+			sourceTree = "<group>";
+		};
+		33C795791A3859A50029FA21 /* MemoBoard */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MemoBoard;
+			sourceTree = "<group>";
+		};
+		33C7957A1A3859A50029FA21 /* DailyLog */ = {
+			isa = PBXGroup;
+			children = (
+				33C7957B1A3859CB0029FA21 /* DailyLogViewController.h */,
+				33C7957C1A3859CB0029FA21 /* DailyLogViewController.m */,
+				33C7957E1A3879FA0029FA21 /* DailyLogReviewProgressViewController.h */,
+				33C7957F1A3879FA0029FA21 /* DailyLogReviewProgressViewController.m */,
+			);
+			path = DailyLog;
 			sourceTree = "<group>";
 		};
 		33CD6B5519DA7E7A0024A02D /* Accident */ = {
@@ -1943,6 +1969,7 @@
 				332B60E51A146CB700B7C7EF /* AFImageRequestOperation.m in Sources */,
 				332E3A3519D535060088AB61 /* SOPDetailViewController.m in Sources */,
 				33FCAF891A1C70D9005EA0DB /* TaskList.m in Sources */,
+				33C7957D1A3859CB0029FA21 /* DailyLogViewController.m in Sources */,
 				3337809719E6B6EA00362F82 /* YAxisBand.m in Sources */,
 				3397CAD619D034C000788153 /* SplashViewController.m in Sources */,
 				3354198119E7A931009B2B20 /* SignatureView.m in Sources */,
@@ -2043,6 +2070,7 @@
 				332F546A1A234BD800F2A40A /* CareProvidedType.m in Sources */,
 				33DF9A4F19DC24540055841D /* DatePopOverView.m in Sources */,
 				3337809419E6B6EA00362F82 /* PageControl.m in Sources */,
+				33C795801A3879FA0029FA21 /* DailyLogReviewProgressViewController.m in Sources */,
 				332B61061A14BE1200B7C7EF /* UserLocation.m in Sources */,
 				332B60EA1A146CB700B7C7EF /* AFXMLRequestOperation.m in Sources */,
 				332B60E91A146CB700B7C7EF /* AFURLConnectionOperation.m in Sources */,

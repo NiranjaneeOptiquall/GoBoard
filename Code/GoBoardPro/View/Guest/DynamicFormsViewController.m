@@ -95,12 +95,12 @@
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
             [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
             [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
-            if ([aDict[@"responseType"] isEqualToString:@"dropdown"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
+            if ([aDict[@"responseType"] isEqualToString:@"dropdown"]) {
                 NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name MATCHES[cd] %@", [aDict objectForKey:@"answer"]]] firstObject];
                 [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
                 [dict setObject:resp[@"value"] forKey:@"ResponseId"];
             }
-            else if ([aDict[@"responseType"] isEqualToString:@"date"] && ![[aDict objectForKey:@"answer"] isEqualToString:@""]) {
+            else if ([aDict[@"responseType"] isEqualToString:@"date"]) {
                 NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
                 [aFormatter setDateFormat:@"MM/dd/yyyy"];
                 NSDate *aDate = [aFormatter dateFromString:aDict[@"answer"]];

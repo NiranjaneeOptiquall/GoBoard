@@ -10,10 +10,11 @@
 #import "DropDownField.h"
 
 #define DAILY_DROPDOWN_VALUE    @[@"Min(s)", @"Hour(s)"]
+#define TASK_STATUS             @[@"Active", @"Inactive"]
 #define NUMBER_OF_DAY           @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10",@"11", @"12", @"13", @"14", @"15", @"16", @"17", @"18", @"19", @"20",@"21", @"22", @"23", @"24", @"25", @"26", @"27", @"28", @"29", @"30",@"31"]
 #define NUMBER_OF_WEEKS         @[@{@"name":@"First", @"id":@"1"}, @{@"name":@"Second", @"id":@"2"}, @{@"name":@"Third", @"id":@"3"}, @{@"name":@"Fourth", @"id":@"4"}]
 
-#define WEEKDAYS                                @[@{@"name":@"Sunday", @"id": @"1"}, @{@"name":@"Monday", @"id": @"2"}, @{@"name":@"Tuesday", @"id": @"3"}, @{@"name":@"Wednesday", @"id": @"4"}, @{@"name":@"Thursday", @"id": @"5"}, @{@"name":@"Friday", @"id": @"6"}, @{@"name":@"Saturday", @"id": @"7"}]
+#define WEEKDAYS                @[@{@"name":@"Sunday", @"id": @"1"}, @{@"name":@"Monday", @"id": @"2"}, @{@"name":@"Tuesday", @"id": @"3"}, @{@"name":@"Wednesday", @"id": @"4"}, @{@"name":@"Thursday", @"id": @"5"}, @{@"name":@"Friday", @"id": @"6"}, @{@"name":@"Saturday", @"id": @"7"}]
 
 @interface ToolsViewController ()
 
@@ -419,7 +420,7 @@
 }
 
 - (void)getTastDetail {
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%ld", TASK_SETUP, (long)selectedTaskIndex] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", TASK_SETUP, [aryTaskList[selectedTaskIndex][@"Id"] stringValue]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         dictTaskDetail = [self removeNullFromDictionary:[NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"Task"]]];
     
         [self populateTaskDetailOnScreen];
@@ -477,7 +478,7 @@
         if (![[dictSetting[@"RecurrenceValue"] stringValue] isEqualToString:@""]) {
             _txtDailyEvery.text = [dictSetting[@"RecurrenceValue"] stringValue];
             [_btnDailyEvery setSelected:YES];
-            if (![dictSetting[@"RecurrenceTimeframe"] isEqualToString:@"minute"]) {
+            if ([dictSetting[@"RecurrenceTimeframe"] isEqualToString:@"minute"]) {
                 _txtDailyDays.text = DAILY_DROPDOWN_VALUE[0];
             }
             else {
@@ -728,7 +729,13 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if ([textField isEqual:_txtSelectTask]) {
+    if ([textField isEqual:_txtStatus]) {
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        [dropDown showDropDownWith:TASK_STATUS view:textField key:nil];
+        return NO;
+    }
+    else if ([textField isEqual:_txtSelectTask]) {
         
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
