@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "GuestFormViewController.h"
+#import "DailyLog.h"
 
 @interface LoginViewController ()
 
@@ -19,6 +20,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"DailyLog"];
+//    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DailyLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+////    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shouldSync == 1"];
+//    NSAttributeDescription *attribute = [entity.attributesByName objectForKey:@"userId"];
+//    NSExpressionDescription* objectIdDesc = [NSExpressionDescription new];
+//    objectIdDesc.name = @"objectID";
+//    objectIdDesc.expression = [NSExpression expressionForEvaluatedObject];
+//    objectIdDesc.expressionResultType = NSObjectIDAttributeType;
+//    [request setPropertiesToFetch:@[objectIdDesc, @"userId", @"date", @"desc", @"includeInEndOfDayReport"]];
+//    [request setPropertiesToGroupBy:@[@"userId"]];
+////    [request setPredicate:predicate];
+//    [request setResultType:NSDictionaryResultType];
+//    NSError *error = nil;
+//    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    
+    
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
 //    _txtUserId.text = @"kapil";
 //    _txtPassword.text = @"Goboardpro1";
@@ -102,18 +120,24 @@
         
         User *currentUser = [User currentUser];
         currentUser.firstName = [response objectForKey:@"FirstName"];
+        currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
         currentUser.lastName = [response objectForKey:@"LastName"];
+        currentUser.mobile = [response objectForKey:@"Mobile"];
+        currentUser.phone = [response objectForKey:@"Phone"];
+        currentUser.Email = [response objectForKey:@"Email"];
+        currentUser.clientName = [response objectForKey:@"ClientName"];
         currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
         currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
         currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
-//        NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-//        if (prevUserId) {
-//            if (![prevUserId isEqualToString:currentUser.userId]) {
-//                [self resetLocalDatabaseForNewUser];
-//            }
-//        }
+        NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+        if (prevUserId) {
+            if (![prevUserId isEqualToString:currentUser.userId]) {
+                [self deleteAllDailyLogData];
+            }
+        }
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
-        [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"clientId"];
+        [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
+        [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
         [[NSUserDefaults standardUserDefaults] synchronize];
 //            if (currentUser.isAdmin) {
 //                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
@@ -126,6 +150,20 @@
         alert(@"", [response objectForKey:@"ErrorMessage"]);
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
+}
+
+- (void)deleteAllDailyLogData {
+    NSFetchRequest * allRecords = [[NSFetchRequest alloc] init];
+    [allRecords setEntity:[NSEntityDescription entityForName:@"DailyLog" inManagedObjectContext:gblAppDelegate.managedObjectContext]];
+    [allRecords setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    NSError * error = nil;
+    NSArray * records = [gblAppDelegate.managedObjectContext executeFetchRequest:allRecords error:&error];
+    //error handling goes here
+    for (NSManagedObject * rec in records) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    NSError *saveError = nil;
+    [gblAppDelegate.managedObjectContext save:&saveError];
 }
 
 - (IBAction)btnForgotPasswordTapped:(id)sender {

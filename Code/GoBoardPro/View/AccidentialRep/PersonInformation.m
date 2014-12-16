@@ -111,7 +111,6 @@
 
 - (void)setRequiredFields:(NSArray*)fields {
     requiredFields = fields;
-    
     if ([requiredFields containsObject:@"memberId"]) [_markerMemberId setHidden:NO];
     if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
@@ -355,6 +354,13 @@
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
         allowEditing = NO;
     }
+    else if ([textField isEqual:_txtState]) {
+        [self setKeepViewInFrame:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        [dropDown showDropDownWith:STATES view:textField key:nil];
+        allowEditing = NO;
+    }
     else if ([textField isEqual:_txtActivity]) {
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
@@ -395,7 +401,12 @@
 }
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
-    [sender setText:[value valueForKey:@"name"]];
+    if ([value isKindOfClass:[NSString class]]) {
+        [sender setText:value];
+    }
+    else {
+        [sender setText:[value valueForKey:@"name"]];
+    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -419,7 +430,13 @@
         }
         return YES;
     }
-    if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+    else if ([textField isEqual:_txtZip]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+    }
+    else if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
         NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;

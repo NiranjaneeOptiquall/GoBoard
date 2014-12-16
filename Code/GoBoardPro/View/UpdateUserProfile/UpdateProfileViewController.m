@@ -204,6 +204,7 @@
 
 - (AddCertificateView*)addCertificationView {
     AddCertificateView *aCertView = [[[NSBundle mainBundle] loadNibNamed:@"AddCertificateView" owner:self options:nil] firstObject];
+    aCertView.parentView = self;
     CGRect frame = aCertView.frame;
     [aCertView.btnRemove addTarget:self action:@selector(btnRemoveCertificateTapped:) forControlEvents:UIControlEventTouchUpInside];
     frame.origin.y = totalCertificateCount * frame.size.height;

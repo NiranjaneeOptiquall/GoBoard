@@ -16,6 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imvIcon;
 @property (weak, nonatomic) IBOutlet UILabel *lblFormTitle;
+@property (weak, nonatomic) IBOutlet UILabel *lblNoRecord;
 @property (weak, nonatomic) IBOutlet UITableView *tblFormList;
 
 @property (assign, nonatomic) NSInteger guestFormType;

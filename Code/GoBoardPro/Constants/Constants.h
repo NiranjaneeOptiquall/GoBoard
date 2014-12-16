@@ -22,20 +22,7 @@ AppDelegate *gblAppDelegate;
 #define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
 
 
-#define LOCATION_VALUES                 @[@{@"title":@"Main Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Swimming Pool", @"id": @"3"}, @{@"title":@"Tennis Court", @"id": @"4"}]
-
-#define POSITION_VALUES                 @[@{@"title":@"Manager", @"id": @"1"}, @{@"title":@"Assistant", @"id": @"2"}, @{@"title":@"Trainer", @"id": @"3"}, @{@"title":@"Medical Personnel", @"id": @"4"}]
-
-#define FACILITY_VALUES                 @[@{@"title":@"Gymnasium", @"id": @"1"}, @{@"title":@"Fitness Center", @"id": @"2"}, @{@"title":@"Games", @"id": @"3"}, @{@"title":@"Cafeteria", @"id": @"4"}]
-
-#define INJURY_TYPE_GENERAL                     @[@{@"title":@"Allergic Reaction", @"id": @"1"}, @{@"title":@"Diabetic Emergency", @"id": @"2"}, @{@"title":@"Fever", @"id": @"3"}, @{@"title":@"Gestrointestinal", @"id": @"4"}, @{@"title":@"Heart", @"id": @"5"}, @{@"title":@"Heat", @"id": @"6"}, @{@"title":@"Other", @"id": @"10"}]
-
-#define INJURY_TYPE_BODY_PART                   @[@{@"title":@"Abrasion", @"id": @"1"}, @{@"title":@"Bruise", @"id": @"2"}, @{@"title":@"Bleeding", @"id": @"3"}, @{@"title":@"Cut", @"id": @"4"}, @{@"title":@"Dental", @"id": @"5"}, @{@"title":@"Fracture", @"id": @"6"}, @{@"title":@"Spinal Injury", @"id": @"7"}, @{@"title":@"Strain", @"id": @"8"}, @{@"title":@"Other", @"id": @"10"}]
-
-
-#define ACTION_TAKEN                            @[@{@"title":@"Ice Applied", @"id": @"1"}, @{@"title":@"Provided Bandages", @"id": @"2"}, @{@"title":@"Called Security", @"id": @"3"}, @{@"title":@"Called 911"}]
-
-#define CARE_PROVIDED_BY                        @[@{@"title":@"Staff", @"id": @"1"}, @{@"title":@"Medical Personnel", @"id": @"2"}, @{@"title":@"Security", @"id": @"3"}, @{@"title":@"911", @"id":@"4"}, @{@"title":@"Refused Care", @"id":@"5"}]
+#define STATES                          @[@"AL", @"AK", @"AZ", @"AR", @"CA", @"CO", @"CT", @"DE", @"DC", @"FL", @"GA", @"HI", @"ID", @"IL", @"IN", @"IA", @"KS", @"KY", @"LA", @"ME", @"MD", @"MA", @"MI", @"MN", @"MS", @"MO", @"MT", @"NE", @"NV", @"NH", @"NJ", @"NM", @"NY", @"NC", @"ND", @"OH", @"OK", @"OR", @"PA", @"RI", @"SC", @"SD", @"TN", @"TX", @"UT", @"VT", @"VA", @"WA", @"WV", @"WI", @"WY"]
 
 #define MONTHS                                  @[@{@"name":@"Jan", @"id": @"1"}, @{@"name":@"Feb", @"id": @"2"}, @{@"name":@"Mar", @"id": @"3"}, @{@"name":@"Apr", @"id": @"4"}, @{@"name":@"May", @"id": @"5"}, @{@"name":@"Jun", @"id": @"6"}, @{@"name":@"Jul", @"id": @"7"}, @{@"name":@"Aug", @"id": @"8"}, @{@"name":@"Sep", @"id": @"9"}, @{@"name":@"Oct", @"id": @"10"}, @{@"name":@"Nov", @"id": @"11"}, @{@"name":@"Dec", @"id": @"12"}]
 
@@ -84,9 +71,12 @@ typedef enum : NSUInteger {
 #define UTILIZATION_GRAPH           @"UtilizationGraph"
 #define TASK_SETUP                  @"TaskSetup"
 #define NOTIFY_EMAIL_GROUP          @"NotificationEmailGroup"
+#define MEMO                        @"Memo"
+#define DAILY_MATRICS             @"DailyMetrics"
+#define DAILY_LOG                   @"DailyLog"
 
 
-#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET"}
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST"}
 
 
 

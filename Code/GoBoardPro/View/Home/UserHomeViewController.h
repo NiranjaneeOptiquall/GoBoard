@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
 @property (weak, nonatomic) IBOutlet UIButton *btnDailyLog;
 @property (weak, nonatomic) IBOutlet UILabel *lblPendingCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblMemoCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblWelcomeUser;
 
 

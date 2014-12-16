@@ -139,6 +139,13 @@
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="conditionList" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="conditionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
+    <entity name="DailyLog" representedClassName="DailyLog" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="includeInEndOfDayReport" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shouldSync" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="EmergencyPersonnel" representedClassName="EmergencyPersonnel" syncable="YES">
         <attribute name="additionalInformation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="badgeNumber" optional="YES" attributeType="String" syncable="YES"/>
@@ -246,6 +253,13 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="legInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
+    </entity>
+    <entity name="Memoboard" representedClassName="Memoboard" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subject" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="to" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="NatureList" representedClassName="NatureList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -449,6 +463,7 @@
         <element name="BodyPartInjuryType" positionX="97" positionY="297" width="128" height="88"/>
         <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="88"/>
         <element name="ConditionList" positionX="-639" positionY="32" width="128" height="103"/>
+        <element name="DailyLog" positionX="-299" positionY="-549" width="128" height="118"/>
         <element name="EmergencyPersonnel" positionX="475" positionY="-90" width="128" height="223"/>
         <element name="EquipmentList" positionX="-612" positionY="212" width="128" height="103"/>
         <element name="ERPCategory" positionX="-34" positionY="-972" width="128" height="88"/>
@@ -462,11 +477,14 @@
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="373"/>
         <element name="InjuryDetail" positionX="423" positionY="623" width="128" height="148"/>
         <element name="LegInjuryList" positionX="-389" positionY="560" width="128" height="88"/>
+        <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
         <element name="Person" positionX="133" positionY="-540" width="128" height="403"/>
+        <element name="QuestionDetails" positionX="-36" positionY="810" width="128" height="118"/>
         <element name="Report" positionX="297" positionY="-540" width="128" height="433"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="133"/>
+        <element name="SubmitFormAndSurvey" positionX="-207" positionY="810" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
@@ -479,7 +497,5 @@
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="163"/>
         <element name="Witness" positionX="261" positionY="-36" width="128" height="178"/>
-        <element name="SubmitFormAndSurvey" positionX="-207" positionY="810" width="128" height="118"/>
-        <element name="QuestionDetails" positionX="-36" positionY="810" width="128" height="118"/>
     </elements>
 </model>

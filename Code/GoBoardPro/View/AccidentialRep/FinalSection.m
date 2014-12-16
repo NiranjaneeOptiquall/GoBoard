@@ -27,6 +27,12 @@
     [self btnSentToInsuranceTapped:_btnYesInsurance];
     [self btnProcedureFollowedTapped:_btnYesProcedure];
     [self btnCallMadeTapped:_btnYesCall];
+    _txtEmpFName.text = [[User currentUser] firstName];
+    _txtEmpMI.text = [[User currentUser] middleInitials];
+    _txtEmpLName.text = [[User currentUser] lastName];
+    _txtEmpHomePhone.text = [[User currentUser] phone];
+    _txtEmpAlternatePhone.text = [[User currentUser] mobile];
+    _txtEmpEmailAddr.text = [[User currentUser] email];
     [self isAdmin];
 }
 

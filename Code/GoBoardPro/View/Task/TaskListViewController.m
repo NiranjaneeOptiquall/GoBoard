@@ -95,7 +95,9 @@
                 areaSupervisor = @"true";
             if (task.isCommentWorkOrder.boolValue)
                 workOrder = @"true";
-            [mutArrPostTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":comment, @"IsCommentTask": taskComment, @"IsCommentGoBoardGroup":goboardGroup, @"IsCommentBuildingSupervisor":buildingSupervisor, @"IsCommentAreaSupervisor":areaSupervisor, @"IsCommentWorkOrder":workOrder}];
+            
+            
+            [mutArrPostTask addObject:@{@"Id": task.taskId, @"Name":task.name, @"Description":task.desc, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":comment, @"IsCommentTask": taskComment, @"IsCommentGoBoardGroup":goboardGroup, @"IsCommentBuildingSupervisor":buildingSupervisor, @"IsCommentAreaSupervisor":areaSupervisor, @"IsCommentWorkOrder":workOrder}];
             task.isCompleted = [NSNumber numberWithBool:YES];
         }
     }
@@ -117,7 +119,7 @@
         [self showCount];
     }
     else {
-        alert(@"", @"Count is already updated.");
+        alert(@"", @"Task is already updated.");
     }
 }
 
@@ -486,6 +488,7 @@
     }
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([string isEqualToString:@""]) return YES;
     NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
     if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
         return NO;

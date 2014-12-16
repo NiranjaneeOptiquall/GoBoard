@@ -8,6 +8,7 @@
 
 #import "BodyPartInjury.h"
 #import "TPKeyboardAvoidingScrollView.h"
+#import "GeneralInjuryType.h"
 
 
 @implementation BodyPartInjury
@@ -22,7 +23,8 @@
 
 - (void)awakeFromNib {
     [self btnInjuryTypeGeneralTapped:_btnGeneralInjury];
-    [_txtOtherInjury setEnabled:NO];
+    [_txtOtherInjury setHidden:YES];
+    [_imvOtherInjuryBG setHidden:YES];
     _mutArrInjuryList = [[NSMutableArray alloc] init];
     [_lblNoInjuryAdded.layer setBorderColor:[UIColor whiteColor].CGColor];
     [_lblNoInjuryAdded.layer setBorderWidth:1.0f];
@@ -33,13 +35,14 @@
         return;
     }
     [_txtEnjuryType setText:@""];
-    [_txtOtherInjury setEnabled:NO];
+    [_txtOtherInjury setHidden:YES];
+    [_imvOtherInjuryBG setHidden:YES];
+    [_imvOtherInjuryBG setHidden:YES];
     [_tblInjuredBodyPartList setHidden:YES];
     [_lblBodyPart setHidden:YES];
     [_lblBodyPartNote setHidden:YES];
     [_vwHumanFigure setHidden:YES];
-    [_imvOtherInjuryBG setHidden:NO];
-    [_txtOtherInjury setHidden:NO];
+    
     CGRect frame = _vwInjuryDetails.frame;
     frame.origin.y = _tblInjuredBodyPartList.frame.origin.y;
     _vwInjuryDetails.frame = frame;
@@ -55,13 +58,13 @@
         return;
     }
     [_txtEnjuryType setText:@""];
-    [_txtOtherInjury setEnabled:NO];
     [_tblInjuredBodyPartList setHidden:NO];
     [_lblBodyPart setHidden:NO];
     [_lblBodyPartNote setHidden:NO];
     [_vwHumanFigure setHidden:NO];
     [_imvOtherInjuryBG setHidden:YES];
     [_txtOtherInjury setHidden:YES];
+    [_imvOtherInjuryBG setHidden:YES];
     CGRect frame = _vwInjuryDetails.frame;
     frame.origin.y = CGRectGetMaxY(_tblInjuredBodyPartList.frame) + 12;
     _vwInjuryDetails.frame = frame;
@@ -101,7 +104,7 @@
         }
     }
     
-    if ([_txtOtherInjury isEnabled]) {
+    if (![_txtOtherInjury isHidden]) {
         [aDict setObject:_txtOtherInjury.trimText forKey:@"injury"];
         [aDict setObject:_txtOtherInjury.trimText forKey:@"generalOther"];
     }
@@ -264,12 +267,17 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        NSArray *ary;
+        NSMutableArray *ary;
         if ([_btnGeneralInjury isSelected]) {
-            ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]];
+            ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.generalInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]]];
+            NSMutableDictionary *aInjury = [NSMutableDictionary dictionary];
+            [aInjury setValue:@"Other" forKey:@"name"];
+            [aInjury setValue:@"-1" forKey:@"typeId"];
+            [ary addObject:aInjury];
+            
         }
         else {
-            ary = [[_parentVC.reportSetupInfo.bodypartInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]];
+            ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.bodypartInjuryType allObjects] sortedArrayUsingDescriptors:@[sort]]];
         }
         [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
@@ -286,7 +294,8 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        NSMutableArray *ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]]];
+        [ary addObject:@{@"name":@"Self Treated", @"careProvidedID":@"-1"}];
         [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
@@ -308,11 +317,12 @@
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     if ([sender isEqual:_txtEnjuryType]) {
         if ([[[value valueForKey:@"name"] lowercaseString] isEqualToString:@"other"]) {
-            [_txtOtherInjury setEnabled:YES];
+            [_txtOtherInjury setHidden:NO];
         }
         else {
-            [_txtOtherInjury setEnabled:NO];
+            [_txtOtherInjury setHidden:YES];
         }
+        [_imvOtherInjuryBG setHidden:_txtOtherInjury.isHidden];
     }
     else if ([sender isEqual:_txtCareProvided]) {
         self.careProvided = [value valueForKey:@"name"];

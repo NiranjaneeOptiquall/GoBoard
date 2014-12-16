@@ -23,6 +23,7 @@
 @property (assign, nonatomic) BOOL isAdmin;
 @property (strong, nonatomic) NSString *userId;
 @property (strong, nonatomic) NSString *clientId;
+@property (strong, nonatomic) NSString *clientName;
 @property (strong, nonatomic) UserFacility *selectedFacility;
 @property (strong, nonatomic) UserLocation *selectedLocation;
 @property (strong, nonatomic) UserPosition *selectedPosition;

@@ -22,6 +22,8 @@
 #import "InjuryDetail.h"
 #import "SubmitFormAndSurvey.h"
 #import "QuestionDetails.h"
+#import "Memoboard.h"
+#import "DailyLog.h"
 
 @interface UserHomeViewController ()
 
@@ -31,20 +33,35 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     if (![[User currentUser] isAdmin]) {
         [_btnTools setHidden:YES];
         [_btnSurvey setCenter:CGPointMake(self.view.center.x, _btnSurvey.center.y)];
     }
     [_lblWelcomeUser setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+    
     [_lblPendingCount.layer setCornerRadius:5.0];
     [_lblPendingCount.layer setBorderWidth:1.0];
     [_lblPendingCount setClipsToBounds:YES];
     [_lblPendingCount.layer setBorderColor:[UIColor whiteColor].CGColor];
+    
+    [_lblMemoCount.layer setCornerRadius:5.0];
+    [_lblMemoCount.layer setBorderWidth:1.0];
+    [_lblMemoCount setClipsToBounds:YES];
+    [_lblMemoCount.layer setBorderColor:[UIColor whiteColor].CGColor];
     // Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    NSInteger count = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
+    if (count > 0) {
+        [_lblMemoCount setHidden:NO];
+        [_lblMemoCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
+    }
+    else {
+        [_lblMemoCount setHidden:YES];
+    }
     [self getSyncCount];
 }
 
@@ -421,4 +438,5 @@
     [gblAppDelegate.managedObjectContext save:nil];
     return isErrorOccurred;
 }
+
 @end

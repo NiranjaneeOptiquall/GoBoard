@@ -113,6 +113,9 @@
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [request setSortDescriptors:@[sort]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+    if ([mutArrFormList count] == 0) {
+        [_lblNoRecord setHidden:NO];
+    }
 }
 
 - (void)fetchFormList {
@@ -133,6 +136,9 @@
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [request setSortDescriptors:@[sort]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+    if ([mutArrFormList count] == 0) {
+        [_lblNoRecord setHidden:NO];
+    }
 }
 
 #pragma mark - IBActions

@@ -35,6 +35,7 @@
     mutArrIncidentPerson = [[NSMutableArray alloc] init];
     mutArrEmergencyPersonnel = [[NSMutableArray alloc] init];
     mutArrWitnessView = [[NSMutableArray alloc] init];
+    
     [self viewSetup];
     [self addIncidentPersonalInformationViews];
     if ([reportSetupInfo.showEmergencyPersonnel boolValue]) {
@@ -95,6 +96,13 @@
     if ([aryFields containsObject:@"phone"]) [_markerEmpPhone setHidden:NO];
     if ([aryFields containsObject:@"alternatePhone"]) [_markerEmpAltPhone setHidden:NO];
     if ([aryFields containsObject:@"email"]) [_markerEmpEmail setHidden:NO];
+    
+    _txtEmpFName.text = [[User currentUser] firstName];
+    _txtEmpMI.text = [[User currentUser] middleInitials];
+    _txtEmpLName.text = [[User currentUser] lastName];
+    _txtEmpHomePhone.text = [[User currentUser] phone];
+    _txtEmpAlternatePhone.text = [[User currentUser] mobile];
+    _txtEmpEmail.text = [[User currentUser] email];
 }
 
 

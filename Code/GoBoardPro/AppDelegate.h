@@ -29,6 +29,8 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 @property (strong, nonatomic) UINavigationController *navigationController;
 @property (nonatomic, assign) BOOL shouldHideActivityIndicator;
 
+@property (strong, nonatomic) NSMutableArray *mutArrMemoList;
+
 @property (assign, nonatomic) BOOL isAdmin;
 
 - (void)saveContext;

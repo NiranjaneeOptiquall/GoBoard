@@ -346,6 +346,13 @@
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
         allowEditing = NO;
     }
+    else if ([textField isEqual:_txtState]) {
+        [self setKeepViewInFrame:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        [dropDown showDropDownWith:STATES view:textField key:nil];
+        allowEditing = NO;
+    }
     return allowEditing;
 }
 
@@ -370,7 +377,13 @@
         }
         return YES;
     }
-    if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
+    else if ([textField isEqual:_txtZip]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
+    }
+    else if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
         NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
@@ -424,6 +437,16 @@
             [self showCamera];
         }
     }];
+}
+
+
+- (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
+    if ([value isKindOfClass:[NSString class]]) {
+        [sender setText:value];
+    }
+    else {
+        [sender setText:[value valueForKey:@"name"]];
+    }
 }
 
 #pragma mark - UIPopOverControllerDelegate

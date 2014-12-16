@@ -59,6 +59,7 @@
     [self callServiceForUtilizationCount:YES complition:nil];
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
+    [self callServiceForMemos:YES complition:nil];
 }
 
 #pragma mark - Emergency Response Plan
@@ -139,7 +140,7 @@
 
 - (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedLocation] value], [[[User currentUser] selectedPosition] value], [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedPosition] value]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
@@ -818,4 +819,26 @@
     [gblAppDelegate.managedObjectContext save:nil];
 }
 
+
+#pragma mark - MemoBoard
+
+- (void)callServiceForMemos:(BOOL)waitUntilDone complition:(void (^)(void))completion {
+    __block BOOL isWSComplete = NO;
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@", MEMO, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        gblAppDelegate.mutArrMemoList = [response objectForKey:@"Memos"];
+        isWSComplete = YES;
+        if (completion)
+            completion();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (completion)
+            completion();
+        
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
 @end

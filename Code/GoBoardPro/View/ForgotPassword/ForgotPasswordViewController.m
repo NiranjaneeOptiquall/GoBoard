@@ -40,19 +40,14 @@
 */
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([[_txtEmailId text] isEqualToString:@""]) {
-        alert(@"Forgot Password", @"Please enter an email address");
-        return;
-    }
-    else if (![gblAppDelegate validateEmail:[_txtEmailId text]]) {
-        alert(@"Forgot Password", @"Please enter a valid email address");
-        [_txtEmailId becomeFirstResponder];
+    if ([[_txtEmailId trimText] isEqualToString:@""]) {
+        alert(@"Forgot Password", @"Please enter your username");
         return;
     }
     [_txtEmailId resignFirstResponder];
 
 //    WebSerivceCall *serviceCall = [[WebSerivceCall alloc] init];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?emailAddress=%@", USER_FORGOT_PASSWORD,_txtEmailId.trimText] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FORGOT_PASSWORD] complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?username=%@", USER_FORGOT_PASSWORD,_txtEmailId.trimText] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FORGOT_PASSWORD] complition:^(NSDictionary *response) {
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Password reset link has been sent to your email address." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [alert setTag:1];
             [alert show];

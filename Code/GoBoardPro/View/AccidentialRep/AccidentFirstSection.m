@@ -56,25 +56,32 @@
     else if ([keyPath isEqualToString:@"careProvided"]) {
         CGRect frame = CGRectZero;
         if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self treated"]) {
-            [_vwBodilyFluid.vwRefuseCare setHidden:YES];
-            frame = _vwBodilyFluid.vwParticipantSignature.frame;
-            frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
-            _vwBodilyFluid.vwParticipantSignature.frame = frame;
-            
+            [_vwBodilyFluid.vwRefuseCare setHidden:NO];
+            float nextY = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
+            if (_vwBodilyFluid.isParticipantSignatureVisible) {
+                frame = _vwBodilyFluid.vwParticipantSignature.frame;
+                frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
+                _vwBodilyFluid.vwParticipantSignature.frame = frame;
+                nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+            }
             frame = _vwBodilyFluid.vwStaffMember.frame;
-            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+            frame.origin.y = nextY;
             _vwBodilyFluid.vwStaffMember.frame = frame;
-            
         }
         else {
-            [_vwBodilyFluid.vwRefuseCare setHidden:NO];
-            frame = _vwBodilyFluid.vwParticipantSignature.frame;
-            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
-            _vwBodilyFluid.vwParticipantSignature.frame = frame;
+            [_vwBodilyFluid.vwRefuseCare setHidden:YES];
+            float nextY = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
+            if (_vwBodilyFluid.isParticipantSignatureVisible) {
+                frame = _vwBodilyFluid.vwParticipantSignature.frame;
+                frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
+                _vwBodilyFluid.vwParticipantSignature.frame = frame;
+                nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+            }
             
             frame = _vwBodilyFluid.vwStaffMember.frame;
-            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+            frame.origin.y = nextY;
             _vwBodilyFluid.vwStaffMember.frame = frame;
+            
         }
         frame = _vwBodilyFluid.frame;
         frame.size.height = CGRectGetMaxY(_vwBodilyFluid.vwStaffMember.frame);

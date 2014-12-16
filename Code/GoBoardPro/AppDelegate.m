@@ -144,19 +144,23 @@
         [request setHTTPMethod:httpMethod];
         if (params) {
             NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
-            NSString *aStr = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", aStr);
+            
             [request setHTTPBody:aData];
         }
         [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:@"vKDx#'D4i}qxj,0Q9@$tWPb!Y69RhS" forHTTPHeaderField:@"ApiKey"];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^
                                              (NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
                                                  [self hideActivityIndicator];
                                                  NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:JSON];
+                                                 NSData *d = [request HTTPBody];
+                                                 NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+                                                 NSLog(@"%@", aStr);
                                                  if ([[aDict objectForKey:@"Success"] boolValue]) {
                                                      completion(aDict);
                                                  }
                                                  else {
+                                                     alert(@"", [aDict objectForKey:@"ErrorMessage"]);
                                                      failure (nil, aDict);
                                                  }
                                              }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {

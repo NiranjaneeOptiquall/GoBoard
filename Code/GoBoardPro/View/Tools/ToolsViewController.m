@@ -129,6 +129,10 @@
 }
 
 - (IBAction)btnDailyTapped:(UIButton *)sender {
+    if (!sender.isSelected) {
+        strRecurrenceTypeId = @"";
+    }
+    
     [sender setSelected:YES];
     strRecurrence = @"daily";
     [_btnWeekly setSelected:NO];
@@ -161,6 +165,10 @@
 }
 
 - (IBAction)btnWeeklyTapped:(UIButton *)sender {
+    if (!sender.isSelected) {
+        strRecurrenceTypeId = @"";
+    }
+    strRecurrenceTypeId = @"";
     [sender setSelected:YES];
     strRecurrence = @"weekly";
     [_btnDaily setSelected:NO];
@@ -184,6 +192,10 @@
 }
 
 - (IBAction)btnMonthlyTapped:(UIButton *)sender {
+    if (!sender.isSelected) {
+        strRecurrenceTypeId = @"";
+    }
+    strRecurrenceTypeId = @"";
     [sender setSelected:YES];
     strRecurrence = @"monthly";
     [_btnDaily setSelected:NO];
@@ -213,6 +225,10 @@
 }
 
 - (IBAction)btnYearlyTapped:(UIButton *)sender {
+    if (!sender.isSelected) {
+        strRecurrenceTypeId = @"";
+    }
+    strRecurrenceTypeId = @"";
     [sender setSelected:YES];
     strRecurrence = @"yearly";
     [_btnDaily setSelected:NO];
@@ -470,6 +486,7 @@
     if ([dictTaskDetail[@"RecurrenceType"] isEqualToString:@"daily"]) {
         [self btnDailyTapped:_btnDaily];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsDaily"]];
+        strRecurrenceTypeId = dictSetting[@"Id"];
         _txtDailyStartTime.text = dictSetting[@"StartTime"];
         if (![dictSetting[@"StartTime"] isEqualToString:@""]) {
             [_btnDailyStartTime setSelected:YES];
@@ -489,6 +506,7 @@
     else if ([dictTaskDetail[@"RecurrenceType"] isEqualToString:@"weekly"]) {
         [self btnWeeklyTapped:_btnWeekly];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsWeekly"]];
+        strRecurrenceTypeId = dictSetting[@"Id"];
         if (![[dictSetting[@"RecurrenceValue"] stringValue] isEqualToString:@""]) {
             [_btnWeekEvery setSelected:YES];
             [_txtWeekEvery setText:[dictSetting[@"RecurrenceValue"] stringValue]];
@@ -503,6 +521,7 @@
     else if ([dictTaskDetail[@"RecurrenceType"] isEqualToString:@"monthly"]) {
         [self btnMonthlyTapped:_btnMonthly];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsMonthly"]];
+        strRecurrenceTypeId = dictSetting[@"Id"];
         if ([dictSetting[@"Type"] isEqualToString:@"day"]) {
             [_btnMonthlyDay setSelected:YES];
             [_btnMonthThe setSelected:NO];
@@ -527,6 +546,7 @@
     else if ([dictTaskDetail[@"RecurrenceType"] isEqualToString:@"yearly"]) {
         [self btnYearlyTapped:_btnYearly];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsYearly"]];
+        strRecurrenceTypeId = dictSetting[@"Id"];
         _txtEveryYear.text = [dictSetting[@"RecurrenceValue"] stringValue];
         if ([dictSetting[@"Type"] isEqualToString:@"date"]) {
             [_btnOn setSelected:YES];
@@ -655,7 +675,7 @@
         aStrEmailGroup = [[[[aryEmailGroup filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Name MATCHES[cd] %@", _txtNotificationEmailGroup.text]] firstObject] objectForKey:@"Id"] stringValue];
     }
     
-    NSDictionary *dict = @{@"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"PositionId":selectedPosition.value, @"Name":_txtTaskTitle.trimText, @"Description":_txtPopUpDesc.trimText, @"NotificationType":[NSString stringWithFormat:@"%ld", (long)selectedNotificationType], @"NotificationEmailGroupId":aStrEmailGroup, @"RecurrenceType":strRecurrence};
+    NSDictionary *dict = @{@"UserId": [[User currentUser] userId], @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"PositionId":selectedPosition.value, @"Name":_txtTaskTitle.trimText, @"Description":_txtPopUpDesc.trimText, @"NotificationType":[NSString stringWithFormat:@"%ld", (long)selectedNotificationType], @"NotificationEmailGroupId":aStrEmailGroup, @"RecurrenceType":strRecurrence};
     [aDict addEntriesFromDictionary:dict];
     
     if ([strRecurrence isEqualToString:@"daily"]) {
@@ -672,6 +692,7 @@
                 [dict setObject:@"hour" forKey:@"RecurrenceTimeframe"];
             }
         }
+        [dict setObject:strRecurrenceTypeId forKey:@"Id"];
         [dict setObject:(_btnDailyEveryWeekdays.selected) ? @"true":@"false" forKey:@"WeekdaysOnly"];
         [aDict setObject:dict forKey:@"TaskRecurrenceSettingsDaily"];
     }
@@ -687,6 +708,7 @@
                 [aryDays addObject:btn.titleLabel.text.lowercaseString];
             }
         }
+        [dict setObject:strRecurrenceTypeId forKey:@"Id"];
         [dict setObject:aryDays forKey:@"Days"];
         [aDict setObject:dict forKey:@"TaskRecurrenceSettingsWeekly"];
     }
@@ -703,6 +725,7 @@
             [dict setObject:_txtMonthWeekday.text forKey:@"DayWeekDay"];
             [dict setObject:_txtMonthEveryThe.text forKey:@"DayRecurrenceValue"];
         }
+        [dict setObject:strRecurrenceTypeId forKey:@"Id"];
         [aDict setObject:dict forKey:@"TaskRecurrenceSettingsMonthly"];
     }
     else if ([strRecurrence isEqualToString:@"yearly"]) {
@@ -719,6 +742,7 @@
             [dict setObject:_txtYearWeekday.text forKey:@"DayWeekDay"];
             [dict setObject:_txtYearOnTheMonth.text forKey:@"DayMonth"];
         }
+        [dict setObject:strRecurrenceTypeId forKey:@"Id"];
         [aDict setObject:dict forKey:@"TaskRecurrenceSettingsMonthly"];
     }
         
@@ -768,7 +792,7 @@
         [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
-        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"name"];
+//        [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"name"];
         return NO;
     }
     else if ([textField isEqual:_txtDailyStartTime]) {

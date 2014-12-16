@@ -22,6 +22,7 @@
     UserPosition *selectedPosition;
     NSInteger selectedNotificationType;
     NSString *strRecurrence;
+    NSString *strRecurrenceTypeId;
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *txtStatus;

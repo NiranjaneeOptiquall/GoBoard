@@ -67,12 +67,12 @@
     if ([textField isEqual:_txtFacility]) {
         DropDownPopOver *dropDown = (DropDownPopOver *)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         [dropDown setDelegate:self];
-        [dropDown showDropDownWith:FACILITY_VALUES view:_txtLocation key:@"title"];
+//        [dropDown showDropDownWith:FACILITY_VALUES view:_txtLocation key:@"title"];
     }
     else if ([textField isEqual:_txtLocation]) {
         DropDownPopOver *dropDown = (DropDownPopOver *)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         [dropDown setDelegate:self];
-        [dropDown showDropDownWith:LOCATION_VALUES view:_txtLocation key:@"title"];
+//        [dropDown showDropDownWith:LOCATION_VALUES view:_txtLocation key:@"title"];
     }
     return NO;
 }
