@@ -409,7 +409,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qXn-rx-hhZ">
-                                                    <rect key="frame" x="0.0" y="1002" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1055" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1496,7 +1496,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GdK-lU-aoN">
-                                                    <rect key="frame" x="0.0" y="1451" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1498" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1691,7 +1691,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7zc-mS-vLg">
-                                                    <rect key="frame" x="0.0" y="2082" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="2140" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921568627447" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2109,11 +2109,11 @@
                                                 <rect key="frame" x="49" y="391" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="911 was called" image="unchecked_red.png">
+                                                <state key="normal" title="911 was called" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_red.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="qjn-ec-nIE"/>
                                                 </connections>
@@ -2122,11 +2122,11 @@
                                                 <rect key="frame" x="399" y="391" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Police / Security called" image="unchecked_orange.png">
+                                                <state key="normal" title="Police / Security called" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_orange.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="Z3g-lW-dhB"/>
                                                 </connections>
@@ -2135,11 +2135,11 @@
                                                 <rect key="frame" x="49" y="437" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Manager" image="unchecked_yellow.png">
+                                                <state key="normal" title="Manager" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_yellow.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="0OD-iH-QTP"/>
                                                 </connections>
@@ -2148,11 +2148,11 @@
                                                 <rect key="frame" x="399" y="437" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="None" image="unchecked_green.png">
+                                                <state key="normal" title="None" image="unchecked_Member.png">
                                                     <color key="titleColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_green.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="k6F-77-CBp"/>
                                                 </connections>
@@ -2438,7 +2438,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ddM-Zv-SgB">
-                                                    <rect key="frame" x="0.0" y="1156" width="768" height="3"/>
+                                                    <rect key="frame" x="0.0" y="1209" width="768" height="3"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -3378,7 +3378,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9h0-WS-Igr">
-                                                    <rect key="frame" x="0.0" y="2009" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="2062" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -3775,7 +3775,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rfj-SN-Cl8">
-                                                    <rect key="frame" x="-4" y="980" width="8448" height="4"/>
+                                                    <rect key="frame" x="-4" y="1070" width="9216" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -5517,11 +5517,11 @@
                                                 <rect key="frame" x="49" y="402" width="335" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="911 was called" image="unchecked_red.png">
+                                                <state key="normal" title="911 was called" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_red.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="q2q-S0-lfy"/>
                                                 </connections>
@@ -5530,11 +5530,11 @@
                                                 <rect key="frame" x="49" y="447" width="335" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Manager" image="unchecked_yellow.png">
+                                                <state key="normal" title="Manager" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_yellow.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="4Ws-Nv-99k"/>
                                                 </connections>
@@ -5543,11 +5543,11 @@
                                                 <rect key="frame" x="399" y="447" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="None" image="unchecked_green.png">
+                                                <state key="normal" title="None" image="unchecked_Member.png">
                                                     <color key="titleColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_green.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="PqT-BY-tEi"/>
                                                 </connections>
@@ -5605,11 +5605,11 @@
                                                 <rect key="frame" x="399" y="402" width="339" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Police / Security called" image="unchecked_orange.png">
+                                                <state key="normal" title="Police / Security called" image="unchecked_Member.png">
                                                     <color key="titleColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="selected" image="checked_orange.png"/>
+                                                <state key="selected" image="checked_Member.png"/>
                                                 <connections>
                                                     <action selector="btnNotificationTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="nRH-3k-9xg"/>
                                                 </connections>
@@ -6918,11 +6918,7 @@
         <image name="check_box_sel.png" width="47" height="46"/>
         <image name="checked.png" width="49" height="49"/>
         <image name="checked_Member.png" width="44" height="44"/>
-        <image name="checked_green.png" width="44" height="44"/>
-        <image name="checked_orange.png" width="44" height="44"/>
-        <image name="checked_red.png" width="44" height="44"/>
         <image name="checked_white_radiobutton.png" width="44" height="44"/>
-        <image name="checked_yellow.png" width="44" height="44"/>
         <image name="close_btn.png" width="66" height="66"/>
         <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="complete_a_form.png" width="100" height="100"/>
@@ -6986,11 +6982,7 @@
         <image name="tools_icon.png" width="100" height="100"/>
         <image name="unchecked.png" width="49" height="49"/>
         <image name="unchecked_Member.png" width="44" height="44"/>
-        <image name="unchecked_green.png" width="44" height="44"/>
-        <image name="unchecked_orange.png" width="44" height="44"/>
-        <image name="unchecked_red.png" width="44" height="44"/>
         <image name="unchecked_white_radiobutton.png" width="44" height="44"/>
-        <image name="unchecked_yellow.png" width="44" height="44"/>
         <image name="update_profile_btn.png" width="143" height="60"/>
         <image name="user.png" width="23" height="22"/>
         <image name="utilization_court_icon.png" width="100" height="100"/>

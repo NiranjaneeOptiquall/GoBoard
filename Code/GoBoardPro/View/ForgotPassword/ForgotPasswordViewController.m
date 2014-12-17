@@ -52,7 +52,7 @@
             [alert setTag:1];
             [alert show];
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
+        
     }];
 
     

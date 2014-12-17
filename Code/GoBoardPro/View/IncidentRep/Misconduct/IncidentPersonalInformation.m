@@ -341,13 +341,13 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     if ([textField isEqual:_txtDob]) {
-        [self setKeepViewInFrame:textField];
+//        [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_DATE_ONLY updateField:textField];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtState]) {
-        [self setKeepViewInFrame:textField];
+//        [self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         [dropDown showDropDownWith:STATES view:textField key:nil];

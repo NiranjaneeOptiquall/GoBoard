@@ -78,7 +78,6 @@
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
         [_lblNoRecords setHidden:NO];
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
 }

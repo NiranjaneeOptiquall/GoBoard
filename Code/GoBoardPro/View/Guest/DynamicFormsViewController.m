@@ -160,8 +160,10 @@
     }
     objRecord.questionList = questionSet;
     [gblAppDelegate.managedObjectContext insertObject:objRecord];
-    [gblAppDelegate.managedObjectContext save:nil];
-    [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    }
 }
 
 - (void)btnCheckMarkTapped:(UIButton *)sender {
@@ -333,6 +335,7 @@
 #pragma mark - UITextField Delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    [self.view endEditing:YES];
     NSIndexPath *indexPath = [self indexPathForView:textField];
     currentIndex = indexPath.row;
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];

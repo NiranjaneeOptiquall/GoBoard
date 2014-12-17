@@ -2,7 +2,7 @@
 //  AccidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind558 on 24/11/14.
+//  Created by ind558 on 17/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -23,37 +23,41 @@
 
 @implementation AccidentReportInfo
 
-@dynamic notificationField2;
-@dynamic showEmergencyPersonnel;
-@dynamic showRefusedSelfCareText;
-@dynamic showGender;
-@dynamic showAffiliation;
-@dynamic notificationField4;
-@dynamic notificationField3;
-@dynamic notificationField1;
-@dynamic selfCareStatement;
-@dynamic refusedCareStatement;
-@dynamic showCommunicationAndNotification;
-@dynamic showParticipantSignature;
-@dynamic showConditions;
-@dynamic showEmployeeId;
-@dynamic showMemberIdAndDriverLicense;
-@dynamic showBloodbornePathogens;
-@dynamic showMinor;
-@dynamic showPhotoIcon;
-@dynamic showDateOfBirth;
-@dynamic showManagementFollowup;
 @dynamic instructions;
+@dynamic notificationField1;
+@dynamic notificationField2;
+@dynamic notificationField3;
+@dynamic notificationField4;
+@dynamic refusedCareStatement;
+@dynamic selfCareStatement;
+@dynamic showAffiliation;
+@dynamic showBloodbornePathogens;
+@dynamic showCommunicationAndNotification;
+@dynamic showConditions;
+@dynamic showDateOfBirth;
+@dynamic showEmergencyPersonnel;
+@dynamic showEmployeeId;
+@dynamic showGender;
+@dynamic showManagementFollowup;
+@dynamic showMemberIdAndDriverLicense;
+@dynamic showMinor;
+@dynamic showParticipantSignature;
+@dynamic showPhotoIcon;
+@dynamic showRefusedSelfCareText;
+@dynamic notificationField1Color;
+@dynamic notificationField4Color;
+@dynamic notificationField3Color;
+@dynamic notificationField2Color;
+@dynamic abdomenInjuryList;
 @dynamic actionList;
 @dynamic activityList;
+@dynamic armInjuryList;
+@dynamic bodypartInjuryType;
+@dynamic careProviderList;
 @dynamic conditionList;
 @dynamic equipmentList;
-@dynamic careProviderList;
 @dynamic generalInjuryType;
-@dynamic bodypartInjuryType;
 @dynamic headInjuryList;
-@dynamic abdomenInjuryList;
-@dynamic armInjuryList;
 @dynamic legInjuryList;
 @dynamic requiredFields;
 

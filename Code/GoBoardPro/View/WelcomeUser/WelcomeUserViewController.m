@@ -115,7 +115,7 @@
             }
             
         } failure:^(NSError *error, NSDictionary *response) {
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
+            
         }];
     }
     else {

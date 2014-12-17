@@ -116,7 +116,6 @@
           [self performSegueWithIdentifier:@"RegistrationToThankYou" sender:nil];
         }
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
     
 }

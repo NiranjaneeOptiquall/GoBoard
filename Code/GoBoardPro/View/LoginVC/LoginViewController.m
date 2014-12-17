@@ -21,25 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
-//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"DailyLog"];
-//    NSEntityDescription *entity = [NSEntityDescription entityForName:@"DailyLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-////    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shouldSync == 1"];
-//    NSAttributeDescription *attribute = [entity.attributesByName objectForKey:@"userId"];
-//    NSExpressionDescription* objectIdDesc = [NSExpressionDescription new];
-//    objectIdDesc.name = @"objectID";
-//    objectIdDesc.expression = [NSExpression expressionForEvaluatedObject];
-//    objectIdDesc.expressionResultType = NSObjectIDAttributeType;
-//    [request setPropertiesToFetch:@[objectIdDesc, @"userId", @"date", @"desc", @"includeInEndOfDayReport"]];
-//    [request setPropertiesToGroupBy:@[@"userId"]];
-////    [request setPredicate:predicate];
-//    [request setResultType:NSDictionaryResultType];
-//    NSError *error = nil;
-//    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    
     
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
-//    _txtUserId.text = @"kapil";
-//    _txtPassword.text = @"Goboardpro1";
     [self initialUIConfig];
 }
 
@@ -147,7 +130,6 @@
 //            }
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
 }

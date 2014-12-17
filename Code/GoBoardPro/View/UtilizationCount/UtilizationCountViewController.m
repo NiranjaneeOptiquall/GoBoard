@@ -102,7 +102,6 @@
             }
             [alert show];
         } failure:^(NSError *error, NSDictionary *response) {
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
             [self saveSubmitToLocal:aDict showTask:showTask];
         }];
     }
@@ -145,7 +144,7 @@
     user.countLocation = locSet;
     [gblAppDelegate.managedObjectContext insertObject:user];
     if ([gblAppDelegate.managedObjectContext save:nil]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         if (showTask) {
             [alert setTag:1];
         }

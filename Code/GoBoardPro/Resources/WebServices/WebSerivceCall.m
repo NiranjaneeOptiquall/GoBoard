@@ -201,14 +201,14 @@
             for (NSDictionary *aDictSubLoc in [aDict objectForKey:@"Sublocations"]) {
                 UtilizationCount *subLoc = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                 subLoc.name = [aDictSubLoc objectForKey:@"Name"];
-                if ([[aDict objectForKey:@"LastCount"] isKindOfClass:[NSNull class]])
+                if ([[aDictSubLoc objectForKey:@"LastCount"] isKindOfClass:[NSNull class]])
                     subLoc.lastCount = @"0";
                 else
                     subLoc.lastCount = [[aDictSubLoc objectForKey:@"LastCount"] stringValue];
-                if ([[aDict objectForKey:@"LastCountDateTime"] isKindOfClass:[NSNull class]])
+                if ([[aDictSubLoc objectForKey:@"LastCountDateTime"] isKindOfClass:[NSNull class]])
                     subLoc.lastCountDateTime = @"";
                 else {
-                    NSString *aStrDate = [[[aDict objectForKey:@"LastCountDateTime"] componentsSeparatedByString:@"."] firstObject];
+                    NSString *aStrDate = [[[aDictSubLoc objectForKey:@"LastCountDateTime"] componentsSeparatedByString:@"."] firstObject];
                     subLoc.lastCountDateTime = aStrDate;
                 }
                 subLoc.locationId = [[aDictSubLoc objectForKey:@"Id"] stringValue];
@@ -340,6 +340,10 @@
         report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
         report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
         report.notificationField4 = [aDict objectForKey:@"NotificationField4"];
+        report.notificationField1Color = [aDict objectForKey:@"NotificationField1Color"];
+        report.notificationField2Color = [aDict objectForKey:@"NotificationField2Color"];
+        report.notificationField3Color = [aDict objectForKey:@"NotificationField3Color"];
+        report.notificationField4Color = [aDict objectForKey:@"NotificationField4Color"];
         report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
         report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
         report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
@@ -477,6 +481,10 @@
     report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
     report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
     report.notificationField4 = [aDict objectForKey:@"NotificationField4"];
+    report.notificationField1Color = [aDict objectForKey:@"NotificationField1Color"];
+    report.notificationField2Color = [aDict objectForKey:@"NotificationField2Color"];
+    report.notificationField3Color = [aDict objectForKey:@"NotificationField3Color"];
+    report.notificationField4Color = [aDict objectForKey:@"NotificationField4Color"];
     report.refusedCareStatement = [aDict objectForKey:@"RefusedCareStatement"];
     report.selfCareStatement = [aDict objectForKey:@"SelfCareStatement"];
     report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];

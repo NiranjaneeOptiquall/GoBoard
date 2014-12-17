@@ -94,7 +94,7 @@
         [self updateUser];
         [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
+        
     }];
     
 }
@@ -163,7 +163,7 @@
             [self updateUser];
         }
     } failure:^(NSError *error, NSDictionary *response) {
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
+        
     }];
     
 }

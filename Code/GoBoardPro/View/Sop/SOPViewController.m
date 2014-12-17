@@ -105,7 +105,6 @@
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
         [_lblNoRecords setHidden:NO];
-        alert(@"", [response objectForKey:@"ErrorMessage"]);
     }];
 }
 

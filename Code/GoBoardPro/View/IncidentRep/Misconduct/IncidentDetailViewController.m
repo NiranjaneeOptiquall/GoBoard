@@ -59,6 +59,12 @@
 }
 
 - (void)viewSetup {
+    
+    [_btn911Called setTitleColor:[UIColor colorWithHexCodeString:reportSetupInfo.notificationField1Color] forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitleColor:[UIColor colorWithHexCodeString:reportSetupInfo.notificationField2Color] forState:UIControlStateNormal];
+    [_btnManager setTitleColor:[UIColor colorWithHexCodeString:reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
+    [_btnNone setTitleColor:[UIColor colorWithHexCodeString:reportSetupInfo.notificationField4Color] forState:UIControlStateNormal];
+    
     [_btn911Called setTitle:reportSetupInfo.notificationField1 forState:UIControlStateNormal];
     [_btnPoliceCalled setTitle:reportSetupInfo.notificationField2 forState:UIControlStateNormal];
     [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
@@ -452,7 +458,7 @@
     
     [gblAppDelegate.managedObjectContext insertedObjects];
     if ([gblAppDelegate.managedObjectContext save:nil]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     }
     

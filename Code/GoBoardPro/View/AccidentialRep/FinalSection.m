@@ -296,8 +296,12 @@
         frame.origin.y = CGRectGetMaxY(_vwManagementFollowUp.frame);
         _vwSubmit.frame = frame;
         
-        frame = self.frame;
+        frame = _vwFixedContent.frame;
         frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        _vwFixedContent.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
         self.frame = frame;
     }
 }
@@ -311,8 +315,12 @@
         frame.origin.y = CGRectGetMinY(_vwManagementFollowUp.frame);
         _vwSubmit.frame = frame;
         
-        frame = self.frame;
+        frame = _vwFixedContent.frame;
         frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        _vwFixedContent.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
         self.frame = frame;
     }
 }

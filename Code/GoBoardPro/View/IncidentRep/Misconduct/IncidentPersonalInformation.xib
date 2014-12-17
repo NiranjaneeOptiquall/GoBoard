@@ -235,6 +235,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="MyI-Fy-8AM"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="TTh-hE-2Tg">
                             <rect key="frame" x="452" y="16" width="262" height="63"/>
@@ -245,6 +248,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="Jnv-gE-IsD"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_mi.png" id="4ri-op-lXk">
                             <rect key="frame" x="345" y="16" width="80" height="63"/>
@@ -255,6 +261,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="4HN-Ol-3Jv"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="kcZ-d4-WWL">
                             <rect key="frame" x="55" y="96" width="315" height="63"/>
@@ -265,6 +274,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="jLg-zG-ojJ"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="gpp-x3-H9h">
                             <rect key="frame" x="399" y="96" width="315" height="63"/>
@@ -275,6 +287,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="GU9-Yq-3rO"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="Bb6-Ia-8ls">
                             <rect key="frame" x="55" y="178" width="262" height="63"/>
@@ -285,6 +300,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="dt7-Lu-G5k"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="UsA-LV-blH">
                             <rect key="frame" x="452" y="178" width="262" height="63"/>
@@ -295,6 +313,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="zIK-P8-Tub"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_mi.png" id="RGL-eU-59w">
                             <rect key="frame" x="345" y="178" width="80" height="63"/>
@@ -305,6 +326,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="8Gf-ZX-vFF"/>
+                            </connections>
                         </textField>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="Lvd-0w-Xbn">
                             <rect key="frame" x="55" y="258" width="315" height="63"/>
@@ -341,6 +365,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                            <connections>
+                                <outlet property="delegate" destination="iN0-l3-epB" id="tRl-ff-v8O"/>
+                            </connections>
                         </textField>
                         <view contentMode="scaleToFill" id="kLX-n6-NQo">
                             <rect key="frame" x="392" y="329" width="322" height="78"/>
@@ -355,6 +382,9 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="iN0-l3-epB" id="Q8e-7T-NfV"/>
+                                    </connections>
                                 </textField>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vl9-b2-umr">
                                     <rect key="frame" x="312" y="38" width="10" height="17"/>

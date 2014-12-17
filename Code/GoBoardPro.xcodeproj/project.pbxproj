@@ -21,7 +21,6 @@
 		331378341A39AAE0001CE8AD /* MemoBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331378331A39AAE0001CE8AD /* MemoBoardViewController.m */; };
 		3322EB271A19C0C1009D3752 /* attachmentLink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3322EB261A19C0C1009D3752 /* attachmentLink@2x.png */; };
 		33236DCE1A03AA1C00384A41 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33236DCD1A03AA1C00384A41 /* WebViewController.m */; };
-		3323D8D01A1F1E2F00946E15 /* IncidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323D8CF1A1F1E2F00946E15 /* IncidentReportInfo.m */; };
 		3323EB491A29E03D00E0ABDC /* DynamicFormsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323EB481A29E03D00E0ABDC /* DynamicFormsViewController.m */; };
 		332B31EA1A2C453D001DE737 /* SurveyResponseTypeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 332B31E91A2C453D001DE737 /* SurveyResponseTypeValues.m */; };
 		332B31F31A2C92C0001DE737 /* DynamicFormCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 332B31F21A2C92C0001DE737 /* DynamicFormCell.m */; };
@@ -60,7 +59,6 @@
 		332F54581A2344BA00F2A40A /* EquipmentList.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F54571A2344BA00F2A40A /* EquipmentList.m */; };
 		332F545B1A2344BB00F2A40A /* ActivityList.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F545A1A2344BB00F2A40A /* ActivityList.m */; };
 		332F545E1A2344BB00F2A40A /* ConditionList.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F545D1A2344BB00F2A40A /* ConditionList.m */; };
-		332F54641A23468800F2A40A /* AccidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F54631A23468800F2A40A /* AccidentReportInfo.m */; };
 		332F54671A2347A700F2A40A /* BodyPartInjuryType.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F54661A2347A700F2A40A /* BodyPartInjuryType.m */; };
 		332F546A1A234BD800F2A40A /* CareProvidedType.m in Sources */ = {isa = PBXBuildFile; fileRef = 332F54691A234BD800F2A40A /* CareProvidedType.m */; };
 		33315CB419DD7A50008C37FF /* DropDownPopOver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33315CB319DD7A50008C37FF /* DropDownPopOver.m */; };
@@ -250,6 +248,10 @@
 		33D630A719D3F66E0090BE80 /* checked_orange@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33D6309F19D3F66E0090BE80 /* checked_orange@2x.png */; };
 		33D630A819D3F66E0090BE80 /* unchecked_Member@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33D630A019D3F66E0090BE80 /* unchecked_Member@2x.png */; };
 		33D630AD19D3FE340090BE80 /* IncidentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D630AC19D3FE340090BE80 /* IncidentDetailViewController.m */; };
+		33D879A31A414AB400CC312C /* AccidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D879A21A414AB400CC312C /* AccidentReportInfo.m */; };
+		33D879A61A414AC700CC312C /* IncidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D879A51A414AC700CC312C /* IncidentReportInfo.m */; };
+		33D879AA1A414B8600CC312C /* UIColor+HexToRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D879A91A414B8600CC312C /* UIColor+HexToRGB.m */; };
+		33D879AD1A414DE900CC312C /* NSString+Validations.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D879AC1A414DE900CC312C /* NSString+Validations.m */; };
 		33DBA1FF19E519480041A932 /* collaps_icon_default_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33DBA1FD19E519480041A932 /* collaps_icon_default_small@2x.png */; };
 		33DBA20019E519480041A932 /* expand_icon_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33DBA1FE19E519480041A932 /* expand_icon_small@2x.png */; };
 		33DBA20719E556D90041A932 /* Defalut@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33DBA20219E556D90041A932 /* Defalut@2x.png */; };
@@ -334,8 +336,6 @@
 		3322EB261A19C0C1009D3752 /* attachmentLink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachmentLink@2x.png"; sourceTree = "<group>"; };
 		33236DCC1A03AA1C00384A41 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		33236DCD1A03AA1C00384A41 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
-		3323D8CE1A1F1E2F00946E15 /* IncidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentReportInfo.h; sourceTree = "<group>"; };
-		3323D8CF1A1F1E2F00946E15 /* IncidentReportInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncidentReportInfo.m; sourceTree = "<group>"; };
 		3323EB471A29E03D00E0ABDC /* DynamicFormsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicFormsViewController.h; sourceTree = "<group>"; };
 		3323EB481A29E03D00E0ABDC /* DynamicFormsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DynamicFormsViewController.m; sourceTree = "<group>"; };
 		332B31E81A2C453D001DE737 /* SurveyResponseTypeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyResponseTypeValues.h; sourceTree = "<group>"; };
@@ -403,8 +403,6 @@
 		332F545A1A2344BB00F2A40A /* ActivityList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityList.m; sourceTree = "<group>"; };
 		332F545C1A2344BB00F2A40A /* ConditionList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConditionList.h; sourceTree = "<group>"; };
 		332F545D1A2344BB00F2A40A /* ConditionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionList.m; sourceTree = "<group>"; };
-		332F54621A23468800F2A40A /* AccidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportInfo.h; sourceTree = "<group>"; };
-		332F54631A23468800F2A40A /* AccidentReportInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportInfo.m; sourceTree = "<group>"; };
 		332F54651A2347A700F2A40A /* BodyPartInjuryType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BodyPartInjuryType.h; sourceTree = "<group>"; };
 		332F54661A2347A700F2A40A /* BodyPartInjuryType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BodyPartInjuryType.m; sourceTree = "<group>"; };
 		332F54681A234BD800F2A40A /* CareProvidedType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CareProvidedType.h; sourceTree = "<group>"; };
@@ -680,6 +678,14 @@
 		33D630A019D3F66E0090BE80 /* unchecked_Member@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unchecked_Member@2x.png"; sourceTree = "<group>"; };
 		33D630AB19D3FE340090BE80 /* IncidentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentDetailViewController.h; sourceTree = "<group>"; };
 		33D630AC19D3FE340090BE80 /* IncidentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = IncidentDetailViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		33D879A11A414AB400CC312C /* AccidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportInfo.h; sourceTree = "<group>"; };
+		33D879A21A414AB400CC312C /* AccidentReportInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportInfo.m; sourceTree = "<group>"; };
+		33D879A41A414AC700CC312C /* IncidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentReportInfo.h; sourceTree = "<group>"; };
+		33D879A51A414AC700CC312C /* IncidentReportInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncidentReportInfo.m; sourceTree = "<group>"; };
+		33D879A81A414B8600CC312C /* UIColor+HexToRGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexToRGB.h"; sourceTree = "<group>"; };
+		33D879A91A414B8600CC312C /* UIColor+HexToRGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexToRGB.m"; sourceTree = "<group>"; };
+		33D879AB1A414DE900CC312C /* NSString+Validations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Validations.h"; sourceTree = "<group>"; };
+		33D879AC1A414DE900CC312C /* NSString+Validations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Validations.m"; sourceTree = "<group>"; };
 		33DBA1FD19E519480041A932 /* collaps_icon_default_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collaps_icon_default_small@2x.png"; sourceTree = "<group>"; };
 		33DBA1FE19E519480041A932 /* expand_icon_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand_icon_small@2x.png"; sourceTree = "<group>"; };
 		33DBA20219E556D90041A932 /* Defalut@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Defalut@2x.png"; sourceTree = "<group>"; };
@@ -836,7 +842,7 @@
 				33EA6A951A3AC78C0069B310 /* DailyLog&Memoboard */,
 				332B31E11A2C3EB1001DE737 /* Survey&Forms */,
 				332F543A1A23438E00F2A40A /* AccidentReport */,
-				33585F1D1A1DB69100B6D28A /* Report */,
+				33585F1D1A1DB69100B6D28A /* IncidentReport */,
 				33585F201A1DB6BA00B6D28A /* Task */,
 				33585F211A1DB6C600B6D28A /* Count */,
 				33585F221A1DB6D200B6D28A /* ERP */,
@@ -893,6 +899,8 @@
 		332F543A1A23438E00F2A40A /* AccidentReport */ = {
 			isa = PBXGroup;
 			children = (
+				33D879A11A414AB400CC312C /* AccidentReportInfo.h */,
+				33D879A21A414AB400CC312C /* AccidentReportInfo.m */,
 				33C4D0261A289441005EC3FA /* InjuryDetail.h */,
 				33C4D0271A289441005EC3FA /* InjuryDetail.m */,
 				33C4D0231A28460D005EC3FA /* AccidentReportSubmit.h */,
@@ -903,8 +911,6 @@
 				332F54691A234BD800F2A40A /* CareProvidedType.m */,
 				332F54651A2347A700F2A40A /* BodyPartInjuryType.h */,
 				332F54661A2347A700F2A40A /* BodyPartInjuryType.m */,
-				332F54621A23468800F2A40A /* AccidentReportInfo.h */,
-				332F54631A23468800F2A40A /* AccidentReportInfo.m */,
 				332F54561A2344BA00F2A40A /* EquipmentList.h */,
 				332F54571A2344BA00F2A40A /* EquipmentList.m */,
 				332F54531A2344BA00F2A40A /* AbdomenInjuryList.h */,
@@ -1061,9 +1067,11 @@
 			path = SignatureView;
 			sourceTree = "<group>";
 		};
-		33585F1D1A1DB69100B6D28A /* Report */ = {
+		33585F1D1A1DB69100B6D28A /* IncidentReport */ = {
 			isa = PBXGroup;
 			children = (
+				33D879A41A414AC700CC312C /* IncidentReportInfo.h */,
+				33D879A51A414AC700CC312C /* IncidentReportInfo.m */,
 				33C4D01D1A2839E3005EC3FA /* Person.h */,
 				33C4D01E1A2839E3005EC3FA /* Person.m */,
 				33C4D01A1A2839E2005EC3FA /* Report.h */,
@@ -1080,12 +1088,10 @@
 				33AC809D1A25E19000FA77A1 /* EmergencyPersonnel.m */,
 				33AC80991A25E19000FA77A1 /* Witness.h */,
 				33AC809A1A25E19000FA77A1 /* Witness.m */,
-				3323D8CE1A1F1E2F00946E15 /* IncidentReportInfo.h */,
-				3323D8CF1A1F1E2F00946E15 /* IncidentReportInfo.m */,
 				33585F361A1DB70800B6D28A /* NatureList.h */,
 				33585F371A1DB70800B6D28A /* NatureList.m */,
 			);
-			name = Report;
+			name = IncidentReport;
 			sourceTree = "<group>";
 		};
 		33585F201A1DB6BA00B6D28A /* Task */ = {
@@ -1230,6 +1236,7 @@
 		3397CACC19D0347700788153 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				33D879A71A414B8600CC312C /* Categories */,
 				330D66E21A15BC2000C3C656 /* CrittercismSDK */,
 				332B60EC1A146D9C00B7C7EF /* Reachability */,
 				332B60CF1A146CB700B7C7EF /* AFNetworking */,
@@ -1613,6 +1620,17 @@
 				33D630AC19D3FE340090BE80 /* IncidentDetailViewController.m */,
 			);
 			path = Misconduct;
+			sourceTree = "<group>";
+		};
+		33D879A71A414B8600CC312C /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				33D879A81A414B8600CC312C /* UIColor+HexToRGB.h */,
+				33D879A91A414B8600CC312C /* UIColor+HexToRGB.m */,
+				33D879AB1A414DE900CC312C /* NSString+Validations.h */,
+				33D879AC1A414DE900CC312C /* NSString+Validations.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		33DBA20119E5563C0041A932 /* Icon_splash */ = {
@@ -2077,7 +2095,6 @@
 				33CFBBC319D2947E00D86E68 /* AddCertificateView.m in Sources */,
 				3341573019E8F88400A71E02 /* BarView.m in Sources */,
 				3397CAA619D02D7A00788153 /* AppDelegate.m in Sources */,
-				3323D8D01A1F1E2F00946E15 /* IncidentReportInfo.m in Sources */,
 				3341573519E9513600A71E02 /* GraphView.m in Sources */,
 				33CD6B7119DABB240024A02D /* EmergencyPersonnelView.m in Sources */,
 				33C4D0251A28460D005EC3FA /* AccidentReportSubmit.m in Sources */,
@@ -2110,6 +2127,7 @@
 				33EB4A5219D18F30008EF8FD /* ForgotPasswordViewController.m in Sources */,
 				3366BC101A1724B7003FA3BF /* ERPTask.m in Sources */,
 				33CFBC4119D2E8BB00D86E68 /* IncidenceReportViewController.m in Sources */,
+				33D879A61A414AC700CC312C /* IncidentReportInfo.m in Sources */,
 				33EB4A5819D18F4F008EF8FD /* UserHomeViewController.m in Sources */,
 				332F545B1A2344BB00F2A40A /* ActivityList.m in Sources */,
 				33CD8DEB1A1B11AE006A6EC2 /* UtilizationCount.m in Sources */,
@@ -2121,6 +2139,7 @@
 				33C4D0281A289441005EC3FA /* InjuryDetail.m in Sources */,
 				3337809119E6B6EA00362F82 /* MIMMargin.m in Sources */,
 				332B60E81A146CB700B7C7EF /* AFPropertyListRequestOperation.m in Sources */,
+				33D879AA1A414B8600CC312C /* UIColor+HexToRGB.m in Sources */,
 				33BF860E1A395EEC00AE6AD7 /* EndOfDayViewController.m in Sources */,
 				3337809D19E6B6EA00362F82 /* MIMColor.m in Sources */,
 				3337809E19E6B6EA00362F82 /* MIMColorClass.m in Sources */,
@@ -2163,14 +2182,15 @@
 				332B60EA1A146CB700B7C7EF /* AFXMLRequestOperation.m in Sources */,
 				332B60E91A146CB700B7C7EF /* AFURLConnectionOperation.m in Sources */,
 				33CFBBD519D2ADE000D86E68 /* WelcomeUserViewController.m in Sources */,
+				33D879AD1A414DE900CC312C /* NSString+Validations.m in Sources */,
 				332F545E1A2344BB00F2A40A /* ConditionList.m in Sources */,
-				332F54641A23468800F2A40A /* AccidentReportInfo.m in Sources */,
 				332B60EB1A146CB700B7C7EF /* UIImageView+AFNetworking.m in Sources */,
 				33CFBC5819D2FABB00D86E68 /* ERPDetailViewController.m in Sources */,
 				33CD6B6619DA855B0024A02D /* BodilyFluidView.m in Sources */,
 				332B60E61A146CB700B7C7EF /* AFJSONRequestOperation.m in Sources */,
 				33CFBC4A19D2E8F400D86E68 /* UtilizationCountViewController.m in Sources */,
 				33DF9A4819DC238F0055841D /* TPKeyboardAvoidingScrollView.m in Sources */,
+				33D879A31A414AB400CC312C /* AccidentReportInfo.m in Sources */,
 				332F54671A2347A700F2A40A /* BodyPartInjuryType.m in Sources */,
 				3337809919E6B6EA00362F82 /* LineInfoBox.m in Sources */,
 				33CFBC3E19D2E8A400D86E68 /* AccidentReportViewController.m in Sources */,

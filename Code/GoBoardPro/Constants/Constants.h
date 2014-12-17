@@ -15,7 +15,8 @@
 #import "DatePopOverView.h"
 #import "DropDownPopOver.h"
 #import "User.h"
-
+#import "UIColor+HexToRGB.h"
+#import "NSString+Validations.h"
 
 AppDelegate *gblAppDelegate;
 
@@ -90,4 +91,5 @@ typedef enum : NSUInteger {
 #define MSG_LOGIN_FAILURE           @"Email id or password does not match, Please check your email id or password"
 #define MSG_NO_INTERNET             @"Please make sure you have an Internet connection and try again."
 #define MSG_SERVICE_FAIL            @"An unexpected error occurred.  Please try again.  If the issue persists, please contact support."
+#define MSG_ADDED_TO_SYNC           @"Your information was saved locally.  Please sync from the Home screen to upload the information to GoBoard once you have an Internet connection."
 #endif

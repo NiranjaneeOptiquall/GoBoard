@@ -59,11 +59,6 @@
         [gblAppDelegate.managedObjectContext save:nil];
         [[[UIAlertView alloc] initWithTitle:gblAppDelegate.appName message:@"Daily log has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     } failure:^(NSError *error, NSDictionary *response) {
-        for (DailyLog *aLog in mutArrDailyList) {
-            aLog.shouldSync = [NSNumber numberWithBool:YES];
-        }
-        [gblAppDelegate.managedObjectContext save:nil];
-        [[[UIAlertView alloc] initWithTitle:gblAppDelegate.appName message:@"Daily log has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     }];
     
 }

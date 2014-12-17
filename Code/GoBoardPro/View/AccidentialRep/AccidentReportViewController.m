@@ -137,7 +137,10 @@
     aReport.additionalInfo = [aDict objectForKey:@"AdditionalInformation"];
     //    aReport.com
     [gblAppDelegate.managedObjectContext insertedObjects];
-    [gblAppDelegate.managedObjectContext save:nil];
+    if ([gblAppDelegate.managedObjectContext save:nil]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    }
 }
 
 #pragma mark - Navigation
@@ -270,9 +273,13 @@
 
 - (void)viewSetup {
     [_btn911Called setTitle:_reportSetupInfo.notificationField1 forState:UIControlStateNormal];
+    [_btn911Called setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField1Color] forState:UIControlStateNormal];
     [_btnPoliceCalled setTitle:_reportSetupInfo.notificationField2 forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
     [_btnManager setTitle:_reportSetupInfo.notificationField3 forState:UIControlStateNormal];
+    [_btnManager setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
     [_btnNone setTitle:_reportSetupInfo.notificationField4 forState:UIControlStateNormal];
+    [_btnNone setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField4Color] forState:UIControlStateNormal];
     _lblInstruction.text = _reportSetupInfo.instructions;
 }
 
@@ -363,7 +370,7 @@
     finalSection.isManagementFollowUpVisible = [_reportSetupInfo.showManagementFollowup boolValue];
     [finalSection.btnFinalSubmit addTarget:self action:@selector(btnFinalSubmitTapped:) forControlEvents:UIControlEventTouchUpInside];
     [finalSection PersonInvolved:_personInvolved];
-    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(finalSection.frame))];
 }
 
 - (void)setPersonInvolved:(NSInteger)personInvolved {

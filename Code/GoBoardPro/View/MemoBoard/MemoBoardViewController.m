@@ -60,12 +60,7 @@
         alert(@"", @"Selected memos has been deleted");
         [_tblMemoList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
-        if (!response) {
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
-        }
-        else {
-            alert(@"", MSG_SERVICE_FAIL);
-        }
+        
     }];
 }
 
@@ -168,12 +163,7 @@
         [mutArrMemoList[index] setObject:[NSNumber numberWithBool:YES] forKey:@"IsRead"];
         [_tblMemoList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
-        if (!response) {
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
-        }
-        else {
-            alert(@"", MSG_SERVICE_FAIL);
-        }
+       
     }];
 }
 

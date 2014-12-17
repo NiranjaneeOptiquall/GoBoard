@@ -48,16 +48,6 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 
 //==================================== Categories ======================================\\
 
-
-
-@interface NSString (Additions)
-
-- (NSString *)trimString;
-- (BOOL)isNumbersOnly;
-- (BOOL)isValidPhoneNumber;
-- (BOOL)isValidPassword;
-@end
-
 @interface UITextField (Additions)
 - (BOOL)isTextFieldBlank;
 - (NSString *)trimText;

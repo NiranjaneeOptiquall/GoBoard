@@ -172,7 +172,6 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isHistorySaved = YES;
             isErrorOccurred = YES;
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isHistorySaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
@@ -206,7 +205,6 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isSingleDataSaved = YES;
             isErrorOccurred = YES;
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isSingleDataSaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
@@ -253,7 +251,6 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isSingleDataSaved = YES;
             isErrorOccurred = YES;
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isSingleDataSaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
@@ -311,7 +308,6 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isSingleDataSaved = YES;
             isErrorOccurred = YES;
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isSingleDataSaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
@@ -380,7 +376,6 @@
         } failure:^(NSError *error, NSDictionary *response) {
             isSingleDataSaved = YES;
             isErrorOccurred = YES;
-            alert(@"", [response objectForKey:@"ErrorMessage"]);
         }];
         while (!isSingleDataSaved) {
             [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];

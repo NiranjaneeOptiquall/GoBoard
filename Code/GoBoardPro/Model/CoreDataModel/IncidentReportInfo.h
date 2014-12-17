@@ -2,7 +2,7 @@
 //  IncidentReportInfo.h
 //  GoBoardPro
 //
-//  Created by ind558 on 21/11/14.
+//  Created by ind558 on 17/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -23,12 +23,16 @@
 @property (nonatomic, retain) NSNumber * showConditions;
 @property (nonatomic, retain) NSNumber * showDateOfBirth;
 @property (nonatomic, retain) NSNumber * showEmergencyPersonnel;
+@property (nonatomic, retain) NSNumber * showEmployeeId;
 @property (nonatomic, retain) NSNumber * showGender;
 @property (nonatomic, retain) NSNumber * showManagementFollowup;
 @property (nonatomic, retain) NSNumber * showMemberIdAndDriverLicense;
 @property (nonatomic, retain) NSNumber * showMinor;
 @property (nonatomic, retain) NSNumber * showPhotoIcon;
-@property (nonatomic, retain) NSNumber * showEmployeeId;
+@property (nonatomic, retain) NSString * notificationField1Color;
+@property (nonatomic, retain) NSString * notificationField2Color;
+@property (nonatomic, retain) NSString * notificationField4Color;
+@property (nonatomic, retain) NSString * notificationField3Color;
 @property (nonatomic, retain) NSSet *actionList;
 @property (nonatomic, retain) NSSet *activityList;
 @property (nonatomic, retain) NSSet *conditionList;

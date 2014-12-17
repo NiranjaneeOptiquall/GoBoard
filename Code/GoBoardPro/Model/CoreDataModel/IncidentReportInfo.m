@@ -2,7 +2,7 @@
 //  IncidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind558 on 21/11/14.
+//  Created by ind558 on 17/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -27,12 +27,16 @@
 @dynamic showConditions;
 @dynamic showDateOfBirth;
 @dynamic showEmergencyPersonnel;
+@dynamic showEmployeeId;
 @dynamic showGender;
 @dynamic showManagementFollowup;
 @dynamic showMemberIdAndDriverLicense;
 @dynamic showMinor;
 @dynamic showPhotoIcon;
-@dynamic showEmployeeId;
+@dynamic notificationField1Color;
+@dynamic notificationField2Color;
+@dynamic notificationField4Color;
+@dynamic notificationField3Color;
 @dynamic actionList;
 @dynamic activityList;
 @dynamic conditionList;

@@ -40,7 +40,9 @@
         });
     }
     else if (buttonIndex == 1) {
-        [self showCamera];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self showCamera];
+        });
     }
 }
 
@@ -60,7 +62,7 @@
     [imgPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
     [imgPicker setDelegate:self];
     [imgPicker setAllowsEditing:YES];
-    [[_parentView navigationController] presentViewController:imgPicker animated:YES completion:^{
+    [gblAppDelegate.navigationController presentViewController:imgPicker animated:YES completion:^{
         
     }];
 }
@@ -76,7 +78,7 @@
         [popOver dismissPopoverAnimated:YES];
     }
     else {
-        [_parentView dismissViewControllerAnimated:YES completion:^{
+        [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
         }];
     }
 }
