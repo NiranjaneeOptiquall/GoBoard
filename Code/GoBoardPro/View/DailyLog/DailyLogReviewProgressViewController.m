@@ -44,7 +44,10 @@
 
 - (void)getMissedTask {
 //    IncompleteTask
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", DAILY_MATRICS, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
+//    [[[User currentUser] mutArrSelectedPositions] value]
+    NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?positionId=%@&locationId=%@", DAILY_MATRICS, strPositionIds, strLocationIds] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
         dictDailyMatrics = response;
         aryMissedTask = [response objectForKey:@"IncompleteTasks"];
         if ([aryMissedTask count]) {
@@ -94,11 +97,17 @@
     [aLblTime setText:aDict[@"Time"]];
     [aLblTitle setText:aDict[@"Name"]];
     [aLblRecurrance setText:[NSString stringWithFormat:@"Reoccurrence: %@", aDict[@"Recurrence"]]];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
-    [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-    aLblLastComplete.text = [formatter stringFromDate:aDate];
+    if (![aDict[@"LastCompletedOn"] isKindOfClass:[NSNull class]]) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+        NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
+        [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+        aLblLastComplete.text = [formatter stringFromDate:aDate];
+    }
+    else {
+        aLblLastComplete.text = @"";
+    }
+    
     [aLblPastDue setHidden:![aDict[@"PastDue"] boolValue]];
     
     

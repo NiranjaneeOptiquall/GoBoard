@@ -414,6 +414,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskDateTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="taskId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="responseTypeValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskResponseTypeValues" inverseName="task" inverseEntity="TaskResponseTypeValues" syncable="YES"/>
     </entity>
@@ -498,7 +499,7 @@
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
         <element name="SurveyQuestions" positionX="-513" positionY="905" width="128" height="148"/>
         <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="88"/>
-        <element name="TaskList" positionX="135" positionY="-972" width="128" height="238"/>
+        <element name="TaskList" positionX="135" positionY="-972" width="128" height="253"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="88"/>

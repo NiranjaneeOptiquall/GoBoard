@@ -16,6 +16,8 @@ static User *user;
     @synchronized(self) {
         if (!user) {
             user = [[User alloc] init];
+            user.mutArrSelectedLocations = [[NSMutableArray alloc] init];
+            user.mutArrSelectedPositions = [[NSMutableArray alloc] init];
         }
     }
     return user;

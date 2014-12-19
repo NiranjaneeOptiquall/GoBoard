@@ -47,6 +47,10 @@
             aDynamicView.isSurvey = NO;
         }
     }
+    else if ([segue.identifier isEqualToString:@"GoToLink"]) {
+        WebViewController *webVC = (WebViewController*)segue.destinationViewController;
+        webVC.strRequestURL = [sender valueForKey:@"link"];
+    }
 }
 
 
@@ -89,7 +93,7 @@
     else if (_guestFormType == 5) {
         // Configure for User Forms
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
-        [_lblFormTitle setText:@"User Survey Forms"];
+        [_lblFormTitle setText:@"User Surveys"];
         [self callService];
     }
 }
@@ -191,9 +195,10 @@
 //    typeId 2 = Make A Suggestion: displays form within the app
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     if ([[obj valueForKey:@"typeId"] integerValue] == 1) {
-        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[obj valueForKey:@"link"]]]) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[obj valueForKey:@"link"]]];
-        }
+//        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[obj valueForKey:@"link"]]]) {
+//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[obj valueForKey:@"link"]]];
+//        }
+        [self performSegueWithIdentifier:@"GoToLink" sender:obj];
     }
     else {
         selectedIndex = indexPath.row;

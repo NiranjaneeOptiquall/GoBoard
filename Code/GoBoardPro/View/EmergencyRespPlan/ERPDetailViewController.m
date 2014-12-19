@@ -82,7 +82,8 @@
     NSString *aStrDate = [formatter stringFromDate:[NSDate date]];
     NSString *aStartDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeStart.text];
     NSString *aEndDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeEnd.text];
-    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"LocationId":[[[User currentUser] selectedLocation] value], @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
+    NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"LocationId":strLocationIds, @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
     if (gblAppDelegate.isNetworkReachable) {
         [gblAppDelegate callWebService:ERP_HISTORY parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_HISTORY] complition:^(NSDictionary *response) {
             [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];

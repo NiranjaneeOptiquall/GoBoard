@@ -11,7 +11,7 @@
 
 
 
-@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate, DatePickerDelegate> {
+@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate, DatePickerDelegate, UITextViewDelegate> {
     NSMutableArray *mutArrQuestions;
     NSInteger currentIndex;
     BOOL isUpdate;

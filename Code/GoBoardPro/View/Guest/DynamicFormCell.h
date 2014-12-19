@@ -17,4 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imvTypeIcon;
 @property (weak, nonatomic) IBOutlet UIView *vwButtonList;
 @property (weak, nonatomic) IBOutlet UILabel *lblDevider;
+@property (weak, nonatomic) IBOutlet UIView *vwTextBox;
+@property (weak, nonatomic) IBOutlet UITextView *txvView;
 @end

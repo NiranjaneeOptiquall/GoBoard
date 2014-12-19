@@ -71,6 +71,9 @@
         mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskList filteredArrayUsingPredicate:predicate]];
     }
     [sender setSelected:![sender isSelected]];
+    if ([mutArrFilteredTaskList count] == 0) {
+        [_lblNoRecords setHidden:NO];
+    }
     [_tblTaskList reloadData];
 }
 
@@ -97,14 +100,15 @@
                 workOrder = @"true";
             
             
-            [mutArrPostTask addObject:@{@"Id": task.taskId, @"Name":task.name, @"Description":task.desc, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":comment, @"IsCommentTask": taskComment, @"IsCommentGoBoardGroup":goboardGroup, @"IsCommentBuildingSupervisor":buildingSupervisor, @"IsCommentAreaSupervisor":areaSupervisor, @"IsCommentWorkOrder":workOrder}];
+            [mutArrPostTask addObject:@{@"Id": task.taskId, @"Name":task.name, @"Description":task.desc, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":comment, @"IsCommentTask": taskComment, @"IsCommentGoBoardGroup":goboardGroup, @"IsCommentBuildingSupervisor":buildingSupervisor, @"IsCommentAreaSupervisor":areaSupervisor, @"IsCommentWorkOrder":workOrder, @"Completed":@"true"}];
             task.isCompleted = [NSNumber numberWithBool:YES];
         }
     }
     if ([mutArrPostTask count] > 0) {
         [gblAppDelegate.managedObjectContext save:nil];
-        
-        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":[[[User currentUser]selectedLocation] value], @"PositionId":[[[User currentUser]selectedPosition] value], @"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
+        NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+        NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":strLocationIds, @"PositionId":strPositionIds, @"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showCount) {
@@ -237,7 +241,8 @@
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
     TaskList *aTask = mutArrFilteredTaskList[indexPath.row];
     _lblPopOverTaskTitle.text = [aTask name];
-    _lblPopOverTaskLocation.text = [[[User currentUser] selectedLocation] name];
+#warning Fix It
+//    _lblPopOverTaskLocation.text = [[[User currentUser] selectedLocation] name];
     _txvPopOverMessage.text = [aTask comment];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"hh:mm a"];
@@ -277,12 +282,11 @@
 
 - (void)fetchAllTask {
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
     [allTask setSortDescriptors:@[descriptor]];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
-//        alert(@"", MSG_NO_INTERNET);
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
     NSArray *a =[mutArrTaskList filteredArrayUsingPredicate:predicate];

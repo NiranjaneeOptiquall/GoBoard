@@ -25,8 +25,8 @@
 @property (strong, nonatomic) NSString *clientId;
 @property (strong, nonatomic) NSString *clientName;
 @property (strong, nonatomic) UserFacility *selectedFacility;
-@property (strong, nonatomic) UserLocation *selectedLocation;
-@property (strong, nonatomic) UserPosition *selectedPosition;
+@property (strong, nonatomic) NSMutableArray *mutArrSelectedLocations;
+@property (strong, nonatomic) NSMutableArray *mutArrSelectedPositions;
 + (User *)currentUser;
 + (void)destroyCurrentUser;
 + (BOOL)checkUserExist;

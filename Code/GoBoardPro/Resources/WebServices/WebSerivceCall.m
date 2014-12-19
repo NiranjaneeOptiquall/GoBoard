@@ -140,7 +140,8 @@
 
 - (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedPosition] value]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
@@ -226,7 +227,10 @@
 
 - (void)callServiceForTaskList:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", TASK, [[[User currentUser] selectedFacility] value], [[[User currentUser] selectedLocation] value], [[[User currentUser] selectedPosition] value], [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+
+    NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", TASK, [[[User currentUser] selectedFacility] value], strLocationIds, strPositionIds, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         NSLog(@"%@", response);
         [self deleteAllTask];
         [self insertAllTask:[response objectForKey:@"Tasks"]];
@@ -268,7 +272,10 @@
         aList.desc = [aDict objectForKey:@"Description"];
         aList.name = [aDict objectForKey:@"Name"];
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
-        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+        NSDate *aDate = [formatter dateFromString:[[aDict[@"TaskDateTime"] componentsSeparatedByString:@"."] firstObject]];
+        aList.taskDateTime = aDate;
         if ([[aDict objectForKey:@"Response"] isKindOfClass:[NSNull class]]) {
             aList.response = @"";
         }

@@ -99,6 +99,7 @@
     NSDate *aStartDate = [aFormatter dateFromString:_txtStartDate.text];
     NSDate *aEndDate = [aFormatter dateFromString:_txtEndDate.text];
     [aFormatter setDateFormat:@"yyyy-MM-dd"];
+    
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@&startDate=%@&endDate=%@&locationId=%@",UTILIZATION_GRAPH, [[User currentUser] userId], [aFormatter stringFromDate:aStartDate], [aFormatter stringFromDate:aEndDate], selectedLocationValue] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:UTILIZATION_GRAPH] complition:^(NSDictionary *response) {
         NSArray *aryAllRecords = [response objectForKey:@"Utilizations"];
         xAxisTitles = [aryAllRecords valueForKeyPath:@"Time"];

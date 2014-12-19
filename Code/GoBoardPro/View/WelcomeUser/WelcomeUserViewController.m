@@ -50,14 +50,11 @@
 #pragma mark - IBActions
 
 - (IBAction)btnSubmitTapped:(id)sender {
-    if ([_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txtPosition isTextFieldBlank]) {
+    if ([_txtFacility isTextFieldBlank] || [[[User currentUser] mutArrSelectedLocations] count] == 0 || [[[User currentUser] mutArrSelectedPositions] count] == 0) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }
-    [[User currentUser] setSelectedFacility:selectedFacility];
-    [[User currentUser] setSelectedLocation:selectedLocation];
-    [[User currentUser] setSelectedPosition:selectedPosition];
-    
+    [[User currentUser] setSelectedFacility:selectedFacility];    
     [gblAppDelegate showActivityIndicator];
     gblAppDelegate.shouldHideActivityIndicator = NO;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
@@ -164,6 +161,72 @@
     aryPositions = [gblAppDelegate.managedObjectContext executeFetchRequest:requestPos error:nil];
 }
 
+#pragma mark - UITableView Delegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger rows = 0;
+    if ([tableView isEqual:_tblLocation]) {
+        rows = [aryLocation count];
+    }
+    else {
+        rows = [aryPositions count];
+    }
+    return rows;
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    NSManagedObject *obj = nil;
+    UIImageView *imgView = (UIImageView*)[aCell.contentView viewWithTag:2];
+    UILabel *aLblName = (UILabel*)[aCell.contentView viewWithTag:3];
+    if ([tableView isEqual:_tblLocation]) {
+        obj = [aryLocation objectAtIndex:indexPath.row];
+        if ([[[User currentUser] mutArrSelectedLocations] containsObject:obj]) {
+            [imgView setImage:[UIImage imageNamed:@"selected_check_box.png"]];
+        }
+        else {
+            [imgView setImage:[UIImage imageNamed:@"check_box.png"]];
+        }
+    }
+    else {
+        obj = [aryPositions objectAtIndex:indexPath.row];
+        if ([[[User currentUser] mutArrSelectedPositions] containsObject:obj]) {
+            [imgView setImage:[UIImage imageNamed:@"selected_check_box.png"]];
+        }
+        else {
+            [imgView setImage:[UIImage imageNamed:@"check_box.png"]];
+            
+        }
+    }
+    
+    aLblName.text = [obj valueForKey:@"name"];
+    [aCell setBackgroundColor:[UIColor clearColor]];
+    return aCell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSManagedObject *obj = nil;
+    if ([tableView isEqual:_tblLocation]) {
+        obj = [aryLocation objectAtIndex:indexPath.row];
+        if ([[[User currentUser] mutArrSelectedLocations] containsObject:obj]) {
+            [[[User currentUser] mutArrSelectedLocations] removeObject:obj];
+        }
+        else {
+            [[[User currentUser] mutArrSelectedLocations] addObject:obj];
+        }
+    }
+    else {
+        obj = [aryPositions objectAtIndex:indexPath.row];
+        if ([[[User currentUser] mutArrSelectedPositions] containsObject:obj]) {
+            [[[User currentUser] mutArrSelectedPositions] removeObject:obj];
+        }
+        else {
+            [[[User currentUser] mutArrSelectedPositions] addObject:obj];
+        }
+    }
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 #pragma mark - UITextField Delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
@@ -193,7 +256,11 @@
             selectedLocation = nil;
             [_txtLocation setText:@""];
             [_txtPosition setText:@""];
+            [[[User currentUser] mutArrSelectedPositions] removeAllObjects];
+            [[[User currentUser] mutArrSelectedLocations] removeAllObjects];
             [self fetchPositionAndLocation];
+            [_tblLocation reloadData];
+            [_tblPosition reloadData];
         }
     }
     else if ([sender isEqual:_txtPosition]) {

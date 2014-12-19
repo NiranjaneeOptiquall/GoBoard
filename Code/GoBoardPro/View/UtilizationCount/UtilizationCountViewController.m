@@ -94,7 +94,9 @@
         }
     }
     if ([mutArrUpdatedCount count] > 0) {
-        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":[[[User currentUser]selectedLocation] value], @"PositionId":[[[User currentUser]selectedPosition] value], @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
+        NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+        NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":strLocationIds, @"PositionId":strPositionIds, @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
         [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Count has been updated successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showTask) {

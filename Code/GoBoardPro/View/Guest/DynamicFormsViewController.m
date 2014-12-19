@@ -11,6 +11,8 @@
 #import "SubmitFormAndSurvey.h"
 #import "QuestionDetails.h"
 #import "DynamicFormCell.h"
+#import "ThankYouViewController.h"
+
 
 @interface DynamicFormsViewController ()
 
@@ -20,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
     [self fetchQuestion];
     // Do any additional setup after loading the view.
 }
@@ -56,15 +59,26 @@
     NSLog(@"%@", mutArrQuestions);
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"ThankYouScreen"]) {
+        ThankYouViewController *thanksVC = (ThankYouViewController*)segue.destinationViewController;
+        if (_isSurvey) {
+            thanksVC.strMsg = @"Your Survey has been submitted.";
+            thanksVC.strBackTitle = @"Back to Survey";
+        }
+        else {
+            thanksVC.strMsg = @"Your Form has been submitted.";
+            thanksVC.strBackTitle = @"Back to Forms";
+        }
+    }
 }
-*/
+
 
 - (IBAction)btnBackTapped:(id)sender {
     if (isUpdate) {
@@ -135,7 +149,7 @@
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
     NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
     [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
     } failure:^(NSError *error, NSDictionary *response) {
         [self saveDataToLocal:dictReq];
     }];
@@ -162,7 +176,9 @@
     [gblAppDelegate.managedObjectContext insertObject:objRecord];
     if ([gblAppDelegate.managedObjectContext save:nil]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        alert.tag = 1;
         [alert show];
+        
     }
 }
 
@@ -208,6 +224,7 @@
     [aCell.btnCheckMark addTarget:self action:@selector(btnCheckMarkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.vwTextArea setHidden:YES];
     [aCell.vwButtonList setHidden:YES];
+    [aCell.vwTextBox setHidden:YES];
     for (UIButton *btn in aCell.vwButtonList.subviews) {
         [btn removeFromSuperview];
     }
@@ -257,6 +274,11 @@
             }
             index++;
         }
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"textbox"]) {
+        [aCell.vwTextBox setHidden:NO];
+        [aCell.txvView setDelegate:self];
+        [aCell.txvView setText:[aDict objectForKey:@"answer"]];
     }
     else if (![[aDict objectForKey:@"responseType"] isEqualToString:@"checkbox"]) {
         [aCell.vwTextArea setHidden:NO];
@@ -369,6 +391,9 @@
 
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([string isEqualToString:@""]) {
+        return YES;
+    }
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
         NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
@@ -376,6 +401,22 @@
             return NO;
         }
     }
+    return YES;
+}
+
+#pragma mark - UITextView Delegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    [self.view endEditing:YES];
+    NSIndexPath *indexPath = [self indexPathForView:textView];
+    currentIndex = indexPath.row;
+    return YES;
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    isUpdate = YES;
+    NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
+    [aDict setObject:textView.text forKey:@"answer"];
     return YES;
 }
 
@@ -398,7 +439,10 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
+    if (alertView.tag == 1) {
+        [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+    }
+    else if (buttonIndex == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
