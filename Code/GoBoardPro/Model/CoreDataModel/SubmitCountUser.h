@@ -2,7 +2,7 @@
 //  SubmitCountUser.h
 //  GoBoardPro
 //
-//  Created by ind558 on 19/11/14.
+//  Created by ind558 on 20/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -13,9 +13,6 @@
 
 @interface SubmitCountUser : NSManagedObject
 
-@property (nonatomic, retain) NSString * facilityId;
-@property (nonatomic, retain) NSString * locationId;
-@property (nonatomic, retain) NSString * positionId;
 @property (nonatomic, retain) NSString * userId;
 @property (nonatomic, retain) NSSet *countLocation;
 @property (nonatomic, retain) NSSet *submittedTask;

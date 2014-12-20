@@ -45,7 +45,7 @@
     if ([reportSetupInfo.showManagementFollowup boolValue]) {
         [self addActionTakenView];
     }
-    [self btnNotificationTapped:_btnNone];
+//    [self btnNotificationTapped:_btnNone];
     if (_incidentType == 2) {
         _lblIncidentTitle.text = @"Customer Service Incident Report";
         [_imvIncidentIcon setImage:[UIImage imageNamed:@"customer_service.png"]];

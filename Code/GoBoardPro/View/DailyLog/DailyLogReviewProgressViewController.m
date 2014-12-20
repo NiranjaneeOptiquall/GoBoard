@@ -47,7 +47,7 @@
 //    [[[User currentUser] mutArrSelectedPositions] value]
     NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
     NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?positionId=%@&locationId=%@", DAILY_MATRICS, strPositionIds, strLocationIds] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?positionIds=%@&locationIds=%@", DAILY_MATRICS, strPositionIds, strLocationIds] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
         dictDailyMatrics = response;
         aryMissedTask = [response objectForKey:@"IncompleteTasks"];
         if ([aryMissedTask count]) {

@@ -82,8 +82,8 @@
     NSString *aStrDate = [formatter stringFromDate:[NSDate date]];
     NSString *aStartDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeStart.text];
     NSString *aEndDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeEnd.text];
-    NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
-    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"LocationId":strLocationIds, @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
+
+    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
     if (gblAppDelegate.isNetworkReachable) {
         [gblAppDelegate callWebService:ERP_HISTORY parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_HISTORY] complition:^(NSDictionary *response) {
             [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Your response has been saved. Thank you." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -152,7 +152,6 @@
     ERPHistory *aErpHistory = [NSEntityDescription insertNewObjectForEntityForName:@"ERPHistory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     aErpHistory.userId = [dict objectForKey:@"UserId"];
     aErpHistory.facilityId = [dict objectForKey:@"FacilityId"];
-    aErpHistory.locationId = [dict objectForKey:@"LocationId"];
     aErpHistory.erpSubcategoryId = [dict objectForKey:@"ErpSubcategoryId"];
     aErpHistory.startDateTime = [dict objectForKey:@"StartDateTime"];
     aErpHistory.endDateTime = [dict objectForKey:@"EndDateTime"];

@@ -31,6 +31,8 @@
     [super viewWillAppear:animated];
     _txtUserId.text = @"";
     _txtPassword.text = @"";
+    gblAppDelegate.mutArrMemoList = nil;
+    gblAppDelegate.mutArrHomeMenus = nil;
     [User destroyCurrentUser];
 }
 
@@ -103,10 +105,26 @@
         
         User *currentUser = [User currentUser];
         currentUser.firstName = [response objectForKey:@"FirstName"];
-        currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
+        if ([[response objectForKey:@"MiddleInitial"] isKindOfClass:[NSNull class]]) {
+            currentUser.middleInitials = @"";
+        }
+        else {
+            currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
+        }
+        
         currentUser.lastName = [response objectForKey:@"LastName"];
-        currentUser.mobile = [response objectForKey:@"Mobile"];
-        currentUser.phone = [response objectForKey:@"Phone"];
+        if ([[response objectForKey:@"Mobile"] isKindOfClass:[NSNull class]]) {
+            currentUser.mobile = @"";
+        }
+        else {
+            currentUser.mobile = [response objectForKey:@"Mobile"];
+        }
+        if ([[response objectForKey:@"Phone"] isKindOfClass:[NSNull class]]) {
+            currentUser.phone = @"";
+        }
+        else {
+            currentUser.phone = [response objectForKey:@"Phone"];
+        }
         currentUser.Email = [response objectForKey:@"Email"];
         currentUser.clientName = [response objectForKey:@"ClientName"];
         currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];

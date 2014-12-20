@@ -15,7 +15,6 @@
 
 @property (nonatomic, retain) NSString * userId;
 @property (nonatomic, retain) NSString * facilityId;
-@property (nonatomic, retain) NSString * locationId;
 @property (nonatomic, retain) NSString * erpSubcategoryId;
 @property (nonatomic, retain) NSString * startDateTime;
 @property (nonatomic, retain) NSString * endDateTime;

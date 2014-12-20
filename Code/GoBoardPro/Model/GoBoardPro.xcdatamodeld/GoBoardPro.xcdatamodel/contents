@@ -179,7 +179,6 @@
         <attribute name="endDateTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="erpSubcategoryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startDateTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="taskList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERPHistoryTask" inverseName="erpHistory" inverseEntity="ERPHistoryTask" syncable="YES"/>
@@ -342,9 +341,6 @@
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="requiredFields" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="SubmitCountUser" representedClassName="SubmitCountUser" syncable="YES">
-        <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="positionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="countLocation" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmitUtilizationCount" inverseName="user" inverseEntity="SubmitUtilizationCount" syncable="YES"/>
         <relationship name="submittedTask" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmittedTask" inverseName="user" inverseEntity="SubmittedTask" syncable="YES"/>
@@ -476,7 +472,7 @@
         <element name="EmergencyPersonnel" positionX="475" positionY="-90" width="128" height="223"/>
         <element name="EquipmentList" positionX="-612" positionY="212" width="128" height="103"/>
         <element name="ERPCategory" positionX="-34" positionY="-972" width="128" height="88"/>
-        <element name="ERPHistory" positionX="-36" positionY="-549" width="128" height="148"/>
+        <element name="ERPHistory" positionX="-36" positionY="-549" width="128" height="133"/>
         <element name="ERPHistoryTask" positionX="-37" positionY="-358" width="128" height="88"/>
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
@@ -492,7 +488,7 @@
         <element name="QuestionDetails" positionX="-36" positionY="810" width="128" height="118"/>
         <element name="Report" positionX="297" positionY="-540" width="128" height="433"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
-        <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="133"/>
+        <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-207" positionY="810" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>

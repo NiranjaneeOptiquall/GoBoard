@@ -14,7 +14,6 @@
 
 @dynamic userId;
 @dynamic facilityId;
-@dynamic locationId;
 @dynamic erpSubcategoryId;
 @dynamic startDateTime;
 @dynamic endDateTime;

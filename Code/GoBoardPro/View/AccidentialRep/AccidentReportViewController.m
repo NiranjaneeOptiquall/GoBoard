@@ -29,7 +29,7 @@
     [_txtLocation setEnabled:NO];
     [self fetchAccidentReportSetupInfo];
     [self fetchFacilities];
-    [self btnNotificationTapped:_btnNone];
+//    [self btnNotificationTapped:_btnNone];
     [self addViews];
     _isUpdate = NO;
         
@@ -221,7 +221,7 @@
     if (![self validateFirstSection]) {
         return;
     }
-    else if (![thirdSection isThirdSectionValidationSuccess]) {
+    else if (thirdSection && ![thirdSection isThirdSectionValidationSuccess]) {
         return;
     }
     else if (![finalSection isFinalSectionValidationSuccessWith:aryEmpFields]) {

@@ -30,6 +30,7 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 @property (nonatomic, assign) BOOL shouldHideActivityIndicator;
 
 @property (strong, nonatomic) NSMutableArray *mutArrMemoList;
+@property (strong, nonatomic) NSMutableArray *mutArrHomeMenus;
 
 @property (assign, nonatomic) BOOL isAdmin;
 

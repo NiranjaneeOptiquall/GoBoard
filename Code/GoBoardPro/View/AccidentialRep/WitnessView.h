@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *markerPhone;
 @property (weak, nonatomic) IBOutlet UILabel *markerAlternatePhone;
 @property (weak, nonatomic) IBOutlet UILabel *markerEmail;
+@property (weak, nonatomic) IBOutlet UILabel *lblDescCaption;
 
 
 - (IBAction)btnWitnessStatusTapped:(UIButton*)sender;

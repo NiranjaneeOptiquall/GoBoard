@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface UserHomeViewController : UIViewController
+@interface UserHomeViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 {
     NSInteger syncCount;
     BOOL isErrorOccurred;
+    NSInteger intUnreadMemoCount;
 }
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;

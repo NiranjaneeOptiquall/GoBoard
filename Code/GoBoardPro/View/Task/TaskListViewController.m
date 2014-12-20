@@ -106,9 +106,7 @@
     }
     if ([mutArrPostTask count] > 0) {
         [gblAppDelegate.managedObjectContext save:nil];
-        NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
-        NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":strLocationIds, @"PositionId":strPositionIds, @"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
+        NSDictionary *aDict = @{@"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showCount) {
@@ -135,9 +133,6 @@
 - (void)saveCompletedTask:(NSDictionary *)aDict showCount:(BOOL)showCount {
     SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     user.userId = [aDict objectForKey:@"UserId"];
-    user.facilityId = [aDict objectForKey:@"FacilityId"];
-    user.locationId = [aDict objectForKey:@"LocationId"];
-    user.positionId = [aDict objectForKey:@"PositionId"];
     NSMutableSet *set = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"Tasks"]) {
         SubmittedTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"SubmittedTask" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -241,8 +236,7 @@
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
     TaskList *aTask = mutArrFilteredTaskList[indexPath.row];
     _lblPopOverTaskTitle.text = [aTask name];
-#warning Fix It
-//    _lblPopOverTaskLocation.text = [[[User currentUser] selectedLocation] name];
+    _lblPopOverTaskLocation.text = @"";
     _txvPopOverMessage.text = [aTask comment];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"hh:mm a"];

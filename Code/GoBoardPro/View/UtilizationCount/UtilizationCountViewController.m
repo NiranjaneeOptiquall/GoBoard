@@ -94,9 +94,7 @@
         }
     }
     if ([mutArrUpdatedCount count] > 0) {
-        NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
-        NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-        NSDictionary *aDict = @{@"FacilityId":[[[User currentUser]selectedFacility] value], @"LocationId":strLocationIds, @"PositionId":strPositionIds, @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
+        NSDictionary *aDict = @{ @"UserId":[[User currentUser]userId], @"Locations":mutArrUpdatedCount};
         [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Count has been updated successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showTask) {
@@ -117,10 +115,7 @@
 
 - (void)saveSubmitToLocal:(NSDictionary *)aDict showTask:(BOOL)showTask {
     SubmitCountUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitCountUser" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-    user.facilityId = [aDict objectForKey:@"FacilityId"];
-    user.locationId = [aDict objectForKey:@"LocationId"];
     user.userId = [aDict objectForKey:@"UserId"];
-    user.userId = [aDict objectForKey:@"PositionId"];
     NSMutableSet *locSet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"Locations"]) {
         UtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -143,6 +138,7 @@
         location.sublocations = set;
         [locSet addObject:location];
     }
+#warning FIxTHIS crash
     user.countLocation = locSet;
     [gblAppDelegate.managedObjectContext insertObject:user];
     if ([gblAppDelegate.managedObjectContext save:nil]) {
@@ -213,6 +209,7 @@
     else if (location.sublocations.count > 0) {
         for (UtilizationCount *subLoc in location.sublocations.allObjects) {
             subLoc.lastCount = @"0";
+            subLoc.isUpdateAvailable = YES;
         }
     }
     location.lastCountDateTime = [self getCurrentDate];
@@ -255,6 +252,7 @@
         else if (location.sublocations.count > 0) {
             for (UtilizationCount *subLoc in location.sublocations.allObjects) {
                 subLoc.lastCount = @"0";
+                subLoc.isUpdateAvailable = YES;
             }
         }
         location.isUpdateAvailable = YES;
@@ -577,6 +575,7 @@
             else if (location.sublocations.count > 0) {
                 for (UtilizationCount *subLoc in location.sublocations.allObjects) {
                     subLoc.lastCount = @"0";
+                    subLoc.isUpdateAvailable = YES;
                 }
             }
             location.isUpdateAvailable = YES;

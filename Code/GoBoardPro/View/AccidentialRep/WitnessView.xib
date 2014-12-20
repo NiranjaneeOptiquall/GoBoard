@@ -218,6 +218,7 @@
                 <outlet property="btnEmployee" destination="UyF-YL-vMK" id="UJR-kB-wEf"/>
                 <outlet property="btnGuest" destination="5Jb-Vy-EPc" id="XDE-gx-K6f"/>
                 <outlet property="btnMember" destination="kQ8-IG-ayL" id="mce-0F-kJm"/>
+                <outlet property="lblDescCaption" destination="fd9-JD-CJH" id="230-Gw-uoo"/>
                 <outlet property="lblWitnessWrittenAccount" destination="1t3-2r-zSU" id="s4s-Io-vOK"/>
                 <outlet property="markerAlternatePhone" destination="A3V-wZ-OfC" id="D39-Aa-nDG"/>
                 <outlet property="markerEmail" destination="FP1-FW-mNX" id="4fn-ih-wKr"/>

@@ -71,7 +71,7 @@
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_DETAIL, [_dictSopCategry objectForKey:@"Id"]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_DETAIL] complition:^(NSDictionary *response) {
         dictSOPDetails = response;
-        if ([dictSOPDetails count] == 0) {
+        if ([[dictSOPDetails objectForKey:@"SopDetails"] count] == 0) {
             [_lblNoRecords setHidden:NO];
         }
         [_tblSOPList reloadData];
@@ -114,7 +114,8 @@
         [aLbl sizeToFit];
         UIView *aView = [aCell.contentView viewWithTag:4];
         UIButton *linkBtn = (UIButton*)[aCell viewWithTag:3];
-        if (![[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:indexPath.row] objectForKey:@"AttachmentLink"] || [[[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:indexPath.row] objectForKey:@"AttachmentLink"] isKindOfClass:[NSNull class]]) {
+        NSString *str = [[[dictSOPDetails objectForKey:@"SopDetails"] objectAtIndex:indexPath.row] objectForKey:@"AttachmentLink"];
+        if (!str || [str isKindOfClass:[NSNull class]] || [str isEqualToString:@""]) {
             [linkBtn setHidden:YES];
         }
         else {

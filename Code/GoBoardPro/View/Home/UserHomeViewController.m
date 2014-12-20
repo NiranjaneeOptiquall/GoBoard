@@ -54,14 +54,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSInteger count = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
-    if (count > 0) {
-        [_lblMemoCount setHidden:NO];
-        [_lblMemoCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
-    }
-    else {
-        [_lblMemoCount setHidden:YES];
-    }
+    intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
+    
+//    if (count > 0) {
+//        [_lblMemoCount setHidden:NO];
+//        [_lblMemoCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
+//    }
+//    else {
+//        [_lblMemoCount setHidden:YES];
+//    }
     [self getSyncCount];
 }
 
@@ -107,6 +108,66 @@
 
 - (IBAction)unwindBackToHomeScreen:(UIStoryboardSegue*)segue {
     
+}
+
+#pragma mark - UICollectionView Datasource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return [gblAppDelegate.mutArrHomeMenus count];
+}
+
+
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *aCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    __weak UIImageView *aImvIcon = (UIImageView*)[aCell.contentView viewWithTag:2];
+    __weak UILabel *aLblMenu = (UILabel*)[aCell.contentView viewWithTag:3];
+    __weak UILabel *aLblBadge = (UILabel*)[aCell.contentView viewWithTag:4];
+    aImvIcon.image = nil;
+    [aLblBadge setHidden:YES];
+    aLblMenu.text = @"";
+    __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
+    if ([aDict[@"IsActive"] boolValue]) {
+        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
+            aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld", [aDict[@"SystemModule"] integerValue]]];
+            aLblMenu.text = aDict[@"Name"];
+            if ([aDict[@"SystemModule"] integerValue] == 15 && intUnreadMemoCount > 0) {
+                aLblBadge.text = [NSString stringWithFormat:@"%ld", intUnreadMemoCount];
+                [aLblBadge.layer setCornerRadius:5.0];
+                [aLblBadge.layer setBorderWidth:1.0];
+                [aLblBadge setClipsToBounds:YES];
+                [aLblBadge.layer setBorderColor:[UIColor whiteColor].CGColor];
+            }
+        }
+    }
+    [aCell setBackgroundColor:[UIColor clearColor]];
+    return aCell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    NAME = SystemModule
+//    Tasks = 0
+//    Counts = 1
+//    Forms = 2
+//    Graphs = 3
+//    ERP = 4
+//    Incident = 5
+//    SOPs = 6
+//    Tools = 7
+//    Account = 8
+//    User = 9
+//    Client = 10
+//    Accident = 11
+//    Survey = 12
+//    EOD = 13
+//    Log = 14
+//    Memos = 15
+    NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
+    __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
+    if ([aDict[@"IsActive"] boolValue]) {
+        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
+            [self performSegueWithIdentifier:segues[[aDict[@"SystemModule"] integerValue]] sender:nil];
+        }
+    }
 }
 
 
@@ -165,7 +226,7 @@
             NSDictionary *dict = @{@"ErpTaskId":task.erpTaskId, @"Completed":task.completed};
             [aryTask addObject:dict];
         }
-        NSDictionary *aDict = @{@"UserId":history.userId, @"FacilityId":history.facilityId, @"LocationId":history.locationId, @"ErpSubcategoryId":history.erpSubcategoryId, @"StartDateTime":history.startDateTime, @"EndDateTime":history.endDateTime, @"Tasks":aryTask};
+        NSDictionary *aDict = @{@"UserId":history.userId, @"FacilityId":history.facilityId, @"ErpSubcategoryId":history.erpSubcategoryId, @"StartDateTime":history.startDateTime, @"EndDateTime":history.endDateTime, @"Tasks":aryTask};
         [gblAppDelegate callWebService:ERP_HISTORY parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_HISTORY] complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:history];
             isHistorySaved = YES;
@@ -198,7 +259,7 @@
         for (SubmitUtilizationCount *location in [user.countLocation allObjects]) {
             [mutArrLocations addObject:[self getPostLocation:location]];
         }
-        NSDictionary *aDict = @{@"FacilityId":user.facilityId, @"LocationId":user.locationId, @"PositionId":user.positionId, @"UserId":user.userId, @"Locations":mutArrLocations};
+        NSDictionary *aDict = @{@"UserId":user.userId, @"Locations":mutArrLocations};
         [gblAppDelegate callWebService:UTILIZATION_COUNT parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:user];
             isSingleDataSaved = YES;
@@ -244,7 +305,7 @@
         for (SubmittedTask *task in [user.submittedTask allObjects]) {
             [mutArrTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":task.comment, @"IsCommentTask": task.isCommentTask, @"IsCommentGoBoardGroup":task.isCommentGoBoardGroup, @"IsCommentBuildingSupervisor":task.isCommentBuildingSupervisor, @"IsCommentAreaSupervisor":task.isCommentAreaSupervisor, @"IsCommentWorkOrder":task.isCommentWorkOrder}];
         }
-        NSDictionary *aDict = @{@"FacilityId":user.facilityId, @"LocationId":user.locationId, @"PositionId":user.positionId, @"UserId":user.userId, @"Locations":mutArrTask};
+        NSDictionary *aDict = @{@"UserId":user.userId, @"Locations":mutArrTask};
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:user];
             isSingleDataSaved = YES;

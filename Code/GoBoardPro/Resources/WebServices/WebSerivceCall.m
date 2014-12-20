@@ -54,12 +54,41 @@
 #pragma mark - GetAllData
 
 - (void)getAllData {
+    [self callServiceForHomeSetup:YES complition:nil];
     [self callServiceForEmergencyResponsePlan:YES complition:nil];
     [self callServiceForTaskList:YES complition:nil];
     [self callServiceForUtilizationCount:YES complition:nil];
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
     [self callServiceForMemos:YES complition:nil];
+}
+
+#pragma mark - HOME Setup
+
+- (void)callServiceForHomeSetup:(BOOL)waitUntilDone complition:(void (^)(void))completion {
+    __block BOOL isWSComplete = NO;
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@", HOME_SCREEN_MODULES, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:HOME_SCREEN_MODULES] complition:^(NSDictionary *response) {
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"Position" ascending:NO];
+        gblAppDelegate.mutArrHomeMenus = [response objectForKey:@"Modules"];
+        [gblAppDelegate.mutArrHomeMenus sortUsingDescriptors:@[sort]];
+        if ([gblAppDelegate.managedObjectContext save:nil]) {
+            isWSComplete = YES;
+        }
+        if (completion) {
+            completion();
+        }
+        
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (completion) {
+            completion();
+        }
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
 }
 
 #pragma mark - Emergency Response Plan
@@ -141,7 +170,7 @@
 - (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionIds=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
@@ -230,7 +259,7 @@
 
     NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
     NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@&positionId=%@&userId=%@", TASK, [[[User currentUser] selectedFacility] value], strLocationIds, strPositionIds, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationIds=%@&positionIds=%@&userId=%@", TASK, [[[User currentUser] selectedFacility] value], strLocationIds, strPositionIds, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         NSLog(@"%@", response);
         [self deleteAllTask];
         [self insertAllTask:[response objectForKey:@"Tasks"]];
