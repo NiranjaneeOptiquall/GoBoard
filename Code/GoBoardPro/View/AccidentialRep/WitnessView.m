@@ -33,9 +33,10 @@
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
     if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
     if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
-    if ([requiredFields containsObject:@"phone"]) [_markerPhone setHidden:NO];
+    if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
     if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
     if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
+    if ([requiredFields containsObject:@"descriptionOfIncident"]) [_markerDescription setHidden:NO];
 }
 
 - (BOOL)isWitnessViewValidationSuccess {
@@ -53,7 +54,7 @@
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
-        else if ([requiredFields containsObject:@"phone"] && [_txtWitnessHomePhone isTextFieldBlank]) {
+        else if ([requiredFields containsObject:@"homePhone"] && [_txtWitnessHomePhone isTextFieldBlank]) {
             success = NO;
             alert(@"", MSG_REQUIRED_FIELDS);
         }
@@ -75,6 +76,9 @@
             success = NO;
             [_txtWitnessEmailAddress becomeFirstResponder];
             alert(@"", @"Please enter witness's valid email address");
+        }
+        else if ([requiredFields containsObject:@"descriptionOfIncident"] && [_txvDescIncident.text isEqualToString:@""]) {
+            alert(@"", @"Please enter witness's written account ");
         }
     }
     

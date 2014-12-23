@@ -82,6 +82,13 @@
     NSString *aStrDate = [formatter stringFromDate:[NSDate date]];
     NSString *aStartDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeStart.text];
     NSString *aEndDate = [NSString stringWithFormat:@"%@ %@", aStrDate, _txtTimeEnd.text];
+    
+    [formatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    NSDate *stDt = [formatter dateFromString:aStartDate];
+    NSDate *endDt = [formatter dateFromString:aEndDate];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    aStartDate = [formatter stringFromDate:stDt];
+    aEndDate = [formatter stringFromDate:endDt];
 
     NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"FacilityId":[[[User currentUser] selectedFacility] value], @"ErpSubcategoryId":[_erpSubcategory subCateId], @"StartDateTime":aStartDate, @"EndDateTime":aEndDate, @"Tasks":aryTask};
     if (gblAppDelegate.isNetworkReachable) {

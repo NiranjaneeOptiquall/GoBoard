@@ -94,13 +94,20 @@
     UILabel *aLblLastComplete = (UILabel *)[aCell.contentView viewWithTag:6];
     UILabel *aLblPastDue = (UILabel *)[aCell.contentView viewWithTag:5];
     NSDictionary *aDict = [aryMissedTask objectAtIndex:indexPath.row];
-    [aLblTime setText:aDict[@"Time"]];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"hh:mm a"];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    NSDate *dt = [formatter dateFromString:aDict[@"Time"]];
+    [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+    [aLblTime setText:[formatter stringFromDate:dt]];
     [aLblTitle setText:aDict[@"Name"]];
     [aLblRecurrance setText:[NSString stringWithFormat:@"Reoccurrence: %@", aDict[@"Recurrence"]]];
     if (![aDict[@"LastCompletedOn"] isKindOfClass:[NSNull class]]) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
+        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
         [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
         aLblLastComplete.text = [formatter stringFromDate:aDate];
     }

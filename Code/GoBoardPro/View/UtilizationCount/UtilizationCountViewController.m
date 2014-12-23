@@ -372,6 +372,7 @@
 - (NSString *)getCurrentDate {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
     return aStr;
 }
@@ -379,6 +380,7 @@
 - (NSString *)getLastUpdate:(NSString*)lastDate {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *lastDt = [aFormatter dateFromString:lastDate];
     NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [cal components:NSCalendarUnitMinute fromDate:lastDt toDate:[NSDate date] options:0];

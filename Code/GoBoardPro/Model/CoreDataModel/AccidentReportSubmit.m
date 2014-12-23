@@ -2,7 +2,7 @@
 //  AccidentReportSubmit.m
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
+//  Created by ind558 on 22/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -33,6 +33,8 @@
 @dynamic isRiskManagementSelected;
 @dynamic locationId;
 @dynamic reportFilerAccount;
+@dynamic isCompleted;
+@dynamic userId;
 @dynamic accidentPerson;
 @dynamic emergencyPersonnels;
 @dynamic witnesses;

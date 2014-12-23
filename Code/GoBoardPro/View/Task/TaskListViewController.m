@@ -127,7 +127,7 @@
 
 - (void)showCount {
     [self.navigationController popViewControllerAnimated:NO];
-    [[[gblAppDelegate.navigationController viewControllers] lastObject] performSegueWithIdentifier:@"Count" sender:nil];
+    [[[gblAppDelegate.navigationController viewControllers] lastObject] performSegueWithIdentifier:@"Counts" sender:nil];
 }
 
 - (void)saveCompletedTask:(NSDictionary *)aDict showCount:(BOOL)showCount {
@@ -324,6 +324,13 @@
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     BOOL isCompleted = [task.isCompleted boolValue];
     [aCell.btnKeyboardIcon addTarget:self action:@selector(btnKeyboardIconTapped:) forControlEvents:UIControlEventTouchUpInside];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    NSLog(@"%@", [aFormatter stringFromDate:task.taskDateTime]);
+//    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    
+    
+    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:task.taskDateTime],task.name];
     if (isCompleted) {
         if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
@@ -353,7 +360,7 @@
             aCell.txtDropDown.text = task.response;
             aCell.txtDropDown.userInteractionEnabled = NO;
         }
-        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:task.name];
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:aStrTaskName];
         [attributeString addAttribute:NSStrikethroughStyleAttributeName
                                 value:@2
                                 range:NSMakeRange(0, [attributeString length])];
@@ -363,7 +370,7 @@
     }
     else {
         [aCell.lblTask setAttributedText:nil];
-        [aCell.lblTask setText:task.name];
+        [aCell.lblTask setText:aStrTaskName];
         [aCell.lblTask setTextColor:[UIColor darkGrayColor]];
         [aCell.btnKeyboardIcon setHidden:NO];
         if ([task.responseType isEqualToString:@"checkbox"]) {

@@ -23,7 +23,6 @@
 
 - (void)awakeFromNib {
     [self setBackgroundColor:[UIColor clearColor]];
-    [self initialSetUp];
 }
 
 #pragma mark - IBActions & Selectors

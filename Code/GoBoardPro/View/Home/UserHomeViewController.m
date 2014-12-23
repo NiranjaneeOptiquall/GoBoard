@@ -56,13 +56,16 @@
     [super viewWillAppear:animated];
     intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
     
-//    if (count > 0) {
-//        [_lblMemoCount setHidden:NO];
-//        [_lblMemoCount setText:[NSString stringWithFormat:@"%ld", (long)count]];
-//    }
-//    else {
-//        [_lblMemoCount setHidden:YES];
-//    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0", [[User currentUser] userId]];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    [request setPredicate:predicate];
+    intPendingAccidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    [request setPredicate:predicate];
+    intPendingIncidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    [_cvMenuGrid reloadData];
     [self getSyncCount];
 }
 
@@ -128,14 +131,26 @@
     __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
     if ([aDict[@"IsActive"] boolValue]) {
         if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
-            aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld", [aDict[@"SystemModule"] integerValue]]];
+            aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld", (long)[aDict[@"SystemModule"] integerValue]]];
             aLblMenu.text = aDict[@"Name"];
-            if ([aDict[@"SystemModule"] integerValue] == 15 && intUnreadMemoCount > 0) {
-                aLblBadge.text = [NSString stringWithFormat:@"%ld", intUnreadMemoCount];
+            NSInteger count = 0;
+            
+            if ([aDict[@"SystemModule"] integerValue] == 5 && intPendingIncidentReport > 0) {
+                count = intPendingIncidentReport;
+            }
+            else if ([aDict[@"SystemModule"] integerValue] == 11 && intPendingAccidentReport > 0) {
+                count = intPendingAccidentReport;
+            }
+            else if ([aDict[@"SystemModule"] integerValue] == 15 && intUnreadMemoCount > 0) {
+                count = intUnreadMemoCount;
+            }
+            if (count > 0) {
+                aLblBadge.text = [NSString stringWithFormat:@"%ld", (long)count];
                 [aLblBadge.layer setCornerRadius:5.0];
                 [aLblBadge.layer setBorderWidth:1.0];
                 [aLblBadge setClipsToBounds:YES];
                 [aLblBadge.layer setBorderColor:[UIColor whiteColor].CGColor];
+                [aLblBadge setHidden:NO];
             }
         }
     }
@@ -179,8 +194,10 @@
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
@@ -207,7 +224,7 @@
     if (!isSyncError)
         isSyncError = [self syncSurveysAndForms];
     if (!isSyncError) {
-        alert(@"", @"All data are Synchronised with server.");
+        alert(@"", @"All data is synchronized with the server.");
     }
     [self getSyncCount];
     gblAppDelegate.shouldHideActivityIndicator = YES;
@@ -327,6 +344,8 @@
 
 - (BOOL)syncIncidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == 1"];
+    [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
     __block BOOL isSingleDataSaved = NO;
@@ -384,6 +403,8 @@
 
 - (BOOL)syncAccidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == 1"];
+    [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
     __block BOOL isSingleDataSaved = NO;

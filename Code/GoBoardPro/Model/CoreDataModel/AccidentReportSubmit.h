@@ -2,7 +2,7 @@
 //  AccidentReportSubmit.h
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
+//  Created by ind558 on 22/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -32,6 +32,8 @@
 @property (nonatomic, retain) NSString * isRiskManagementSelected;
 @property (nonatomic, retain) NSString * locationId;
 @property (nonatomic, retain) NSString * reportFilerAccount;
+@property (nonatomic, retain) NSNumber * isCompleted;
+@property (nonatomic, retain) NSString * userId;
 @property (nonatomic, retain) NSSet *accidentPerson;
 @property (nonatomic, retain) NSSet *emergencyPersonnels;
 @property (nonatomic, retain) NSSet *witnesses;

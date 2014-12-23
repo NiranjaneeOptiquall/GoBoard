@@ -111,7 +111,7 @@
 
 - (void)setRequiredFields:(NSArray*)fields {
     requiredFields = fields;
-    if ([requiredFields containsObject:@"memberId"]) [_markerMemberId setHidden:NO];
+    if ([requiredFields containsObject:@"memberId"] || [requiredFields containsObject:@"driverLicenseNumber"] || [requiredFields containsObject:@"employeeId"]) [_markerMemberId setHidden:NO];
     if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
     if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
@@ -120,7 +120,7 @@
     if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
     if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
     if ([requiredFields containsObject:@"streetAddress"]) [_markerAddress1 setHidden:NO];
-    if ([requiredFields containsObject:@"email"]) [_markerAddress2 setHidden:NO];
+//    if ([requiredFields containsObject:@"email"]) [_markerAddress2 setHidden:NO];
     if ([requiredFields containsObject:@"city"]) [_markerCity setHidden:NO];
     if ([requiredFields containsObject:@"state"]) [_markerState setHidden:NO];
     if ([requiredFields containsObject:@"zip"]) [_markerZip setHidden:NO];
@@ -203,18 +203,6 @@
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-//    else if ([fields containsObject:@"dateOfBirth"] && [_txtActivity isTextFieldBlank]) {
-//        success = NO;
-//        alert(@"", MSG_REQUIRED_FIELDS);
-//    }
-//    else if ([fields containsObject:@"dateOfBirth"] && [_txtWheather isTextFieldBlank]) {
-//        success = NO;
-//        alert(@"", MSG_REQUIRED_FIELDS);
-//    }
-//    else if ([fields containsObject:@"dateOfBirth"] && [_txtEquipment isTextFieldBlank]) {
-//        success = NO;
-//        alert(@"", MSG_REQUIRED_FIELDS);
-//    }
     
     return success;
 }

@@ -53,6 +53,7 @@
     aLog.userId = [[User currentUser] userId];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     aLog.date = [aFormatter stringFromDate:[NSDate date]];
     aLog.includeInEndOfDayReport = @"false";
     aLog.shouldSync = [NSNumber numberWithBool:NO];

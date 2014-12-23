@@ -1519,6 +1519,7 @@
                         <outlet property="btnMedicalPersonnelTreated" destination="bQY-MH-oh3" id="VVa-bl-xn1"/>
                         <outlet property="btnNotExposedToBlood" destination="FKs-Pj-egJ" id="qqm-td-qO2"/>
                         <outlet property="btnSelfTreated" destination="KKC-jn-ake" id="rm6-Gl-5fS"/>
+                        <outlet property="lblRefuseCareCaption" destination="Sen-JQ-hIY" id="TeG-Gt-H90"/>
                         <outlet property="lblRefuseCareText" destination="hTF-1v-zWr" id="aBE-Yx-WPG"/>
                         <outlet property="lblStaffMemberAccount" destination="DlB-MJ-DP8" id="0uF-p0-6Bw"/>
                         <outlet property="markerFName" destination="u5a-gv-ca8" id="SXd-CK-DkW"/>

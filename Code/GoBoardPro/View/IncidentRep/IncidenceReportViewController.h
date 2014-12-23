@@ -10,5 +10,8 @@
 #import "Constants.h"
 
 @interface IncidenceReportViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UILabel *lblBadgeMisconduct;
+@property (weak, nonatomic) IBOutlet UILabel *lblBadgeCustomerService;
+@property (weak, nonatomic) IBOutlet UILabel *lblBadgeOther;
 
 @end

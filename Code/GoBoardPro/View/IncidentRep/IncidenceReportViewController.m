@@ -17,7 +17,50 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    // Get Misconduct Count
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0 AND incidentType = 1", [[User currentUser] userId]];
+    [request setPredicate:predicate];
+    NSInteger count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    if (count > 0) {
+        _lblBadgeMisconduct.text = [NSString stringWithFormat:@"%ld", (long)count];
+        [_lblBadgeMisconduct setHidden:NO];
+    }
+    // Get Costumer service Count
+    predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0 AND incidentType = 2", [[User currentUser] userId]];
+    //    [request setPredicate:nil];
+    [request setPredicate:predicate];
+    count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    if (count > 0) {
+        _lblBadgeCustomerService.text = [NSString stringWithFormat:@"%ld", (long)count];
+        [_lblBadgeCustomerService setHidden:NO];
+    }
+    
+    // Get Other Count
+    predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0 AND incidentType = 3", [[User currentUser] userId]];
+    //    [request setPredicate:nil];
+    [request setPredicate:predicate];
+    count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    if (count > 0) {
+        _lblBadgeOther.text = [NSString stringWithFormat:@"%ld", (long)count];
+        [_lblBadgeOther setHidden:NO];
+    }
+    
+    _lblBadgeMisconduct.layer.cornerRadius = 2.0;
+    _lblBadgeMisconduct.layer.borderColor = [UIColor whiteColor].CGColor;
+    _lblBadgeMisconduct.layer.borderWidth = 1.0;
+    
+    _lblBadgeCustomerService.layer.cornerRadius = 2.0;
+    _lblBadgeCustomerService.layer.borderColor = [UIColor whiteColor].CGColor;
+    _lblBadgeCustomerService.layer.borderWidth = 1.0;
+    
+    _lblBadgeOther.layer.cornerRadius = 2.0;
+    _lblBadgeOther.layer.borderColor = [UIColor whiteColor].CGColor;
+    _lblBadgeOther.layer.borderWidth = 1.0;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		330010711A2EF16500239D8D /* SubmitFormAndSurvey.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */; };
 		330010741A2EF16600239D8D /* QuestionDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010731A2EF16600239D8D /* QuestionDetails.m */; };
+		3302251F1A47E64100D2F76C /* AccidentReportSubmit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302251E1A47E64100D2F76C /* AccidentReportSubmit.m */; };
+		330225251A47EB6400D2F76C /* Report.m in Sources */ = {isa = PBXBuildFile; fileRef = 330225241A47EB6400D2F76C /* Report.m */; };
 		3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */; };
 		3302B8F11A2DC79A00FC7591 /* SurveyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F01A2DC79A00FC7591 /* SurveyList.m */; };
 		3302B8F41A2DC79B00FC7591 /* FormsList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F31A2DC79B00FC7591 /* FormsList.m */; };
@@ -171,10 +173,8 @@
 		33BF86251A39673D00AE6AD7 /* Rounded_bg_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33BF86221A39673D00AE6AD7 /* Rounded_bg_large@2x.png */; };
 		33BF86261A39673D00AE6AD7 /* Rounded_bg_medium@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33BF86231A39673D00AE6AD7 /* Rounded_bg_medium@2x.png */; };
 		33BF86271A39673D00AE6AD7 /* Rounded_bg_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33BF86241A39673D00AE6AD7 /* Rounded_bg_small@2x.png */; };
-		33C4D01C1A2839E2005EC3FA /* Report.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D01B1A2839E2005EC3FA /* Report.m */; };
 		33C4D01F1A2839E3005EC3FA /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D01E1A2839E3005EC3FA /* Person.m */; };
 		33C4D0221A28460C005EC3FA /* AccidentPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0211A28460C005EC3FA /* AccidentPerson.m */; };
-		33C4D0251A28460D005EC3FA /* AccidentReportSubmit.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0241A28460D005EC3FA /* AccidentReportSubmit.m */; };
 		33C4D0281A289441005EC3FA /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C4D0271A289441005EC3FA /* InjuryDetail.m */; };
 		33C7957D1A3859CB0029FA21 /* DailyLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C7957C1A3859CB0029FA21 /* DailyLogViewController.m */; };
 		33C795801A3879FA0029FA21 /* DailyLogReviewProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C7957F1A3879FA0029FA21 /* DailyLogReviewProgressViewController.m */; };
@@ -328,6 +328,10 @@
 		330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitFormAndSurvey.m; sourceTree = "<group>"; };
 		330010721A2EF16600239D8D /* QuestionDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionDetails.h; sourceTree = "<group>"; };
 		330010731A2EF16600239D8D /* QuestionDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionDetails.m; sourceTree = "<group>"; };
+		3302251D1A47E64100D2F76C /* AccidentReportSubmit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportSubmit.h; sourceTree = "<group>"; };
+		3302251E1A47E64100D2F76C /* AccidentReportSubmit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportSubmit.m; sourceTree = "<group>"; };
+		330225231A47EB6400D2F76C /* Report.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Report.h; sourceTree = "<group>"; };
+		330225241A47EB6400D2F76C /* Report.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Report.m; sourceTree = "<group>"; };
 		3302B8E91A2DBC8900FC7591 /* SurveyQuestions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyQuestions.h; sourceTree = "<group>"; };
 		3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyQuestions.m; sourceTree = "<group>"; };
 		3302B8EF1A2DC79A00FC7591 /* SurveyList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyList.h; sourceTree = "<group>"; };
@@ -589,14 +593,10 @@
 		33BF86221A39673D00AE6AD7 /* Rounded_bg_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Rounded_bg_large@2x.png"; sourceTree = "<group>"; };
 		33BF86231A39673D00AE6AD7 /* Rounded_bg_medium@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Rounded_bg_medium@2x.png"; sourceTree = "<group>"; };
 		33BF86241A39673D00AE6AD7 /* Rounded_bg_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Rounded_bg_small@2x.png"; sourceTree = "<group>"; };
-		33C4D01A1A2839E2005EC3FA /* Report.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Report.h; sourceTree = "<group>"; };
-		33C4D01B1A2839E2005EC3FA /* Report.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Report.m; sourceTree = "<group>"; };
 		33C4D01D1A2839E3005EC3FA /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		33C4D01E1A2839E3005EC3FA /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		33C4D0201A28460C005EC3FA /* AccidentPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentPerson.h; sourceTree = "<group>"; };
 		33C4D0211A28460C005EC3FA /* AccidentPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentPerson.m; sourceTree = "<group>"; };
-		33C4D0231A28460D005EC3FA /* AccidentReportSubmit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportSubmit.h; sourceTree = "<group>"; };
-		33C4D0241A28460D005EC3FA /* AccidentReportSubmit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentReportSubmit.m; sourceTree = "<group>"; };
 		33C4D0261A289441005EC3FA /* InjuryDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryDetail.h; sourceTree = "<group>"; };
 		33C4D0271A289441005EC3FA /* InjuryDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryDetail.m; sourceTree = "<group>"; };
 		33C7957B1A3859CB0029FA21 /* DailyLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyLogViewController.h; sourceTree = "<group>"; };
@@ -928,12 +928,12 @@
 		332F543A1A23438E00F2A40A /* AccidentReport */ = {
 			isa = PBXGroup;
 			children = (
+				3302251D1A47E64100D2F76C /* AccidentReportSubmit.h */,
+				3302251E1A47E64100D2F76C /* AccidentReportSubmit.m */,
 				33D879A11A414AB400CC312C /* AccidentReportInfo.h */,
 				33D879A21A414AB400CC312C /* AccidentReportInfo.m */,
 				33C4D0261A289441005EC3FA /* InjuryDetail.h */,
 				33C4D0271A289441005EC3FA /* InjuryDetail.m */,
-				33C4D0231A28460D005EC3FA /* AccidentReportSubmit.h */,
-				33C4D0241A28460D005EC3FA /* AccidentReportSubmit.m */,
 				33C4D0201A28460C005EC3FA /* AccidentPerson.h */,
 				33C4D0211A28460C005EC3FA /* AccidentPerson.m */,
 				332F54681A234BD800F2A40A /* CareProvidedType.h */,
@@ -1099,12 +1099,12 @@
 		33585F1D1A1DB69100B6D28A /* IncidentReport */ = {
 			isa = PBXGroup;
 			children = (
+				330225231A47EB6400D2F76C /* Report.h */,
+				330225241A47EB6400D2F76C /* Report.m */,
 				33D879A41A414AC700CC312C /* IncidentReportInfo.h */,
 				33D879A51A414AC700CC312C /* IncidentReportInfo.m */,
 				33C4D01D1A2839E3005EC3FA /* Person.h */,
 				33C4D01E1A2839E3005EC3FA /* Person.m */,
-				33C4D01A1A2839E2005EC3FA /* Report.h */,
-				33C4D01B1A2839E2005EC3FA /* Report.m */,
 				332F545C1A2344BB00F2A40A /* ConditionList.h */,
 				332F545D1A2344BB00F2A40A /* ConditionList.m */,
 				332F54591A2344BB00F2A40A /* ActivityList.h */,
@@ -2147,6 +2147,7 @@
 				33C7957D1A3859CB0029FA21 /* DailyLogViewController.m in Sources */,
 				3337809719E6B6EA00362F82 /* YAxisBand.m in Sources */,
 				3397CAD619D034C000788153 /* SplashViewController.m in Sources */,
+				3302251F1A47E64100D2F76C /* AccidentReportSubmit.m in Sources */,
 				3354198119E7A931009B2B20 /* SignatureView.m in Sources */,
 				332E3A4F19D570C60088AB61 /* TaskTableViewCell.m in Sources */,
 				33B6368719D9327800875A1D /* UtilizationCountTableViewCell.m in Sources */,
@@ -2170,7 +2171,6 @@
 				3397CAA619D02D7A00788153 /* AppDelegate.m in Sources */,
 				3341573519E9513600A71E02 /* GraphView.m in Sources */,
 				33CD6B7119DABB240024A02D /* EmergencyPersonnelView.m in Sources */,
-				33C4D0251A28460D005EC3FA /* AccidentReportSubmit.m in Sources */,
 				33DF9A4919DC238F0055841D /* TPKeyboardAvoidingTableView.m in Sources */,
 				332B61091A14BE1300B7C7EF /* UserFacility.m in Sources */,
 				3354198719E7DD7C009B2B20 /* GraphListViewController.m in Sources */,
@@ -2240,10 +2240,10 @@
 				334585F819D98681000AB7E1 /* BodyPartInjury.m in Sources */,
 				33EB4A5B19D18F5E008EF8FD /* UserRegistrationViewController.m in Sources */,
 				332B60EF1A146D9C00B7C7EF /* Reachability.m in Sources */,
-				33C4D01C1A2839E2005EC3FA /* Report.m in Sources */,
 				3337809019E6B6EA00362F82 /* MIMFloatingView.m in Sources */,
 				332B31F31A2C92C0001DE737 /* DynamicFormCell.m in Sources */,
 				33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */,
+				330225251A47EB6400D2F76C /* Report.m in Sources */,
 				3337809519E6B6EA00362F82 /* XAxisBand.m in Sources */,
 				33CD6B7419DABB380024A02D /* ThirdSection.m in Sources */,
 				3366BC161A1724B8003FA3BF /* ERPCategory.m in Sources */,

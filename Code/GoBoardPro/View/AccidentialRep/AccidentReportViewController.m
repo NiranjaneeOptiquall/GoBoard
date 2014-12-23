@@ -29,10 +29,248 @@
     [_txtLocation setEnabled:NO];
     [self fetchAccidentReportSetupInfo];
     [self fetchFacilities];
+    [self viewSetup];
 //    [self btnNotificationTapped:_btnNone];
     [self addViews];
     _isUpdate = NO;
+    [self fetchIncompleteReportIfAny];
+}
+
+- (void)fetchIncompleteReportIfAny {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0", [[User currentUser] userId]];
+    [request setPredicate:predicate];
+    AccidentReportSubmit *aReport = [[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil] firstObject];
+    if (aReport) {
+        _isUpdate = YES;
+        [self PopulateIncompleteData:aReport];
+        [gblAppDelegate.managedObjectContext deleteObject:aReport];
+        [gblAppDelegate.managedObjectContext save:nil];
+    }
+    
+    
+}
+
+- (void)PopulateIncompleteData:(AccidentReportSubmit*)aReport {
+    NSMutableArray *mutArr = [NSMutableArray arrayWithArray:[aReport.dateOfIncident componentsSeparatedByString:@" "]];
+    NSString *aDateOfAccident = [mutArr firstObject];
+    [mutArr removeObjectAtIndex:0];
+    _txtTimeOfIncident.text = [mutArr componentsJoinedByString:@" "];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *incidentDate = [aFormatter dateFromString:aDateOfAccident];
+    [aFormatter setDateFormat:@"MM/dd/yyyy"];
+    _txtDateOfIncident.text = [aFormatter stringFromDate:incidentDate];
+
+    selectedFacility = [[aryFacilities filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", aReport.facilityId]] firstObject];
+    _txtFacility.text = selectedFacility.name;
+    if (selectedFacility)
+        [self fetchLocation];
+    selectedLocation = [[aryLocation filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", aReport.locationId]] firstObject];
+    _txtLocation.text = selectedLocation.name;
+    _txvDescription.text = aReport.accidentDesc;
+
+    _btn911Called.selected = ([aReport.isNotification1Selected isEqualToString:@"true"]) ? YES : NO;
+    _btnPoliceCalled.selected = ([aReport.isNotification2Selected isEqualToString:@"true"]) ? YES : NO;
+    _btnManager.selected = ([aReport.isNotification3Selected isEqualToString:@"true"]) ? YES : NO;
+    _btnNone.selected = ([aReport.isNotification4Selected isEqualToString:@"true"]) ? YES : NO;
+    
+    [self popolatePersonalInformation:aReport.accidentPerson.allObjects];
+    [self populateEmergencyPersonnel:aReport.emergencyPersonnels.allObjects];
+    [self populateWitness:aReport.witnesses.allObjects];
+    finalSection.txtEmpFName.text = aReport.employeeFirstName;
+    finalSection.txtEmpLName.text = aReport.employeeLastName;
+    finalSection.txtEmpMI.text = aReport.employeeMiddleInitial;
+    finalSection.txtEmpHomePhone.text = aReport.employeeHomePhone;
+    finalSection.txtEmpAlternatePhone.text = aReport.employeeAlternatePhone;
+    finalSection.txtEmpEmailAddr.text = aReport.employeeEmail;
+    finalSection.txvReportFilerAccount.text = aReport.reportFilerAccount;
+    finalSection.txvAdditionalInformation.text = aReport.additionalInfo;
+}
+
+- (void)popolatePersonalInformation:(NSArray*)aryPersonInfo {
+    for (int i = 0; i < [aryPersonInfo count]; i++) {
+        AccidentPerson *aPerson = aryPersonInfo[i];
+        if (i > 0) {
+            [self addAccidentView];
+        }
+        AccidentFirstSection *aFirstSection = nil;
+        for (AccidentFirstSection *aView in _vwFirstSection.subviews) {
+            if ([aView isKindOfClass:[AccidentFirstSection class]]) {
+                aFirstSection = aView;
+            }
+        }
         
+        PersonInformation *vwPersonalInfo = aFirstSection.vwPersonalInfo;
+        
+        if (vwPersonalInfo.btnMember.tag == [aPerson.personTypeID integerValue]) {
+            [vwPersonalInfo.btnMember setSelected:YES];
+        }
+        else if (vwPersonalInfo.btnGuest.tag == [aPerson.personTypeID integerValue]) {
+            [vwPersonalInfo.btnGuest setSelected:YES];
+        }
+        else if (vwPersonalInfo.btnEmployee.tag == [aPerson.personTypeID integerValue]) {
+            [vwPersonalInfo.btnEmployee setSelected:YES];
+        }
+        
+        UIButton *aBtnAffiliationType = (UIButton*)[vwPersonalInfo.vwAffiliation viewWithTag:[aPerson.affiliationTypeID integerValue]];
+        [aBtnAffiliationType setSelected:YES];
+        
+        vwPersonalInfo.txtMemberId.text = aPerson.memberId;
+        vwPersonalInfo.txtEmployeePosition.text = aPerson.employeeTitle;
+        vwPersonalInfo.txtFirstName.text = aPerson.firstName;
+        vwPersonalInfo.txtMi.text = aPerson.middleInitial;
+        vwPersonalInfo.txtLastName.text = aPerson.lastName;
+        vwPersonalInfo.txtStreetAddress.text = aPerson.streetAddress;
+        vwPersonalInfo.txtAppartment.text = aPerson.apartmentNumber;
+        vwPersonalInfo.txtCity.text = aPerson.city;
+        vwPersonalInfo.txtState.text = aPerson.state;
+        vwPersonalInfo.txtZip.text = aPerson.zip;
+        vwPersonalInfo.txtHomePhone.text = aPerson.primaryPhone;
+        vwPersonalInfo.txtAlternatePhone.text = aPerson.alternatePhone;
+        vwPersonalInfo.txtEmailAddress.text = aPerson.email;
+        
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSDate *aDate = [aFormatter dateFromString:[[aPerson.dateOfBirth componentsSeparatedByString:@" "] firstObject]];
+        [aFormatter setDateFormat:@"MM/dd/yyyy"];
+        vwPersonalInfo.txtDob.text = [aFormatter stringFromDate:aDate];
+        
+        vwPersonalInfo.txtActivity.text = [[[_reportSetupInfo.activityList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"activityId MATCHES[cd] %@", aPerson.activityTypeID]] firstObject] name];
+        vwPersonalInfo.txtWheather.text = [[[_reportSetupInfo.conditionList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"conditionId MATCHES[cd] %@", aPerson.conditionTypeID]] firstObject] name];
+        vwPersonalInfo.txtEquipment.text = [[[_reportSetupInfo.equipmentList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"equipmentId MATCHES[cd] %@", aPerson.equipmentTypeID]] firstObject] name];
+        
+//        [aPerson.injuryList allObjects];
+        BodyPartInjury *vwBodyPart = aFirstSection.vwBodyPartInjury;
+        
+        NSArray *injuryList = aPerson.injuryList.allObjects;
+        
+        NSMutableArray *mutArrInjury = [NSMutableArray array];
+        for (InjuryDetail *injury in injuryList) {
+            
+            NSMutableDictionary *aMutDict = [NSMutableDictionary dictionary];
+            [aMutDict setObject:injury.natureId forKey:@"nature"];
+            if (![injury.generalInjuryTypeId isEqualToString:@""]) {
+                id obj = [[_reportSetupInfo.generalInjuryType.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"typeId MATCHES[cd] %@", injury.generalInjuryTypeId]] firstObject];
+                [aMutDict setObject:injury.generalInjuryOther forKey:@"generalOther"];
+                [aMutDict setObject:injury.generalInjuryOther forKey:@"injury"];
+                if (obj) {
+                    [aMutDict setObject:[obj valueForKey:@"name"] forKey:@"injury"];
+                    [aMutDict setObject:obj forKey:@"GeneralInjuryType"];
+                }
+            }
+            if (injury.bodyPartInjuryTypeId) {
+                id obj = [[_reportSetupInfo.bodypartInjuryType.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"typeId MATCHES[cd] %@", injury.bodyPartInjuryTypeId]] firstObject];
+                if (obj) {
+                    [aMutDict setObject:[obj valueForKey:@"name"] forKey:@"injury"];
+                    [aMutDict setObject:obj forKey:@"BodyPartInjuryType"];
+                }
+                
+                NSMutableArray *mutArr = [NSMutableArray array];
+                [mutArr addObjectsFromArray:_reportSetupInfo.headInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.abdomenInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.legInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.armInjuryList.allObjects];
+                
+                obj = [[mutArr filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", injury.bodyPartInjuryTypeId]] firstObject];
+                if (obj) {
+                    [aMutDict setObject:obj forKey:@"part"];
+                }
+            
+            }
+            if (injury.actionTakenId) {
+                id obj = [[[_reportSetupInfo.actionList allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"%K MATCHES %@", @"actionId", injury.actionTakenId]] firstObject];
+                if (obj) {
+                    [aMutDict setObject:obj forKey:@"action"];
+                }
+            }
+            
+            [mutArrInjury addObject:aMutDict];
+        }
+        vwBodyPart.mutArrInjuryList = mutArrInjury;
+        [vwBodyPart.tblAddedInjuryList reloadData];
+        
+        
+        vwBodyPart.txtCareProvided.text = [[[_reportSetupInfo.careProviderList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] name];
+        
+        BodilyFluidView *vwBodilyFluid = aFirstSection.vwBodilyFluid;
+        vwBodilyFluid.txtFName.text = aPerson.firstAidFirstName;
+        vwBodilyFluid.txtLName.text = aPerson.firstAidLastName;
+        vwBodilyFluid.txtMI.text = aPerson.firstAidMiddleInitial;
+        vwBodilyFluid.txtPosition.text = aPerson.firstAidPosition;
+        
+        vwBodilyFluid.signatureView.txtName.text = aPerson.participantName;
+        vwBodilyFluid.signatureView.tempDrawImage.image = [UIImage imageWithData:aPerson.participantSignature];
+        
+        vwBodilyFluid.txvStaffMemberAccount.text = aPerson.staffMemberWrittenAccount;
+        
+        if (vwBodilyFluid.btnSelfTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
+            [vwBodilyFluid.btnSelfTreated setSelected:YES];
+        }
+        else if (vwBodilyFluid.btnEmployeeTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
+            [vwBodilyFluid.btnEmployeeTreated setSelected:YES];
+        }
+        else if (vwBodilyFluid.btnMedicalPersonnelTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
+            [vwBodilyFluid.btnMedicalPersonnelTreated setSelected:YES];
+        }
+        
+        if ([aPerson.bloodCleanUpRequired isEqualToString:@"true"]) {
+            [vwBodilyFluid.btnBloodCleanupRequired setSelected:YES];
+            [vwBodilyFluid.btnBloodCleanupNotRequired setSelected:NO];
+        }
+        else {
+            [vwBodilyFluid.btnBloodCleanupNotRequired setSelected:YES];
+            [vwBodilyFluid.btnBloodCleanupRequired setSelected:NO];
+        }
+        if ([aPerson.wasExposedToBlood isEqualToString:@"true"]) {
+            [vwBodilyFluid.btnExposedToBlood setSelected:YES];
+            [vwBodilyFluid.btnNotExposedToBlood setSelected:NO];
+        }
+        else {
+            [vwBodilyFluid.btnExposedToBlood setSelected:NO];
+            [vwBodilyFluid.btnNotExposedToBlood setSelected:YES];
+        }
+        
+        aFirstSection.imgBodilyFluid = [UIImage imageWithData:aPerson.personPhoto];
+        
+    }
+}
+
+- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
+    for (int i = 0; i < [aryEmergency count]; i++) {
+        if (i > 0) {
+            [thirdSection initialSetUp];
+        }
+        EmergencyPersonnelView *vwEmergency = [thirdSection.mutArrEmergencyViews lastObject];
+        EmergencyPersonnel *aEmergency = aryEmergency[i];
+        vwEmergency.txtFirstName.text = aEmergency.firstName;
+        vwEmergency.txtLastName.text = aEmergency.lastName;
+        vwEmergency.txtMI.text = aEmergency.middileInitial;
+        vwEmergency.txtCaseNo.text = aEmergency.caseNumber;
+        vwEmergency.txtPhone.text = aEmergency.phone;
+        vwEmergency.txtBadge.text = aEmergency.badgeNumber;
+        vwEmergency.txtTime911Called.text = aEmergency.time911Called;
+        vwEmergency.txtTimeOfArrival.text = aEmergency.time911Arrival;
+        vwEmergency.txtTimeOfDeparture.text = aEmergency.time911Departure;
+        vwEmergency.txvAdditionalInfo.text = aEmergency.additionalInformation;
+    }
+}
+
+- (void)populateWitness:(NSArray*)aryWitness {
+    for (int i = 0; i < [aryWitness count]; i++) {
+        if (i > 0) {
+            [finalSection btnAddMoreWitnessTapped:nil];
+        }
+        WitnessView *vwWitness = [finalSection.mutArrWitnessViews lastObject];
+        Witness *aWitness = aryWitness[i];
+        vwWitness.txtWitnessFName.text = aWitness.firstName;
+        vwWitness.txtWitnessLName.text = aWitness.lastName;
+        vwWitness.txtWitnessMI.text = aWitness.middleInitial;
+        vwWitness.txtWitnessHomePhone.text = aWitness.homePhone;
+        vwWitness.txtWitnessAlternatePhone.text = aWitness.alternatePhone;
+        vwWitness.txtWitnessEmailAddress.text = aWitness.email;
+        vwWitness.txvDescIncident.text = aWitness.witnessWrittenAccount;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -73,11 +311,11 @@
     requestLoc = nil;
 }
 
-- (void)saveAccidentReportToLocal:(NSDictionary*)aDict {
-    
+- (void)saveAccidentReportToLocal:(NSDictionary*)aDict completed:(BOOL)isCompleted {
     
     AccidentReportSubmit *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-    
+    aReport.userId = [[User currentUser] userId];
+    aReport.isCompleted = [NSNumber numberWithBool:isCompleted];
     aReport.dateOfIncident = [aDict objectForKey:@"AccidentDate"];
     aReport.facilityId = [aDict objectForKey:@"FacilityId"];
     aReport.locationId = [aDict objectForKey:@"LocationId"];
@@ -137,7 +375,7 @@
     aReport.additionalInfo = [aDict objectForKey:@"AdditionalInformation"];
     //    aReport.com
     [gblAppDelegate.managedObjectContext insertedObjects];
-    if ([gblAppDelegate.managedObjectContext save:nil]) {
+    if ([gblAppDelegate.managedObjectContext save:nil] && isCompleted) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_ADDED_TO_SYNC delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     }
@@ -209,6 +447,7 @@
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
+    [self createSubmitRequest];
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -233,7 +472,7 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Accident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     } failure:^(NSError *error, NSDictionary *response) {
-        [self saveAccidentReportToLocal:request];
+        [self saveAccidentReportToLocal:request completed:YES];
     }];
 }
 
@@ -245,7 +484,9 @@
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (_isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Would you like to save this report and complete it later?  You will lose all entered information if you choose \"No\"." delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+        [alert setTag:3];
+        [alert show];
     }
     else {
         [self removeObservers];
@@ -275,7 +516,7 @@
     [_btn911Called setTitle:_reportSetupInfo.notificationField1 forState:UIControlStateNormal];
     [_btn911Called setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField1Color] forState:UIControlStateNormal];
     [_btnPoliceCalled setTitle:_reportSetupInfo.notificationField2 forState:UIControlStateNormal];
-    [_btnPoliceCalled setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
+    [_btnPoliceCalled setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField2Color] forState:UIControlStateNormal];
     [_btnManager setTitle:_reportSetupInfo.notificationField3 forState:UIControlStateNormal];
     [_btnManager setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
     [_btnNone setTitle:_reportSetupInfo.notificationField4 forState:UIControlStateNormal];
@@ -340,6 +581,8 @@
     CGRect frame;
     if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
         thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+        thirdSection.parentVC = self;
+        [thirdSection initialSetUp];
         CGRect frame = thirdSection.frame;
         frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
         thirdSection.frame = frame;
@@ -351,6 +594,7 @@
     
     finalSection = (FinalSection*)[[[NSBundle mainBundle] loadNibNamed:@"FinalSection" owner:self options:nil] firstObject];
     finalSection.parentVC = self;
+    [finalSection addWitnessView];
     [finalSection setBackgroundColor:[UIColor clearColor]];
     frame = finalSection.frame;
     if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
@@ -394,11 +638,14 @@
 
 - (NSDictionary*)createSubmitRequest {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"MM/dd/yyyy"];
-    NSDate *incidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
-    //    NSDate *managementFollowupDate = [aFormatter dateFromString:_txtManagementFollowUp.text];
-    [aFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSString *astrAccidentDate = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:incidentDate], _txtTimeOfIncident.text];
+    [aFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+    
+    
+    NSString *aStr = [NSString stringWithFormat:@"%@ %@", _txtDateOfIncident.text, _txtTimeOfIncident.text];
+    NSDate *incidentDate = [aFormatter dateFromString:aStr];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    NSString *astrAccidentDate = [aFormatter stringFromDate:incidentDate];
     
     
     
@@ -420,8 +667,14 @@
         NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
         [mutArrWitness addObject:aDict];
     }
-    
-    NSDictionary *aDict = @{@"AccidentDate":astrAccidentDate, @"FacilityId":selectedFacility.value, @"LocationId":selectedLocation.value, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+    NSString *facilityId = @"", *locationId = @"";
+    if (selectedFacility.value) {
+        facilityId = selectedFacility.value;
+    }
+    if (selectedLocation.value) {
+        locationId = selectedLocation.value;
+    }
+    NSDictionary *aDict = @{@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
     return aDict;
 }
 
@@ -595,7 +848,15 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
+    if (alertView.tag == 3) {
+        if (buttonIndex == 0) {
+            [self saveAccidentReportToLocal:[self createSubmitRequest] completed:NO];
+        }
+        [self removeObservers];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }
+    else if (buttonIndex == 0) {
         [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];
     }

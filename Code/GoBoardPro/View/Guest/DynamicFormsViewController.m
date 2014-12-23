@@ -116,15 +116,21 @@
             }
             else if ([aDict[@"responseType"] isEqualToString:@"date"]) {
                 NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-                [aFormatter setDateFormat:@"MM/dd/yyyy"];
-                NSDate *aDate = [aFormatter dateFromString:aDict[@"answer"]];
+                [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                 [aFormatter setDateFormat:@"yyyy-MM-dd"];
-                [dict setObject:[aFormatter stringFromDate:aDate] forKey:@"ResponseText"];
+                [dict setObject:[aFormatter stringFromDate:aDict[@"answerDate"]] forKey:@"ResponseText"];
             }
             else if ([aDict[@"responseType"] isEqualToString:@"radioButtonList"]) {
                 NSDictionary *resp = [aDict[@"responseList"] objectAtIndex:[aDict[@"answer"] integerValue]];
                 [dict setObject:resp[@"name"] forKey:@"ResponseText"];
                 [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+            }
+            else if ([aDict[@"responseType"] isEqualToString:@"time"]) {
+                NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+                [aFormatter setDateFormat:@"hh:mm a"];
+                NSDate *dt = [aFormatter dateFromString:aDict[@"answer"]];
+                [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                [dict setObject:[aFormatter stringFromDate:dt] forKey:@"ResponseText"];
             }
             else {
                 [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
@@ -432,6 +438,7 @@
 - (void)datePickerDidSelect:(NSDate*)date forObject:(id)field {
     isUpdate = YES;
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
+    [aDict setObject:date forKey:@"answerDate"];
     [aDict setObject:[field text] forKey:@"answer"];
 }
 

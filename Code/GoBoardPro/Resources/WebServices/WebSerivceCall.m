@@ -68,7 +68,7 @@
 - (void)callServiceForHomeSetup:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@", HOME_SCREEN_MODULES, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:HOME_SCREEN_MODULES] complition:^(NSDictionary *response) {
-        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"Position" ascending:NO];
+        NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"Position" ascending:YES];
         gblAppDelegate.mutArrHomeMenus = [response objectForKey:@"Modules"];
         [gblAppDelegate.mutArrHomeMenus sortUsingDescriptors:@[sort]];
         if ([gblAppDelegate.managedObjectContext save:nil]) {
@@ -302,6 +302,7 @@
         aList.name = [aDict objectForKey:@"Name"];
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
         NSDate *aDate = [formatter dateFromString:[[aDict[@"TaskDateTime"] componentsSeparatedByString:@"."] firstObject]];
         aList.taskDateTime = aDate;

@@ -2,7 +2,7 @@
 //  Report.m
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
+//  Created by ind558 on 22/12/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
 
@@ -37,6 +37,9 @@
 @dynamic managementFollowUpDate;
 @dynamic natureId;
 @dynamic reportFilerAccount;
+@dynamic isCompleted;
+@dynamic userId;
+@dynamic incidentType;
 @dynamic emergencyPersonnels;
 @dynamic persons;
 @dynamic witnesses;

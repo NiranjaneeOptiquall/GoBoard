@@ -175,6 +175,13 @@
                     <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="F7i-zH-ijd">
+                    <rect key="frame" x="704" y="401" width="10" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                    <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kQ8-IG-ayL">
                     <rect key="frame" x="282" y="3" width="130" height="44"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -221,6 +228,7 @@
                 <outlet property="lblDescCaption" destination="fd9-JD-CJH" id="230-Gw-uoo"/>
                 <outlet property="lblWitnessWrittenAccount" destination="1t3-2r-zSU" id="s4s-Io-vOK"/>
                 <outlet property="markerAlternatePhone" destination="A3V-wZ-OfC" id="D39-Aa-nDG"/>
+                <outlet property="markerDescription" destination="F7i-zH-ijd" id="P2t-BF-h65"/>
                 <outlet property="markerEmail" destination="FP1-FW-mNX" id="4fn-ih-wKr"/>
                 <outlet property="markerFirstName" destination="No3-OF-afA" id="AJa-q7-4tC"/>
                 <outlet property="markerLastName" destination="sQS-LQ-fH1" id="AT6-Xn-ZVd"/>

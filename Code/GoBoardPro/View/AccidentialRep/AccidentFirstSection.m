@@ -55,8 +55,16 @@
     }
     else if ([keyPath isEqualToString:@"careProvided"]) {
         CGRect frame = CGRectZero;
-        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self treated"]) {
+        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self care"] || [[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"refused care"]) {
             [_vwBodilyFluid.vwRefuseCare setHidden:NO];
+            if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self care"]) {
+                _vwBodilyFluid.lblRefuseCareText.text = _parentVC.reportSetupInfo.selfCareStatement;
+                _vwBodilyFluid.lblRefuseCareCaption.text = @"Self Care Statement";
+            }
+            else {
+                _vwBodilyFluid.lblRefuseCareText.text = _parentVC.reportSetupInfo.refusedCareStatement;
+                _vwBodilyFluid.lblRefuseCareCaption.text = @"Refused Care Statement";
+            }
             float nextY = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
             if (_vwBodilyFluid.isParticipantSignatureVisible) {
                 frame = _vwBodilyFluid.vwParticipantSignature.frame;
@@ -141,6 +149,7 @@
         NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         NSDate *aDob = [aFormatter dateFromString:_vwPersonalInfo.txtDob.text];
+        [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         strDob = [aFormatter stringFromDate:aDob];
     }
@@ -153,8 +162,8 @@
     }
 
     NSString *strPhoto = @"", *strSignature = @"";
-    if (imgBodilyFluid) {
-        strPhoto = [UIImageJPEGRepresentation(imgBodilyFluid, 1.0) base64EncodedStringWithOptions:0];
+    if (_imgBodilyFluid) {
+        strPhoto = [UIImageJPEGRepresentation(_imgBodilyFluid, 1.0) base64EncodedStringWithOptions:0];
     }
     if (_vwBodilyFluid.signatureView.tempDrawImage.image) {
         strSignature = [UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0) base64EncodedStringWithOptions:0];
@@ -240,7 +249,7 @@
 #pragma mark - UIImagePickerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    imgBodilyFluid = [info objectForKey:UIImagePickerControllerEditedImage];
+    _imgBodilyFluid = [info objectForKey:UIImagePickerControllerEditedImage];
     if (popOver) {
         [popOver dismissPopoverAnimated:YES];
     }

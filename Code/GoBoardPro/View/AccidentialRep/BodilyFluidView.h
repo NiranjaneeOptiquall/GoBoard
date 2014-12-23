@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblRefuseCareText;
 @property (weak, nonatomic) IBOutlet UIView *vwParticipantSignature;
 @property (weak, nonatomic) IBOutlet UIView *vwStaffMember;
+@property (weak, nonatomic) IBOutlet UILabel *lblRefuseCareCaption;
 
 @property (weak, nonatomic) IBOutlet UILabel *markerFName;
 @property (weak, nonatomic) IBOutlet UILabel *markerMI;

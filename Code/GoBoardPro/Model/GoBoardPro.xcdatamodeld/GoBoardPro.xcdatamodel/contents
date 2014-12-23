@@ -99,6 +99,7 @@
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAdminstrationSelected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAllSupervisorSelected" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isNotification1Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification2Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification3Selected" optional="YES" attributeType="String" syncable="YES"/>
@@ -106,6 +107,7 @@
         <attribute name="isRiskManagementSelected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reportFilerAccount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentPerson" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AccidentPerson" inverseName="accidentInfo" inverseEntity="AccidentPerson" syncable="YES"/>
         <relationship name="emergencyPersonnels" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EmergencyPersonnel" inverseName="accidentInfo" inverseEntity="EmergencyPersonnel" syncable="YES"/>
         <relationship name="witnesses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Witness" inverseName="accidentInfo" inverseEntity="Witness" syncable="YES"/>
@@ -322,6 +324,8 @@
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="followUpCallType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="incidentDesc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="incidentType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isNotification1Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification2Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification3Selected" optional="YES" attributeType="String" syncable="YES"/>
@@ -330,6 +334,7 @@
         <attribute name="managementFollowUpDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="natureId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reportFilerAccount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="emergencyPersonnels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EmergencyPersonnel" inverseName="report" inverseEntity="EmergencyPersonnel" syncable="YES"/>
         <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="report" inverseEntity="Person" syncable="YES"/>
         <relationship name="witnesses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Witness" inverseName="report" inverseEntity="Witness" syncable="YES"/>
@@ -461,7 +466,7 @@
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="88"/>
         <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="643"/>
         <element name="AccidentReportInfo" positionX="-191" positionY="104" width="128" height="598"/>
-        <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="373"/>
+        <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="403"/>
         <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="103"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="103"/>
         <element name="ArmInjuryList" positionX="-200" positionY="747" width="128" height="88"/>
@@ -486,7 +491,7 @@
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
         <element name="Person" positionX="133" positionY="-540" width="128" height="403"/>
         <element name="QuestionDetails" positionX="-36" positionY="810" width="128" height="118"/>
-        <element name="Report" positionX="297" positionY="-540" width="128" height="433"/>
+        <element name="Report" positionX="297" positionY="-540" width="128" height="478"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-207" positionY="810" width="128" height="118"/>

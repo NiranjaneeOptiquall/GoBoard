@@ -13,7 +13,7 @@
 {
     NSInteger syncCount;
     BOOL isErrorOccurred;
-    NSInteger intUnreadMemoCount;
+    NSInteger intUnreadMemoCount, intPendingAccidentReport, intPendingIncidentReport;
 }
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblPendingCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblMemoCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblWelcomeUser;
+@property (weak, nonatomic) IBOutlet UICollectionView *cvMenuGrid;
 
 
 - (IBAction)btnStartSyncCount:(id)sender;

@@ -295,7 +295,8 @@
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]]];
-        [ary addObject:@{@"name":@"Self Treated", @"careProvidedID":@"-1"}];
+        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
+        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
         [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }

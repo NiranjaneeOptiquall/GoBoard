@@ -22,7 +22,7 @@
 
 - (void)awakeFromNib {
     _mutArrWitnessViews = [[NSMutableArray alloc] init];
-    [self addWitnessView];
+    
     [self btnCommunicationTapped:_btnAdmin];
     [self btnSentToInsuranceTapped:_btnYesInsurance];
     [self btnProcedureFollowedTapped:_btnYesProcedure];

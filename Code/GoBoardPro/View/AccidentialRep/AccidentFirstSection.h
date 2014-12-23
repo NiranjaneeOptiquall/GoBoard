@@ -15,7 +15,7 @@
 @class AccidentReportViewController;
 
 @interface AccidentFirstSection : UIView<UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
-    UIImage *imgBodilyFluid;
+    
     UIPopoverController *popOver;
 }
 
@@ -23,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet BodyPartInjury *vwBodyPartInjury;
 @property (weak, nonatomic) IBOutlet BodilyFluidView *vwBodilyFluid;
 @property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
-
+@property (strong, nonatomic) UIImage *imgBodilyFluid;
 @property (assign, nonatomic) BOOL isCaptureCameraVisible;
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
