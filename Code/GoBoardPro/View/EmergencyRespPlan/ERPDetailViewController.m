@@ -222,6 +222,13 @@
     else {
         [linkBtn setHidden:YES];
     }
+//    if ([task.type isEqualToString:@"video"]) {
+//        [linkBtn setImage:[UIImage imageNamed:@"erp_video_icon@2x.png"] forState:UIControlStateNormal];
+//    }
+//    else {
+//        [linkBtn setImage:[UIImage imageNamed:@"erp_photo_icon@2x.png"] forState:UIControlStateNormal];
+//    }
+    
     [linkBtn addTarget:self action:@selector(btnViewLinkTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;

@@ -71,6 +71,20 @@
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"Position" ascending:YES];
         gblAppDelegate.mutArrHomeMenus = [response objectForKey:@"Modules"];
         [gblAppDelegate.mutArrHomeMenus sortUsingDescriptors:@[sort]];
+        int Pos = 0;
+        for (int i = 0; i < gblAppDelegate.mutArrHomeMenus.count; i++) {
+            int currentPos = [[gblAppDelegate.mutArrHomeMenus[i] objectForKey:@"Position"] intValue];
+            int differance = currentPos - Pos;
+            if (differance > 1) {
+                for (int j = 0; j < differance-1; j++) {
+                    [gblAppDelegate.mutArrHomeMenus insertObject:@{@"IsActive":[NSNumber numberWithBool:NO], @"Position":[NSNumber numberWithInt:Pos+1]} atIndex:i];
+                    Pos++;
+                    i++;
+                }
+            }
+            Pos = currentPos;
+        }
+        
         if ([gblAppDelegate.managedObjectContext save:nil]) {
             isWSComplete = YES;
         }

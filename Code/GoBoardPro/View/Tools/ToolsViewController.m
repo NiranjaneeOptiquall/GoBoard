@@ -522,59 +522,63 @@
         [self btnMonthlyTapped:_btnMonthly];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsMonthly"]];
         strRecurrenceTypeId = dictSetting[@"Id"];
-        if ([dictSetting[@"Type"] isEqualToString:@"day"]) {
-            [_btnMonthlyDay setSelected:YES];
-            [_btnMonthThe setSelected:NO];
-            _txtMonthDay.text = [dictSetting[@"DateNumber"] stringValue];
-            _txtEveryMonth.text = [dictSetting[@"DateRecurrenceValue"] stringValue];
-        }
-        else {
-            [_btnMonthThe setSelected:YES];
-            [_btnMonthlyDay setSelected:NO];
-            NSDictionary *week = [[NUMBER_OF_WEEKS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekNumber"] stringValue]]] firstObject];
-            if (week) {
-                _txtMonthEveryThe.text = week[@"name"];
+        if ([dictSetting[@"Type"] isKindOfClass:[NSString class]]) {
+            if ([dictSetting[@"Type"] isEqualToString:@"day"]) {
+                [_btnMonthlyDay setSelected:YES];
+                [_btnMonthThe setSelected:NO];
+                _txtMonthDay.text = [dictSetting[@"DateNumber"] stringValue];
+                _txtEveryMonth.text = [dictSetting[@"DateRecurrenceValue"] stringValue];
             }
-            NSDictionary *day = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekDay"] stringValue]]] firstObject];
-            if (day) {
-                _txtMonthWeekday.text = week[@"name"];
+            else {
+                [_btnMonthThe setSelected:YES];
+                [_btnMonthlyDay setSelected:NO];
+                NSDictionary *week = [[NUMBER_OF_WEEKS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekNumber"] stringValue]]] firstObject];
+                if (week) {
+                    _txtMonthEveryThe.text = week[@"name"];
+                }
+                NSDictionary *day = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekDay"] stringValue]]] firstObject];
+                if (day) {
+                    _txtMonthWeekday.text = week[@"name"];
+                }
+                _txtMonthEveryThe.text = [dictSetting[@"DayRecurrenceValue"] stringValue];
+                //
             }
-            _txtMonthEveryThe.text = [dictSetting[@"DayRecurrenceValue"] stringValue];
-            //
         }
+        
     }
     else if ([dictTaskDetail[@"RecurrenceType"] isEqualToString:@"yearly"]) {
         [self btnYearlyTapped:_btnYearly];
         NSMutableDictionary *dictSetting = [self removeNullFromDictionary:dictTaskDetail[@"TaskRecurrenceSettingsYearly"]];
         strRecurrenceTypeId = dictSetting[@"Id"];
         _txtEveryYear.text = [dictSetting[@"RecurrenceValue"] stringValue];
-        if ([dictSetting[@"Type"] isEqualToString:@"date"]) {
-            [_btnOn setSelected:YES];
-            [_btnOnThe setSelected:NO];
-            NSDictionary *month = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DateMonth"] stringValue]]] firstObject];
-            if (month) {
-                _txtYearMonth.text = month[@"name"];
+        if ([dictSetting[@"Type"] isKindOfClass:[NSString class]]) {
+            if ([dictSetting[@"Type"] isEqualToString:@"date"]) {
+                [_btnOn setSelected:YES];
+                [_btnOnThe setSelected:NO];
+                NSDictionary *month = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DateMonth"] stringValue]]] firstObject];
+                if (month) {
+                    _txtYearMonth.text = month[@"name"];
+                }
+                _txtYearDate.text = [dictSetting[@"DateDay"] stringValue];
             }
-            _txtYearDate.text = [dictSetting[@"DateDay"] stringValue];
+            else {
+                [_btnOn setSelected:NO];
+                [_btnOnThe setSelected:YES];
+                NSDictionary *week = [[NUMBER_OF_WEEKS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekNumber"] stringValue]]] firstObject];
+                if (week) {
+                    _txtMonthEveryThe.text = week[@"name"];
+                }
+                NSDictionary *day = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekDay"] stringValue]]] firstObject];
+                if (day) {
+                    _txtYearWeekday.text = week[@"name"];
+                }
+                NSDictionary *month = [[MONTHS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayMonth"] stringValue]]] firstObject];
+                if (month) {
+                    _txtYearOnTheMonth.text = month[@"name"];
+                }
+                
+            }
         }
-        else {
-            [_btnOn setSelected:NO];
-            [_btnOnThe setSelected:YES];
-            NSDictionary *week = [[NUMBER_OF_WEEKS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekNumber"] stringValue]]] firstObject];
-            if (week) {
-                _txtMonthEveryThe.text = week[@"name"];
-            }
-            NSDictionary *day = [[WEEKDAYS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayWeekDay"] stringValue]]] firstObject];
-            if (day) {
-                _txtYearWeekday.text = week[@"name"];
-            }
-            NSDictionary *month = [[MONTHS filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"id MATCHES %@", [dictSetting[@"DayMonth"] stringValue]]] firstObject];
-            if (month) {
-                _txtYearOnTheMonth.text = month[@"name"];
-            }
-            
-        }
-        
     }
     
     if ([dictTaskDetail[@"ResponseType"] isEqualToString:@"dropdown"]) {

@@ -32,4 +32,5 @@
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnLikeToRcvTextMSGTapped:(UIButton *)sender;
+- (IBAction)btnPasswordHintTapped:(id)sender;
 @end

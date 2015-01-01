@@ -68,7 +68,6 @@
 - (IBAction)btnSignatureTapped:(id)sender {
     if (!_signatureView)
         _signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
-    
     [_signatureView showPopOverWithSender:sender];
 }
 

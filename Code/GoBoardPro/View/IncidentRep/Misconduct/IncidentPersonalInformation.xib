@@ -688,7 +688,7 @@
                 </view>
                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Yxp-gd-cKm">
                     <rect key="frame" x="650" y="794" width="110" height="84"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <inset key="titleEdgeInsets" minX="-67" minY="0.0" maxX="0.0" maxY="-50"/>
                     <inset key="imageEdgeInsets" minX="17" minY="-25" maxX="0.0" maxY="0.0"/>
                     <state key="normal" title="Take Photo" image="camera_icon.png">

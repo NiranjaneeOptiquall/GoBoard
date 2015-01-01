@@ -27,8 +27,10 @@
     [request setPredicate:predicate];
     NSInteger count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (count > 0) {
-        _lblBadgeMisconduct.text = [NSString stringWithFormat:@"%ld", (long)count];
         [_lblBadgeMisconduct setHidden:NO];
+    }
+    else {
+        [_lblBadgeMisconduct setHidden:YES];
     }
     // Get Costumer service Count
     predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0 AND incidentType = 2", [[User currentUser] userId]];
@@ -36,8 +38,10 @@
     [request setPredicate:predicate];
     count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (count > 0) {
-        _lblBadgeCustomerService.text = [NSString stringWithFormat:@"%ld", (long)count];
         [_lblBadgeCustomerService setHidden:NO];
+    }
+    else {
+        [_lblBadgeCustomerService setHidden:YES];
     }
     
     // Get Other Count
@@ -46,8 +50,10 @@
     [request setPredicate:predicate];
     count = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     if (count > 0) {
-        _lblBadgeOther.text = [NSString stringWithFormat:@"%ld", (long)count];
         [_lblBadgeOther setHidden:NO];
+    }
+    else {
+        [_lblBadgeOther setHidden:YES];
     }
     
     _lblBadgeMisconduct.layer.cornerRadius = 2.0;

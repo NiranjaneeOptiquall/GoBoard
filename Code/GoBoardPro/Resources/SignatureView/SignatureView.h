@@ -37,6 +37,9 @@
 @property (nonatomic, readwrite) CGFloat blue;
 @property (nonatomic, readwrite) CGFloat brush;
 @property (nonatomic, readwrite) CGFloat opacity;
+
+@property (nonatomic, copy) void (^Completion)();
+
 - (IBAction)ClearSignature;
 - (IBAction)DoneSigning:(id)sender;
 

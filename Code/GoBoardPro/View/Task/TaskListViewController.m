@@ -278,6 +278,8 @@
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
     [allTask setSortDescriptors:@[descriptor]];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime < %@", [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
+    [allTask setPredicate:predicate1];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
@@ -478,7 +480,9 @@
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         editingIndex = indexPath.row;
-        [dropDown showDropDownWith:[task.responseTypeValues allObjects] view:textField key:@"value"];
+        NSArray *ary = [task.responseTypeValues allObjects];
+        [ary sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"code" ascending:YES]]];
+        [dropDown showDropDownWith:ary view:textField key:@"value"];
         return NO;
     }
     return YES;

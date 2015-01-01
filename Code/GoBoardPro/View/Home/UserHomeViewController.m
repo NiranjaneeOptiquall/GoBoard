@@ -131,7 +131,7 @@
     __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
     if ([aDict[@"IsActive"] boolValue]) {
         if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
-            aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld", (long)[aDict[@"SystemModule"] integerValue]]];
+            aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld.png", (long)[aDict[@"SystemModule"] integerValue]]];
             aLblMenu.text = aDict[@"Name"];
             NSInteger count = 0;
             

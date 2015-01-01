@@ -26,9 +26,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblTask;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
 @property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
+@property (weak, nonatomic) IBOutlet UIButton *btnToggleSummary;
 
 - (IBAction)btnToggleCountAndTaskTapped:(id)sender;
 - (IBAction)btnSubmitCountTapped:(id)sender;
 - (IBAction)btnCountCommentTapped:(UIButton *)sender;
 - (IBAction)btnBackTapped:(id)sender;
+- (IBAction)btnToggleSummaryTapped:(UIButton *)sender;
 @end

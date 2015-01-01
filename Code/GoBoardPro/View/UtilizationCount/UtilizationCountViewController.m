@@ -168,6 +168,11 @@
     }
 }
 
+- (IBAction)btnToggleSummaryTapped:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
+    [_tblCountList reloadData];
+}
+
 - (void)btnIncreaseCountTapped:(UIButton*)btn {
     isUpdate = YES;
     id view = [btn superview];
@@ -310,20 +315,24 @@
         view = [view superview];
     }
     UtilizationCount *location;
+    NSInteger section = 0;
     if ([view isKindOfClass:[UtilizationHeaderView class]]) {
+        section = [(UtilizationHeaderView*)view section];
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
     }
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        section = indexPath.section;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
     }
-    location.isCountRemainSame = YES;
+    location.isCountRemainSame = !location.isCountRemainSame;
     location.isUpdateAvailable = YES;
     if (location.location) {
         location.location.isUpdateAvailable = YES;
         location.location.lastCountDateTime = [self getCurrentDate];
     }
     location.lastCountDateTime = [self getCurrentDate];
+    [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
     isUpdate = YES;
 }
 
@@ -382,7 +391,7 @@
     [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
     [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *lastDt = [aFormatter dateFromString:lastDate];
-    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [cal components:NSCalendarUnitMinute fromDate:lastDt toDate:[NSDate date] options:0];
     NSString *aStrTime = [NSString stringWithFormat:@"Last Count:%ld mins.", (long)components.minute];
     return aStrTime;
@@ -395,7 +404,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[[mutArrCount objectAtIndex:section] sublocations] count];
+    NSInteger rows = 0;
+    if (_btnToggleSummary.isSelected) {
+        rows = [[[mutArrCount objectAtIndex:section] sublocations] count];
+    }
+    return rows;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -428,7 +441,7 @@
         [aCell.txtCount setTextColor:[UIColor colorWithRed:124.0/255.0 green:193.0/255.0 blue:139.0/255.0 alpha:1.0]];
     }
     [aCell.txtCount setText:[NSString stringWithFormat:@"%d", aCurrent]];
-    [aCell.txtCount setFont:[UIFont boldSystemFontOfSize:64.0]];
+    [aCell.txtCount setFont:[UIFont boldSystemFontOfSize:50.0]];
     [aCell.txtCount setDelegate:self];
     [aCell.btnDecreaseCount addTarget:self action:@selector(btnDecreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnIncreaseCount addTarget:self action:@selector(btnIncreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -446,6 +459,14 @@
     if (indexPath.row == [location.sublocations count] - 1)
         [aCell.lblDevider setHidden:NO];
     else [aCell.lblDevider setHidden:YES];
+    
+    if (location.isCountRemainSame || subLocation.isCountRemainSame) {
+        [aCell.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
+    }
+    else {
+        [aCell.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
+    }
+    
     CGRect frame = [aCell.lblDevider frame];
     frame.origin.y = aCell.frame.size.height - frame.size.height;
     [aCell.lblDevider setFrame:frame];
@@ -507,6 +528,26 @@
         [aHeaderView.lblDevider setHidden:YES];
     else
         [aHeaderView.lblDevider setHidden:NO];
+    
+    
+    if (location.isCountRemainSame) {
+        [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
+    }
+    else {
+        [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
+    }
+    
+    if (_btnToggleSummary.isSelected && [[location.sublocations allObjects] count] > 0) {
+        // Breakup is shown
+        [aHeaderView.btnIncreaseCount setHidden:YES];
+        [aHeaderView.btnDecreaseCount setHidden:YES];
+        [aHeaderView.txtCount setUserInteractionEnabled:NO];
+        [aHeaderView.btnCountRemainSame setHidden:YES];
+        [aHeaderView.btnMessage setHidden:YES];
+    }
+    else {
+        // Summary is shown
+    }
     return aHeaderView;
 }
 

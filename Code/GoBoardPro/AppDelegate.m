@@ -25,6 +25,7 @@
     //    //sync Breadcrumb Mode
     [Crittercism setAsyncBreadcrumbMode:YES];
     _shouldHideActivityIndicator = YES;
+    _str = [[NSString alloc] initWithFormat:@"Test"];
     return YES;
 }
 
@@ -39,6 +40,7 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    NSLog(@"%@", _str);
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 

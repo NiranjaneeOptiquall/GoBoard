@@ -123,6 +123,10 @@
     [sender setSelected:!sender.isSelected];
 }
 
+- (IBAction)btnPasswordHintTapped:(id)sender {
+    alert(@"", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
+}
+
 #pragma mark - Methods
 
 - (void)getUserInfo {

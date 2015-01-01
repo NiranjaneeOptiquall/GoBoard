@@ -46,12 +46,39 @@
     [_btnBloodPresent setSelected:NO];
     [_btnBloodNotPresent setSelected:NO];
     [sender setSelected:YES];
+    if ([sender isEqual:_btnBloodPresent]) {
+        [_vwBloodborne setHidden:NO];
+        CGRect frame = _vwBloodbornePathogens.frame;
+        frame.size.height = CGRectGetMaxY(_vwBloodborne.frame);
+        _vwBloodbornePathogens.frame = frame;
+    }
+    else {
+        [_vwBloodborne setHidden:YES];
+        CGRect frame = _vwBloodbornePathogens.frame;
+        frame.size.height = CGRectGetMinY(_vwBloodborne.frame);
+        _vwBloodbornePathogens.frame = frame;
+    }
+    CGRect frame = _vwRefuseCare.frame;
+    frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
+    _vwRefuseCare.frame = frame;
+    [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
+    [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
+//    _vwParticipantSignature
+//    _vwStaffMember
 }
 
-- (IBAction)btnSignatureTapped:(id)sender {
+- (IBAction)btnSignatureTapped:(UIButton*)sender {
     if (!_signatureView)
         _signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
-        
+    __weak SignatureView *weakSignature = _signatureView;
+        [_signatureView setCompletion:^{
+            if (weakSignature.tempDrawImage.image) {
+                [sender setTitle:@"Edit Participant's Signature" forState:UIControlStateNormal];
+            }
+            else {
+                [sender setTitle:@"Participant's Signature" forState:UIControlStateNormal];
+            }
+        }];
     [_signatureView showPopOverWithSender:sender];
 }
 
@@ -166,11 +193,40 @@
         frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
         self.frame = frame;
     }
+    else {
+        [_vwRefuseCare setHidden:NO];
+        
+        CGRect frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+        _vwParticipantSignature.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
 }
 
 - (void)setIsParticipantSignatureVisible:(BOOL)isParticipantSignatureVisible {
     _isParticipantSignatureVisible = isParticipantSignatureVisible;
-    if (!_isParticipantSignatureVisible) {
+    [self shouldShowParticipantsSignatureView:_isParticipantSignatureVisible];
+}
+
+- (void)shouldShowParticipantsSignatureView:(BOOL)show {
+    if (show && _isRefusedCareSelected) {
+        [_vwParticipantSignature setHidden:NO];
+        CGRect frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+    else {
         [_vwParticipantSignature setHidden:YES];
         CGRect frame = _vwStaffMember.frame;
         frame.origin.y = CGRectGetMinY(_vwParticipantSignature.frame);
@@ -180,6 +236,37 @@
         frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
         self.frame = frame;
     }
+}
+
+- (void)shouldShowFirstAddView:(BOOL)show {
+    if (show) {
+        [_vwFirstAid setHidden:NO];
+        CGRect frame = _vwBloodborne.frame;
+        frame.origin.y = CGRectGetMaxY(_vwFirstAid.frame);
+        _vwBloodborne.frame = frame;
+    }
+    else {
+        [_vwFirstAid setHidden:YES];
+        CGRect frame = _vwBloodborne.frame;
+        frame.origin.y = CGRectGetMinY(_vwFirstAid.frame);
+        _vwBloodborne.frame = frame;
+    }
+    
+    if ([_btnBloodPresent isSelected]) {
+        CGRect frame = _vwBloodbornePathogens.frame;
+        frame.size.height = CGRectGetMaxY(_vwBloodborne.frame);
+        _vwBloodbornePathogens.frame = frame;
+    }
+    else {
+        CGRect frame = _vwBloodbornePathogens.frame;
+        frame.size.height = CGRectGetMinY(_vwBloodborne.frame);
+        _vwBloodbornePathogens.frame = frame;
+    }
+    CGRect frame = _vwRefuseCare.frame;
+    frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
+    _vwRefuseCare.frame = frame;
+    [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
+    [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
 }
 
 @end

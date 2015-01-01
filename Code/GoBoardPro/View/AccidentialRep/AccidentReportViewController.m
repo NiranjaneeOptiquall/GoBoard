@@ -190,8 +190,12 @@
         vwBodyPart.mutArrInjuryList = mutArrInjury;
         [vwBodyPart.tblAddedInjuryList reloadData];
         
+        NSMutableArray *ary = [NSMutableArray arrayWithArray:[_reportSetupInfo.careProviderList allObjects]];
+        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
+        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
         
-        vwBodyPart.txtCareProvided.text = [[[_reportSetupInfo.careProviderList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] name];
+        vwBodyPart.txtCareProvided.text = [[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
+        vwBodyPart.careProvided = vwBodyPart.txtCareProvided.text;
         
         BodilyFluidView *vwBodilyFluid = aFirstSection.vwBodilyFluid;
         vwBodilyFluid.txtFName.text = aPerson.firstAidFirstName;
@@ -438,11 +442,23 @@
 #pragma mark - IBActions & Selectors
 
 - (IBAction)btnNotificationTapped:(UIButton *)sender {
-//    [_btn911Called setSelected:NO];
-//    [_btnPoliceCalled setSelected:NO];
-//    [_btnManager setSelected:NO];
-//    [_btnNone setSelected:NO];
-    [sender setSelected:!sender.isSelected];
+    [_btn911Called setSelected:NO];
+    [_btnPoliceCalled setSelected:NO];
+    [_btnManager setSelected:NO];
+    [_btnNone setSelected:NO];
+    [sender setSelected:YES];
+    if (_btn911Called.isSelected && [_reportSetupInfo.showEmergencyPersonnel boolValue]) {
+        [thirdSection setHidden:NO];
+        CGRect frame = finalSection.frame;
+        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+        finalSection.frame = frame;
+    }
+    else if (thirdSection){
+        [thirdSection setHidden:YES];
+        CGRect frame = finalSection.frame;
+        frame.origin.y = CGRectGetMinY(thirdSection.frame);
+        finalSection.frame = frame;
+    }
     _isUpdate = YES;
 }
 
@@ -460,14 +476,18 @@
     if (![self validateFirstSection]) {
         return;
     }
-    else if (thirdSection && ![thirdSection isThirdSectionValidationSuccess]) {
+    else if (thirdSection && _btn911Called.isSelected && ![thirdSection isThirdSectionValidationSuccess]) {
         return;
     }
     else if (![finalSection isFinalSectionValidationSuccessWith:aryEmpFields]) {
         return;
     }
     
-    NSDictionary *request = [self createSubmitRequest];
+    NSMutableDictionary *request = [NSMutableDictionary dictionaryWithDictionary:[self createSubmitRequest]];
+    NSString *strCareId = [request objectForKey:@"CareProvidedById"];
+    if ([strCareId intValue] < 0) {
+        [request setObject:@"" forKey:@"CareProvidedById"];
+    }
     [gblAppDelegate callWebService:ACCIDENT_REPORT_POST parameters:request httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Accident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
@@ -546,9 +566,11 @@
     [accidentView.vwBodilyFluid setRequiredFields:aryAidFields];
     
     accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
-    accidentView.vwBodilyFluid.isRefuseCareStatementVisible = [_reportSetupInfo.showRefusedSelfCareText boolValue];
+    accidentView.vwBodilyFluid.isRefuseCareStatementVisible = NO;
     accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
     accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
+    [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
+    [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:NO];
     accidentView.parentVC = self;
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
@@ -646,7 +668,8 @@
     [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
     NSString *astrAccidentDate = [aFormatter stringFromDate:incidentDate];
-    
+    if (!astrAccidentDate)
+        astrAccidentDate = @"";
     
     
     //    "ReportFilerAccount": "sample string 11",
@@ -667,7 +690,7 @@
         NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
         [mutArrWitness addObject:aDict];
     }
-    NSString *facilityId = @"", *locationId = @"";
+    NSString *facilityId = [NSString string], *locationId = [NSString string];
     if (selectedFacility.value) {
         facilityId = selectedFacility.value;
     }

@@ -93,7 +93,6 @@
         return;
     }
     
-    
     [popOver dismissPopoverAnimated:YES];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"DoneSigning" object:nil];
 }
@@ -110,6 +109,9 @@
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    if (_Completion) {
+        _Completion();
+    }
     popOver = nil;
 }
 

@@ -32,6 +32,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblStaffMemberAccount;
 @property (strong, nonatomic) SignatureView *signatureView;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
+@property (weak, nonatomic) IBOutlet UIView *vwFirstAid;
+@property (weak, nonatomic) IBOutlet UIView *vwBloodborne;
 @property (weak, nonatomic) IBOutlet UIView *vwRefuseCare;
 @property (weak, nonatomic) IBOutlet UILabel *lblRefuseCareText;
 @property (weak, nonatomic) IBOutlet UIView *vwParticipantSignature;
@@ -46,6 +48,8 @@
 @property (assign, nonatomic) BOOL isBloodBornePathogenVisible;
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
 @property (assign, nonatomic) BOOL isParticipantSignatureVisible;
+@property (assign, nonatomic) BOOL isRefusedCareSelected;
+
 
 @property (assign, nonatomic) NSInteger intBloodBornePathogen;
 
@@ -56,4 +60,7 @@
 - (IBAction)btnSignatureTapped:(id)sender;
 - (void)setRequiredFields:(NSArray*)fields;
 - (BOOL)isBodilyFluidValidationSucceedWith:(NSArray*)fields;
+
+- (void)shouldShowFirstAddView:(BOOL)show;
+- (void)shouldShowParticipantsSignatureView:(BOOL)show;
 @end

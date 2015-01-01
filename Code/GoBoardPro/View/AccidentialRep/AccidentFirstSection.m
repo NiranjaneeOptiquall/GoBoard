@@ -55,8 +55,16 @@
     }
     else if ([keyPath isEqualToString:@"careProvided"]) {
         CGRect frame = CGRectZero;
+        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"first aid"]) {
+            [_vwBodilyFluid shouldShowFirstAddView:YES];
+        }
+        else {
+            [_vwBodilyFluid shouldShowFirstAddView:NO];
+        }
+        [_vwBodilyFluid shouldShowParticipantsSignatureView:NO];
+        _vwBodilyFluid.isRefusedCareSelected = NO;
         if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self care"] || [[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"refused care"]) {
-            [_vwBodilyFluid.vwRefuseCare setHidden:NO];
+            _vwBodilyFluid.isRefuseCareStatementVisible = [_parentVC.reportSetupInfo.showRefusedSelfCareText boolValue];
             if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self care"]) {
                 _vwBodilyFluid.lblRefuseCareText.text = _parentVC.reportSetupInfo.selfCareStatement;
                 _vwBodilyFluid.lblRefuseCareCaption.text = @"Self Care Statement";
@@ -64,9 +72,13 @@
             else {
                 _vwBodilyFluid.lblRefuseCareText.text = _parentVC.reportSetupInfo.refusedCareStatement;
                 _vwBodilyFluid.lblRefuseCareCaption.text = @"Refused Care Statement";
+                _vwBodilyFluid.isRefusedCareSelected = YES;
+                if (_vwBodilyFluid.isParticipantSignatureVisible) {
+                    [_vwBodilyFluid shouldShowParticipantsSignatureView:YES];
+                }
             }
             float nextY = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
-            if (_vwBodilyFluid.isParticipantSignatureVisible) {
+            if (_vwBodilyFluid.isParticipantSignatureVisible && _vwBodilyFluid.isRefusedCareSelected) {
                 frame = _vwBodilyFluid.vwParticipantSignature.frame;
                 frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
                 _vwBodilyFluid.vwParticipantSignature.frame = frame;
@@ -77,9 +89,10 @@
             _vwBodilyFluid.vwStaffMember.frame = frame;
         }
         else {
-            [_vwBodilyFluid.vwRefuseCare setHidden:YES];
+//            [_vwBodilyFluid.vwRefuseCare setHidden:YES];
+            _vwBodilyFluid.isRefuseCareStatementVisible = NO;
             float nextY = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
-            if (_vwBodilyFluid.isParticipantSignatureVisible) {
+            if (_vwBodilyFluid.isParticipantSignatureVisible && _vwBodilyFluid.isRefusedCareSelected) {
                 frame = _vwBodilyFluid.vwParticipantSignature.frame;
                 frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
                 _vwBodilyFluid.vwParticipantSignature.frame = frame;
@@ -171,7 +184,12 @@
     
     NSString *careProvidedBy = @"", *activityTypeID = @"", *conditionTypeID = @"", *equipmentTypeID = @"";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
-    NSArray *ary = [[_parentVC.reportSetupInfo.careProviderList allObjects] filteredArrayUsingPredicate:predicate];
+    
+    NSMutableArray *ary1 = [NSMutableArray arrayWithArray:[_parentVC.reportSetupInfo.careProviderList allObjects]];
+    [ary1 addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
+    [ary1 addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
+    
+    NSArray *ary = [ary1 filteredArrayUsingPredicate:predicate];
     if (ary.count > 0) careProvidedBy = [[ary firstObject] valueForKey:@"careProvidedID"];
     
     predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwPersonalInfo.txtActivity.text];
