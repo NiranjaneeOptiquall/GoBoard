@@ -81,7 +81,7 @@
     NSDateFormatter *aTempDateFormate = [[NSDateFormatter alloc] init];
     switch (option) {
         case DATE_SELECTION_DATE_ONLY:
-            [aTempDateFormate setDateFormat:@"dd/MM/yyyy"];
+            [aTempDateFormate setDateFormat:@"MM/dd/yyyy"];
             [_datePicker setDatePickerMode:UIDatePickerModeDate];
             break;
         case DATE_SELECTION_TIME_ONLY:
@@ -89,7 +89,7 @@
             [_datePicker setDatePickerMode:UIDatePickerModeTime];
             break;
         case DATE_SELECTION_DATE_AND_TIME:
-            [aTempDateFormate setDateFormat:@"dd/MM/yyyy hh:mm a"];
+            [aTempDateFormate setDateFormat:@"MM/dd/yyyy hh:mm a"];
             [_datePicker setDatePickerMode:UIDatePickerModeDateAndTime];
             break;
         default:

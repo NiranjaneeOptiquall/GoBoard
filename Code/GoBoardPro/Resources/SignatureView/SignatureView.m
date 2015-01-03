@@ -38,6 +38,8 @@
 //        [btnClear setHidden:true];
 //        [btnSign setHidden:true];
 //    }
+    tempDrawImage.image = _lastSignatureImage;
+    txtName.text = _lastSavedName;
     red = 0.0/255.0;
     green = 0.0/255.0;
     blue = 0.0/255.0;
@@ -92,7 +94,9 @@
         alert(@"", @"Please enter your name");
         return;
     }
-    
+    if (_Completion) {
+        _Completion();
+    }
     [popOver dismissPopoverAnimated:YES];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"DoneSigning" object:nil];
 }
@@ -103,7 +107,9 @@
 }
 
 - (void)showPopOverWithSender:(UIButton*)sender {
+    popOver = nil;
     popOver = [[UIPopoverController alloc] initWithContentViewController:self];
+    popOver.delegate = self;
     [popOver setPopoverContentSize:CGSizeMake(630, 255)];
     [popOver presentPopoverFromRect:sender.frame inView:[sender superview] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }

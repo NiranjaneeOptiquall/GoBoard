@@ -277,11 +277,12 @@
     UtilizationCount *location;
     if ([view isKindOfClass:[UtilizationHeaderView class]]) {
         editingIndex =[(UtilizationHeaderView*)view section];
+        editIndexPath = nil;
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
     }
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
-        editingIndex = indexPath.row;
+        editIndexPath = indexPath;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
     }
     
@@ -466,7 +467,7 @@
     else {
         [aCell.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
     }
-    
+    [aCell.btnKeyboard addTarget:self action:@selector(btnMessageTapped:) forControlEvents:UIControlEventTouchUpInside];
     CGRect frame = [aCell.lblDevider frame];
     frame.origin.y = aCell.frame.size.height - frame.size.height;
     [aCell.lblDevider setFrame:frame];
@@ -568,7 +569,13 @@
         isUpdate = YES;
     }
     if ([textField isEqual:_txtPopOverMessage]) {
-        UtilizationCount *location = [mutArrCount objectAtIndex:editingIndex];
+        UtilizationCount *location = nil;
+        if (editIndexPath) {
+            location = [[[[mutArrCount objectAtIndex:editIndexPath.section] sublocations] allObjects] objectAtIndex:editIndexPath.row];
+        }
+        else {
+            location = [mutArrCount objectAtIndex:editingIndex];
+        }
         if (![textField.trimText isEqualToString:location.message]) {
             location.message = textField.trimText;
             location.isUpdateAvailable = YES;

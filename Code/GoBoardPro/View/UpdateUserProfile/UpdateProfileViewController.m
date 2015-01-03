@@ -17,7 +17,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getUserInfo];
+    [self getCertificateList];
+    mutArrDeletedCertificates = [[NSMutableArray alloc] init];
+    if (![[User currentUser] isAcceptedTermsAndConditions]) {
+        if ([[[User currentUser] termsAndConditions] isKindOfClass:[NSString class]])
+            _txvTerms.text = [[User currentUser] termsAndConditions];
+    }
+    else {
+        [_vwTerms setHidden:YES];
+        CGRect frame = _btnSubmit.frame;
+        frame.origin.y = CGRectGetMinY(_vwTerms.frame);
+        _btnSubmit.frame = frame;
+        frame = _lblSubmit.frame;
+        frame.origin.y = CGRectGetMinY(_vwTerms.frame);
+        _lblSubmit.frame = frame;
+    }
     [_btnLikeToRcvTextMSG.titleLabel setNumberOfLines:2];
     [_btnLikeToRcvTextMSG.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     // Do any additional setup after loading the view.
@@ -30,6 +44,15 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+
+- (void)getCertificateList {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@", @"ClientRequirement", [[User currentUser] clientId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        _aryCertificates = [response objectForKey:@"ClientRequirements"];
+        [self getUserInfo];
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
 }
 
 /*
@@ -83,13 +106,34 @@
     NSMutableArray *aMutArrCertificate = [NSMutableArray array];
     for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
         if ([certificate isKindOfClass:[AddCertificateView class]]) {
-            NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
-            [aMutArrCertificate addObject:@{@"Name": certificate.txtCertificateName.trimText, @"ExpirationDate":certificate.txtExpDate.trimText, @"Photo":@""}];
-            //, @"Photo":[aData base64EncodedStringWithOptions:0]
+            id aPhotoData, fileName;
+            if (certificate.imgCertificate) {
+                NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
+                aPhotoData = [aData base64EncodedStringWithOptions:0];
+            }
+            else {
+                aPhotoData = [NSNull null];
+            }
+            if (certificate.strCertificateFileName) {
+                fileName = certificate.strCertificateFileName;
+            }
+            else {
+                fileName = [NSString stringWithFormat:@"%@_%ld", [[User currentUser] userId], (long)[[NSDate date] timeIntervalSince1970]];
+            }
+            [aMutArrCertificate addObject:@{@"RequirementId": certificate.strDropDownId, @"ExpirationDate":certificate.txtExpDate.trimText, @"Id":(certificate.strCertificateId) ? certificate.strCertificateId : @"", @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false"}];
+            //,
         }
     }
+    [aMutArrCertificate addObjectsFromArray:mutArrDeletedCertificates];
     NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
-    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG};
+    id aTerms;
+    if ([[User currentUser] isAcceptedTermsAndConditions]) {
+        aTerms = [NSNull null];
+    }
+    else {
+        aTerms = (_btnAgreeTerms.isSelected) ? @"true" : @"false";
+    }
+    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG, @"AcceptedTermsAndConditions":aTerms};
     [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
         [self updateUser];
         [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -106,6 +150,9 @@
     [[User currentUser] setEmail:_txtEmail.text];
     [[User currentUser] setPhone:_txtPhone.text];
     [[User currentUser] setMobile:_txtMobile.text];
+    if (![[User currentUser] isAcceptedTermsAndConditions]) {
+        [[User currentUser] setIsAcceptedTermsAndConditions:_btnAgreeTerms.isSelected];
+    }
 }
 
 - (IBAction)btnBackTapped:(id)sender {
@@ -125,6 +172,10 @@
 
 - (IBAction)btnPasswordHintTapped:(id)sender {
     alert(@"", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
+}
+
+- (IBAction)btnAgreeTermsTapped:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
 }
 
 #pragma mark - Methods
@@ -154,7 +205,13 @@
             if ([response objectForKey:@"Certifications"] && ![[response objectForKey:@"Certifications"]isKindOfClass:[NSNull class]]) {
                 for (NSDictionary *aDict in [response objectForKey:@"Certifications"]) {
                     AddCertificateView *certificate = [self addCertificationView];
-                    certificate.txtCertificateName.text = [aDict objectForKey:@"Name"];
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %d", [[aDict objectForKey:@"RequirementId"] integerValue]];
+                    NSDictionary *aDictCert = [[_aryCertificates filteredArrayUsingPredicate:predicate]firstObject];
+                    certificate.txtCertificateName.text = [aDictCert objectForKey:@"Name"];
+                    certificate.strDropDownId = [[aDict objectForKey:@"RequirementId"] stringValue];
+                    certificate.strCertificateId = [[aDict objectForKey:@"Id"] stringValue];
+                    certificate.strCertificateFileName = [aDict objectForKey:@"FileName"];
+                    [certificate.txtCertificateName setUserInteractionEnabled:NO];
                     NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc] init];
                     NSString *aStrDate = [[[aDict objectForKey:@"ExpirationDate"] componentsSeparatedByString:@"."] firstObject];
                     [aDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
@@ -174,21 +231,31 @@
 }
 
 - (void)btnRemoveCertificateTapped:(UIButton*)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete this certification?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+    [alert setTag:2];
+    [alert show];
     totalCertificateCount--;
     UIView *currentView = sender.superview;
-    NSInteger index = [_scrlCertificationView.subviews indexOfObject:currentView];
+    removeCertificateIndex = [_scrlCertificationView.subviews indexOfObject:currentView];
+}
+
+- (void)removeCertificate {
     CGRect frame = CGRectZero;
+    AddCertificateView *currentView = [_scrlCertificationView.subviews objectAtIndex:removeCertificateIndex];
     for (NSInteger i = 0; i < [_scrlCertificationView.subviews count]; i++) {
         UIView *vw = [_scrlCertificationView.subviews objectAtIndex:i];
         if ([vw isKindOfClass:[currentView class]]) {
-            if (i != index) {
+            if (i != removeCertificateIndex) {
                 frame = vw.frame;
-                if (i > index) {
+                if (i > removeCertificateIndex) {
                     frame.origin.y -= currentView.frame.size.height;
                     vw.frame = frame;
                 }
             }
         }
+    }
+    if (currentView.strCertificateId) {
+        [mutArrDeletedCertificates addObject:@{@"RequirementId": currentView.strDropDownId, @"ExpirationDate":currentView.txtExpDate.trimText, @"Id":currentView.strCertificateId, @"FileName":currentView.strCertificateFileName, @"Photo":[NSNull null], @"IsDeleted":@"true"}];
     }
     [currentView removeFromSuperview];
     [_scrlCertificationView setContentSize:CGSizeMake(_scrlCertificationView.contentSize.width, CGRectGetMaxY(frame))];
@@ -314,7 +381,12 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
+    if (alertView.tag == 2) {
+        if (buttonIndex == 0) {
+            [self removeCertificate];
+        }
+    }
+    else if (buttonIndex == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

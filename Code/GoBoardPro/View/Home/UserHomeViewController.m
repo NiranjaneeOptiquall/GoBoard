@@ -222,6 +222,8 @@
     if (!isSyncError)
         isSyncError = [self syncIncidentReport];
     if (!isSyncError)
+        isSyncError = [self syncAccidentReport];
+    if (!isSyncError)
         isSyncError = [self syncSurveysAndForms];
     if (!isSyncError) {
         alert(@"", @"All data is synchronized with the server.");
@@ -371,7 +373,28 @@
         
         NSMutableArray *mutArrEmergency = [NSMutableArray array];
         for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":obj.time911Called, @"ArrivalTime":obj.time911Arrival, @"DepartureTime":obj.time911Departure};
+            id time911Called, timeArrival, timeDeparture;
+            if ([obj.time911Called isEqualToString:@""]) {
+                time911Called = [NSNull null];
+            }
+            else {
+                time911Called = obj.time911Called;
+            }
+            
+            if ([obj.time911Arrival isEqualToString:@""]) {
+                timeArrival = [NSNull null];
+            }
+            else {
+                timeArrival = obj.time911Arrival;
+            }
+            
+            if ([obj.time911Departure isEqualToString:@""]) {
+                timeDeparture = [NSNull null];
+            }
+            else {
+                timeDeparture = obj.time911Departure;
+            }
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
             [mutArrEmergency addObject:aDict];
         }
         
@@ -441,7 +464,28 @@
         
         NSMutableArray *mutArrEmergency = [NSMutableArray array];
         for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":obj.time911Called, @"ArrivalTime":obj.time911Arrival, @"DepartureTime":obj.time911Departure};
+            id time911Called, timeArrival, timeDeparture;
+            if ([obj.time911Called isEqualToString:@""]) {
+                time911Called = [NSNull null];
+            }
+            else {
+                time911Called = obj.time911Called;
+            }
+            
+            if ([obj.time911Arrival isEqualToString:@""]) {
+                timeArrival = [NSNull null];
+            }
+            else {
+                timeArrival = obj.time911Arrival;
+            }
+            
+            if ([obj.time911Departure isEqualToString:@""]) {
+                timeDeparture = [NSNull null];
+            }
+            else {
+                timeDeparture = obj.time911Departure;
+            }
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
             [mutArrEmergency addObject:aDict];
         }
         

@@ -195,7 +195,7 @@
         }
     }
     else if ([_txtMI isEqual:textField]) {
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 5) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 1) {
             return NO;
         }
     }

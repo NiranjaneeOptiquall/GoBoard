@@ -11,6 +11,7 @@
 @interface UtilizationCountViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIPopoverControllerDelegate> {
     NSMutableArray *mutArrCount;
     NSInteger editingIndex;
+    NSIndexPath *editIndexPath;
     UIPopoverController *popOverMessage;
     BOOL isUpdate;
     NSString *strPreviousText;

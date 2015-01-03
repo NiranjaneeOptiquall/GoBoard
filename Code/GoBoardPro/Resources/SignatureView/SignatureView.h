@@ -37,6 +37,8 @@
 @property (nonatomic, readwrite) CGFloat blue;
 @property (nonatomic, readwrite) CGFloat brush;
 @property (nonatomic, readwrite) CGFloat opacity;
+@property (nonatomic, strong) UIImage *lastSignatureImage;
+@property (nonatomic, strong) NSString *lastSavedName;
 
 @property (nonatomic, copy) void (^Completion)();
 

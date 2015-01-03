@@ -25,6 +25,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if (![[User currentUser] isAcceptedTermsAndConditions]) {
+        [_lblAcceptTerms setHidden:NO];
+        [_vwFacility setHidden:YES];
+    }
+    else {
+        [_lblAcceptTerms setHidden:YES];
+        [_vwFacility setHidden:NO];
+    }
     [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
 }
 

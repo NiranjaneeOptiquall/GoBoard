@@ -52,16 +52,20 @@
 }
 
 - (void)PopulateIncompleteData:(AccidentReportSubmit*)aReport {
-    NSMutableArray *mutArr = [NSMutableArray arrayWithArray:[aReport.dateOfIncident componentsSeparatedByString:@" "]];
-    NSString *aDateOfAccident = [mutArr firstObject];
-    [mutArr removeObjectAtIndex:0];
-    _txtTimeOfIncident.text = [mutArr componentsJoinedByString:@" "];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *incidentDate = [aFormatter dateFromString:aDateOfAccident];
+    
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    NSDate *aAccidentDate = [aFormatter dateFromString:aReport.dateOfIncident];
+    [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    
+//    _txtTimeOfIncident.text = [mutArr componentsJoinedByString:@" "];
+    
     [aFormatter setDateFormat:@"MM/dd/yyyy"];
-    _txtDateOfIncident.text = [aFormatter stringFromDate:incidentDate];
-
+    _txtDateOfIncident.text = [aFormatter stringFromDate:aAccidentDate];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    _txtTimeOfIncident.text = [aFormatter stringFromDate:aAccidentDate];
+    
     selectedFacility = [[aryFacilities filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", aReport.facilityId]] firstObject];
     _txtFacility.text = selectedFacility.name;
     if (selectedFacility)
@@ -202,12 +206,19 @@
         vwBodilyFluid.txtLName.text = aPerson.firstAidLastName;
         vwBodilyFluid.txtMI.text = aPerson.firstAidMiddleInitial;
         vwBodilyFluid.txtPosition.text = aPerson.firstAidPosition;
-        
-        vwBodilyFluid.signatureView.txtName.text = aPerson.participantName;
-        vwBodilyFluid.signatureView.tempDrawImage.image = [UIImage imageWithData:aPerson.participantSignature];
+        vwBodilyFluid.signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
+//        [vwBodilyFluid.signatureView loadView];
+        vwBodilyFluid.signatureView.lastSavedName = aPerson.participantName;
+        vwBodilyFluid.signatureView.lastSignatureImage = [UIImage imageWithData:aPerson.participantSignature];
         
         vwBodilyFluid.txvStaffMemberAccount.text = aPerson.staffMemberWrittenAccount;
-        
+        if ([aPerson.wasBloodPresent isEqualToString:@"true"]) {
+            [vwBodilyFluid btnWasBloodPresentTapped:vwBodilyFluid.btnBloodPresent];
+        }
+        else {
+            [vwBodilyFluid btnWasBloodPresentTapped:vwBodilyFluid.btnBloodNotPresent];
+        }
+
         if (vwBodilyFluid.btnSelfTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
             [vwBodilyFluid.btnSelfTreated setSelected:YES];
         }
@@ -344,9 +355,24 @@
         aEmergencyPersonnel.additionalInformation = [dict objectForKey:@"AdditionalInformation"];
         aEmergencyPersonnel.caseNumber = [dict objectForKey:@"CaseNumber"];
         aEmergencyPersonnel.badgeNumber = [dict objectForKey:@"BadgeNumber"];
-        aEmergencyPersonnel.time911Called = [dict objectForKey:@"Time911Called"];
-        aEmergencyPersonnel.time911Arrival = [dict objectForKey:@"ArrivalTime"];
-        aEmergencyPersonnel.time911Departure = [dict objectForKey:@"DepartureTime"];
+        if ([[dict objectForKey:@"Time911Called"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Called = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Called = [dict objectForKey:@"Time911Called"];
+        }
+        if ([[dict objectForKey:@"ArrivalTime"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Arrival = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Arrival = [dict objectForKey:@"ArrivalTime"];
+        }
+        if ([[dict objectForKey:@"DepartureTime"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Departure = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Departure = [dict objectForKey:@"DepartureTime"];
+        }
         aEmergencyPersonnel.accidentInfo = aReport;
         [emergencySet addObject:aEmergencyPersonnel];
     }
@@ -463,7 +489,7 @@
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
-    [self createSubmitRequest];
+//    [self createSubmitRequest];
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -571,6 +597,7 @@
     accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
     [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
     [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:NO];
+    [accidentView.vwBodilyFluid btnWasBloodPresentTapped:accidentView.vwBodilyFluid.btnBloodNotPresent];
     accidentView.parentVC = self;
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
@@ -661,6 +688,12 @@
 - (NSDictionary*)createSubmitRequest {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+    if (![_txtDateOfIncident.text isEqualToString:@""] && [_txtTimeOfIncident.text isEqualToString:@""]) {
+        [aFormatter setDateFormat:@"MM/dd/yyyy"];
+    }
+    else if (![_txtTimeOfIncident.text isEqualToString:@""] && [_txtDateOfIncident.text isEqualToString:@""]) {
+        [aFormatter setDateFormat:@"hh:mm a"];
+    }
     
     
     NSString *aStr = [NSString stringWithFormat:@"%@ %@", _txtDateOfIncident.text, _txtTimeOfIncident.text];
@@ -682,7 +715,28 @@
     
     NSMutableArray *mutArrEmergency = [NSMutableArray array];
     for (EmergencyPersonnelView *vwEmergency in thirdSection.mutArrEmergencyViews) {
-        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":vwEmergency.txtTime911Called.text, @"ArrivalTime":vwEmergency.txtTimeOfArrival.text, @"DepartureTime":vwEmergency.txtTimeOfDeparture.text};
+        id time911Called, timeArrival, timeDeparture;
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            time911Called = [NSNull null];
+        }
+        else {
+            time911Called = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeArrival = [NSNull null];
+        }
+        else {
+            timeArrival = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeDeparture = [NSNull null];
+        }
+        else {
+            timeDeparture = vwEmergency.txtTime911Called.text;
+        }
+        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
         [mutArrEmergency addObject:aDict];
     }
     NSMutableArray *mutArrWitness = [NSMutableArray array];
@@ -733,10 +787,11 @@
     aPerson.equipmentTypeID = [dict objectForKey:@"EquipmentTypeId"];
     aPerson.conditionTypeID = [dict objectForKey:@"ConditionId"];
     aPerson.careProvidedBy = [dict objectForKey:@"CareProvidedById"];
+    
     if (![[dict objectForKey:@"PersonPhoto"] isEqualToString:@""])
-        aPerson.personPhoto = [[dict objectForKey:@"PersonPhoto"] base64EncodedDataWithOptions:0];
+        aPerson.personPhoto = [[NSData alloc] initWithBase64EncodedString:[dict objectForKey:@"PersonPhoto"] options:0];
     if (![[dict objectForKey:@"PersonSignature"] isEqualToString:@""])
-        aPerson.participantSignature = [[dict objectForKey:@"PersonSignature"] base64EncodedDataWithOptions:0];
+        aPerson.participantSignature = [[NSData alloc] initWithBase64EncodedString:[dict objectForKey:@"PersonSignature"] options:0];
     
     aPerson.participantName = [dict objectForKey:@"PersonName"];
     aPerson.bloodBornePathogenType = [dict objectForKey:@"BloodbornePathogenTypeId"];
@@ -808,8 +863,36 @@
     }
     else if ([textField isEqual:_txtTimeOfIncident]) {
         [self setKeepViewInFrame:textField];
+        
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *accidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
+        
+        NSString *currentDate = [aFormatter stringFromDate:[NSDate date]];
+        
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        NSDate *pickerDate = [NSDate date];;
+        if (accidentDate) {
+            if ([accidentDate compare:[aFormatter dateFromString:currentDate]] == NSOrderedAscending) {
+                [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
+                pickerDate = accidentDate;
+            }
+            else {
+                [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+            }
+            
+        }
+        else {
+            [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        }
+        if (![textField.text isEqualToString:@""]) {
+            NSString *aPkrDate = [aFormatter stringFromDate:pickerDate];
+            aPkrDate = [aPkrDate stringByAppendingFormat:@" %@", textField.text];
+            [aFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+            pickerDate = [aFormatter dateFromString:aPkrDate];
+        }
+        datePopOver.datePicker.date = pickerDate;
+        
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtFacility]) {

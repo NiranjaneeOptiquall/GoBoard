@@ -24,6 +24,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblUserName;
 @property (weak, nonatomic) IBOutlet UITableView *tblLocation;
 @property (weak, nonatomic) IBOutlet UITableView *tblPosition;
+@property (weak, nonatomic) IBOutlet UIView *vwFacility;
+@property (weak, nonatomic) IBOutlet UILabel *lblAcceptTerms;
 
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnUpdateProfileTapped:(id)sender;

@@ -24,6 +24,8 @@
 @property (strong, nonatomic) NSString *userId;
 @property (strong, nonatomic) NSString *clientId;
 @property (strong, nonatomic) NSString *clientName;
+@property (strong, nonatomic) NSString *termsAndConditions;
+@property (assign, nonatomic) BOOL isAcceptedTermsAndConditions;
 @property (strong, nonatomic) UserFacility *selectedFacility;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedLocations;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedPositions;

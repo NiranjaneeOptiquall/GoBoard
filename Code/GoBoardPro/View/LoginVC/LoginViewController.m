@@ -111,7 +111,8 @@
         else {
             currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
         }
-        
+        currentUser.termsAndConditions = [response objectForKey:@"TermsAndConditions"];
+        currentUser.isAcceptedTermsAndConditions = [[response objectForKey:@"AcceptedTermsAndConditions"] boolValue];
         currentUser.lastName = [response objectForKey:@"LastName"];
         if ([[response objectForKey:@"Mobile"] isKindOfClass:[NSNull class]]) {
             currentUser.mobile = @"";

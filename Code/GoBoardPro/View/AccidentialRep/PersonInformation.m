@@ -418,6 +418,7 @@
         }
         return YES;
     }
+    
     else if ([textField isEqual:_txtZip]) {
         NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
@@ -450,7 +451,7 @@
         }
     }
     else if ([_txtMi isEqual:textField]) {
-        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 5) {
+        if ([textField.text stringByReplacingCharactersInRange:range withString:string].length > 1) {
             return NO;
         }
     }

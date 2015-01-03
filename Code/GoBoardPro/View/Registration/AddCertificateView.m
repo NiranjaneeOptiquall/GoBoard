@@ -30,7 +30,26 @@
 - (IBAction)btnCaptureCertificatieImageTapped:(UIButton*)sender {
     
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo Library", @"Camera", nil];
-    [actionSheet showFromRect:sender.frame inView:self.superview animated:YES];
+    
+//    CGRect rect = [self getRectForPopOver:sender];
+    CGRect rect = [self convertRect:sender.frame toView:self.superview];
+//    rect = [self.superview convertRect:rect toView:_parentView.view];
+
+    [actionSheet showFromRect:rect inView:self.superview animated:YES];
+}
+
+- (CGRect)getRectForPopOver:(UIView*)view {
+    CGRect rect = CGRectZero;
+    UIView *superView = view.superview;
+    while (YES) {
+        rect = [superView convertRect:rect toView:superView.superview];
+        if ([superView isEqual:_parentView.view]) {
+            break;
+        }
+        view = superView;
+        superView = superView.superview;
+    }
+    return rect;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -54,7 +73,8 @@
     popOver = [[UIPopoverController alloc] initWithContentViewController:imgPicker];
     [popOver setPopoverContentSize:CGSizeMake(320, 480)];
     [popOver setDelegate:self];
-    [popOver presentPopoverFromRect:_btnCaptureImage.frame inView:_btnCaptureImage.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    CGRect rect = [self convertRect:_btnCaptureImage.frame toView:self.superview];
+    [popOver presentPopoverFromRect:rect inView:self.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 - (void)showCamera {
@@ -83,15 +103,16 @@
     }
 }
 
-//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-//    DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
-//    dropDown.delegate = self;
-//    [dropDown showDropDownWith:LOCATION_VALUES view:textField key:@"title"];
-//    return NO;
-//}
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+    dropDown.delegate = self;
+    [dropDown showDropDownWith:_parentView.aryCertificates view:textField key:@"Name"];
+    return NO;
+}
 
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
-    [sender setText:[value objectForKey:@"title"]];
+    [sender setText:[value objectForKey:@"Name"]];
+    _strDropDownId = [[value objectForKey:@"Id"] stringValue];
 }
 
 @end

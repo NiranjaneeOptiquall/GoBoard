@@ -715,7 +715,11 @@
 - (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", SURVEY_SETUP, aStrClientId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@", SURVEY_SETUP, aStrClientId, strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllSurveys];
         [self insertSurvey:[response objectForKey:@"Surveys"]];
         isWSComplete = YES;
@@ -800,7 +804,11 @@
 - (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", FORM_SETUP, aStrClientId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@", FORM_SETUP, aStrClientId, strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllForms];
         [self insertForms:[response objectForKey:@"Forms"]];
         isWSComplete = YES;

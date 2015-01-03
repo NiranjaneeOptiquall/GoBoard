@@ -419,7 +419,28 @@
     
     NSMutableArray *mutArrEmergency = [NSMutableArray array];
     for (EmergencyPersonnelView *vwEmergency in mutArrEmergencyPersonnel) {
-        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.text, @"MiddleInitial":vwEmergency.txtMI.text, @"LastName":vwEmergency.txtLastName.text, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.text, @"BadgeNumber":vwEmergency.txtBadge.text, @"Time911Called":vwEmergency.txtTime911Called.text, @"ArrivalTime":vwEmergency.txtTimeOfArrival.text, @"DepartureTime":vwEmergency.txtTimeOfDeparture.text};
+        id time911Called, timeArrival, timeDeparture;
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            time911Called = [NSNull null];
+        }
+        else {
+            time911Called = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeArrival = [NSNull null];
+        }
+        else {
+            timeArrival = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeDeparture = [NSNull null];
+        }
+        else {
+            timeDeparture = vwEmergency.txtTime911Called.text;
+        }
+        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.text, @"MiddleInitial":vwEmergency.txtMI.text, @"LastName":vwEmergency.txtLastName.text, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.text, @"BadgeNumber":vwEmergency.txtBadge.text, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
         [mutArrEmergency addObject:aDict];
     }
     
@@ -581,14 +602,14 @@
         aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
         aPerson.duringWorkHours = [dict objectForKey:@"OccuredDuringBusinessHours"];
 
-        aPerson.guestOfFirstName = [aDict objectForKey:@"GuestOfFirstName"];
-        aPerson.guestOfMiddleInitial = [aDict objectForKey:@"GuestOfMiddleInitial"];
-        aPerson.guestOfLastName = [aDict objectForKey:@"GuestOfLastName"];
+        aPerson.guestOfFirstName = [dict objectForKey:@"GuestOfFirstName"];
+        aPerson.guestOfMiddleInitial = [dict objectForKey:@"GuestOfMiddleInitial"];
+        aPerson.guestOfLastName = [dict objectForKey:@"GuestOfLastName"];
         
         if (![[aDict objectForKey:@"PersonPhoto"] isEqualToString:@""]) {
             aPerson.personPhoto = [[aDict objectForKey:@"PersonPhoto"] base64EncodedDataWithOptions:0];
         }
-        aPerson.minor = [aDict objectForKey:@"IsMinor"];
+        aPerson.minor = [dict objectForKey:@"IsMinor"];
         //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         aPerson.report = aReport;
         [personSet addObject:aPerson];
@@ -605,9 +626,25 @@
         aEmergencyPersonnel.additionalInformation = [dict objectForKey:@"AdditionalInformation"];
         aEmergencyPersonnel.caseNumber = [dict objectForKey:@"CaseNumber"];
         aEmergencyPersonnel.badgeNumber = [dict objectForKey:@"BadgeNumber"];
-        aEmergencyPersonnel.time911Called = [dict objectForKey:@"Time911Called"];
-        aEmergencyPersonnel.time911Arrival = [dict objectForKey:@"ArrivalTime"];
-        aEmergencyPersonnel.time911Departure = [dict objectForKey:@"DepartureTime"];
+        if ([[dict objectForKey:@"Time911Called"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Called = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Called = [dict objectForKey:@"Time911Called"];
+        }
+        if ([[dict objectForKey:@"ArrivalTime"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Arrival = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Arrival = [dict objectForKey:@"ArrivalTime"];
+        }
+        if ([[dict objectForKey:@"DepartureTime"] isKindOfClass:[NSNull class]]) {
+            aEmergencyPersonnel.time911Departure = @"";
+        }
+        else {
+            aEmergencyPersonnel.time911Departure = [dict objectForKey:@"DepartureTime"];
+        }
+
         aEmergencyPersonnel.report = aReport;
         [emergencySet addObject:aEmergencyPersonnel];
     }
@@ -878,8 +915,34 @@
     }
     else if ([textField isEqual:_txtTimeOfIncident]) {
         [self setKeepViewInFrame:textField];
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"MM/dd/yyyy"];
+        NSDate *accidentDate = [aFormatter dateFromString:_txtDateOfIncident.text];
+        
+        NSString *currentDate = [aFormatter stringFromDate:[NSDate date]];
+        
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        NSDate *pickerDate = [NSDate date];
+        if (accidentDate) {
+            if ([accidentDate compare:[aFormatter dateFromString:currentDate]] == NSOrderedAscending) {
+                [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
+                pickerDate = accidentDate;
+            }
+            else {
+                [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+            }
+            
+        }
+        else {
+            [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        }
+        if (![textField.text isEqualToString:@""]) {
+            NSString *aPkrDate = [aFormatter stringFromDate:pickerDate];
+            aPkrDate = [aPkrDate stringByAppendingFormat:@" %@", textField.text];
+            [aFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+            pickerDate = [aFormatter dateFromString:aPkrDate];
+        }
+        datePopOver.datePicker.date = pickerDate;
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtFacility]) {

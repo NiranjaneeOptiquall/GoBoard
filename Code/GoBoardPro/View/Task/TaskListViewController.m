@@ -278,7 +278,11 @@
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
     [allTask setSortDescriptors:@[descriptor]];
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime < %@", [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
+    
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", [aFormatter dateFromString:aStr], [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
     [allTask setPredicate:predicate1];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
@@ -331,7 +335,7 @@
     NSLog(@"%@", [aFormatter stringFromDate:task.taskDateTime]);
 //    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     
-    
+    [aCell.imvTextBG setHidden:YES];
     NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:task.taskDateTime],task.name];
     if (isCompleted) {
         if ([task.responseType isEqualToString:@"checkbox"]) {
@@ -339,7 +343,8 @@
             [aCell.btnCheckBox setUserInteractionEnabled:NO];
             [aCell.btnCheckBox setSelected:YES];
         }
-        else if ([task.responseType isEqualToString:@"numeric"]) {
+        else if ([task.responseType isEqualToString:@"numeric"] || [task.responseType isEqualToString:@"textbox"]) {
+            [aCell.imvTextBG setHidden:NO];
             [aCell.txtTemp setHidden:NO];
             [aCell.txtTemp setUserInteractionEnabled:NO];
             [aCell.txtTemp setText:task.response];
@@ -384,14 +389,21 @@
                 [aCell.btnCheckBox setSelected:NO];
             }
         }
-        else if ([task.responseType isEqualToString:@"numeric"]) {
+        else if ([task.responseType isEqualToString:@"numeric"] || [task.responseType isEqualToString:@"textbox"]) {
+            [aCell.imvTextBG setHidden:NO];
             [aCell.txtTemp setHidden:NO];
+            if ([task.responseType isEqualToString:@"numeric"]) {
+                [aCell.txtTemp setText:@"--"];
+                [aCell.txtTemp setKeyboardType:UIKeyboardTypeNumberPad];
+            }
+            else {
+                [aCell.txtTemp setKeyboardType:UIKeyboardTypeAlphabet];
+                aCell.txtTemp.text = @"";
+            }
             if (![task.response isEqualToString:@""]) {
                 [aCell.txtTemp setText:task.response];
             }
-            else {
-                [aCell.txtTemp setText:@"--"];
-            }
+            
             [aCell.txtTemp setUserInteractionEnabled:YES];
             [aCell.txtTemp setTextColor:[UIColor colorWithRed:204.0/255.0 green:0.0 blue:0.0 alpha:1.0]];
         }
@@ -498,10 +510,15 @@
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) return YES;
-    NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
-    if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
-        return NO;
+    NSIndexPath *indexPath = [self indexPathForCellSubView:textField];
+    TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
+    if ([[task responseType] isEqualToString:@"numeric"]) {
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+            return NO;
+        }
     }
+    
     return YES;
 }
 

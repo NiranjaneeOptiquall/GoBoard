@@ -17,5 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnIncreaseCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblDevider;
 @property (weak, nonatomic) IBOutlet UIButton *btnCountRemainSame;
+@property (weak, nonatomic) IBOutlet UIButton *btnKeyboard;
 
 @end
