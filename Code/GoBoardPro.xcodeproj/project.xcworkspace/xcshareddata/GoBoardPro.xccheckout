@@ -10,36 +10,31 @@
 	<string>GoBoardPro</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>https://10.2.1.98/projects/goboarpro_ipad_app/Code/iPhone</string>
+		<key>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</key>
+		<string>https://elitedev.visualstudio.com/DefaultCollection/_git/GoBoard.iOS</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>GoBoardPro.xcodeproj</string>
+	<string>Code/GoBoardPro.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>../..</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>https://10.2.1.98/projects/goboarpro_ipad_app</string>
+		<key>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://10.2.1.98/projects/goboarpro_ipad_app/Code/iPhone/GoBoardPro.xcodeproj</string>
+	<string>https://elitedev.visualstudio.com/DefaultCollection/_git/GoBoard.iOS</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</string>
+	<string>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</string>
+			<string>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Code</string>
+			<string>Development</string>
 		</dict>
 	</array>
 </dict>
