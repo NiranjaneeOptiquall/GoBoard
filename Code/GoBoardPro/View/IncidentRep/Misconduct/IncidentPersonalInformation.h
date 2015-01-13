@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IncidentReportInfo.h"
 #import "Constants.h"
 
 @interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
@@ -102,5 +103,5 @@
 - (BOOL)isPersonalInfoValidationSuccess;
 - (void)setRequiredFields:(NSArray*)fields;
 
-- (void)callInitialActions;
+- (void)callInitialActions:(IncidentReportInfo*)reportSetupInfo;
 @end

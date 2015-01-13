@@ -2,8 +2,8 @@
 //  UtilizationCount.m
 //  GoBoardPro
 //
-//  Created by ind558 on 18/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind558 on 05/01/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "UtilizationCount.h"
@@ -12,14 +12,15 @@
 
 @implementation UtilizationCount
 
-@dynamic locationId;
-@dynamic name;
 @dynamic capacity;
 @dynamic lastCount;
 @dynamic lastCountDateTime;
+@dynamic locationId;
 @dynamic message;
-@dynamic sublocations;
+@dynamic name;
+@dynamic sequence;
 @dynamic location;
+@dynamic sublocations;
 
 @synthesize originalCount, originalMessage, isCountRemainSame, isUpdateAvailable;
 
@@ -29,5 +30,4 @@
     self.isCountRemainSame = NO;
     self.isUpdateAvailable = NO;
 }
-
 @end

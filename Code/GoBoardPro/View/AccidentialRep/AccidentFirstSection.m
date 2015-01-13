@@ -141,7 +141,13 @@
         }   
         if ([aDict objectForKey:@"BodyPartInjuryType"]) {
             [aMutDict setObject:[[aDict objectForKey:@"BodyPartInjuryType"] valueForKey:@"typeId"] forKey:@"BodyPartInjuryTypeId"];
-            [aMutDict setObject:[[aDict objectForKey:@"part"] valueForKey:@"value"] forKey:@"BodyPartInjuredId"];
+            if ([aDict objectForKey:@"part"]) {
+                [aMutDict setObject:[[aDict objectForKey:@"part"] valueForKey:@"value"] forKey:@"BodyPartInjuredId"];
+            }
+            else {
+                [aMutDict setObject:@"" forKey:@"BodyPartInjuredId"];
+            }
+            
         }
         else {
             [aMutDict setObject:@"" forKey:@"BodyPartInjuryTypeId"];

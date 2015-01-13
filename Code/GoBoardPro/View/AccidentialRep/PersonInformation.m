@@ -57,7 +57,8 @@
     }
     else if ([sender isEqual:_btnEmployee]) {
         [self hideMemberId:NO];
-        if (!_isMemberIdVisible) [_vwMemberId setHidden:YES];
+        if (!_isEmployeeIdVisible) [_vwMemberId setHidden:YES];
+        else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_vwEmpPosition setHidden:NO];
         [_vwEmployee setHidden:NO];
@@ -215,6 +216,18 @@
     if (!_isGenderVisible) [self hideGender];
     if (!_isMinorVisible) [self hideMinor];
     if (!_isConditionsVisible) [self hideConditions];
+    
+    [_btnMember setTitle:_parentVC.reportSetupInfo.personInvolved1 forState:UIControlStateNormal];
+    [_btnGuest setTitle:_parentVC.reportSetupInfo.personInvolved2 forState:UIControlStateNormal];
+    [_btnEmployee setTitle:_parentVC.reportSetupInfo.personInvolved3 forState:UIControlStateNormal];
+    
+    [_btnNonAssessedStudent setTitle:_parentVC.reportSetupInfo.affiliation1 forState:UIControlStateNormal];
+    [_btnAssessedStudent setTitle:_parentVC.reportSetupInfo.affiliation2 forState:UIControlStateNormal];
+    [_btnAlumni setTitle:_parentVC.reportSetupInfo.affiliation3 forState:UIControlStateNormal];
+    [_btnStaff setTitle:_parentVC.reportSetupInfo.affiliation4 forState:UIControlStateNormal];
+    [_btnCommunity setTitle:_parentVC.reportSetupInfo.affiliation5 forState:UIControlStateNormal];
+    [_btnOther setTitle:_parentVC.reportSetupInfo.affiliation6 forState:UIControlStateNormal];
+    
     [self btnPersonInvolvedTapped:_btnMember];
     [self btnAffiliationTapped:_btnNonAssessedStudent];
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
@@ -310,7 +323,7 @@
     _vwConditions.frame = frame;
     
     frame = _vwCommon.frame;
-    frame.size.height = CGRectGetMinY(_vwConditions.frame);
+    frame.size.height = CGRectGetMaxY(_vwConditions.frame);
     _vwCommon.frame = frame;
 }
 

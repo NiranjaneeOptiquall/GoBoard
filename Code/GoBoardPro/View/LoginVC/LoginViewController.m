@@ -23,6 +23,7 @@
     _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
     
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     [self initialUIConfig];
 }
 
@@ -228,6 +229,14 @@
     return YES;
 }
 
+
+- (void)defaultsSettingsChanged {
+    BOOL value = [[NSUserDefaults standardUserDefaults] boolForKey:@"SettingsIsProduction"];
+    if (value != gblAppDelegate.isProduction) {
+        gblAppDelegate.isProduction = value;
+        [self.navigationController popToViewController:self animated:YES];
+    }
+}
 
 
 @end

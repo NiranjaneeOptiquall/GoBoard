@@ -31,9 +31,9 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 
 @property (strong, nonatomic) NSMutableArray *mutArrMemoList;
 @property (strong, nonatomic) NSMutableArray *mutArrHomeMenus;
-@property (weak, nonatomic) NSString *str;
 
 @property (assign, nonatomic) BOOL isAdmin;
+@property (assign, nonatomic) BOOL isProduction;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

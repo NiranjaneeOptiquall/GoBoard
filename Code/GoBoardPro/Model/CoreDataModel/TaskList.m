@@ -2,8 +2,8 @@
 //  TaskList.m
 //  GoBoardPro
 //
-//  Created by ind558 on 19/12/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind558 on 05/01/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "TaskList.h"
@@ -23,8 +23,9 @@
 @dynamic name;
 @dynamic response;
 @dynamic responseType;
-@dynamic taskId;
 @dynamic taskDateTime;
+@dynamic taskId;
+@dynamic sequence;
 @dynamic responseTypeValues;
 
 @end

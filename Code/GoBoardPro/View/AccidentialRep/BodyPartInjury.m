@@ -97,7 +97,9 @@
     }
     else {
         [aDict setObject:[NSString stringWithFormat:@"%ld", (long)_btnBodyPartInjury.tag] forKey:@"nature"];
-        [aDict setObject:[mutArrBodyPart objectAtIndex:selectedBodyPart] forKey:@"part"];
+        if ([mutArrBodyPart objectAtIndex:selectedBodyPart]) {
+            [aDict setObject:[mutArrBodyPart objectAtIndex:selectedBodyPart] forKey:@"part"];
+        }
         NSArray *ary = [[_parentVC.reportSetupInfo.bodypartInjuryType allObjects] filteredArrayUsingPredicate:predicate];
         if ([ary count] > 0) {
             [aDict setObject:[ary firstObject] forKey:@"BodyPartInjuryType"];

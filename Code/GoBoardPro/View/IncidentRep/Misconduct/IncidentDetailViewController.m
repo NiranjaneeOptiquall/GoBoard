@@ -684,8 +684,8 @@
     personalInfoView.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
     personalInfoView.isGenderVisible = [reportSetupInfo.showGender boolValue];
     personalInfoView.isMinorVisible = [reportSetupInfo.showMinor boolValue];
-    personalInfoView.isMinorVisible = [reportSetupInfo.showEmployeeId boolValue];
-    [personalInfoView callInitialActions];
+    personalInfoView.isEmployeeIdVisible = [reportSetupInfo.showEmployeeId boolValue];
+    [personalInfoView callInitialActions:reportSetupInfo];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
     NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];

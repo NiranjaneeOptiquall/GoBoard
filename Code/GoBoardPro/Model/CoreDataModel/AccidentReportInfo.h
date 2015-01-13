@@ -2,8 +2,8 @@
 //  AccidentReportInfo.h
 //  GoBoardPro
 //
-//  Created by ind558 on 17/12/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind558 on 05/01/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -15,9 +15,13 @@
 
 @property (nonatomic, retain) NSString * instructions;
 @property (nonatomic, retain) NSString * notificationField1;
+@property (nonatomic, retain) NSString * notificationField1Color;
 @property (nonatomic, retain) NSString * notificationField2;
+@property (nonatomic, retain) NSString * notificationField2Color;
 @property (nonatomic, retain) NSString * notificationField3;
+@property (nonatomic, retain) NSString * notificationField3Color;
 @property (nonatomic, retain) NSString * notificationField4;
+@property (nonatomic, retain) NSString * notificationField4Color;
 @property (nonatomic, retain) NSString * refusedCareStatement;
 @property (nonatomic, retain) NSString * selfCareStatement;
 @property (nonatomic, retain) NSNumber * showAffiliation;
@@ -34,10 +38,15 @@
 @property (nonatomic, retain) NSNumber * showParticipantSignature;
 @property (nonatomic, retain) NSNumber * showPhotoIcon;
 @property (nonatomic, retain) NSNumber * showRefusedSelfCareText;
-@property (nonatomic, retain) NSString * notificationField1Color;
-@property (nonatomic, retain) NSString * notificationField4Color;
-@property (nonatomic, retain) NSString * notificationField3Color;
-@property (nonatomic, retain) NSString * notificationField2Color;
+@property (nonatomic, retain) NSString * personInvolved1;
+@property (nonatomic, retain) NSString * personInvolved2;
+@property (nonatomic, retain) NSString * personInvolved3;
+@property (nonatomic, retain) NSString * affiliation1;
+@property (nonatomic, retain) NSString * affiliation2;
+@property (nonatomic, retain) NSString * affiliation3;
+@property (nonatomic, retain) NSString * affiliation4;
+@property (nonatomic, retain) NSString * affiliation5;
+@property (nonatomic, retain) NSString * affiliation6;
 @property (nonatomic, retain) NSSet *abdomenInjuryList;
 @property (nonatomic, retain) NSSet *actionList;
 @property (nonatomic, retain) NSSet *activityList;

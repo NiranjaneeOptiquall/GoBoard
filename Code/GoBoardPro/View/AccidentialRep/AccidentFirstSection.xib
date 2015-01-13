@@ -8,11 +8,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AccidentFirstSection">
-            <rect key="frame" x="0.0" y="0.0" width="768" height="3256"/>
+            <rect key="frame" x="0.0" y="0.0" width="768" height="3337"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" id="Z35-1Q-5nL" customClass="PersonInformation">
-                    <rect key="frame" x="0.0" y="0.0" width="768" height="1039"/>
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="1125"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Person(s) Involved" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VKY-jG-BsK">
@@ -23,7 +23,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jdd-vJ-ebw">
-                            <rect key="frame" x="278" y="6" width="130" height="44"/>
+                            <rect key="frame" x="51" y="45" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <state key="normal" title="Member" image="unchecked_white_radiobutton.png">
@@ -38,7 +38,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Wvb-vE-Kcd">
-                            <rect key="frame" x="416" y="6" width="114" height="44"/>
+                            <rect key="frame" x="273" y="45" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <state key="normal" title="Guest" image="unchecked_white_radiobutton.png">
@@ -53,7 +53,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fcw-lM-T2s">
-                            <rect key="frame" x="544" y="6" width="137" height="44"/>
+                            <rect key="frame" x="495" y="45" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <state key="normal" title="Employee" image="unchecked_white_radiobutton.png">
@@ -68,7 +68,7 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" id="9m8-0Q-8h3">
-                            <rect key="frame" x="0.0" y="62" width="768" height="108"/>
+                            <rect key="frame" x="0.0" y="90" width="768" height="191"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Affiliation" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Q50-s1-met">
@@ -79,7 +79,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="HIe-Nh-xMz">
-                                    <rect key="frame" x="195" y="8" width="255" height="44"/>
+                                    <rect key="frame" x="51" y="48" width="330" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="Non-Assessed Student" image="unchecked_white_radiobutton.png">
@@ -94,7 +94,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ilG-hl-T5r">
-                                    <rect key="frame" x="464" y="8" width="210" height="44"/>
+                                    <rect key="frame" x="383" y="48" width="330" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="Assessed Student" image="unchecked_white_radiobutton.png">
@@ -109,7 +109,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="PGd-5z-hce">
-                                    <rect key="frame" x="51" y="55" width="114" height="44"/>
+                                    <rect key="frame" x="51" y="95" width="330" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="Alumni" image="unchecked_white_radiobutton.png">
@@ -123,23 +123,8 @@
                                         <action selector="btnAffiliationTapped:" destination="Z35-1Q-5nL" eventType="touchUpInside" id="HId-EW-Liw"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Yc9-t5-i4g">
-                                    <rect key="frame" x="368" y="55" width="155" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                    <state key="normal" title="Community" image="unchecked_white_radiobutton.png">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <state key="selected" image="checked_Member.png">
-                                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="btnAffiliationTapped:" destination="Z35-1Q-5nL" eventType="touchUpInside" id="exa-Fh-4VL"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jBl-Cr-pf3">
-                                    <rect key="frame" x="538" y="55" width="164" height="44"/>
+                                    <rect key="frame" x="384" y="142" width="330" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="Other" image="unchecked_white_radiobutton.png">
@@ -154,7 +139,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Ws3-LF-jgi">
-                                    <rect key="frame" x="182" y="55" width="164" height="44"/>
+                                    <rect key="frame" x="383" y="95" width="330" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="Faculty/Staff" image="unchecked_white_radiobutton.png">
@@ -168,11 +153,26 @@
                                         <action selector="btnAffiliationTapped:" destination="Z35-1Q-5nL" eventType="touchUpInside" id="xxg-bH-ZtH"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Yc9-t5-i4g">
+                                    <rect key="frame" x="51" y="142" width="330" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                    <state key="normal" title="Community" image="unchecked_white_radiobutton.png">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <state key="selected" image="checked_Member.png">
+                                        <color key="titleColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="btnAffiliationTapped:" destination="Z35-1Q-5nL" eventType="touchUpInside" id="exa-Fh-4VL"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="zfR-ma-pJd">
-                            <rect key="frame" x="44" y="183" width="277" height="71"/>
+                            <rect key="frame" x="44" y="281" width="277" height="71"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="o1Q-eR-v8I">
@@ -199,22 +199,13 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" id="9hQ-fK-7Fx">
-                            <rect key="frame" x="386" y="183" width="331" height="71"/>
+                            <rect key="frame" x="386" y="281" width="331" height="71"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="sJQ-bq-hQB">
                                     <rect key="frame" x="7" y="4" width="315" height="63"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Employee Title/Position" minimumFontSize="17" id="u4x-it-mo1">
-                                    <rect key="frame" x="17" y="8" width="293" height="50"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <connections>
-                                        <outlet property="delegate" destination="Z35-1Q-5nL" id="Nhv-rO-LWh"/>
-                                    </connections>
-                                </textField>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TWM-uy-HJ3">
                                     <rect key="frame" x="312" y="32" width="10" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -222,11 +213,20 @@
                                     <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Employee Title/Position" minimumFontSize="17" id="u4x-it-mo1">
+                                    <rect key="frame" x="18" y="8" width="293" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="Z35-1Q-5nL" id="Nhv-rO-LWh"/>
+                                    </connections>
+                                </textField>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="yoc-Oa-CwU">
-                            <rect key="frame" x="0.0" y="254" width="768" height="411"/>
+                            <rect key="frame" x="0.0" y="352" width="768" height="411"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_name.png" id="Zle-Jg-vi6">
@@ -420,13 +420,6 @@
                                     <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dVF-CS-zSZ">
-                                    <rect key="frame" x="700" y="122" width="10" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="23"/>
-                                    <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hux-6v-2xp">
                                     <rect key="frame" x="302" y="202" width="10" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -480,7 +473,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="yxi-tH-iRQ">
-                            <rect key="frame" x="51" y="669" width="659" height="96"/>
+                            <rect key="frame" x="51" y="767" width="659" height="96"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest Of:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="B4I-cF-L5o">
@@ -545,7 +538,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" id="iha-hN-pWw">
-                            <rect key="frame" x="51" y="669" width="659" height="72"/>
+                            <rect key="frame" x="51" y="767" width="659" height="72"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Did the accident happen during the employee's work hours?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mh2-be-S0M">
@@ -583,7 +576,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="2Nd-VT-e3Y">
-                            <rect key="frame" x="0.0" y="669" width="768" height="370"/>
+                            <rect key="frame" x="0.0" y="767" width="768" height="370"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" id="yDp-7j-zMp">
@@ -730,7 +723,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <view contentMode="scaleToFill" id="Mn4-TU-gxq">
-                                    <rect key="frame" x="0.0" y="246" width="768" height="124"/>
+                                    <rect key="frame" x="0.0" y="246" width="768" height="112"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Condition at the time of accident?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="U6G-yW-uEo">
@@ -817,7 +810,6 @@
                         <outlet property="btnOtherGender" destination="dXY-og-A8l" id="5aW-X8-YV2"/>
                         <outlet property="btnStaff" destination="Ws3-LF-jgi" id="Ma7-Id-jgp"/>
                         <outlet property="markerAddress1" destination="NOY-rV-LO6" id="rdy-rd-0st"/>
-                        <outlet property="markerAddress2" destination="dVF-CS-zSZ" id="T0x-Tb-hRT"/>
                         <outlet property="markerAlternatePhone" destination="jvR-HR-csh" id="eeo-vj-Xlk"/>
                         <outlet property="markerCity" destination="Hux-6v-2xp" id="1ss-qH-sYh"/>
                         <outlet property="markerDOB" destination="NAR-BR-gy4" id="yI6-Of-JRq"/>
@@ -868,7 +860,7 @@
                     </connections>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" id="dv9-eE-FaQ" customClass="BodyPartInjury">
-                    <rect key="frame" x="0.0" y="1039" width="768" height="1161"/>
+                    <rect key="frame" x="0.0" y="1125" width="768" height="1161"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Suspected Nature of Injury" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2R1-Db-QkT">
@@ -1196,7 +1188,7 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" id="v5Q-PM-O4f" customClass="BodilyFluidView">
-                    <rect key="frame" x="0.0" y="2200" width="768" height="989"/>
+                    <rect key="frame" x="0.0" y="2286" width="768" height="989"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <view contentMode="scaleToFill" id="s3u-u7-L42">
@@ -1554,7 +1546,7 @@
                     </connections>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="94J-A4-4i5">
-                    <rect key="frame" x="578" y="3190" width="169" height="66"/>
+                    <rect key="frame" x="578" y="3276" width="169" height="66"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="attach photo" image="camera_icon.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1572,7 +1564,7 @@
                 <outlet property="vwBodyPartInjury" destination="dv9-eE-FaQ" id="bor-4k-Fcw"/>
                 <outlet property="vwPersonalInfo" destination="Z35-1Q-5nL" id="cM2-L1-eyy"/>
             </connections>
-            <point key="canvasLocation" x="565" y="1543"/>
+            <point key="canvasLocation" x="565" y="1583.5"/>
         </view>
     </objects>
     <resources>

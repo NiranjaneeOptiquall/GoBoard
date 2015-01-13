@@ -224,6 +224,7 @@
         UtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         location.locationId = [[aDict objectForKey:@"Id"] stringValue];
         location.name = [aDict objectForKey:@"Name"];
+        location.sequence = [aDict objectForKey:@"Sequence"];
         if ([[aDict objectForKey:@"Message"] isKindOfClass:[NSNull class]])
             location.message = @"";
         else
@@ -245,6 +246,7 @@
             for (NSDictionary *aDictSubLoc in [aDict objectForKey:@"Sublocations"]) {
                 UtilizationCount *subLoc = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                 subLoc.name = [aDictSubLoc objectForKey:@"Name"];
+                subLoc.sequence = [aDictSubLoc objectForKey:@"Sequence"];
                 if ([[aDictSubLoc objectForKey:@"LastCount"] isKindOfClass:[NSNull class]])
                     subLoc.lastCount = @"0";
                 else
@@ -315,6 +317,7 @@
         aList.desc = [aDict objectForKey:@"Description"];
         aList.name = [aDict objectForKey:@"Name"];
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
+        aList.sequence = [aDict objectForKey:@"Sequence"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
@@ -386,7 +389,14 @@
     for (NSDictionary *aDict in arrReports) {
         IncidentReportInfo *report = [NSEntityDescription insertNewObjectForEntityForName:@"IncidentReportInfo" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         report.reportType = [aDict objectForKey:@"ReportType"];
-        report.instructions = [aDict objectForKey:@"Instructions"];
+        if ([[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
+            report.instructions = @"";
+        }
+        else {
+            report.instructions = [aDict objectForKey:@"Instructions"];
+        }
+            
+        
         report.notificationField1 = [aDict objectForKey:@"NotificationField1"];
         report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
         report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
@@ -395,6 +405,16 @@
         report.notificationField2Color = [aDict objectForKey:@"NotificationField2Color"];
         report.notificationField3Color = [aDict objectForKey:@"NotificationField3Color"];
         report.notificationField4Color = [aDict objectForKey:@"NotificationField4Color"];
+        report.personInvolved1 = [aDict objectForKey:@"PersonInvolved1"];
+        report.personInvolved2 = [aDict objectForKey:@"PersonInvolved2"];
+        report.personInvolved3 = [aDict objectForKey:@"PersonInvolved3"];
+        
+        report.affiliation1 = [aDict objectForKey:@"Affiliation1"];
+        report.affiliation2 = [aDict objectForKey:@"Affiliation2"];
+        report.affiliation3 = [aDict objectForKey:@"Affiliation3"];
+        report.affiliation4 = [aDict objectForKey:@"Affiliation4"];
+        report.affiliation5 = [aDict objectForKey:@"Affiliation5"];
+        report.affiliation6 = [aDict objectForKey:@"Affiliation6"];
         report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
         report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
         report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
@@ -527,7 +547,12 @@
 
 - (void)insertAccidentReportSettings:(NSMutableDictionary*)aDict {
     AccidentReportInfo *report = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportInfo" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-    report.instructions = [aDict objectForKey:@"Instructions"];
+    if ([[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
+        report.instructions = @"";
+    }
+    else {
+        report.instructions = [aDict objectForKey:@"Instructions"];
+    }
     report.notificationField1 = [aDict objectForKey:@"NotificationField1"];
     report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
     report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
@@ -536,6 +561,17 @@
     report.notificationField2Color = [aDict objectForKey:@"NotificationField2Color"];
     report.notificationField3Color = [aDict objectForKey:@"NotificationField3Color"];
     report.notificationField4Color = [aDict objectForKey:@"NotificationField4Color"];
+    report.personInvolved1 = [aDict objectForKey:@"PersonInvolved1"];
+    report.personInvolved2 = [aDict objectForKey:@"PersonInvolved2"];
+    report.personInvolved3 = [aDict objectForKey:@"PersonInvolved3"];
+    
+    report.affiliation1 = [aDict objectForKey:@"Affiliation1"];
+    report.affiliation2 = [aDict objectForKey:@"Affiliation2"];
+    report.affiliation3 = [aDict objectForKey:@"Affiliation3"];
+    report.affiliation4 = [aDict objectForKey:@"Affiliation4"];
+    report.affiliation5 = [aDict objectForKey:@"Affiliation5"];
+    report.affiliation6 = [aDict objectForKey:@"Affiliation6"];
+
     report.refusedCareStatement = [aDict objectForKey:@"RefusedCareStatement"];
     report.selfCareStatement = [aDict objectForKey:@"SelfCareStatement"];
     report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];

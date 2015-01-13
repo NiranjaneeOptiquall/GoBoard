@@ -118,7 +118,10 @@
     user.userId = [aDict objectForKey:@"UserId"];
     NSMutableSet *locSet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"Locations"]) {
-        UtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        
+        SubmitUtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitUtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        
+//        UtilizationCount *location = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         location.name = [dict objectForKey:@"Name"];
         location.lastCount = [dict objectForKey:@"LastCount"];
         location.lastCountDateTime = [dict objectForKey:@"LastCountDateTime"];
@@ -127,7 +130,7 @@
         location.locationId = [dict objectForKey:@"Id"];
         NSMutableSet *set = [NSMutableSet set];
         for (NSDictionary *subLoc in [dict objectForKey:@"Sublocations"]) {
-            UtilizationCount *subLocation = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            SubmitUtilizationCount *subLocation = [NSEntityDescription insertNewObjectForEntityForName:@"SubmitUtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             subLocation.name = [subLoc objectForKey:@"Name"];
             subLocation.lastCount = [subLoc objectForKey:@"LastCount"];
             subLocation.lastCountDateTime = [subLoc objectForKey:@"LastCountDateTime"];
@@ -138,7 +141,6 @@
         location.sublocations = set;
         [locSet addObject:location];
     }
-#warning FIxTHIS crash
     user.countLocation = locSet;
     [gblAppDelegate.managedObjectContext insertObject:user];
     if ([gblAppDelegate.managedObjectContext save:nil]) {
@@ -355,14 +357,39 @@
     
 }
 
+- (void)updateCountForToday {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UtilizationCount"];
+    NSError *error = nil;
+    NSArray *aryCounts = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    
+    NSDateComponents *components = [[NSCalendar currentCalendar]
+                                    components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit
+                                    fromDate:[NSDate date]];
+    NSDate *currentDate = [[NSCalendar currentCalendar]
+                           dateFromComponents:components];
+    for (UtilizationCount *location in aryCounts) {
+        NSDate *lastCountDate = [aFormatter dateFromString:location.lastCountDateTime];
+        
+        if (!lastCountDate || [lastCountDate compare:currentDate] == NSOrderedAscending) {
+            location.lastCount = @"0";
+            location.lastCountDateTime = [aFormatter stringFromDate:currentDate];
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
 - (void)fetchOfflineCountData {
+    [self updateCountForToday];
     mutArrCount = [[NSMutableArray alloc] init];
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UtilizationCount"];
-    //    [request setPropertiesToFetch:@[@"categoryId", @"title", @"erpTitles", @"erpTitles.subCateId", @"erpTitles.title"]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"location = nil"];
     [request setPredicate:predicate];
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-    [request setSortDescriptors:@[sortByName]];
+    NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
+    [request setSortDescriptors:@[sortBySequence, sortByName]];
     NSError *error = nil;
     NSArray *aryCategories = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {

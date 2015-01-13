@@ -50,8 +50,8 @@
         frame.origin.y = _vwEmployee.frame.origin.y;
     }
     else if ([sender isEqual:_btnEmployee]) {
-        [self hideMemberId:NO];
-        if (!_isMemberIdVisible) [_vwMemberId setHidden:YES];
+        if (!_isEmployeeIdVisible) [_vwMemberId setHidden:YES];
+        else [self hideMemberId:NO];
         
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_vwEmpPosition setHidden:NO];
@@ -234,13 +234,25 @@
     return success;
 }
 
-- (void)callInitialActions {
+- (void)callInitialActions:(IncidentReportInfo*)reportSetupInfo {
     
     if (!_isAffiliationVisible) [self hideAffiliation];
     if (!_isDOBVisible) [self hideDateOfBirth];
     if (!_isGenderVisible) [self hideGender];
     if (!_isMinorVisible) [self hideMinor];
     if (!_isCapturePhotoVisible) [self hideCaptureButton];
+    
+    [_btnMember setTitle:reportSetupInfo.personInvolved1 forState:UIControlStateNormal];
+    [_btnGuest setTitle:reportSetupInfo.personInvolved2 forState:UIControlStateNormal];
+    [_btnEmployee setTitle:reportSetupInfo.personInvolved3 forState:UIControlStateNormal];
+    
+    [_btnNonAssessedStudent setTitle:reportSetupInfo.affiliation1 forState:UIControlStateNormal];
+    [_btnAssessedStudent setTitle:reportSetupInfo.affiliation2 forState:UIControlStateNormal];
+    [_btnAlumni setTitle:reportSetupInfo.affiliation3 forState:UIControlStateNormal];
+    [_btnStaff setTitle:reportSetupInfo.affiliation4 forState:UIControlStateNormal];
+    [_btnCommunity setTitle:reportSetupInfo.affiliation5 forState:UIControlStateNormal];
+    [_btnOther setTitle:reportSetupInfo.affiliation6 forState:UIControlStateNormal];
+    
     [self btnPersonInvolvedTapped:_btnMember];
     [self btnAffiliationTapped:_btnNonAssessedStudent];
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];

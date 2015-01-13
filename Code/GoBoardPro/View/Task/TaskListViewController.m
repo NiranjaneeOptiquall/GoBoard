@@ -277,7 +277,8 @@
 - (void)fetchAllTask {
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
-    [allTask setSortDescriptors:@[descriptor]];
+    NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
+    [allTask setSortDescriptors:@[descriptor, sortBySequence]];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"MM/dd/yyyy"];
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];

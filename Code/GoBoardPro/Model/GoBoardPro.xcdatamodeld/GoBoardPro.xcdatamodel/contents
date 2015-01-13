@@ -48,6 +48,12 @@
         <relationship name="injuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="InjuryDetail" inverseName="accidentPerson" inverseEntity="InjuryDetail" syncable="YES"/>
     </entity>
     <entity name="AccidentReportInfo" representedClassName="AccidentReportInfo" syncable="YES">
+        <attribute name="affiliation1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation5" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
@@ -57,6 +63,9 @@
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="refusedCareStatement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfCareStatement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="showAffiliation" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -222,6 +231,12 @@
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="headInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="IncidentReportInfo" representedClassName="IncidentReportInfo" syncable="YES">
+        <attribute name="affiliation1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation5" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
@@ -231,6 +246,9 @@
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personInvolved3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reportType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="showAffiliation" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showConditions" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -415,6 +433,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="taskDateTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="taskId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="responseTypeValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskResponseTypeValues" inverseName="task" inverseEntity="TaskResponseTypeValues" syncable="YES"/>
@@ -448,6 +467,7 @@
         <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="sublocations" inverseEntity="UtilizationCount" syncable="YES"/>
         <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="location" inverseEntity="UtilizationCount" syncable="YES"/>
     </entity>
@@ -465,7 +485,7 @@
     <elements>
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="88"/>
         <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="643"/>
-        <element name="AccidentReportInfo" positionX="-191" positionY="104" width="128" height="598"/>
+        <element name="AccidentReportInfo" positionX="-200" positionY="230" width="128" height="733"/>
         <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="403"/>
         <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="103"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="103"/>
@@ -484,7 +504,7 @@
         <element name="FormsList" positionX="-443" positionY="720" width="128" height="148"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="88"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="88"/>
-        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="433"/>
+        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="568"/>
         <element name="InjuryDetail" positionX="423" positionY="623" width="128" height="148"/>
         <element name="LegInjuryList" positionX="-389" positionY="560" width="128" height="88"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
@@ -500,12 +520,12 @@
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
         <element name="SurveyQuestions" positionX="-513" positionY="905" width="128" height="148"/>
         <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="88"/>
-        <element name="TaskList" positionX="135" positionY="-972" width="128" height="253"/>
+        <element name="TaskList" positionX="135" positionY="-972" width="128" height="268"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="88"/>
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
-        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="163"/>
+        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="178"/>
         <element name="Witness" positionX="261" positionY="-36" width="128" height="178"/>
     </elements>
 </model>

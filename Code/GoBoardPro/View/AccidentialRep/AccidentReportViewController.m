@@ -431,7 +431,7 @@
         newFrame.size.height = CGRectGetMaxY(frame);
         _vwFirstSection.frame = newFrame;
         float nextY = CGRectGetMaxY(_vwFirstSection.frame);
-        if (thirdSection) {
+        if (thirdSection && !thirdSection.isHidden) {
             frame = thirdSection.frame;
             frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
             thirdSection.frame = frame;
@@ -572,13 +572,14 @@
 
 - (void)addAccidentView {
     AccidentFirstSection *accidentView = (AccidentFirstSection*)[[[NSBundle mainBundle] loadNibNamed:@"AccidentFirstSection" owner:self options:nil] firstObject];
+    accidentView.parentVC = self;
     accidentView.isCaptureCameraVisible = [_reportSetupInfo.showPhotoIcon boolValue];
     accidentView.vwPersonalInfo.isAffiliationVisible = [_reportSetupInfo.showAffiliation boolValue];
     accidentView.vwPersonalInfo.isMemberIdVisible = [_reportSetupInfo.showMemberIdAndDriverLicense boolValue];
     accidentView.vwPersonalInfo.isDOBVisible = [_reportSetupInfo.showDateOfBirth boolValue];
     accidentView.vwPersonalInfo.isGenderVisible = [_reportSetupInfo.showGender boolValue];
     accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showMinor boolValue];
-    accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showEmployeeId boolValue];
+    accidentView.vwPersonalInfo.isEmployeeIdVisible = [_reportSetupInfo.showEmployeeId boolValue];
     accidentView.vwPersonalInfo.isConditionsVisible = [_reportSetupInfo.showConditions boolValue];
     [accidentView.vwPersonalInfo callInitialActions];
     
@@ -598,7 +599,7 @@
     [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
     [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:NO];
     [accidentView.vwBodilyFluid btnWasBloodPresentTapped:accidentView.vwBodilyFluid.btnBloodNotPresent];
-    accidentView.parentVC = self;
+    
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
     totalAccidentFirstSectionCount++;

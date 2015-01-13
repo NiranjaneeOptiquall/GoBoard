@@ -110,6 +110,7 @@
             if (certificate.imgCertificate) {
                 NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
                 aPhotoData = [aData base64EncodedStringWithOptions:0];
+                certificate.strCertificateFileName = [NSString stringWithFormat:@"%@_%ld", [[User currentUser] userId], (long)[[NSDate date] timeIntervalSince1970]];
             }
             else {
                 aPhotoData = [NSNull null];
@@ -118,8 +119,9 @@
                 fileName = certificate.strCertificateFileName;
             }
             else {
-                fileName = [NSString stringWithFormat:@"%@_%ld", [[User currentUser] userId], (long)[[NSDate date] timeIntervalSince1970]];
+                fileName = [NSNull null];
             }
+            
             [aMutArrCertificate addObject:@{@"RequirementId": certificate.strDropDownId, @"ExpirationDate":certificate.txtExpDate.trimText, @"Id":(certificate.strCertificateId) ? certificate.strCertificateId : @"", @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false"}];
             //,
         }

@@ -91,21 +91,23 @@
 
 - (BOOL)isBodilyFluidValidationSucceedWith:(NSArray*)fields {
     BOOL success = YES;
-    if ([fields containsObject:@"firstName"] && [_txtFName isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        success = NO;
-    }
-    else if ([fields containsObject:@"middleInitial"] && [_txtMI isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        success = NO;
-    }
-    else if ([fields containsObject:@"lastName"] && [_txtLName isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        success = NO;
-    }
-    else if ([fields containsObject:@"position"] && [_txtPosition isTextFieldBlank]) {
-        alert(@"", MSG_REQUIRED_FIELDS);
-        success = NO;
+    if (!_vwFirstAid.isHidden) {
+        if ([fields containsObject:@"firstName"] && [_txtFName isTextFieldBlank]) {
+            alert(@"", MSG_REQUIRED_FIELDS);
+            success = NO;
+        }
+        else if ([fields containsObject:@"middleInitial"] && [_txtMI isTextFieldBlank]) {
+            alert(@"", MSG_REQUIRED_FIELDS);
+            success = NO;
+        }
+        else if ([fields containsObject:@"lastName"] && [_txtLName isTextFieldBlank]) {
+            alert(@"", MSG_REQUIRED_FIELDS);
+            success = NO;
+        }
+        else if ([fields containsObject:@"position"] && [_txtPosition isTextFieldBlank]) {
+            alert(@"", MSG_REQUIRED_FIELDS);
+            success = NO;
+        }
     }
     return success;
 }
