@@ -408,7 +408,7 @@
 
 - (NSString *)getCurrentDate {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
     [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
     return aStr;

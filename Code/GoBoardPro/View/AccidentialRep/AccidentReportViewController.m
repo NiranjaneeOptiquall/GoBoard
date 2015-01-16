@@ -108,17 +108,17 @@
         PersonInformation *vwPersonalInfo = aFirstSection.vwPersonalInfo;
         
         if (vwPersonalInfo.btnMember.tag == [aPerson.personTypeID integerValue]) {
-            [vwPersonalInfo.btnMember setSelected:YES];
+            [vwPersonalInfo btnPersonInvolvedTapped:vwPersonalInfo.btnMember];
         }
         else if (vwPersonalInfo.btnGuest.tag == [aPerson.personTypeID integerValue]) {
-            [vwPersonalInfo.btnGuest setSelected:YES];
+            [vwPersonalInfo btnPersonInvolvedTapped:vwPersonalInfo.btnGuest];
         }
         else if (vwPersonalInfo.btnEmployee.tag == [aPerson.personTypeID integerValue]) {
-            [vwPersonalInfo.btnEmployee setSelected:YES];
+            [vwPersonalInfo btnPersonInvolvedTapped:vwPersonalInfo.btnEmployee];
         }
         
         UIButton *aBtnAffiliationType = (UIButton*)[vwPersonalInfo.vwAffiliation viewWithTag:[aPerson.affiliationTypeID integerValue]];
-        [aBtnAffiliationType setSelected:YES];
+        [vwPersonalInfo btnAffiliationTapped:aBtnAffiliationType];
         
         vwPersonalInfo.txtMemberId.text = aPerson.memberId;
         vwPersonalInfo.txtEmployeePosition.text = aPerson.employeeTitle;

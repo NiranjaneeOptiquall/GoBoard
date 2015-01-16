@@ -236,6 +236,7 @@
         gblAppDelegate.isProduction = value;
         [self.navigationController popToViewController:self animated:YES];
     }
+    NSLog(@"%@", SERVICE_URL);
 }
 
 
