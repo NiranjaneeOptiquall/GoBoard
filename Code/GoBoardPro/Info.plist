@@ -19,11 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-<<<<<<< HEAD
-	<string>1.0.333</string>
-=======
-	<string>1.0.323</string>
->>>>>>> d92c40d549dd7f319d15bafc20684927e811a2bf
+	<string>1.0.345</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

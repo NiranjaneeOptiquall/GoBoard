@@ -92,8 +92,13 @@
     UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
     UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-    NSArray *aryDateComp = [log.date componentsSeparatedByString:@" "];
-    [aLblTime setText:[NSString stringWithFormat:@"%@ %@", aryDateComp[1], aryDateComp[2]]];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    NSDate *aDate = [aFormatter dateFromString:log.date];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    
+    
+    [aLblTime setText:[aFormatter stringFromDate:aDate]];
     [aLblLog setText:log.desc];
     [aLblLog sizeToFit];
     CGRect frame = aLblLog.frame;

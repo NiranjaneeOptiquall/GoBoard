@@ -151,6 +151,7 @@
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     } failure:^(NSError *error, NSDictionary *response) {
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        alert(@"", [response objectForKeyedSubscript:@"ErrorMessage"]);
     }];
 }
 
@@ -188,6 +189,7 @@
 
 #pragma mark - Methods
 
+// Delete all records from all tables in database.
 - (void)resetLocalDatabaseForNewUser {
     NSError * error;
     NSURL * storeURL = [[gblAppDelegate.managedObjectContext persistentStoreCoordinator] URLForPersistentStore:[[[gblAppDelegate.managedObjectContext persistentStoreCoordinator] persistentStores] lastObject]];
@@ -236,7 +238,6 @@
         gblAppDelegate.isProduction = value;
         [self.navigationController popToViewController:self animated:YES];
     }
-    NSLog(@"%@", SERVICE_URL);
 }
 
 

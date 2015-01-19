@@ -91,7 +91,7 @@
         }];
     }
     else if (_guestFormType == 5) {
-        // Configure for User Forms
+        // Configure for User Survey
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Surveys"];
         [self callService];

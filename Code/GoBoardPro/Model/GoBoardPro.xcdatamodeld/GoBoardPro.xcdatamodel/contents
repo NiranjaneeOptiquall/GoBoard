@@ -489,7 +489,7 @@
         <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="403"/>
         <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="103"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="103"/>
-        <element name="ArmInjuryList" positionX="-200" positionY="747" width="128" height="88"/>
+        <element name="ArmInjuryList" positionX="61" positionY="846" width="128" height="88"/>
         <element name="BodyPartInjuryType" positionX="97" positionY="297" width="128" height="88"/>
         <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="88"/>
         <element name="ConditionList" positionX="-639" positionY="32" width="128" height="103"/>
@@ -510,11 +510,11 @@
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
         <element name="Person" positionX="133" positionY="-540" width="128" height="403"/>
-        <element name="QuestionDetails" positionX="-36" positionY="810" width="128" height="118"/>
+        <element name="QuestionDetails" positionX="-18" positionY="1034" width="128" height="118"/>
         <element name="Report" positionX="297" positionY="-540" width="128" height="478"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
-        <element name="SubmitFormAndSurvey" positionX="-207" positionY="810" width="128" height="118"/>
+        <element name="SubmitFormAndSurvey" positionX="-200" positionY="1034" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>

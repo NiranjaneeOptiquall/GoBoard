@@ -72,7 +72,9 @@
 }
 
 - (NSDictionary *)getPostLocation:(UtilizationCount*)location {
-    
+    if (!location.message) {
+        location.message = @"";
+    }
     NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id", nil];
     NSMutableArray *subLocations = [NSMutableArray array];
     for (UtilizationCount *subLocation in [location.sublocations allObjects]) {

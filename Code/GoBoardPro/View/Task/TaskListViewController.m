@@ -283,8 +283,8 @@
     [aFormatter setDateFormat:@"MM/dd/yyyy"];
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
     
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", [aFormatter dateFromString:aStr], [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
-    [allTask setPredicate:predicate1];
+//    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", [aFormatter dateFromString:aStr], [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
+//    [allTask setPredicate:predicate1];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
     if ([mutArrTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];

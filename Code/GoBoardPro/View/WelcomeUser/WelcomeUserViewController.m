@@ -256,26 +256,14 @@
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     [sender setText:[value valueForKey:@"name"]];
     if ([sender isEqual:_txtFacility]) {
-        [_txtLocation setEnabled:YES];
-        [_txtPosition setEnabled:YES];
         if (![selectedFacility isEqual:value]) {
             selectedFacility = value;
-            selectedPosition = nil;
-            selectedLocation = nil;
-            [_txtLocation setText:@""];
-            [_txtPosition setText:@""];
             [[[User currentUser] mutArrSelectedPositions] removeAllObjects];
             [[[User currentUser] mutArrSelectedLocations] removeAllObjects];
             [self fetchPositionAndLocation];
             [_tblLocation reloadData];
             [_tblPosition reloadData];
         }
-    }
-    else if ([sender isEqual:_txtPosition]) {
-        selectedPosition = value;
-    }
-    else if ([sender isEqual:_txtLocation]) {
-        selectedLocation = value;
     }
 }
 @end
