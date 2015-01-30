@@ -32,6 +32,7 @@
             break;
         }
     }
+    
     if (isTask) {
         _lblCount.text = @"Tasks";
         _lblTask.text = @"Counts";
@@ -39,6 +40,7 @@
         _lblCount.textColor = [UIColor whiteColor];
         _lblTask.textColor = color;
     }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -473,6 +475,7 @@
     [aCell.txtCount setText:[NSString stringWithFormat:@"%d", aCurrent]];
     [aCell.txtCount setFont:[UIFont boldSystemFontOfSize:50.0]];
     [aCell.txtCount setDelegate:self];
+    
     [aCell.btnDecreaseCount addTarget:self action:@selector(btnDecreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnIncreaseCount addTarget:self action:@selector(btnIncreaseCountTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnCountRemainSame.layer setCornerRadius:3.0];
@@ -508,6 +511,9 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    
+    
     UtilizationHeaderView *aHeaderView = (UtilizationHeaderView *)[[[NSBundle mainBundle] loadNibNamed:@"UtilizationHeaderView" owner:self options:nil] firstObject];
     aHeaderView.section = section;
     if (section == 0 || section % 2 == 0) {
@@ -578,7 +584,11 @@
     else {
         // Summary is shown
     }
-    return aHeaderView;
+    
+    UITableViewHeaderFooterView *myHeader = [[UITableViewHeaderFooterView alloc] init];
+    myHeader.frame=aHeaderView.frame;
+    [myHeader addSubview:aHeaderView];
+    return myHeader;
 }
 
 
@@ -590,7 +600,9 @@
 #pragma mark - TextFieldDelegate
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    
     strPreviousText = textField.text;
+    
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -659,7 +671,86 @@
             }
             location.isUpdateAvailable = YES;
             location.lastCountDateTime = [self getCurrentDate];
-            [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+            
+            //Update Current Section Data
+            NSArray *visibleRows = [_tblCountList visibleCells];
+            for (UtilizationCountTableViewCell *aCell in visibleRows) {
+                NSIndexPath *indexPath = [_tblCountList indexPathForCell:(UITableViewCell *)aCell];
+                if (indexPath.section==section) {
+                    UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
+                    UtilizationCount *subLocation = [[location.sublocations allObjects] objectAtIndex:indexPath.row];
+                    [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
+                    int aCurrent = [subLocation.lastCount intValue];
+                    
+                    if (subLocation.lastCountDateTime.length == 0)
+                        aCell.lblLastUpdate.text = @"";
+                    else
+                        aCell.lblLastUpdate.text = [NSString stringWithFormat:@"- %@",[self getLastUpdate:subLocation.lastCountDateTime]];
+
+                    int percent = 100 * [location.lastCount floatValue] / [location.capacity floatValue];
+                    if (percent > 80)
+                        [aCell.txtCount setTextColor:[UIColor colorWithRed:218.0/255.0 green:154.0/255.0 blue:154.0/255.0 alpha:1.0]];
+                    else if (percent > 40)
+                        [aCell.txtCount setTextColor:[UIColor colorWithRed:228.0/255.0 green:195.0/255.0 blue:96.0/255.0 alpha:1.0]];
+                    else
+                        [aCell.txtCount setTextColor:[UIColor colorWithRed:124.0/255.0 green:193.0/255.0 blue:139.0/255.0 alpha:1.0]];
+    
+                    [aCell.txtCount setText:[NSString stringWithFormat:@"%d", aCurrent]];
+                    
+                    if (aCurrent == 0)
+                        [aCell.btnDecreaseCount setHidden:YES];
+                    else
+                        [aCell.btnDecreaseCount setHidden:NO];
+
+                    if (indexPath.row == [location.sublocations count] - 1)
+                        [aCell.lblDevider setHidden:NO];
+                    else [aCell.lblDevider setHidden:YES];
+                    
+                    if (location.isCountRemainSame || subLocation.isCountRemainSame)
+                        [aCell.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
+                    else
+                        [aCell.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
+                
+                    CGRect frame = [aCell.lblDevider frame];
+                    frame.origin.y = aCell.frame.size.height - frame.size.height;
+                    [aCell.lblDevider setFrame:frame];
+                }
+            }
+            
+            
+            //Update Cell Header Data
+            UtilizationCount *locationHeader = [mutArrCount objectAtIndex:section];
+            UITableViewHeaderFooterView *aHeaderView = [_tblCountList headerViewForSection:section];
+            UtilizationHeaderView *aUtiHeaderView;
+            for (id aView in aHeaderView.subviews) {
+                if ([aView isKindOfClass:[UtilizationHeaderView class]]) {
+                    aUtiHeaderView = (UtilizationHeaderView*)aView;
+                    break;
+                }
+            }
+            
+            int aMaxCapacity = [locationHeader.capacity intValue];
+            int aCurrent = [locationHeader.lastCount intValue];
+            int percent = 100 * aCurrent / aMaxCapacity;
+            if (locationHeader.lastCountDateTime.length == 0)
+                aUtiHeaderView.lblLastUpdate.text = @"";
+            else
+                aUtiHeaderView.lblLastUpdate.text = [self getLastUpdate:locationHeader.lastCountDateTime];
+        
+            [aUtiHeaderView.lblCapicity setText:[NSString stringWithFormat:@"%d%% Capacity", percent]];
+            if (percent > 80)
+                [aUtiHeaderView.txtCount setTextColor:[UIColor colorWithRed:218.0/255.0 green:154.0/255.0 blue:154.0/255.0 alpha:1.0]];
+            else if (percent > 40)
+                [aUtiHeaderView.txtCount setTextColor:[UIColor colorWithRed:228.0/255.0 green:195.0/255.0 blue:96.0/255.0 alpha:1.0]];
+            else
+                [aUtiHeaderView.txtCount setTextColor:[UIColor colorWithRed:124.0/255.0 green:193.0/255.0 blue:139.0/255.0 alpha:1.0]];
+            
+            [aUtiHeaderView.txtCount setText:[NSString stringWithFormat:@"%d", aCurrent]];
+            [aUtiHeaderView.txtCount setFont:[UIFont boldSystemFontOfSize:64.0]];
+            
+//          [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+
+            
         }
         else {
             [textField becomeFirstResponder];

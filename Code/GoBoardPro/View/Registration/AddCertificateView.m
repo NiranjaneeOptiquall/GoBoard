@@ -78,6 +78,7 @@
 }
 
 - (void)showCamera {
+    
     UIImagePickerController *imgPicker = [[UIImagePickerController alloc] init];
     [imgPicker setSourceType:UIImagePickerControllerSourceTypeCamera];
     [imgPicker setDelegate:self];
