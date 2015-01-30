@@ -243,12 +243,6 @@
     if ([textField isEqual:_txtFacility]) {
         [dropDown showDropDownWith:aryFacilities view:textField key:@"name"];
     }
-    else if ([textField isEqual:_txtLocation]) {
-        [dropDown showDropDownWith:aryLocation view:textField key:@"name"];
-    }
-    else if ([textField isEqual:_txtPosition]) {
-        [dropDown showDropDownWith:aryPositions view:textField key:@"name"];
-    }
     return NO;
 }
 
