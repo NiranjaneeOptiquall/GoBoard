@@ -527,6 +527,14 @@
     [self addAccidentView];
 }
 
+- (IBAction)btnDeleteRecentlyaddedPersonInvolved:(UIButton *)sender {
+    UIAlertView *aAlertDeletePerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Person Involved?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeletePerson.tag = 5;
+    
+    [aAlertDeletePerson show];
+}
+
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (_isUpdate) {
@@ -603,10 +611,14 @@
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
     totalAccidentFirstSectionCount++;
+    accidentView.tag = totalAccidentFirstSectionCount+100;
     accidentView.frame = frame;
     [accidentView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+    
     [_vwFirstSection addSubview:accidentView];
+    
     [mutArrAccidentViews addObject:accidentView];
+    
     frame = _vwFirstSection.frame;
     frame.size.height = CGRectGetMaxY(accidentView.frame) + _vwAddMoreFirstSection.frame.size.height;
     _vwFirstSection.frame = frame;
@@ -614,6 +626,13 @@
     frame.origin.y = CGRectGetMaxY(accidentView.frame);
     _vwAddMoreFirstSection.frame = frame;
     [_vwFirstSection bringSubviewToFront:_vwAddMoreFirstSection];
+    
+    if (totalAccidentFirstSectionCount<=1) {
+        _btnRemovePerson.hidden=YES;
+    }else{
+        _btnRemovePerson.hidden=NO;
+    }
+    
     if (thirdSection) {
         frame = thirdSection.frame;
         frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
@@ -623,7 +642,6 @@
         finalSection.frame = frame;
         [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
     }
-    
 }
 
 - (void)addViews {
@@ -961,12 +979,57 @@
         }
         [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];
-        
+    }
+    else if (alertView.tag == 5){
+    
+        AccidentFirstSection *accidentView = (AccidentFirstSection*)[_vwFirstSection viewWithTag:totalAccidentFirstSectionCount+100];
+        if (accidentView) {
+            
+            if ([accidentView isKindOfClass:[AccidentFirstSection class]]) {
+                [accidentView removeObserver:self forKeyPath:@"frame"];
+                [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"frame"];
+                [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"careProvided"];
+                [accidentView.vwBodilyFluid removeObserver:accidentView forKeyPath:@"frame"];
+                [accidentView.vwPersonalInfo removeObserver:accidentView forKeyPath:@"frame"];
+            }
+            if ([mutArrAccidentViews containsObject:accidentView]) {
+                [mutArrAccidentViews removeObject:accidentView];
+                
+                CGRect frame = _vwFirstSection.frame;
+                frame.size.height = _vwFirstSection.frame.size.height - accidentView.frame.size.height;
+                _vwFirstSection.frame = frame;
+                frame = _vwAddMoreFirstSection.frame;
+                frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
+                //frame.size.height = CGRectGetMaxY(_vwFirstSection.frame);
+                _vwAddMoreFirstSection.frame = frame;
+                [_vwFirstSection bringSubviewToFront:_vwAddMoreFirstSection];
+                if (thirdSection) {
+                    frame = thirdSection.frame;
+                    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+                    thirdSection.frame = frame;
+                    frame = finalSection.frame;
+                    frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+                    finalSection.frame = frame;
+                    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width,CGRectGetMaxY(frame))];
+                }
+                
+                totalAccidentFirstSectionCount--;
+                
+                [accidentView removeFromSuperview];
+                
+                if (totalAccidentFirstSectionCount<=1) {
+                    _btnRemovePerson.hidden=YES;
+                }else{
+                    _btnRemovePerson.hidden=NO;
+                }
+            }
+        }
     }
     else if (buttonIndex == 0) {
         [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];
     }
+
 }
 
 @end

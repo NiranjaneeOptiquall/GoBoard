@@ -315,6 +315,7 @@
 		33EB4A9E19D1A3A2008EF8FD /* text_box_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */; };
 		33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAF941A1C7778005EA0DB /* SubmittedTask.m */; };
 		33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FE66691A10D7090058BFB6 /* WebSerivceCall.m */; };
+		A98357561A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -784,6 +785,8 @@
 		33FCAF941A1C7778005EA0DB /* SubmittedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmittedTask.m; sourceTree = "<group>"; };
 		33FE66681A10D7090058BFB6 /* WebSerivceCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSerivceCall.h; sourceTree = "<group>"; };
 		33FE66691A10D7090058BFB6 /* WebSerivceCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSerivceCall.m; sourceTree = "<group>"; };
+		A98357541A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
+		A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1274,6 +1277,7 @@
 		3397CACC19D0347700788153 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A98357531A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum */,
 				33D879A71A414B8600CC312C /* Categories */,
 				330D66E21A15BC2000C3C656 /* CrittercismSDK */,
 				332B60EC1A146D9C00B7C7EF /* Reachability */,
@@ -1877,6 +1881,15 @@
 			path = WebServices;
 			sourceTree = "<group>";
 		};
+		A98357531A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				A98357541A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.h */,
+				A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */,
+			);
+			path = "ALAssetsLibrary+CustomPhotoAlbum";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2170,6 +2183,7 @@
 				332E3A4F19D570C60088AB61 /* TaskTableViewCell.m in Sources */,
 				33B6368719D9327800875A1D /* UtilizationCountTableViewCell.m in Sources */,
 				332F54431A2344BA00F2A40A /* ArmInjuryList.m in Sources */,
+				A98357561A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */,
 				3397CAD219D0347700788153 /* GoBoardPro.xcdatamodeld in Sources */,
 				3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */,

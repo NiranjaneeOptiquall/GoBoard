@@ -128,6 +128,29 @@
     selectedBodyPart = 0;
 }
 
+
+- (IBAction)btnRemoveInjuryTapped:(id)sender {
+    
+    UIButton *btnRemoveInjury = (UIButton *)sender;
+    
+    id getCell = btnRemoveInjury.superview;
+    
+    while (![getCell isKindOfClass:[UITableViewCell class]]) {
+        getCell = [getCell superview];
+    }
+    
+    UITableViewCell *cell = (UITableViewCell*) getCell;
+    
+    indexPathRemoveInjury = [_tblAddedInjuryList indexPathForCell:cell];
+    
+    UIAlertView *aAlertRemoveInjury = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete recently added Injury?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertRemoveInjury.tag = 1;
+    
+    [aAlertRemoveInjury show];
+    
+    
+}
 - (IBAction)btnInjureadBodyPartTapped:(UIButton *)sender {
     if ([sender isEqual:_btnHead]) {
         mutArrBodyPart = [_parentVC.reportSetupInfo.headInjuryList allObjects];
@@ -214,6 +237,10 @@
         CGRect frame = aView.frame;
         frame.origin.y = aCell.frame.size.height - 3;
         [aView setFrame:frame];
+        
+        UIButton *btnRemoveInjury = (UIButton *) [aCell.contentView viewWithTag:6];
+        
+        [btnRemoveInjury addTarget:self action:@selector(btnRemoveInjuryTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     else {
         if (indexPath.row == selectedBodyPart) {
@@ -332,6 +359,15 @@
     }
     [sender setText:[value valueForKey:@"name"]];
 }
-
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        if (buttonIndex == 0) {
+            [_mutArrInjuryList removeObjectAtIndex:indexPathRemoveInjury.row];
+            
+            [_tblAddedInjuryList reloadData];
+        }
+    }
+}
 
 @end

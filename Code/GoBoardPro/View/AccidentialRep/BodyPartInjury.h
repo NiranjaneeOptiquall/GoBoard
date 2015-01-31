@@ -10,10 +10,12 @@
 #import "Constants.h"
 #import "AccidentReportViewController.h"
 
-@interface BodyPartInjury : UIView<UITableViewDataSource, UITableViewDelegate, DropDownValueDelegate> {
+@interface BodyPartInjury : UIView<UITableViewDataSource, UITableViewDelegate, DropDownValueDelegate,UIAlertViewDelegate> {
     NSArray *mutArrBodyPart;
     NSInteger bodyPartIndex;
     NSInteger selectedBodyPart;
+    
+    NSIndexPath *indexPathRemoveInjury;
     
 }
 

@@ -263,7 +263,7 @@
     }];
 }
 
-
+ 
 #pragma mark - UIPopOverControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
@@ -274,12 +274,28 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     _imgBodilyFluid = [info objectForKey:UIImagePickerControllerEditedImage];
-    if (popOver) {
-        [popOver dismissPopoverAnimated:YES];
-    }
-    else {
-        [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
+    
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library saveImage:_imgBodilyFluid toAlbum:@"GoBoard Pro" withCompletionBlock:^(NSError *error) {
+            if (error!=nil)
+            {
+                NSLog(@"error: %@", [error description]);
+            }
+            [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
+            }];
         }];
+    }else{
+        if (popOver)
+        {
+            [popOver dismissPopoverAnimated:YES];
+        }
+        else
+        {
+            [gblAppDelegate.navigationController dismissViewControllerAnimated:YES completion:^{
+            }];
+        }
     }
 }
 

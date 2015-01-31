@@ -11,6 +11,7 @@
 #import "BodyPartInjury.h"
 #import "BodilyFluidView.h"
 #import "AccidentPerson.h"
+#import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
 @class AccidentReportViewController;
 

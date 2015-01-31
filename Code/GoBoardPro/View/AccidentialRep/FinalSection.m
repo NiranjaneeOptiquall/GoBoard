@@ -36,6 +36,14 @@
     [self isAdmin];
 }
 
+- (IBAction)btnDeleteWitnessTapped:(UIButton *)sender {
+    UIAlertView *aAlertDeleteWitness = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Witness?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeleteWitness.tag = 1;
+    
+    [aAlertDeleteWitness show];
+}
+
 - (IBAction)btnAddMoreWitnessTapped:(id)sender {
     [self addWitnessView];
 }
@@ -122,6 +130,7 @@
 
 - (void)addWitnessView {
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
+    
     aWitnessView.lblDescCaption.text = @"Description of Accident";
     [aWitnessView setBackgroundColor:[UIColor clearColor]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
@@ -133,6 +142,7 @@
     aWitnessView.frame = frame;
     [self addSubview:aWitnessView];
     totalWitnessCount ++;
+    aWitnessView.tag = totalWitnessCount + 300;
     [_mutArrWitnessViews addObject:aWitnessView];
     frame = _vwFixedContent.frame;
     frame.origin.y = CGRectGetMaxY(aWitnessView.frame);
@@ -140,6 +150,11 @@
     frame = self.frame;
     frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
     self.frame = frame;
+    if (totalWitnessCount<=1) {
+        _btnRemoveWitness.hidden=YES;
+    }else{
+        _btnRemoveWitness.hidden=NO;
+    }
 }
 
 - (void)setupEmployeeRequiredFields:(NSArray*)aryFields {
@@ -324,5 +339,25 @@
         self.frame = frame;
     }
 }
-
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        if (buttonIndex == 0) {
+            WitnessView *aWitnessView = (WitnessView*)[self viewWithTag:totalWitnessCount + 300];
+            if ([[self subviews] containsObject:aWitnessView]) {
+                totalWitnessCount --;
+                CGRect frame = _vwFixedContent.frame;
+                frame.origin.y = _vwFixedContent.frame.origin.y - aWitnessView.frame.size.height;
+                _vwFixedContent.frame = frame;
+                frame = self.frame;
+                frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+                self.frame = frame;
+                [aWitnessView removeFromSuperview];
+                if ([_mutArrWitnessViews containsObject:aWitnessView]) {
+                    [_mutArrWitnessViews removeObject:aWitnessView];
+                }
+            }
+        }
+    }
+}
 @end

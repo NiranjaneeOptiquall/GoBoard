@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class AccidentReportViewController;
-@interface ThirdSection : UIView<UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+@interface ThirdSection : UIView<UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,UIAlertViewDelegate> {
     NSInteger totalBodilyFluidCount, totalEmergencyPersonnelCount;
     
 //    NSMutableArray *mutArrBodilyFluidViews;
@@ -18,10 +18,14 @@
 @property (strong, nonatomic) NSMutableArray *mutArrEmergencyViews;
 @property (weak, nonatomic) IBOutlet UIView *vwFixedContent;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddEmergencyPersonnel;
+@property (strong, nonatomic) IBOutlet UIButton *btnDeleteEmergencyPersonnel;
+
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 
 
 - (IBAction)btnAddEmergencyPersonnel:(id)sender;
+- (IBAction)btnDeleteEmergencyPersonnel:(UIButton *)sender;
+
 - (void)initialSetUp;
 - (BOOL)isThirdSectionValidationSuccess;
 @end

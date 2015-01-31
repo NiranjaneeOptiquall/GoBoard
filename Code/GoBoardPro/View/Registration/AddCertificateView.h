@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "UpdateProfileViewController.h"
+#import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
 @interface AddCertificateView : UIView<UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
     UIPopoverController *popOver;

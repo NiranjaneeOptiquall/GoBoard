@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ALAssetsLibrary+CustomPhotoAlbum.h"
 #import "IncidentReportInfo.h"
 #import "Constants.h"
+
 
 @interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
     UIPopoverController *popOver;

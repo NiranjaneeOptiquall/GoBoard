@@ -10,7 +10,7 @@
 #import "SignatureView.h"
 
 @class AccidentReportViewController;
-@interface FinalSection : UIView<UITextFieldDelegate> {
+@interface FinalSection : UIView<UITextFieldDelegate,UIAlertViewDelegate> {
     NSInteger totalWitnessCount;
 }
 
@@ -61,7 +61,11 @@
 
 @property (strong, nonatomic) SignatureView *signatureView;
 
+
+@property (strong, nonatomic) IBOutlet UIButton *btnAddWitness;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemoveWitness;
 - (IBAction)btnAddMoreWitnessTapped:(id)sender;
+- (IBAction)btnDeleteWitnessTapped:(UIButton *)sender;
 - (IBAction)btnCommunicationTapped:(UIButton *)sender;
 - (IBAction)btnSentToInsuranceTapped:(UIButton *)sender;
 - (IBAction)btnProcedureFollowedTapped:(UIButton *)sender;

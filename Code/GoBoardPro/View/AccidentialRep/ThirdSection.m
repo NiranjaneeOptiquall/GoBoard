@@ -37,6 +37,14 @@
     [self resetSelfFrame];
 }
 
+- (IBAction)btnDeleteEmergencyPersonnel:(UIButton *)sender {
+    UIAlertView *aAlertDeleteEmergencyPerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Emergency Personnel?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeleteEmergencyPerson.tag = 1;
+    
+    [aAlertDeleteEmergencyPerson show];
+}
+
 
 
 #pragma mark - Methods
@@ -69,6 +77,7 @@
 
 - (void)addEmergencyPersonnel {
     EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
+    
     [objEmergency setBackgroundColor:[UIColor clearColor]];
     [objEmergency.txtCaseNo setPlaceholder:@"Case / Accident #"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
@@ -80,9 +89,21 @@
     objEmergency.frame = frame;
     [self addSubview:objEmergency];
     totalEmergencyPersonnelCount ++;
+    objEmergency.tag = totalEmergencyPersonnelCount+200;
     frame = _btnAddEmergencyPersonnel.frame;
     frame.origin.y = CGRectGetMaxY(objEmergency.frame);
     _btnAddEmergencyPersonnel.frame = frame;
+    
+    CGRect btnDeleteFrmae = _btnDeleteEmergencyPersonnel.frame;
+    btnDeleteFrmae.origin.y = _btnAddEmergencyPersonnel.frame.origin.y;
+    _btnDeleteEmergencyPersonnel.frame = btnDeleteFrmae;
+    
+    if (totalEmergencyPersonnelCount<=1) {
+        _btnDeleteEmergencyPersonnel.hidden=YES;
+    }else{
+        _btnDeleteEmergencyPersonnel.hidden=NO;
+    }
+    
     [_mutArrEmergencyViews addObject:objEmergency];
     [self bringSubviewToFront:_btnAddEmergencyPersonnel];
 }
@@ -119,6 +140,44 @@
     return success;
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        if (buttonIndex == 0) {
+            
+            EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[self viewWithTag:totalEmergencyPersonnelCount+200];
+            
+            if ([[self subviews] containsObject:objEmergency]) {
 
+                
+                totalEmergencyPersonnelCount --;
+                
+               CGRect frame = _btnAddEmergencyPersonnel.frame;
+                int yPosition = frame.origin.y - objEmergency.frame.size.height;
+                
+                frame.origin.y = yPosition;
+                _btnAddEmergencyPersonnel.frame = frame;
+                
+                CGRect btnDeleteFrmae = _btnDeleteEmergencyPersonnel.frame;
+                btnDeleteFrmae.origin.y = _btnAddEmergencyPersonnel.frame.origin.y;
+                _btnDeleteEmergencyPersonnel.frame = btnDeleteFrmae;
+                
+                if ([_mutArrEmergencyViews containsObject:objEmergency]) {
+                    [_mutArrEmergencyViews removeObject:objEmergency];
+                }
+                [objEmergency removeFromSuperview];
+                
+                [self bringSubviewToFront:_btnAddEmergencyPersonnel];
+                if (totalEmergencyPersonnelCount<=1) {
+                    _btnDeleteEmergencyPersonnel.hidden=YES;
+                }else{
+                    _btnDeleteEmergencyPersonnel.hidden=NO;
+                }
+                
+                [self resetSelfFrame];
+            }
+        }
+    }
+}
 
 @end

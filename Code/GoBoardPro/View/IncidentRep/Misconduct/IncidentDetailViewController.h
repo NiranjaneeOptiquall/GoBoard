@@ -32,13 +32,20 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 
 @property (weak, nonatomic) IBOutlet UIView *vwPersonalInfo;
+@property (strong, nonatomic) IBOutlet UIButton *btnAddmorePerson;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemovePerson;
+
+
 @property (weak, nonatomic) IBOutlet UIView *vwAfterPersonalInfo;
 @property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
 @property (weak, nonatomic) IBOutlet UIView *vwConditions;
 @property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemoveEmergency;
+
 @property (weak, nonatomic) IBOutlet UIView *vwWitnesses;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddWitness;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemoveWitness;
 @property (weak, nonatomic) IBOutlet UIView *vwEmployeeInfo;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpFName;
 
@@ -87,8 +94,15 @@
 @property (nonatomic, assign) NSInteger incidentType;
 
 - (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
+- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender;
+
 - (IBAction)btnAddPersonTapped:(id)sender;
+- (IBAction)btnDeletePersonTapped:(UIButton *)sender;
+
 - (IBAction)btnAddWitnessTapped:(id)sender;
+- (IBAction)btnDeleteWitnessTapped:(UIButton *)sender;
+
+
 - (IBAction)btnFollowUpCallTapped:(UIButton *)sender;
 - (IBAction)btnNotificationTapped:(UIButton *)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

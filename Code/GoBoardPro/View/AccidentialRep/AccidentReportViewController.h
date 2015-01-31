@@ -14,7 +14,7 @@
 #import "UserLocation.h"
 #import "UserFacility.h"
 
-@interface AccidentReportViewController : UIViewController<DropDownValueDelegate> {
+@interface AccidentReportViewController : UIViewController<DropDownValueDelegate,UIAlertViewDelegate> {
     ThirdSection *thirdSection;
     FinalSection *finalSection;
     NSMutableArray *mutArrAccidentViews;
@@ -39,6 +39,9 @@
 @property (weak, nonatomic) IBOutlet UIView *vwBasicDetail;
 @property (weak, nonatomic) IBOutlet UIView *vwFirstSection;
 @property (weak, nonatomic) IBOutlet UIView *vwAddMoreFirstSection;
+@property (strong, nonatomic) IBOutlet UIButton *btnAddMorePerson;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemovePerson;
+
 
 @property (assign, nonatomic) NSInteger personInvolved;
 
@@ -47,6 +50,9 @@
 
 
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender;
+- (IBAction)btnDeleteRecentlyaddedPersonInvolved:(UIButton *)sender;
+
+
 - (IBAction)btnBackTapped:(id)sender;
 
 - (IBAction)btnNotificationTapped:(UIButton *)sender;

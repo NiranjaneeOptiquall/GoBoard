@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="uAz-MZ-ZCG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="uAz-MZ-ZCG">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -408,7 +409,6 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qXn-rx-hhZ">
-                                                    <rect key="frame" x="0.0" y="1424" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1051,7 +1051,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gC7-5y-kM8">
-                                <rect key="frame" x="8" y="51" width="109" height="42"/>
+                                <rect key="frame" x="16" y="205" width="109" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -1065,7 +1065,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Av9-1g-pYr">
-                                <rect key="frame" x="621" y="14" width="100" height="130"/>
+                                <rect key="frame" x="8" y="14" width="100" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="titleEdgeInsets" minX="-99" minY="0.0" maxX="0.0" maxY="-92"/>
                                 <state key="normal" title="Sync" image="sync_icon.png">
@@ -1077,7 +1077,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4h4-Ls-f2b">
-                                <rect key="frame" x="675" y="53" width="40" height="21"/>
+                                <rect key="frame" x="71" y="53" width="40" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1332,7 +1332,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GdK-lU-aoN">
-                                                    <rect key="frame" x="0.0" y="1824" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="1817" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1527,7 +1527,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7zc-mS-vLg">
-                                                    <rect key="frame" x="0.0" y="2541" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="2593" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921568627447" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2029,6 +2029,16 @@
                                                             <action selector="btnAddMoreBodilyFluidTapped:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="XTm-eH-oQO"/>
                                                         </connections>
                                                     </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fnt-J4-sEn">
+                                                        <rect key="frame" x="400" y="1" width="355" height="66"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <state key="normal" title="Delete recently add person involved" image="collaps_icon_default.png">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="btnDeleteRecentlyaddedPersonInvolved:" destination="AbP-cJ-EaC" eventType="touchUpInside" id="3wS-Au-M6n"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </view>
@@ -2050,9 +2060,11 @@
                     <navigationItem key="navigationItem" id="01V-yP-ucP"/>
                     <connections>
                         <outlet property="btn911Called" destination="rBD-8H-XIu" id="pe9-u0-e3U"/>
+                        <outlet property="btnAddMorePerson" destination="rGc-rW-b94" id="gnN-VD-Qdy"/>
                         <outlet property="btnManager" destination="bbD-4O-AZ2" id="Dwt-4m-lMz"/>
                         <outlet property="btnNone" destination="Pfq-2B-Fn3" id="2BD-1P-ZG1"/>
                         <outlet property="btnPoliceCalled" destination="c3A-OQ-4qW" id="1WA-HQ-bNO"/>
+                        <outlet property="btnRemovePerson" destination="fnt-J4-sEn" id="9BB-Et-UHG"/>
                         <outlet property="lblIncidentDesc" destination="zMw-5y-P1m" id="IIU-kg-txw"/>
                         <outlet property="lblInstruction" destination="nis-do-PPH" id="frg-yB-Ctb"/>
                         <outlet property="scrlMainView" destination="CkE-uB-YKT" id="Vhf-eI-Gxa"/>
@@ -3208,7 +3220,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9h0-WS-Igr">
-                                                    <rect key="frame" x="0.0" y="2433" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="2539" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -3602,7 +3614,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rfj-SN-Cl8">
-                                                    <rect key="frame" x="0.0" y="536" width="768" height="4"/>
+                                                    <rect key="frame" x="0.0" y="806" width="768" height="4"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -5546,6 +5558,17 @@
                                                     <action selector="btnAddPersonTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="7Yn-3I-kLn"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uMB-6o-510">
+                                                <rect key="frame" x="430" y="0.0" width="330" height="66"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Delete recently added person involved" image="collaps_icon_default.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnDeletePersonTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="ffd-Zt-DNd"/>
+                                                </connections>
+                                            </button>
                                             <view contentMode="scaleToFill" id="Qc1-Ui-q2T">
                                                 <rect key="frame" x="0.0" y="310" width="768" height="246"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -5684,7 +5707,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="4by-lZ-KCf">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="4by-lZ-KCf">
                                         <rect key="frame" x="0.0" y="1289" width="768" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -5697,6 +5720,17 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="btnAddEmergencyPersonnelTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="F7C-AN-kSi"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7RU-le-Lvk">
+                                                <rect key="frame" x="390" y="8" width="370" height="66"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Delete recently added Emergency personnel" image="collaps_icon_default.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnDeleteEmergencyPersonnelTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="VnE-td-Cbj"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -5720,6 +5754,17 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="btnAddWitnessTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="ldz-Pg-zsQ"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TRj-oe-zNj">
+                                                <rect key="frame" x="430" y="8" width="300" height="66"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Delete recently added witnesses" image="collaps_icon_default.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnDeleteWitnessTapped:" destination="75u-mX-Fgc" eventType="touchUpInside" id="rHd-P6-DEp"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Employee Completing Report" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9tl-Mw-mbC">
@@ -6003,11 +6048,15 @@
                         <outlet property="btn911Called" destination="Pd8-J3-I0H" id="ld0-dg-On0"/>
                         <outlet property="btnAddEmergency" destination="hH1-eT-aWU" id="Ifx-rb-KOt"/>
                         <outlet property="btnAddWitness" destination="k5S-iO-bOA" id="hBU-Lo-8Oa"/>
+                        <outlet property="btnAddmorePerson" destination="LKB-Nu-lWC" id="fCR-O4-6T1"/>
                         <outlet property="btnCallNotReq" destination="gHW-bX-SnY" id="ksb-b6-ClW"/>
                         <outlet property="btnManager" destination="URP-TR-xFe" id="Vqe-bk-eju"/>
                         <outlet property="btnNoCall" destination="8fU-dE-6rF" id="Z29-Ao-neB"/>
                         <outlet property="btnNone" destination="ts4-en-g34" id="F6h-Cj-AOH"/>
                         <outlet property="btnPoliceCalled" destination="5qW-EZ-OEj" id="mEE-Jf-SuT"/>
+                        <outlet property="btnRemoveEmergency" destination="7RU-le-Lvk" id="D1F-Ty-N4Q"/>
+                        <outlet property="btnRemovePerson" destination="uMB-6o-510" id="hyS-JS-A0n"/>
+                        <outlet property="btnRemoveWitness" destination="TRj-oe-zNj" id="fKN-KH-YQR"/>
                         <outlet property="btnYesCall" destination="sLi-mJ-0BY" id="Cu2-Q9-RQH"/>
                         <outlet property="imvIncidentIcon" destination="fVP-ip-N0n" id="a2w-Fd-9wC"/>
                         <outlet property="lblAdditonInfo" destination="cYi-Az-P1t" id="GGc-O6-POH"/>
@@ -7002,9 +7051,9 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="kwZ-XS-lmq"/>
         <segue reference="nXf-Vb-N5P"/>
-        <segue reference="vif-Tr-xCv"/>
+        <segue reference="kwZ-XS-lmq"/>
         <segue reference="v6e-GR-DHO"/>
+        <segue reference="vif-Tr-xCv"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6245" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -24,6 +24,16 @@
                             </state>
                             <connections>
                                 <action selector="btnAddMoreWitnessTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="TAT-mk-qv1"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GxM-ds-nNf">
+                            <rect key="frame" x="430" y="0.0" width="330" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Delete recently added witnesses" image="collaps_icon_default.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="btnDeleteWitnessTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="TSl-4H-PSl"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Employee Completing Report" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="l2o-R3-Ywv">
@@ -471,6 +481,7 @@
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="btnAddWitness" destination="7Sd-1T-PDk" id="e41-8j-bTi"/>
                 <outlet property="btnAdmin" destination="5vC-Ui-dfg" id="o44-iK-dcR"/>
                 <outlet property="btnCallNotReq" destination="hRx-jQ-f3z" id="uIU-PU-1eq"/>
                 <outlet property="btnFinalSubmit" destination="Feg-Th-6Ix" id="I7m-zy-EEz"/>
@@ -479,6 +490,7 @@
                 <outlet property="btnNoInsurance" destination="Rdo-wb-9r1" id="E7U-BX-GOI"/>
                 <outlet property="btnNoProcedure" destination="bGa-Ce-Szs" id="9Zf-Ah-ftX"/>
                 <outlet property="btnProcedureNotReq" destination="QQ6-uz-5bg" id="Qtd-DG-rPZ"/>
+                <outlet property="btnRemoveWitness" destination="GxM-ds-nNf" id="H97-Gg-H0v"/>
                 <outlet property="btnRiskManagement" destination="1vw-ls-Zbt" id="ZJ7-wn-hNw"/>
                 <outlet property="btnSupervisers" destination="qv9-jU-kwV" id="asR-ke-kqz"/>
                 <outlet property="btnYesCall" destination="8JY-Rv-zRH" id="RFi-DH-f6P"/>
@@ -515,6 +527,7 @@
         <image name="add_icon.png" width="65" height="65"/>
         <image name="checked_Member.png" width="44" height="44"/>
         <image name="checked_white_radiobutton.png" width="44" height="44"/>
+        <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="date.png" width="50" height="50"/>
         <image name="report_filers_text_box.png" width="681" height="113"/>
         <image name="submit_long.png" width="195" height="59"/>

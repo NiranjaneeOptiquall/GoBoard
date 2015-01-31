@@ -309,16 +309,44 @@
     }
 }
 
-- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender {
-    [self addEmergencyPersonnel];
-}
-
 - (IBAction)btnAddPersonTapped:(id)sender {
     [self addIncidentPersonalInformationViews];
 }
 
+- (IBAction)btnDeletePersonTapped:(UIButton *)sender {
+    
+    UIAlertView *aAlertDeletePerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Person Involved?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeletePerson.tag = 4;
+    
+    [aAlertDeletePerson show];
+    
+}
+
+- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender {
+    [self addEmergencyPersonnel];
+}
+
+- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender {
+    
+    UIAlertView *aAlertDeleteEmergencyPerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Emergency Personnel?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeleteEmergencyPerson.tag = 5;
+    
+    [aAlertDeleteEmergencyPerson show];
+    
+}
+
 - (IBAction)btnAddWitnessTapped:(id)sender {
     [self addWitnessView];
+}
+
+- (IBAction)btnDeleteWitnessTapped:(UIButton *)sender {
+    UIAlertView *aAlertDeleteWitness = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Witness?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeleteWitness.tag = 6;
+    
+    [aAlertDeleteWitness show];
 }
 
 - (IBAction)btnFollowUpCallTapped:(UIButton *)sender {
@@ -492,6 +520,109 @@
         }
         [self.navigationController popViewControllerAnimated:YES];
         
+    }
+    else if (alertView.tag == 4)
+    {
+        if (buttonIndex == 0){
+            IncidentPersonalInformation *personalInfoView = (IncidentPersonalInformation*)[_vwPersonalInfo viewWithTag:totalPersonCount + 100];
+            
+            CGRect frame = _vwPersonalInfo.frame;
+            frame.size.height = _vwPersonalInfo.frame.size.height - personalInfoView.frame.size.height;
+            _vwPersonalInfo.frame = frame;
+            
+            frame = _vwAfterPersonalInfo.frame;
+            frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+            _vwAfterPersonalInfo.frame = frame;
+            
+            frame = _vwEmergencyPersonnel.frame;
+            frame.origin.y = CGRectGetMaxY(_vwAfterPersonalInfo.frame);
+            _vwEmergencyPersonnel.frame = frame;
+            frame = _vwWitnesses.frame;
+            frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+            _vwWitnesses.frame = frame;
+            frame = _vwEmployeeInfo.frame;
+            frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
+            _vwEmployeeInfo.frame = frame;
+            [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+           
+            totalPersonCount --;
+        
+            [personalInfoView removeObserver:self forKeyPath:@"frame" context:NULL];
+
+            [personalInfoView removeFromSuperview];
+            [mutArrIncidentPerson removeObject:personalInfoView];
+            
+            if (totalPersonCount<=1) {
+                _btnRemovePerson.hidden=YES;
+            }else{
+                _btnRemovePerson.hidden=NO;
+            }
+        }
+    }else if (alertView.tag == 5)
+    {
+        if (buttonIndex == 0){
+            EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[_vwEmergencyPersonnel viewWithTag:totalEmergencyPersonnelCount+200];
+           
+            
+            CGRect frame = _vwEmergencyPersonnel.frame;
+            frame.size.height = frame.size.height - objEmergency.frame.size.height;
+            _vwEmergencyPersonnel.frame = frame;
+            totalEmergencyPersonnelCount --;
+            [mutArrEmergencyPersonnel removeObject:objEmergency];
+            
+            frame = _btnAddEmergency.frame;
+            frame.origin.y = CGRectGetMinY(objEmergency.frame);
+            _btnAddEmergency.frame = frame;
+            
+            CGRect frameEmegency = _btnRemoveEmergency.frame;
+            frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
+            _btnRemoveEmergency.frame = frameEmegency;
+
+            frame = _vwEmergencyPersonnel.frame;
+            frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+            _vwEmergencyPersonnel.frame = frame;
+            
+            if (totalEmergencyPersonnelCount<=1) {
+                _btnRemoveEmergency.hidden=YES;
+            }else{
+                _btnRemoveEmergency.hidden=NO;
+            }
+            
+            frame = _vwWitnesses.frame;
+            frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+            _vwWitnesses.frame = frame;
+            frame = _vwEmployeeInfo.frame;
+            frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
+            _vwEmployeeInfo.frame = frame;
+            [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+            
+            [objEmergency removeFromSuperview];
+            
+        }
+    }
+    else if (alertView.tag == 6)
+    {
+        if (buttonIndex == 0){
+            WitnessView *aWitnessView = (WitnessView*)[_vwWitnesses viewWithTag:totalWitnessCount + 300];
+            
+            CGRect frame = _vwWitnesses.frame;
+            frame.size.height =  frame.size.height - aWitnessView.frame.size.height;
+            _vwWitnesses.frame = frame;
+            totalWitnessCount --;
+            frame = _vwEmployeeInfo.frame;
+            frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
+            _vwEmployeeInfo.frame = frame;
+            [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+            [mutArrWitnessView removeObject:aWitnessView];
+            
+            [aWitnessView removeFromSuperview];
+            
+            if (totalWitnessCount<=1) {
+                _btnRemoveWitness.hidden=YES;
+            }else{
+                _btnRemoveWitness.hidden=NO;
+            }
+        }
     }
     else if (buttonIndex == 0) {
         for (IncidentPersonalInformation *vw in mutArrIncidentPerson) {
@@ -697,11 +828,18 @@
     [personalInfoView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     [_vwPersonalInfo addSubview:personalInfoView];
     totalPersonCount ++;
+    personalInfoView.tag = totalPersonCount + 100;
     [mutArrIncidentPerson addObject:personalInfoView];
     
     frame = _vwPersonalInfo.frame;
     frame.size.height = CGRectGetMaxY(personalInfoView.frame);
     _vwPersonalInfo.frame = frame;
+    
+    if (totalPersonCount<=1) {
+        _btnRemovePerson.hidden=YES;
+    }else{
+        _btnRemovePerson.hidden=NO;
+    }
     
     frame = _vwAfterPersonalInfo.frame;
     frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
@@ -731,14 +869,25 @@
     objEmergency.frame = frame;
     [_vwEmergencyPersonnel addSubview:objEmergency];
     totalEmergencyPersonnelCount ++;
+    objEmergency.tag = totalEmergencyPersonnelCount+200;
     [mutArrEmergencyPersonnel addObject:objEmergency];
     frame = _btnAddEmergency.frame;
     frame.origin.y = CGRectGetMaxY(objEmergency.frame);
     _btnAddEmergency.frame = frame;
     
+    CGRect frameEmegency = _btnRemoveEmergency.frame;
+    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
+    _btnRemoveEmergency.frame = frameEmegency;
+    
     frame = _vwEmergencyPersonnel.frame;
     frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
     _vwEmergencyPersonnel.frame = frame;
+    
+    if (totalEmergencyPersonnelCount<=1) {
+        _btnRemoveEmergency.hidden=YES;
+    }else{
+        _btnRemoveEmergency.hidden=NO;
+    }
     
     frame = _vwWitnesses.frame;
     frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
@@ -762,6 +911,7 @@
     [_vwWitnesses addSubview:aWitnessView];
     [mutArrWitnessView addObject:aWitnessView];
     totalWitnessCount ++;
+    aWitnessView.tag = totalWitnessCount + 300;
     frame = _vwWitnesses.frame;
     frame.size.height = CGRectGetMaxY(aWitnessView.frame);
     _vwWitnesses.frame = frame;
@@ -769,6 +919,12 @@
     frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
     _vwEmployeeInfo.frame = frame;
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+    
+    if (totalWitnessCount<=1) {
+        _btnRemoveWitness.hidden=YES;
+    }else{
+        _btnRemoveWitness.hidden=NO;
+    }
 }
 
 - (void)addActionTakenView {
