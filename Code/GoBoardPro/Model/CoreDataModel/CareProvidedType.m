@@ -2,8 +2,8 @@
 //  CareProvidedType.m
 //  GoBoardPro
 //
-//  Created by ind558 on 24/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 04/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "CareProvidedType.h"
@@ -14,6 +14,12 @@
 
 @dynamic careProvidedID;
 @dynamic name;
+@dynamic refusedCare;
+@dynamic selfCare;
+@dynamic firstAid;
+@dynamic emergencyPersonnel;
+@dynamic emergencyResponse;
+@dynamic sequence;
 @dynamic accidentInfo;
 
 @end

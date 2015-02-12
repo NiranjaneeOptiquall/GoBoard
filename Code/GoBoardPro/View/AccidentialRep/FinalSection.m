@@ -9,7 +9,7 @@
 #import "FinalSection.h"
 #import "WitnessView.h"
 #import "AccidentReportViewController.h"
-
+#import "WitnessPresent.h"
 @implementation FinalSection
 
 /*
@@ -20,7 +20,11 @@
 }
 */
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToRemoveWitness:) name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToInsertWitness:) name:@"adjustContentOffsetsToInsertWitnessView" object:nil];
+    
     _mutArrWitnessViews = [[NSMutableArray alloc] init];
     
     [self btnCommunicationTapped:_btnAdmin];
@@ -36,6 +40,52 @@
     [self isAdmin];
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"adjustContentOffsetsToInsertWitnessView" object:nil];
+    
+}
+
+- (void)didAdjustContentOffsetsToRemoveWitness:(id)objectInfo
+{
+    for (int i = totalWitnessCount; i >0; i--) {
+        WitnessView *aWitnessView = (WitnessView*)[self viewWithTag:totalWitnessCount + 300];
+        if ([[self subviews] containsObject:aWitnessView]) {
+            totalWitnessCount --;
+            CGRect frame = _vwFixedContent.frame;
+            frame.origin.y = _vwFixedContent.frame.origin.y - aWitnessView.frame.size.height ;
+            _vwFixedContent.frame = frame;
+            
+            frame = self.frame;
+            frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+            self.frame = frame;
+            
+            frame = [[self viewWithTag:9999] frame];
+            frame.size.height = CGRectGetMinY(aWitnessView.frame);
+            [[self viewWithTag:9999] setFrame:frame];
+            
+//            int yPositionScrollView = _parentVC.scrlMainView.contentOffset.y - aWitnessView.frame.size.height;
+//            
+//            if (yPositionScrollView < _parentVC.scrlMainView.contentOffset.y) {
+//                [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, yPositionScrollView)];
+//            }
+            
+            _btnRemoveWitness.hidden=YES;
+            _btnAddWitness.hidden = YES;
+            
+            [aWitnessView removeFromSuperview];
+            if ([_mutArrWitnessViews containsObject:aWitnessView]) {
+                [_mutArrWitnessViews removeObject:aWitnessView];
+            }
+        }
+    }
+}
+
+- (void)didAdjustContentOffsetsToInsertWitness:(id)objectInfo
+{
+     [self addWitnessView];
+}
 - (IBAction)btnDeleteWitnessTapped:(UIButton *)sender {
     UIAlertView *aAlertDeleteWitness = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Witness?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
     
@@ -45,6 +95,7 @@
 }
 
 - (IBAction)btnAddMoreWitnessTapped:(id)sender {
+    
     [self addWitnessView];
 }
 
@@ -128,6 +179,27 @@
     }
 }
 
+-(void)addWitnessPresentView
+{
+    WitnessPresent *aWitnessPrensent = (WitnessPresent *) [[[NSBundle mainBundle]loadNibNamed:@"WitnessPresent" owner:self options:nil] firstObject];
+    
+    aWitnessPrensent.parentVCAccident = self.parentVC;
+    
+    [aWitnessPrensent setBackgroundColor:[UIColor clearColor]];
+    
+    aWitnessPrensent.tag = 9999;
+    
+    [self addSubview:aWitnessPrensent];
+    
+    CGRect frame = aWitnessPrensent.frame;
+    
+    frame.origin.y = CGRectGetMinY(self.frame);
+    
+    aWitnessPrensent.frame = frame;
+    
+    [self addWitnessView];
+}
+
 - (void)addWitnessView {
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
     
@@ -138,7 +210,14 @@
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     [aWitnessView setRequiredFields:aryFields];
     CGRect frame = aWitnessView.frame;
-    frame.origin.y = totalWitnessCount * frame.size.height;
+    if (_mutArrWitnessViews.count > 0) {
+        CGRect frameLastView = [[_mutArrWitnessViews lastObject] frame];
+        frame.origin.y = CGRectGetMaxY(frameLastView);
+    }else{
+        CGRect frameLastView = [[self viewWithTag:9999] frame];
+       frame.origin.y = CGRectGetMaxY(frameLastView);
+        //frame.origin.y = totalWitnessCount * frame.size.height;
+    }
     aWitnessView.frame = frame;
     [self addSubview:aWitnessView];
     totalWitnessCount ++;
@@ -147,9 +226,13 @@
     frame = _vwFixedContent.frame;
     frame.origin.y = CGRectGetMaxY(aWitnessView.frame);
     _vwFixedContent.frame = frame;
+    [self bringSubviewToFront:_vwFixedContent];
     frame = self.frame;
     frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
     self.frame = frame;
+    
+    _btnAddWitness.hidden = NO;
+   
     if (totalWitnessCount<=1) {
         _btnRemoveWitness.hidden=YES;
     }else{
@@ -352,6 +435,19 @@
                 frame = self.frame;
                 frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
                 self.frame = frame;
+                
+                int yPositionScrollView = _parentVC.scrlMainView.contentOffset.y - aWitnessView.frame.size.height;
+                
+                if (yPositionScrollView < _parentVC.scrlMainView.contentOffset.y) {
+                    [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, yPositionScrollView)];
+                }
+                
+                if (totalWitnessCount<=1) {
+                    _btnRemoveWitness.hidden=YES;
+                }else{
+                    _btnRemoveWitness.hidden=NO;
+                }
+                
                 [aWitnessView removeFromSuperview];
                 if ([_mutArrWitnessViews containsObject:aWitnessView]) {
                     [_mutArrWitnessViews removeObject:aWitnessView];

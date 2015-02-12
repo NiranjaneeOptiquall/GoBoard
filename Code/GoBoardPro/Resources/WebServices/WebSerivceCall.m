@@ -183,8 +183,23 @@
 
 - (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionIds=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+//    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionIds=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+//        [self deleteAllCountLocation];
+//        [self insertAllCountLocation:[response objectForKey:@"Locations"]];
+//        isWSComplete = YES;
+//        if (completion) {
+//            completion();
+//        }
+//    } failure:^(NSError *error, NSDictionary *response) {
+//        isWSComplete = YES;
+//        if (completion) {
+//            completion();
+//        }
+//    }];
+    
+                //PositionID Removed
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
@@ -418,13 +433,15 @@
         report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
         report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
         report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
-        report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberIdAndDriverLicense"] boolValue]];
+        report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberId"] boolValue]];
         report.showManagementFollowup = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowManagementFollowup"] boolValue]];
         report.showDateOfBirth = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowDateOfBirth"] boolValue]];
         report.showPhotoIcon = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowPhotoIcon"] boolValue]];
         report.showMinor = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMinor"] boolValue]];
         report.showConditions = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowConditions"] boolValue]];
         report.showEmployeeId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmployeeId"] boolValue]];
+        report.showGuestId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuestId"] boolValue]];
+       
         // Add ActionTaker
         NSMutableSet *actionSet = [NSMutableSet set];
         for (NSDictionary *dict in [aDict objectForKey:@"ActionTakenList"]) {
@@ -442,6 +459,7 @@
             obj.activityId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
             obj.incidentType = report;
+            obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
             [activitySet addObject:obj];
         }
         report.activityList = activitySet;
@@ -451,6 +469,7 @@
             ConditionList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ConditionList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             obj.conditionId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
+            obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
             obj.incidentType = report;
             [conditionSet addObject:obj];
         }
@@ -461,6 +480,7 @@
             EquipmentList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"EquipmentList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             obj.equipmentId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
+            obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
             obj.incidentType = report;
             [equipmentSet addObject:obj];
         }
@@ -577,23 +597,31 @@
     report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
     report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
     report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
-    report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberIdAndDriverLicense"] boolValue]];
+    report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberId"] boolValue]];
     report.showManagementFollowup = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowManagementFollowup"] boolValue]];
     report.showDateOfBirth = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowDateOfBirth"] boolValue]];
     report.showPhotoIcon = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowPhotoIcon"] boolValue]];
     report.showMinor = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMinor"] boolValue]];
+    report.showNotificationField1 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField1"] boolValue]];
+    report.showNotificationField2 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField2"] boolValue]];
+    report.showNotificationField3 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField3"] boolValue]];
+    report.showNotificationField4 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField4"] boolValue]];
+    
     report.showConditions = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowConditions"] boolValue]];
     report.showEmployeeId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmployeeId"] boolValue]];
     report.showBloodbornePathogens = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowBloodbornePathogens"] boolValue]];
     report.showCommunicationAndNotification = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowCommunicationAndNotification"] boolValue]];
     report.showParticipantSignature = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowParticipantSignature"] boolValue]];
-    report.showRefusedSelfCareText = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowRefusedSelfCareText"] boolValue]];
+    report.showRefusedSelfCareText = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowRefusedCareText"] boolValue]];
+    report.showSelfCareText = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowSelfCareText"] boolValue]];
+    report.showGuestId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuestId"] boolValue]];
     // Add ActionTaker
     NSMutableSet *actionSet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"ActionTakenList"]) {
         ActionTakenList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ActionTakenList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.actionId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [actionSet addObject:obj];
     }
@@ -604,6 +632,7 @@
         ActivityList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ActivityList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.activityId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [activitySet addObject:obj];
     }
@@ -614,6 +643,7 @@
         ConditionList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ConditionList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.conditionId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [conditionSet addObject:obj];
     }
@@ -624,6 +654,7 @@
         EquipmentList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"EquipmentList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.equipmentId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [equipmentSet addObject:obj];
     }
@@ -634,6 +665,12 @@
         CareProvidedType *obj = [NSEntityDescription insertNewObjectForEntityForName:@"CareProvidedType" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.careProvidedID = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.refusedCare = [[dict objectForKey:@"RefusedCare"] stringValue];
+        obj.selfCare = [[dict objectForKey:@"SelfCare"] stringValue];
+        obj.firstAid = [[dict objectForKey:@"FirstAid"] stringValue];
+        obj.emergencyPersonnel = [[dict objectForKey:@"EmergencyPersonnel"] stringValue];
+        obj.emergencyResponse = [[dict objectForKey:@"EmergencyResponse"] stringValue];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [careSet addObject:obj];
     }
@@ -645,6 +682,7 @@
         GeneralInjuryType *obj = [NSEntityDescription insertNewObjectForEntityForName:@"GeneralInjuryType" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.typeId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [generalInjurySet addObject:obj];
     }
@@ -655,6 +693,7 @@
         BodyPartInjuryType *obj = [NSEntityDescription insertNewObjectForEntityForName:@"BodyPartInjuryType" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.typeId = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [bodyPartSet addObject:obj];
     }
@@ -665,6 +704,7 @@
         HeadInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"HeadInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [headInjurySet addObject:obj];
     }
@@ -675,32 +715,56 @@
         AbdomenInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"AbdomenInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
         [abdomenInjurySet addObject:obj];
     }
     report.abdomenInjuryList = abdomenInjurySet;
     
-    NSMutableSet *armInjurySet = [NSMutableSet set];
-    for (NSDictionary *dict in [aDict objectForKey:@"ArmInjuryLocationList"]) {
-        ArmInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ArmInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    NSMutableSet *rightArmInjurySet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"RightArmInjuryLocationList"]) {
+        ArmInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RightArmInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
-        [armInjurySet addObject:obj];
+        [rightArmInjurySet addObject:obj];
     }
-    report.armInjuryList = armInjurySet;
+    report.rightArmInjuryList = rightArmInjurySet;
     
-    NSMutableSet *legInjurySet = [NSMutableSet set];
-    for (NSDictionary *dict in [aDict objectForKey:@"LegInjuryLocationList"]) {
-        LegInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LegInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    
+    NSMutableSet *leftArmInjurySet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"LeftArmInjuryLocationList"]) {
+        ArmInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftArmInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
         obj.accidentInfo = report;
-        [legInjurySet addObject:obj];
+        [leftArmInjurySet addObject:obj];
     }
-    report.legInjuryList = legInjurySet;
+    report.leftArmInjuryList = leftArmInjurySet;
     
+    NSMutableSet *rightLegInjurySet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"RightLegInjuryLocationList"]) {
+        LegInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"RightLegInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        obj.value = [[dict objectForKey:@"Id"] stringValue];
+        obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
+        obj.accidentInfo = report;
+        [rightLegInjurySet addObject:obj];
+    }
+    report.rightLegInjuryList = rightLegInjurySet;
     
+    NSMutableSet *leftLegInjurySet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"LeftLegInjuryLocationList"]) {
+        LegInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftLegInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        obj.value = [[dict objectForKey:@"Id"] stringValue];
+        obj.name = [dict objectForKey:@"Name"];
+        obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
+        obj.accidentInfo = report;
+        [leftLegInjurySet addObject:obj];
+    }
+    report.leftLegInjuryList = leftLegInjurySet;
     
     NSMutableSet *requiredSet = [NSMutableSet set];
     for (NSString *aStr in [aDict objectForKey:@"PersonInvolvedRequiredFields"]) {

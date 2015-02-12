@@ -2,7 +2,7 @@
 //  AccidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind558 on 05/01/15.
+//  Created by ind726 on 04/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -17,12 +17,20 @@
 #import "EquipmentList.h"
 #import "GeneralInjuryType.h"
 #import "HeadInjuryList.h"
+#import "LeftArmInjuryList.h"
+#import "LeftLegInjuryList.h"
 #import "LegInjuryList.h"
 #import "RequiredField.h"
 
 
 @implementation AccidentReportInfo
 
+@dynamic affiliation1;
+@dynamic affiliation2;
+@dynamic affiliation3;
+@dynamic affiliation4;
+@dynamic affiliation5;
+@dynamic affiliation6;
 @dynamic instructions;
 @dynamic notificationField1;
 @dynamic notificationField1Color;
@@ -32,6 +40,9 @@
 @dynamic notificationField3Color;
 @dynamic notificationField4;
 @dynamic notificationField4Color;
+@dynamic personInvolved1;
+@dynamic personInvolved2;
+@dynamic personInvolved3;
 @dynamic refusedCareStatement;
 @dynamic selfCareStatement;
 @dynamic showAffiliation;
@@ -42,32 +53,31 @@
 @dynamic showEmergencyPersonnel;
 @dynamic showEmployeeId;
 @dynamic showGender;
+@dynamic showGuestId;
 @dynamic showManagementFollowup;
 @dynamic showMemberIdAndDriverLicense;
 @dynamic showMinor;
+@dynamic showNotificationField1;
+@dynamic showNotificationField2;
+@dynamic showNotificationField3;
+@dynamic showNotificationField4;
 @dynamic showParticipantSignature;
 @dynamic showPhotoIcon;
 @dynamic showRefusedSelfCareText;
-@dynamic personInvolved1;
-@dynamic personInvolved2;
-@dynamic personInvolved3;
-@dynamic affiliation1;
-@dynamic affiliation2;
-@dynamic affiliation3;
-@dynamic affiliation4;
-@dynamic affiliation5;
-@dynamic affiliation6;
+@dynamic showSelfCareText;
 @dynamic abdomenInjuryList;
 @dynamic actionList;
 @dynamic activityList;
-@dynamic armInjuryList;
+@dynamic rightArmInjuryList;
 @dynamic bodypartInjuryType;
 @dynamic careProviderList;
 @dynamic conditionList;
 @dynamic equipmentList;
 @dynamic generalInjuryType;
 @dynamic headInjuryList;
-@dynamic legInjuryList;
+@dynamic rightLegInjuryList;
 @dynamic requiredFields;
+@dynamic leftArmInjuryList;
+@dynamic leftLegInjuryList;
 
 @end

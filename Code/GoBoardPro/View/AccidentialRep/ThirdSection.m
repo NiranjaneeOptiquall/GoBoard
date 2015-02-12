@@ -10,6 +10,7 @@
 #import "BodilyFluidView.h"
 #import "EmergencyPersonnelView.h"
 #import "AccidentReportViewController.h"
+#import "WitnessView.h"
 
 @implementation ThirdSection
 
@@ -45,6 +46,39 @@
     [aAlertDeleteEmergencyPerson show];
 }
 
+- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender {
+//    _btnWitnessPresentYes.selected = YES;
+//    _btnWitnessPresentNo.selected = NO;
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"adjustContentOffsetsToInsertWitnessView" object:nil];
+}
+
+- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender {
+    
+//    _btnWitnessPresentNo.selected = YES;
+//    _btnWitnessPresentYes.selected = NO;
+//    
+//    for (UIView *vw in [_parentVC.scrlMainView subviews]) {
+//        if ([vw isKindOfClass:[FinalSection class]]) {
+//            [self removeWitnessViewFromFinalSection:vw];
+//        }
+//    }
+    
+}
+
+-(void)removeWitnessViewFromFinalSection:(UIView*)vwFinalSection
+{
+    BOOL isWitnessViewExist = NO;
+    
+    for (UIView *vwWitness in [vwFinalSection subviews]) {
+        if ([vwWitness isKindOfClass:[WitnessView class]]) {
+            
+            isWitnessViewExist = YES;
+        }
+    }
+    if (isWitnessViewExist) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
+    }
+}
 
 
 #pragma mark - Methods
@@ -97,6 +131,7 @@
     CGRect btnDeleteFrmae = _btnDeleteEmergencyPersonnel.frame;
     btnDeleteFrmae.origin.y = _btnAddEmergencyPersonnel.frame.origin.y;
     _btnDeleteEmergencyPersonnel.frame = btnDeleteFrmae;
+    
     
     if (totalEmergencyPersonnelCount<=1) {
         _btnDeleteEmergencyPersonnel.hidden=YES;
@@ -162,11 +197,20 @@
                 btnDeleteFrmae.origin.y = _btnAddEmergencyPersonnel.frame.origin.y;
                 _btnDeleteEmergencyPersonnel.frame = btnDeleteFrmae;
                 
+//                frame = _viewWitnessPresent.frame;
+//                frame.origin.y = CGRectGetMaxY(_btnAddEmergencyPersonnel.frame);
+//                _viewWitnessPresent.frame = frame;
+                
                 if ([_mutArrEmergencyViews containsObject:objEmergency]) {
                     [_mutArrEmergencyViews removeObject:objEmergency];
                 }
-                [objEmergency removeFromSuperview];
                 
+                int yPositionScrollView = _parentVC.scrlMainView.contentOffset.y - objEmergency.frame.size.height;
+                
+                if (yPositionScrollView < _parentVC.scrlMainView.contentOffset.y) {
+                    [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, yPositionScrollView)];
+                }
+                  
                 [self bringSubviewToFront:_btnAddEmergencyPersonnel];
                 if (totalEmergencyPersonnelCount<=1) {
                     _btnDeleteEmergencyPersonnel.hidden=YES;
@@ -174,6 +218,7 @@
                     _btnDeleteEmergencyPersonnel.hidden=NO;
                 }
                 
+                [objEmergency removeFromSuperview];
                 [self resetSelfFrame];
             }
         }

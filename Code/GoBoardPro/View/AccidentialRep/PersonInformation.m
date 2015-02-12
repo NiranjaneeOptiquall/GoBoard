@@ -41,7 +41,7 @@
     [sender setSelected:YES];
     CGRect frame = _vwCommon.frame;
     if ([sender isEqual:_btnGuest]) {
-        if (!_isMemberIdVisible) [self hideMemberId:YES];
+        if (!_isGuestIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
@@ -347,7 +347,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     _parentVC.isUpdate = YES;
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence.intValue" ascending:YES];
     if ([textField isEqual:_txtDob]) {
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];

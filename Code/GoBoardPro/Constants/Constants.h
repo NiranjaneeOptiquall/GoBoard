@@ -46,8 +46,8 @@ typedef enum : NSUInteger {
 #define REQUIRED_TYPE_EMPLOYEE    @"Employee"
 #define REQUIRED_TYPE_FIRST_AID     @"FirstAid"
 
-
-#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"http://goboardapi.azurewebsites.net/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
+// http://goboardapi.azurewebsites.net/api/
+#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
 
 #define USER_SERVICE                @"User"

@@ -1445,7 +1445,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="8TJ-bo-7gr">
-                            <rect key="frame" x="0.0" y="657" width="768" height="100"/>
+                            <rect key="frame" x="0.0" y="657" width="768" height="70"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refused Care Statement" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Sen-JQ-hIY">
@@ -1456,9 +1456,32 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hTF-1v-zWr">
-                                    <rect key="frame" x="55" y="37" width="659" height="59"/>
+                                    <rect key="frame" x="55" y="37" width="659" height="29"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <string key="text">I have been advised that I may have a medical condition(s), which may require an examination by a doctor. My signature below acknowledges that I refused such medical care and/or advice or I do not believe a medical emergency exist and I require no further assistance.</string>
+                                    <string key="text">Please remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcter.Please remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcterPlease remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcter.Please remember to only record objective facts and do not attempt to diagnose or provide asdvd.</string>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" id="iJD-qN-zIr">
+                            <rect key="frame" x="0.0" y="727" width="768" height="70"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Self Care Statement" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6Rs-YP-hPf">
+                                    <rect key="frame" x="55" y="12" width="269" height="26"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                    <size key="shadowOffset" width="0.0" height="0.0"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6qO-ov-NjX">
+                                    <rect key="frame" x="55" y="37" width="659" height="29"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <string key="text">Please remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcter.Please remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcterPlease remember to only record objective facts and do not attempt to diagnose or provide subjective opinions on the incident.The Giant super charatcter.Please remember to only record objective facts and do not attempt to diagnose or provide asdvd.</string>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -1467,7 +1490,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="ub4-Kk-beL">
-                            <rect key="frame" x="1" y="848" width="768" height="141"/>
+                            <rect key="frame" x="0.0" y="888" width="768" height="141"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="8Wo-IP-U2n">
@@ -1495,7 +1518,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" id="AeM-TP-SO9">
-                            <rect key="frame" x="0.0" y="757" width="768" height="91"/>
+                            <rect key="frame" x="0.0" y="797" width="768" height="91"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cBU-ym-PPG">
@@ -1527,6 +1550,8 @@
                         <outlet property="btnSelfTreated" destination="KKC-jn-ake" id="rm6-Gl-5fS"/>
                         <outlet property="lblRefuseCareCaption" destination="Sen-JQ-hIY" id="TeG-Gt-H90"/>
                         <outlet property="lblRefuseCareText" destination="hTF-1v-zWr" id="aBE-Yx-WPG"/>
+                        <outlet property="lblSelfCareCaption" destination="6Rs-YP-hPf" id="WHV-PI-Zp3"/>
+                        <outlet property="lblSelfCareText" destination="6qO-ov-NjX" id="d8s-j8-7s4"/>
                         <outlet property="lblStaffMemberAccount" destination="DlB-MJ-DP8" id="0uF-p0-6Bw"/>
                         <outlet property="markerFName" destination="u5a-gv-ca8" id="SXd-CK-DkW"/>
                         <outlet property="markerLName" destination="qaF-6g-GJM" id="Zor-K8-lxz"/>
@@ -1542,6 +1567,7 @@
                         <outlet property="vwFirstAid" destination="99x-hK-HqX" id="MfV-J2-64t"/>
                         <outlet property="vwParticipantSignature" destination="AeM-TP-SO9" id="rEG-Hy-g92"/>
                         <outlet property="vwRefuseCare" destination="8TJ-bo-7gr" id="zTw-so-fOX"/>
+                        <outlet property="vwSelfCare" destination="iJD-qN-zIr" id="3xZ-vc-9Cv"/>
                         <outlet property="vwStaffMember" destination="ub4-Kk-beL" id="Wlw-QP-Ilx"/>
                     </connections>
                 </view>

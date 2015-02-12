@@ -45,7 +45,7 @@
                     <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Cr-xl-5o6">
                         <rect key="frame" x="606" y="2" width="40" height="40"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" image="collaps_icon_default.png">
+                        <state key="normal" image="delete_icon.png">
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                     </button>
@@ -57,7 +57,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="collaps_icon_default.png" width="49" height="49"/>
+        <image name="delete_icon.png" width="65" height="65"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

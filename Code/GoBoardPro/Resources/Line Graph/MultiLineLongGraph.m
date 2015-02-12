@@ -233,6 +233,10 @@
     
 }
 
+-(void)_drawAnchorPointsAtIndex:(int)index
+{
+    
+}
 
 #pragma mark - Anchor Delegate Method
 -(void)displayAnchorInfo:(NSInteger)tagID At:(CGPoint)point

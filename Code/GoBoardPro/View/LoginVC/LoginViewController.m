@@ -216,7 +216,10 @@
 }
 
 #pragma mark - UITextField Delegate
-
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if ([textField isEqual:_txtGuestName]) {
         [textField resignFirstResponder];

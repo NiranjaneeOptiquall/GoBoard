@@ -160,13 +160,15 @@
             
             CTFontRef font = CTFontCreateWithName((CFStringRef)@"GillSans", 12.0f, nil);
             CFAttributedStringSetAttribute(attrString,CFRangeMake(0, _stringLength),kCTFontAttributeName,font);
+    
             
             //Set the paragrapgh attribute
             CTTextAlignment alignment = kCTRightTextAlignment;
             CTParagraphStyleSetting _settings[] = {    {kCTParagraphStyleSpecifierAlignment, sizeof(alignment), &alignment} };
             CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(_settings, sizeof(_settings) / sizeof(_settings[0]));
             CFAttributedStringSetAttribute(attrString, CFRangeMake(0, _stringLength), kCTParagraphStyleAttributeName, paragraphStyle);
-            
+
+           
             
             float initY=tileHeight* i + 5;
             if([yTitles count]>0)

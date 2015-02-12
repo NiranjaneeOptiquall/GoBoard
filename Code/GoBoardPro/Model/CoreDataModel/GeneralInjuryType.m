@@ -2,17 +2,19 @@
 //  GeneralInjuryType.m
 //  GoBoardPro
 //
-//  Created by ind558 on 24/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 04/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "GeneralInjuryType.h"
+#import "AccidentReportInfo.h"
 
 
 @implementation GeneralInjuryType
 
-@dynamic typeId;
 @dynamic name;
+@dynamic typeId;
+@dynamic sequence;
 @dynamic accidentInfo;
 
 @end

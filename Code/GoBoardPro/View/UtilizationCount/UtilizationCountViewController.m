@@ -15,6 +15,12 @@
 #import "SubmitCountUser.h"
 #import "SubmitUtilizationCount.h"
 
+#ifdef __IPHONE_8_0
+#define GregorianCalendar NSCalendarIdentifierGregorian
+#else
+#define GregorianCalendar NSGregorianCalendar
+#endif
+
 @interface UtilizationCountViewController ()
 
 @end
@@ -423,7 +429,7 @@
     [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
     [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *lastDt = [aFormatter dateFromString:lastDate];
-    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:GregorianCalendar];
     NSDateComponents *components = [cal components:NSCalendarUnitMinute fromDate:lastDt toDate:[NSDate date] options:0];
     NSString *aStrTime = [NSString stringWithFormat:@"Last Count:%ld mins.", (long)components.minute];
     return aStrTime;

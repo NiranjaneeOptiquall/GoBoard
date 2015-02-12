@@ -173,8 +173,10 @@
                 NSMutableArray *mutArr = [NSMutableArray array];
                 [mutArr addObjectsFromArray:_reportSetupInfo.headInjuryList.allObjects];
                 [mutArr addObjectsFromArray:_reportSetupInfo.abdomenInjuryList.allObjects];
-                [mutArr addObjectsFromArray:_reportSetupInfo.legInjuryList.allObjects];
-                [mutArr addObjectsFromArray:_reportSetupInfo.armInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.leftLegInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.leftArmInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.rightArmInjuryList.allObjects];
+                [mutArr addObjectsFromArray:_reportSetupInfo.rightArmInjuryList.allObjects];
                 
                 obj = [[mutArr filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", injury.bodyPartInjuryTypeId]] firstObject];
                 if (obj) {
@@ -195,8 +197,8 @@
         [vwBodyPart.tblAddedInjuryList reloadData];
         
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[_reportSetupInfo.careProviderList allObjects]];
-        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
-        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
+//        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
+//        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
         
         vwBodyPart.txtCareProvided.text = [[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
         vwBodyPart.careProvided = vwBodyPart.txtCareProvided.text;
@@ -569,13 +571,40 @@
 - (void)viewSetup {
     [_btn911Called setTitle:_reportSetupInfo.notificationField1 forState:UIControlStateNormal];
     [_btn911Called setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField1Color] forState:UIControlStateNormal];
+    _btn911Called.hidden = !_reportSetupInfo.showNotificationField1.boolValue;
     [_btnPoliceCalled setTitle:_reportSetupInfo.notificationField2 forState:UIControlStateNormal];
     [_btnPoliceCalled setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField2Color] forState:UIControlStateNormal];
+    _btnPoliceCalled.hidden = !_reportSetupInfo.showNotificationField2.boolValue;
+    
     [_btnManager setTitle:_reportSetupInfo.notificationField3 forState:UIControlStateNormal];
     [_btnManager setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField3Color] forState:UIControlStateNormal];
+    _btnManager.hidden = !_reportSetupInfo.showNotificationField3.boolValue;
     [_btnNone setTitle:_reportSetupInfo.notificationField4 forState:UIControlStateNormal];
     [_btnNone setTitleColor:[UIColor colorWithHexCodeString:_reportSetupInfo.notificationField4Color] forState:UIControlStateNormal];
+    _btnNone.hidden = !_reportSetupInfo.showNotificationField4.boolValue;
+    
     _lblInstruction.text = _reportSetupInfo.instructions;
+    NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
+    
+    float height = [_reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+    CGRect frameLblInstruction  = _lblInstruction.frame;
+    frameLblInstruction.size.height = height;
+    _lblInstruction.frame = frameLblInstruction;
+    _lblInstruction.numberOfLines = 0;
+    [_lblInstruction setFont:[UIFont systemFontOfSize:20]];
+    [_lblInstruction setTextAlignment:NSTextAlignmentLeft];
+    
+    CGRect frame = _vwBasicDetail.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_lblInstruction.frame);
+    
+    _vwBasicDetail.frame = frame;
+    
+    frame = _vwFirstSection.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwBasicDetail.frame);
+    
+    _vwFirstSection.frame = frame;
 }
 
 - (void)addAccidentView {
@@ -584,10 +613,12 @@
     accidentView.isCaptureCameraVisible = [_reportSetupInfo.showPhotoIcon boolValue];
     accidentView.vwPersonalInfo.isAffiliationVisible = [_reportSetupInfo.showAffiliation boolValue];
     accidentView.vwPersonalInfo.isMemberIdVisible = [_reportSetupInfo.showMemberIdAndDriverLicense boolValue];
+    accidentView.vwPersonalInfo.isGuestIdVisible = [_reportSetupInfo.showGuestId boolValue];
+    accidentView.vwPersonalInfo.isEmployeeIdVisible = [_reportSetupInfo.showEmployeeId boolValue];
     accidentView.vwPersonalInfo.isDOBVisible = [_reportSetupInfo.showDateOfBirth boolValue];
     accidentView.vwPersonalInfo.isGenderVisible = [_reportSetupInfo.showGender boolValue];
     accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showMinor boolValue];
-    accidentView.vwPersonalInfo.isEmployeeIdVisible = [_reportSetupInfo.showEmployeeId boolValue];
+    
     accidentView.vwPersonalInfo.isConditionsVisible = [_reportSetupInfo.showConditions boolValue];
     [accidentView.vwPersonalInfo callInitialActions];
     
@@ -602,8 +633,10 @@
     
     accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
     accidentView.vwBodilyFluid.isRefuseCareStatementVisible = NO;
+    accidentView.vwBodilyFluid.isSelfCareStatementVisible = NO;
     accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
     accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
+    accidentView.vwBodilyFluid.lblSelfCareText.text = _reportSetupInfo.selfCareStatement;
     [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
     [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:NO];
     [accidentView.vwBodilyFluid btnWasBloodPresentTapped:accidentView.vwBodilyFluid.btnBloodNotPresent];
@@ -641,6 +674,11 @@
         frame.origin.y = CGRectGetMaxY(thirdSection.frame);
         finalSection.frame = frame;
         [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+    }else{
+        frame = finalSection.frame;
+        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+        finalSection.frame = frame;
+        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
     }
 }
 
@@ -662,7 +700,7 @@
     
     finalSection = (FinalSection*)[[[NSBundle mainBundle] loadNibNamed:@"FinalSection" owner:self options:nil] firstObject];
     finalSection.parentVC = self;
-    [finalSection addWitnessView];
+    [finalSection addWitnessPresentView];
     [finalSection setBackgroundColor:[UIColor clearColor]];
     frame = finalSection.frame;
     if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
@@ -684,6 +722,7 @@
     [finalSection PersonInvolved:_personInvolved];
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(finalSection.frame))];
 }
+
 
 - (void)setPersonInvolved:(NSInteger)personInvolved {
     _personInvolved = personInvolved;
@@ -770,7 +809,7 @@
     if (selectedLocation.value) {
         locationId = selectedLocation.value;
     }
-    NSDictionary *aDict = @{@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+    NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
     return aDict;
 }
 
@@ -982,45 +1021,52 @@
     }
     else if (alertView.tag == 5){
     
-        AccidentFirstSection *accidentView = (AccidentFirstSection*)[_vwFirstSection viewWithTag:totalAccidentFirstSectionCount+100];
-        if (accidentView) {
-            
-            if ([accidentView isKindOfClass:[AccidentFirstSection class]]) {
-                [accidentView removeObserver:self forKeyPath:@"frame"];
-                [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"frame"];
-                [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"careProvided"];
-                [accidentView.vwBodilyFluid removeObserver:accidentView forKeyPath:@"frame"];
-                [accidentView.vwPersonalInfo removeObserver:accidentView forKeyPath:@"frame"];
-            }
-            if ([mutArrAccidentViews containsObject:accidentView]) {
-                [mutArrAccidentViews removeObject:accidentView];
+        if (buttonIndex == 0) {
+            AccidentFirstSection *accidentView = (AccidentFirstSection*)[_vwFirstSection viewWithTag:totalAccidentFirstSectionCount+100];
+            if (accidentView) {
                 
-                CGRect frame = _vwFirstSection.frame;
-                frame.size.height = _vwFirstSection.frame.size.height - accidentView.frame.size.height;
-                _vwFirstSection.frame = frame;
-                frame = _vwAddMoreFirstSection.frame;
-                frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
-                //frame.size.height = CGRectGetMaxY(_vwFirstSection.frame);
-                _vwAddMoreFirstSection.frame = frame;
-                [_vwFirstSection bringSubviewToFront:_vwAddMoreFirstSection];
-                if (thirdSection) {
-                    frame = thirdSection.frame;
-                    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-                    thirdSection.frame = frame;
-                    frame = finalSection.frame;
-                    frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-                    finalSection.frame = frame;
-                    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width,CGRectGetMaxY(frame))];
+                if ([accidentView isKindOfClass:[AccidentFirstSection class]]) {
+                    [accidentView removeObserver:self forKeyPath:@"frame"];
+                    [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"frame"];
+                    [accidentView.vwBodyPartInjury removeObserver:accidentView forKeyPath:@"careProvided"];
+                    [accidentView.vwBodilyFluid removeObserver:accidentView forKeyPath:@"frame"];
+                    [accidentView.vwPersonalInfo removeObserver:accidentView forKeyPath:@"frame"];
                 }
-                
-                totalAccidentFirstSectionCount--;
-                
-                [accidentView removeFromSuperview];
-                
-                if (totalAccidentFirstSectionCount<=1) {
-                    _btnRemovePerson.hidden=YES;
-                }else{
-                    _btnRemovePerson.hidden=NO;
+                if ([mutArrAccidentViews containsObject:accidentView]) {
+                    [mutArrAccidentViews removeObject:accidentView];
+                    
+                    CGRect frame = _vwFirstSection.frame;
+                    frame.size.height = _vwFirstSection.frame.size.height - accidentView.frame.size.height;
+                    _vwFirstSection.frame = frame;
+                    frame = _vwAddMoreFirstSection.frame;
+                    frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
+                    //frame.size.height = CGRectGetMaxY(_vwFirstSection.frame);
+                    _vwAddMoreFirstSection.frame = frame;
+                    [_vwFirstSection bringSubviewToFront:_vwAddMoreFirstSection];
+                    if (thirdSection) {
+                        frame = thirdSection.frame;
+                        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+                        thirdSection.frame = frame;
+                        frame = finalSection.frame;
+                        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+                        finalSection.frame = frame;
+                        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width,CGRectGetMaxY(frame))];
+                        int yPositionScrollView = _scrlMainView.contentOffset.y - accidentView.frame.size.height;
+                        
+                        if (yPositionScrollView < _scrlMainView.contentOffset.y) {
+                            [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPositionScrollView)];
+                        }
+                    }
+                    
+                    totalAccidentFirstSectionCount--;
+                    
+                    [accidentView removeFromSuperview];
+                    
+                    if (totalAccidentFirstSectionCount<=1) {
+                        _btnRemovePerson.hidden=YES;
+                    }else{
+                        _btnRemovePerson.hidden=NO;
+                    }
                 }
             }
         }

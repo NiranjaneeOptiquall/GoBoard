@@ -15,21 +15,11 @@
                     <rect key="frame" x="0.0" y="0.0" width="768" height="1276"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7Sd-1T-PDk">
-                            <rect key="frame" x="43" y="0.0" width="266" height="66"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GxM-ds-nNf">
+                            <rect key="frame" x="444" y="0.0" width="290" height="66"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <state key="normal" title="add more witnesses" image="add_icon.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="btnAddMoreWitnessTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="TAT-mk-qv1"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GxM-ds-nNf">
-                            <rect key="frame" x="430" y="0.0" width="330" height="66"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Delete recently added witnesses" image="collaps_icon_default.png">
+                            <state key="normal" title=" delete recently added witnesses" image="delete_icon.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
                             <connections>
@@ -474,6 +464,17 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7Sd-1T-PDk">
+                            <rect key="frame" x="46" y="0.0" width="266" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="add more witnesses" image="add_icon.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="btnAddMoreWitnessTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="TAT-mk-qv1"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
@@ -527,8 +528,8 @@
         <image name="add_icon.png" width="65" height="65"/>
         <image name="checked_Member.png" width="44" height="44"/>
         <image name="checked_white_radiobutton.png" width="44" height="44"/>
-        <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="date.png" width="50" height="50"/>
+        <image name="delete_icon.png" width="65" height="65"/>
         <image name="report_filers_text_box.png" width="681" height="113"/>
         <image name="submit_long.png" width="195" height="59"/>
         <image name="text_box_date.png" width="204" height="62"/>

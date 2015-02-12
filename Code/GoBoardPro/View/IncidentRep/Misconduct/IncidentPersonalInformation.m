@@ -37,7 +37,7 @@
     CGRect frame = _vwCommon.frame;
     _intPersonInvolved = sender.tag;
     if ([sender isEqual:_btnGuest]) {
-        if (!_isMemberIdVisible) [self hideMemberId:YES];
+        if (!_isGuestIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
         [_txtMemberId setPlaceholder:@"Driver's License #"];
         [_vwGuest setHidden:NO];
@@ -52,6 +52,14 @@
     else if ([sender isEqual:_btnEmployee]) {
         if (!_isEmployeeIdVisible) [_vwMemberId setHidden:YES];
         else [self hideMemberId:NO];
+        
+        CGRect frame1 = _vwPersonalInfo.frame;
+        frame1.origin.y = CGRectGetMaxY(_vwEmpPosition.frame);
+        _vwPersonalInfo.frame = frame1;
+
+        frame1 = _vwEmployee.frame;
+        frame1.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+        _vwEmployee.frame = frame1;
         
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_vwEmpPosition setHidden:NO];

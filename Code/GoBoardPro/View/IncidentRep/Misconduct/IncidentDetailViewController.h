@@ -42,6 +42,9 @@
 @property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
 @property (strong, nonatomic) IBOutlet UIButton *btnRemoveEmergency;
+@property (strong, nonatomic) IBOutlet UIView *vwWitnessPresent;
+@property (strong, nonatomic) IBOutlet UIButton *btnWitnessPresentYes;
+@property (strong, nonatomic) IBOutlet UIButton *btnWitnessPresentNo;
 
 @property (weak, nonatomic) IBOutlet UIView *vwWitnesses;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddWitness;
@@ -95,6 +98,9 @@
 
 - (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
 - (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender;
+
+- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender;
+- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender;
 
 - (IBAction)btnAddPersonTapped:(id)sender;
 - (IBAction)btnDeletePersonTapped:(UIButton *)sender;

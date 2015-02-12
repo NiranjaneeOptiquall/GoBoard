@@ -97,6 +97,7 @@
 
 @property (assign, nonatomic) BOOL isAffiliationVisible;
 @property (assign, nonatomic) BOOL isMemberIdVisible;
+@property (assign, nonatomic) BOOL isGuestIdVisible;
 @property (assign, nonatomic) BOOL isDOBVisible;
 @property (assign, nonatomic) BOOL isGenderVisible;
 @property (assign, nonatomic) BOOL isMinorVisible;

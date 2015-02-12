@@ -64,7 +64,8 @@
 
 - (IBAction)btnHideCompletedTapped:(UIButton *)sender {
     if (sender.isSelected) {
-        mutArrFilteredTaskList = mutArrTaskList;
+        
+        mutArrFilteredTaskList =  mutArrTaskList;
     }
     else {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
@@ -73,6 +74,8 @@
     [sender setSelected:![sender isSelected]];
     if ([mutArrFilteredTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
+    }else{
+         [_lblNoRecords setHidden:YES];
     }
     [_tblTaskList reloadData];
 }
@@ -281,8 +284,8 @@
     [allTask setSortDescriptors:@[descriptor, sortBySequence]];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"MM/dd/yyyy"];
-    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
-    
+
+//    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
 //    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", [aFormatter dateFromString:aStr], [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
 //    [allTask setPredicate:predicate1];
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
@@ -290,9 +293,8 @@
         [_lblNoRecords setHidden:NO];
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
-    NSArray *a =[mutArrTaskList filteredArrayUsingPredicate:predicate];
-    _lblTaskRemaining.text = [NSString stringWithFormat:@"%ld", (long)a.count];
-    mutArrFilteredTaskList = mutArrTaskList;
+   mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskList filteredArrayUsingPredicate:predicate]];
+    _lblTaskRemaining.text = [NSString stringWithFormat:@"%ld", (long)mutArrFilteredTaskList.count];
 }
 
 
@@ -383,6 +385,7 @@
         [aCell.btnKeyboardIcon setHidden:NO];
         if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
+            [aCell.btnCheckBox setUserInteractionEnabled:YES];
             if ([task.response isEqualToString:@"checked"]) {
                 [aCell.btnCheckBox setSelected:YES];
             }
@@ -413,6 +416,8 @@
             [aCell.btnYes setHidden:NO];
             [aCell.btnNo setSelected:NO];
             [aCell.btnYes setSelected:NO];
+            [aCell.btnYes setUserInteractionEnabled:YES];
+            [aCell.btnNo setUserInteractionEnabled:YES];
             if ([task.response isEqualToString:@"yes"]) {
                 [aCell.btnYes setSelected:YES];
             }
@@ -438,6 +443,7 @@
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
     [aView setFrame:frame];
+    
     return aCell;
 }
 

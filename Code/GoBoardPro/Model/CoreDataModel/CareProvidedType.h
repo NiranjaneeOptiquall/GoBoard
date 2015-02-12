@@ -2,8 +2,8 @@
 //  CareProvidedType.h
 //  GoBoardPro
 //
-//  Created by ind558 on 24/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 04/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -15,6 +15,12 @@
 
 @property (nonatomic, retain) NSString * careProvidedID;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * refusedCare;
+@property (nonatomic, retain) NSString * selfCare;
+@property (nonatomic, retain) NSString * firstAid;
+@property (nonatomic, retain) NSString * emergencyPersonnel;
+@property (nonatomic, retain) NSString * emergencyResponse;
+@property (nonatomic, retain) NSString * sequence;
 @property (nonatomic, retain) AccidentReportInfo *accidentInfo;
 
 @end

@@ -78,7 +78,7 @@
             alert(@"", @"Please enter witness's valid email address");
         }
         else if ([requiredFields containsObject:@"descriptionOfIncident"] && [_txvDescIncident.text isEqualToString:@""]) {
-            alert(@"", @"Please enter witness's written account ");
+            //alert(@"", @"Please enter witness's written account ");
         }
     }
     

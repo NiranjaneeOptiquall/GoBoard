@@ -73,5 +73,6 @@
 - (void)PersonInvolved:(NSInteger)person;
 - (void)setupEmployeeRequiredFields:(NSArray*)aryFields;
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields;
-- (void)addWitnessView;
+//- (void)addWitnessView;
+-(void)addWitnessPresentView;
 @end

@@ -62,6 +62,7 @@
     frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
     _vwRefuseCare.frame = frame;
     [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
+    [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
     [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
 //    _vwParticipantSignature
 //    _vwStaffMember
@@ -164,8 +165,12 @@
         frame.origin.y = CGRectGetMinY(_vwBloodbornePathogens.frame);
         _vwRefuseCare.frame = frame;
         
-        frame = _vwParticipantSignature.frame;
+        frame = _vwSelfCare.frame;
         frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+        _vwSelfCare.frame = frame;
+        
+        frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
         frame = _vwStaffMember.frame;
@@ -183,8 +188,12 @@
     if (!_isRefuseCareStatementVisible) {
         [_vwRefuseCare setHidden:YES];
         
-        CGRect frame = _vwParticipantSignature.frame;
+        CGRect frame = _vwSelfCare.frame;
         frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
+        _vwSelfCare.frame = frame;
+        
+        frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
         frame = _vwStaffMember.frame;
@@ -198,8 +207,46 @@
     else {
         [_vwRefuseCare setHidden:NO];
         
-        CGRect frame = _vwParticipantSignature.frame;
+        CGRect frame = _vwSelfCare.frame;
         frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+        _vwSelfCare.frame = frame;
+        
+        frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
+        _vwParticipantSignature.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+}
+
+- (void)setIsSelfCareStatementVisible:(BOOL)isSelfCareStatementVisible {
+    _isSelfCareStatementVisible = isSelfCareStatementVisible;
+    if (!_isSelfCareStatementVisible) {
+        [_vwSelfCare setHidden:YES];
+        
+        CGRect frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMinY(_vwSelfCare.frame);
+        _vwParticipantSignature.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+    else {
+        [_vwSelfCare setHidden:NO];
+        
+        CGRect frame = _vwParticipantSignature.frame;
+        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
         frame = _vwStaffMember.frame;
@@ -218,7 +265,7 @@
 }
 
 - (void)shouldShowParticipantsSignatureView:(BOOL)show {
-    if (show && _isRefusedCareSelected) {
+    if (show && (_isRefusedCareSelected || _isSelfCareSelected)) {
         [_vwParticipantSignature setHidden:NO];
         CGRect frame = _vwStaffMember.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
@@ -267,7 +314,14 @@
     CGRect frame = _vwRefuseCare.frame;
     frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
     _vwRefuseCare.frame = frame;
+    
+    frame = _vwSelfCare.frame;
+    frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+    _vwSelfCare.frame = frame;
+    
+
     [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
+    [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
     [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
 }
 

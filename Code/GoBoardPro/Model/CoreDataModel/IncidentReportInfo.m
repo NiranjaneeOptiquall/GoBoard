@@ -2,7 +2,7 @@
 //  IncidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind558 on 05/01/15.
+//  Created by ind726 on 12/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -17,6 +17,12 @@
 
 @implementation IncidentReportInfo
 
+@dynamic affiliation1;
+@dynamic affiliation2;
+@dynamic affiliation3;
+@dynamic affiliation4;
+@dynamic affiliation5;
+@dynamic affiliation6;
 @dynamic instructions;
 @dynamic notificationField1;
 @dynamic notificationField1Color;
@@ -26,6 +32,9 @@
 @dynamic notificationField3Color;
 @dynamic notificationField4;
 @dynamic notificationField4Color;
+@dynamic personInvolved1;
+@dynamic personInvolved2;
+@dynamic personInvolved3;
 @dynamic reportType;
 @dynamic showAffiliation;
 @dynamic showConditions;
@@ -37,15 +46,7 @@
 @dynamic showMemberIdAndDriverLicense;
 @dynamic showMinor;
 @dynamic showPhotoIcon;
-@dynamic affiliation1;
-@dynamic affiliation2;
-@dynamic affiliation3;
-@dynamic affiliation4;
-@dynamic affiliation5;
-@dynamic affiliation6;
-@dynamic personInvolved1;
-@dynamic personInvolved2;
-@dynamic personInvolved3;
+@dynamic showGuestId;
 @dynamic actionList;
 @dynamic activityList;
 @dynamic conditionList;

@@ -9,12 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "AccidentReportViewController.h"
+typedef enum
+{
+    Head = 1,
+    Abdomen = 2,
+    RightArm = 3,
+    RightLeg = 4,
+    LeftArm = 5,
+    LeftLeg = 6,
+    
+} BodyPartLocation;
+
+
 
 @interface BodyPartInjury : UIView<UITableViewDataSource, UITableViewDelegate, DropDownValueDelegate,UIAlertViewDelegate> {
     NSArray *mutArrBodyPart;
     NSInteger bodyPartIndex;
     NSInteger selectedBodyPart;
-    
+    NSInteger selectedBodyPartLocation;
     NSIndexPath *indexPathRemoveInjury;
     
 }

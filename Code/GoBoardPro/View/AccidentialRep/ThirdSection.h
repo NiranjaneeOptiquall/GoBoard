@@ -23,6 +23,9 @@
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 
 
+- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender;
+- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender;
+
 - (IBAction)btnAddEmergencyPersonnel:(id)sender;
 - (IBAction)btnDeleteEmergencyPersonnel:(UIButton *)sender;
 

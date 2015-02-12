@@ -285,7 +285,7 @@
     [titleLabel setBackgroundColor:[UIColor clearColor]];
     [titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [titleLabel setTextColor:[UIColor blackColor]];
-    [titleLabel setTextAlignment:UITextAlignmentCenter];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
     [self addSubview:titleLabel];
     
     titleLabel.text=@"Line Chart Title";

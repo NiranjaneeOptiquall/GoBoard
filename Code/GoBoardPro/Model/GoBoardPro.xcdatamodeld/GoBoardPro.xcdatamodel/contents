@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="14B25" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="abdomenInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
@@ -76,24 +77,32 @@
         <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showGender" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showGuestId" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showMinor" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showNotificationField1" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showNotificationField2" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showParticipantSignature" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showRefusedSelfCareText" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showSelfCareText" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="abdomenInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AbdomenInjuryList" inverseName="accidentInfo" inverseEntity="AbdomenInjuryList" syncable="YES"/>
         <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="accidentInfo" inverseEntity="ActionTakenList" syncable="YES"/>
         <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="accidentInfo" inverseEntity="ActivityList" syncable="YES"/>
-        <relationship name="armInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ArmInjuryList" inverseName="accidentInfo" inverseEntity="ArmInjuryList" syncable="YES"/>
         <relationship name="bodypartInjuryType" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BodyPartInjuryType" inverseName="accidentInfo" inverseEntity="BodyPartInjuryType" syncable="YES"/>
         <relationship name="careProviderList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CareProvidedType" inverseName="accidentInfo" inverseEntity="CareProvidedType" syncable="YES"/>
         <relationship name="conditionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConditionList" inverseName="accidentInfo" inverseEntity="ConditionList" syncable="YES"/>
         <relationship name="equipmentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EquipmentList" inverseName="accidentInfo" inverseEntity="EquipmentList" syncable="YES"/>
         <relationship name="generalInjuryType" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralInjuryType" inverseName="accidentInfo" inverseEntity="GeneralInjuryType" syncable="YES"/>
         <relationship name="headInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HeadInjuryList" inverseName="accidentInfo" inverseEntity="HeadInjuryList" syncable="YES"/>
-        <relationship name="legInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="LegInjuryList" inverseName="accidentInfo" inverseEntity="LegInjuryList" syncable="YES"/>
+        <relationship name="leftArmInjuryList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LeftArmInjuryList" inverseName="accidentInfo" inverseEntity="LeftArmInjuryList" syncable="YES"/>
+        <relationship name="leftLegInjuryList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LeftLegInjuryList" inverseName="accidentInfo" inverseEntity="LeftLegInjuryList" syncable="YES"/>
         <relationship name="requiredFields" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RequiredField" inverseName="accidentInfo" inverseEntity="RequiredField" syncable="YES"/>
+        <relationship name="rightArmInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RightArmInjuryList" inverseName="accidentInfo" inverseEntity="RightArmInjuryList" syncable="YES"/>
+        <relationship name="rightLegInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RightLegInjuryList" inverseName="accidentInfo" inverseEntity="RightLegInjuryList" syncable="YES"/>
     </entity>
     <entity name="AccidentReportSubmit" representedClassName="AccidentReportSubmit" syncable="YES">
         <attribute name="accidentDesc" optional="YES" attributeType="String" syncable="YES"/>
@@ -124,33 +133,38 @@
     <entity name="ActionTakenList" representedClassName="ActionTakenList" syncable="YES">
         <attribute name="actionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="actionList" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="actionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="ActivityList" representedClassName="ActivityList" syncable="YES">
         <attribute name="activityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="activityList" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="activityList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
-    <entity name="ArmInjuryList" representedClassName="ArmInjuryList" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="armInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
-    </entity>
     <entity name="BodyPartInjuryType" representedClassName="BodyPartInjuryType" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="bodypartInjuryType" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="CareProvidedType" representedClassName="CareProvidedType" syncable="YES">
         <attribute name="careProvidedID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emergencyPersonnel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emergencyResponse" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstAid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="refusedCare" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selfCare" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="careProviderList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="ConditionList" representedClassName="ConditionList" syncable="YES">
         <attribute name="conditionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="conditionList" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="conditionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
@@ -178,6 +192,7 @@
     <entity name="EquipmentList" representedClassName="EquipmentList" syncable="YES">
         <attribute name="equipmentId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="equipmentList" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="equipmentList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
@@ -222,11 +237,13 @@
     </entity>
     <entity name="GeneralInjuryType" representedClassName="GeneralInjuryType" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="generalInjuryType" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="HeadInjuryList" representedClassName="HeadInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="headInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
@@ -256,6 +273,7 @@
         <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showGender" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showGuestId" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="showMinor" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -276,10 +294,17 @@
         <attribute name="natureId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentPerson" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentPerson" inverseName="injuryList" inverseEntity="AccidentPerson" syncable="YES"/>
     </entity>
-    <entity name="LegInjuryList" representedClassName="LegInjuryList" syncable="YES">
+    <entity name="LeftArmInjuryList" representedClassName="LeftArmInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="legInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
+        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="leftArmInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
+    </entity>
+    <entity name="LeftLegInjuryList" representedClassName="LeftLegInjuryList" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="leftLegInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="Memoboard" representedClassName="Memoboard" syncable="YES">
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
@@ -362,6 +387,18 @@
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="requiredFields" inverseEntity="AccidentReportInfo" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="requiredFields" inverseEntity="IncidentReportInfo" syncable="YES"/>
+    </entity>
+    <entity name="RightArmInjuryList" representedClassName="ArmInjuryList" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="rightArmInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
+    </entity>
+    <entity name="RightLegInjuryList" representedClassName="LegInjuryList" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="rightLegInjuryList" inverseEntity="AccidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="SubmitCountUser" representedClassName="SubmitCountUser" syncable="YES">
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
@@ -483,36 +520,38 @@
         <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="witnesses" inverseEntity="Report" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="88"/>
+        <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="103"/>
         <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="643"/>
-        <element name="AccidentReportInfo" positionX="-200" positionY="230" width="128" height="733"/>
+        <element name="AccidentReportInfo" positionX="-200" positionY="230" width="128" height="853"/>
         <element name="AccidentReportSubmit" positionX="423" positionY="207" width="128" height="403"/>
-        <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="103"/>
-        <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="103"/>
-        <element name="ArmInjuryList" positionX="61" positionY="846" width="128" height="88"/>
-        <element name="BodyPartInjuryType" positionX="97" positionY="297" width="128" height="88"/>
-        <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="88"/>
-        <element name="ConditionList" positionX="-639" positionY="32" width="128" height="103"/>
+        <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="118"/>
+        <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="118"/>
+        <element name="BodyPartInjuryType" positionX="97" positionY="297" width="128" height="103"/>
+        <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="178"/>
+        <element name="ConditionList" positionX="-639" positionY="32" width="128" height="118"/>
         <element name="DailyLog" positionX="-299" positionY="-549" width="128" height="118"/>
         <element name="EmergencyPersonnel" positionX="475" positionY="-90" width="128" height="223"/>
-        <element name="EquipmentList" positionX="-612" positionY="212" width="128" height="103"/>
+        <element name="EquipmentList" positionX="-612" positionY="212" width="128" height="118"/>
         <element name="ERPCategory" positionX="-34" positionY="-972" width="128" height="88"/>
         <element name="ERPHistory" positionX="-36" positionY="-549" width="128" height="133"/>
         <element name="ERPHistoryTask" positionX="-37" positionY="-358" width="128" height="88"/>
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
         <element name="FormsList" positionX="-443" positionY="720" width="128" height="148"/>
-        <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="88"/>
-        <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="88"/>
-        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="568"/>
+        <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
+        <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
+        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="583"/>
         <element name="InjuryDetail" positionX="423" positionY="623" width="128" height="148"/>
-        <element name="LegInjuryList" positionX="-389" positionY="560" width="128" height="88"/>
+        <element name="LeftArmInjuryList" positionX="232" positionY="968" width="128" height="103"/>
+        <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
         <element name="Person" positionX="133" positionY="-540" width="128" height="403"/>
         <element name="QuestionDetails" positionX="-18" positionY="1034" width="128" height="118"/>
         <element name="Report" positionX="297" positionY="-540" width="128" height="478"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
+        <element name="RightArmInjuryList" positionX="232" positionY="855" width="128" height="103"/>
+        <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-200" positionY="1034" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>

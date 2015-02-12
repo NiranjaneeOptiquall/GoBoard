@@ -1,5 +1,5 @@
 //
-//  EquipmentList.h
+//  LeftLegInjuryList.h
 //  GoBoardPro
 //
 //  Created by ind726 on 04/02/15.
@@ -9,14 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class AccidentReportInfo, IncidentReportInfo;
+@class AccidentReportInfo;
 
-@interface EquipmentList : NSManagedObject
+@interface LeftLegInjuryList : NSManagedObject
 
-@property (nonatomic, retain) NSString * equipmentId;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSString * sequence;
 @property (nonatomic, retain) AccidentReportInfo *accidentInfo;
-@property (nonatomic, retain) IncidentReportInfo *incidentType;
 
 @end

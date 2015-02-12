@@ -5,7 +5,7 @@
 //  Created by ind558 on 25/09/14.
 //  Copyright (c) 2014 IndiaNIC. All rights reserved.
 //
-
+#import "WitnessPresent.h"
 #import "IncidentDetailViewController.h"
 #import "EmergencyPersonnelView.h"
 #import "IncidentPersonalInformation.h"
@@ -14,6 +14,8 @@
 #import "Person.h"
 #import "Witness.h"
 #import "EmergencyPersonnel.h"
+
+
 
 #define MISCONDUCT  @"misconduct"
 #define CUSTOMER_SERVICE    @"customerservice"
@@ -24,6 +26,60 @@
 @end
 
 @implementation IncidentDetailViewController
+
+-(void)awakeFromNib
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToRemoveWitness:) name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToInsertWitness:) name:@"adjustContentOffsetsToInsertWitnessView" object:nil];
+}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"adjustContentOffsetsToInsertWitnessView" object:nil];
+    
+}
+- (void)didAdjustContentOffsetsToRemoveWitness:(id)objectInfo
+{
+    for (int i = totalWitnessCount; i >0; i--) {
+        WitnessView *aWitnessView = (WitnessView*)[_vwWitnesses viewWithTag:totalWitnessCount + 300];
+        if ([[_vwWitnesses subviews] containsObject:aWitnessView]) {
+            
+            CGRect frame = _vwWitnesses.frame;
+            frame.size.height = _vwWitnesses.frame.size.height - aWitnessView.frame.size.height;
+            _vwWitnesses.frame = frame;
+            
+            frame = [[_vwWitnesses viewWithTag:9999] frame];
+            frame.size.height = CGRectGetMinY(aWitnessView.frame);
+            [[_vwWitnesses viewWithTag:9999] setFrame:frame];
+            
+            frame = _vwEmployeeInfo.frame;
+            frame.origin.y = _vwEmployeeInfo.frame.origin.y - aWitnessView.frame.size.height ;
+            _vwEmployeeInfo.frame = frame;
+            
+            [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+            
+//            int yPosition = _scrlMainView.contentOffset.y - aWitnessView.frame.size.height;
+//            
+//            if (yPosition < _scrlMainView.contentOffset.y) {
+//                [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPosition)];
+//            }
+            
+            _btnRemoveWitness.hidden=YES;
+            _btnAddWitness.hidden = YES;
+            
+            totalWitnessCount --;
+            if ([mutArrWitnessView containsObject:aWitnessView]) {
+                [mutArrWitnessView removeObject:aWitnessView];
+            }
+            [aWitnessView removeFromSuperview];
+        }
+    }
+}
+
+- (void)didAdjustContentOffsetsToInsertWitness:(id)objectInfo
+{
+    [self addWitnessView];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,6 +97,7 @@
     if ([reportSetupInfo.showEmergencyPersonnel boolValue]) {
         [self addEmergencyPersonnel];
     }
+    [self addWitnessPresentView];
     [self addWitnessView];
     if ([reportSetupInfo.showManagementFollowup boolValue]) {
         [self addActionTakenView];
@@ -214,8 +271,53 @@
     [_btnPoliceCalled setTitle:reportSetupInfo.notificationField2 forState:UIControlStateNormal];
     [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
     [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
+   
     _lblInstruction.text = reportSetupInfo.instructions;
+    NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
+    float height = [reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+    CGRect frameLblInstruction  = _lblInstruction.frame;
+    frameLblInstruction.size.height = height;
+    _lblInstruction.frame = frameLblInstruction;
+    _lblInstruction.numberOfLines = 0;
+    [_lblInstruction setFont:[UIFont systemFontOfSize:20]];
+    [_lblInstruction setTextAlignment:NSTextAlignmentLeft];
     
+    CGRect frame = _vwBasicInfo.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_lblInstruction.frame);
+    
+    _vwBasicInfo.frame = frame;
+    
+    frame = _vwPersonalInfo.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwBasicInfo.frame);
+    
+    _vwPersonalInfo.frame = frame;
+    
+    frame = _vwAfterPersonalInfo.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+    
+    _vwAfterPersonalInfo.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwAfterPersonalInfo.frame);
+    
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _vwEmployeeInfo.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    
+    _vwEmployeeInfo.frame = frame;
+    
+    frame = _vwWitnesses.frame;
+    
+    frame.origin.y = CGRectGetMaxY(_vwEmployeeInfo.frame);
+    
+    _vwWitnesses.frame = frame;
+
     if (![reportSetupInfo.showConditions boolValue]) {
         [_vwConditions setHidden:YES];
         CGRect frame = _vwNatureOfIncident.frame;
@@ -337,6 +439,12 @@
     
 }
 
+- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender {
+}
+
+- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender {
+}
+
 - (IBAction)btnAddWitnessTapped:(id)sender {
     [self addWitnessView];
 }
@@ -428,18 +536,23 @@
             [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
             strDob = [aFormatter stringFromDate:aDob];
         }
-        NSString *memberId = @"", *employeeId = @"";
+        NSString *memberId = @"", *employeeId = @"",  *guestId = @"";
+        
         if (vwPerson.intPersonInvolved == 3) {
             employeeId = vwPerson.txtMemberId.text;
         }
-        else {
+        else if(vwPerson.intPersonInvolved == 2){
+            guestId = vwPerson.txtMemberId.text;
+        }else{
             memberId = vwPerson.txtMemberId.text;
         }
+        
+        
         NSString *strPhoto = @"";
         if (vwPerson.imgIncidentPerson) {
             strPhoto = [UIImageJPEGRepresentation(vwPerson.imgIncidentPerson, 1.0) base64EncodedStringWithOptions:0];
         }
-        NSDictionary *aDict = @{@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":employeeId, @"MemberId":memberId, @"OccuredDuringBusinessHours":(vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"DateOfBirth":strDob, @"PersonPhoto":strPhoto};
+        NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeId":employeeId, @"GuestId":guestId ,@"MemberId":memberId, @"OccuredDuringBusinessHours":(vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"DateOfBirth":strDob, @"PersonPhoto":strPhoto};
         //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         
         [mutArrPersons addObject:aDict];
@@ -544,7 +657,15 @@
             frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
             _vwEmployeeInfo.frame = frame;
             [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
-           
+            
+            int yPosition = _scrlMainView.contentOffset.y - personalInfoView.frame.size.height;
+            
+            if (yPosition < _scrlMainView.contentOffset.y) {
+                  [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPosition)];
+            }
+            
+            [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPosition)];
+            
             totalPersonCount --;
         
             [personalInfoView removeObserver:self forKeyPath:@"frame" context:NULL];
@@ -596,6 +717,12 @@
             _vwEmployeeInfo.frame = frame;
             [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
             
+            int yPosition = _scrlMainView.contentOffset.y - objEmergency.frame.size.height;
+            
+            if (yPosition < _scrlMainView.contentOffset.y) {
+                [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPosition)];
+            }
+            
             [objEmergency removeFromSuperview];
             
         }
@@ -613,6 +740,13 @@
             frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
             _vwEmployeeInfo.frame = frame;
             [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+            
+            int yPosition = _scrlMainView.contentOffset.y - aWitnessView.frame.size.height;
+            
+            if (yPosition < _scrlMainView.contentOffset.y) {
+                [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPosition)];
+            }
+            
             [mutArrWitnessView removeObject:aWitnessView];
             
             [aWitnessView removeFromSuperview];
@@ -812,6 +946,8 @@
     personalInfoView.isCapturePhotoVisible = [reportSetupInfo.showPhotoIcon boolValue];
     personalInfoView.isAffiliationVisible = [reportSetupInfo.showAffiliation boolValue];
     personalInfoView.isMemberIdVisible = [reportSetupInfo.showMemberIdAndDriverLicense boolValue];
+    personalInfoView.isGuestIdVisible = [reportSetupInfo.showGuestId boolValue];
+    personalInfoView.isEmployeeIdVisible = [reportSetupInfo.showEmployeeId boolValue];
     personalInfoView.isDOBVisible = [reportSetupInfo.showDateOfBirth boolValue];
     personalInfoView.isGenderVisible = [reportSetupInfo.showGender boolValue];
     personalInfoView.isMinorVisible = [reportSetupInfo.showMinor boolValue];
@@ -823,7 +959,13 @@
     [personalInfoView setRequiredFields:aryFields];
     [personalInfoView setBackgroundColor:[UIColor clearColor]];
     CGRect frame = personalInfoView.frame;
-    frame.origin.y = totalPersonCount * frame.size.height;
+    if (mutArrIncidentPerson.count > 0) {
+        CGRect rectLastView = [[mutArrIncidentPerson lastObject] frame];
+        frame.origin.y = CGRectGetMaxY(rectLastView);
+    }else{
+        frame.origin.y = totalPersonCount * frame.size.height;
+    }
+    
     personalInfoView.frame = frame;
     [personalInfoView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     [_vwPersonalInfo addSubview:personalInfoView];
@@ -864,6 +1006,8 @@
     NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     [objEmergency setRequiredFields:aryFields];
+    [objEmergency setBackgroundColor:[UIColor yellowColor]];
+    
     CGRect frame = objEmergency.frame;
     frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
     objEmergency.frame = frame;
@@ -871,6 +1015,7 @@
     totalEmergencyPersonnelCount ++;
     objEmergency.tag = totalEmergencyPersonnelCount+200;
     [mutArrEmergencyPersonnel addObject:objEmergency];
+   
     frame = _btnAddEmergency.frame;
     frame.origin.y = CGRectGetMaxY(objEmergency.frame);
     _btnAddEmergency.frame = frame;
@@ -879,8 +1024,12 @@
     frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
     _btnRemoveEmergency.frame = frameEmegency;
     
+    CGRect frameWitnessPresentView = _vwWitnessPresent.frame;
+    frameWitnessPresentView.origin.y = CGRectGetMaxY(_btnAddEmergency.frame);
+    _vwWitnessPresent.frame = frameWitnessPresentView;
+    
     frame = _vwEmergencyPersonnel.frame;
-    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+    frame.size.height = CGRectGetMaxY(_vwWitnessPresent.frame);
     _vwEmergencyPersonnel.frame = frame;
     
     if (totalEmergencyPersonnelCount<=1) {
@@ -898,7 +1047,22 @@
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
 }
 
+-(void)addWitnessPresentView
+{
+    WitnessPresent *aWitnessPrensent = (WitnessPresent *) [[[NSBundle mainBundle]loadNibNamed:@"WitnessPresent" owner:self options:nil] firstObject];
+    
+    aWitnessPrensent.parentVCIncident = self;
+    
+    [aWitnessPrensent setBackgroundColor:[UIColor clearColor]];
+    
+    aWitnessPrensent.tag = 9999;
+    
+    [_vwWitnesses addSubview:aWitnessPrensent];
+}
+
+
 - (void)addWitnessView {
+    
     WitnessView *aWitnessView = (WitnessView*)[[[NSBundle mainBundle] loadNibNamed:@"WitnessView" owner:self options:nil] firstObject];
     [aWitnessView setBackgroundColor:[UIColor clearColor]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_WITNESS];
@@ -906,7 +1070,15 @@
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     [aWitnessView setRequiredFields:aryFields];
     CGRect frame = aWitnessView.frame;
-    frame.origin.y = totalWitnessCount * frame.size.height;
+    
+    if (mutArrWitnessView.count > 0) {
+        CGRect frameLastView = [[mutArrWitnessView lastObject] frame];
+        frame.origin.y = CGRectGetMaxY(frameLastView);
+    }else{
+        CGRect frameLastView = [[_vwWitnesses viewWithTag:9999] frame];
+        frame.origin.y = CGRectGetMaxY(frameLastView);
+        //frame.origin.y = totalWitnessCount * frame.size.height;
+    }
     aWitnessView.frame = frame;
     [_vwWitnesses addSubview:aWitnessView];
     [mutArrWitnessView addObject:aWitnessView];
@@ -919,7 +1091,7 @@
     frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
     _vwEmployeeInfo.frame = frame;
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
-    
+    _btnAddWitness.hidden = NO;
     if (totalWitnessCount<=1) {
         _btnRemoveWitness.hidden=YES;
     }else{
@@ -1259,9 +1431,4 @@
     }
     [sender setText:[value valueForKey:@"name"]];
 }
-
-
-
-
-
 @end

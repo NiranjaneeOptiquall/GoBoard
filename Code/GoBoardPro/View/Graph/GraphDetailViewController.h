@@ -34,5 +34,3 @@
 
 @property (assign, nonatomic) NSInteger graphType;
 @end
-
-

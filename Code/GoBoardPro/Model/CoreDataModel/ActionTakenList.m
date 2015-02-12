@@ -2,11 +2,12 @@
 //  ActionTakenList.m
 //  GoBoardPro
 //
-//  Created by ind558 on 24/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 04/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "ActionTakenList.h"
+#import "AccidentReportInfo.h"
 #import "IncidentReportInfo.h"
 
 
@@ -14,7 +15,8 @@
 
 @dynamic actionId;
 @dynamic name;
-@dynamic incidentType;
+@dynamic sequence;
 @dynamic accidentInfo;
+@dynamic incidentType;
 
 @end

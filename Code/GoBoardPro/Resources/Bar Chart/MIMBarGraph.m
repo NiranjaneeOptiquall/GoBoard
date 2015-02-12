@@ -1100,14 +1100,13 @@ static NSInteger firstNumSort(id str1, id str2, void *context) {
     if([delegate respondsToSelector:@selector(animationOnBars:)])
     {
         animationDict=[delegate animationOnBars:self];
-        if([animationDict respondsToSelector:@selector(allKeys)])
-        if([[animationDict allKeys] count]>0)
-        {
-            animationOnBars=TRUE;
-        }
-        else 
-        {
-            if(DEBUG_MODE) NSLog(@"WARNING:animationOnBars delegate method returns nil.");
+        if([animationDict respondsToSelector:@selector(allKeys)]){
+            if([[animationDict allKeys] count]>0)
+            {
+                animationOnBars=TRUE;
+            }else{
+                if(DEBUG_MODE) NSLog(@"WARNING:animationOnBars delegate method returns nil.");
+            }
         }
         
         
@@ -2136,7 +2135,10 @@ static NSInteger firstNumSort(id str1, id str2, void *context) {
     
     
 }
-
+-(void)displayAnchorInfo:(NSInteger)tagID At:(CGPoint)point
+{
+    
+}
 
 - (void)dealloc
 {
