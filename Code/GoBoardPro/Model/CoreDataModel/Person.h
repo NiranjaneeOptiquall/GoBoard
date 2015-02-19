@@ -2,8 +2,8 @@
 //  Person.h
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 18/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -30,12 +30,21 @@
 @property (nonatomic, retain) NSString * memberId;
 @property (nonatomic, retain) NSString * middleInitial;
 @property (nonatomic, retain) NSString * minor;
+@property (nonatomic, retain) NSData * personPhoto;
 @property (nonatomic, retain) NSString * personTypeID;
 @property (nonatomic, retain) NSString * primaryPhone;
 @property (nonatomic, retain) NSString * state;
 @property (nonatomic, retain) NSString * streetAddress;
 @property (nonatomic, retain) NSString * zip;
-@property (nonatomic, retain) NSData * personPhoto;
 @property (nonatomic, retain) Report *report;
+@property (nonatomic, retain) NSSet *emergencyPersonnelIncident;
+@end
+
+@interface Person (CoreDataGeneratedAccessors)
+
+- (void)addEmergencyPersonnelIncidentObject:(NSManagedObject *)value;
+- (void)removeEmergencyPersonnelIncidentObject:(NSManagedObject *)value;
+- (void)addEmergencyPersonnelIncident:(NSSet *)values;
+- (void)removeEmergencyPersonnelIncident:(NSSet *)values;
 
 @end

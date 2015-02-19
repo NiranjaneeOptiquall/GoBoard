@@ -51,7 +51,7 @@
     }
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
-    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"Date":[aFormatter stringFromDate:[NSDate date]], @"DailyLogDetails":mutAryLogs};
     [gblAppDelegate callWebService:DAILY_LOG parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_LOG] complition:^(NSDictionary *response) {
         for (DailyLog *aLog in mutArrDailyList) {

@@ -217,7 +217,7 @@
                     NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc] init];
                     NSString *aStrDate = [[[aDict objectForKey:@"ExpirationDate"] componentsSeparatedByString:@"."] firstObject];
                     [aDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-                    [aDateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                    //[aDateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                     NSDate *aDate = [aDateFormatter dateFromString:aStrDate];
                     [aDateFormatter setDateFormat:@"MM/dd/yyyy"];
                     certificate.txtExpDate.text = [aDateFormatter stringFromDate:aDate];

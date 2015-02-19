@@ -11,10 +11,12 @@
 #import "AccidentReportSubmit.h"
 #import "AccidentPerson.h"
 #import "InjuryDetail.h"
+#import "Emergency.h"
 #import "Witness.h"
 #import "EmergencyPersonnel.h"
 #import "EmergencyPersonnelView.h"
 #import "WitnessView.h"
+#import "CareProvidedType.h"
 
 
 @interface AccidentReportViewController ()
@@ -55,7 +57,6 @@
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
-    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *aAccidentDate = [aFormatter dateFromString:aReport.dateOfIncident];
     [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     
@@ -80,7 +81,7 @@
     _btnNone.selected = ([aReport.isNotification4Selected isEqualToString:@"true"]) ? YES : NO;
     
     [self popolatePersonalInformation:aReport.accidentPerson.allObjects];
-    [self populateEmergencyPersonnel:aReport.emergencyPersonnels.allObjects];
+    //[self populateEmergencyPersonnel:aReport.emergencyPersonnels.allObjects];
     [self populateWitness:aReport.witnesses.allObjects];
     finalSection.txtEmpFName.text = aReport.employeeFirstName;
     finalSection.txtEmpLName.text = aReport.employeeLastName;
@@ -197,8 +198,7 @@
         [vwBodyPart.tblAddedInjuryList reloadData];
         
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[_reportSetupInfo.careProviderList allObjects]];
-//        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
-//        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
+
         
         vwBodyPart.txtCareProvided.text = [[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
         vwBodyPart.careProvided = vwBodyPart.txtCareProvided.text;
@@ -248,30 +248,32 @@
             [vwBodilyFluid.btnNotExposedToBlood setSelected:YES];
         }
         
+        //vwPersonalInfo
+        
         aFirstSection.imgBodilyFluid = [UIImage imageWithData:aPerson.personPhoto];
         
     }
 }
 
-- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
-    for (int i = 0; i < [aryEmergency count]; i++) {
-        if (i > 0) {
-            [thirdSection initialSetUp];
-        }
-        EmergencyPersonnelView *vwEmergency = [thirdSection.mutArrEmergencyViews lastObject];
-        EmergencyPersonnel *aEmergency = aryEmergency[i];
-        vwEmergency.txtFirstName.text = aEmergency.firstName;
-        vwEmergency.txtLastName.text = aEmergency.lastName;
-        vwEmergency.txtMI.text = aEmergency.middileInitial;
-        vwEmergency.txtCaseNo.text = aEmergency.caseNumber;
-        vwEmergency.txtPhone.text = aEmergency.phone;
-        vwEmergency.txtBadge.text = aEmergency.badgeNumber;
-        vwEmergency.txtTime911Called.text = aEmergency.time911Called;
-        vwEmergency.txtTimeOfArrival.text = aEmergency.time911Arrival;
-        vwEmergency.txtTimeOfDeparture.text = aEmergency.time911Departure;
-        vwEmergency.txvAdditionalInfo.text = aEmergency.additionalInformation;
-    }
-}
+//- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
+//    for (int i = 0; i < [aryEmergency count]; i++) {
+//        if (i > 0) {
+//            [thirdSection initialSetUp];
+//        }
+//        EmergencyPersonnelView *vwEmergency = [thirdSection.mutArrEmergencyViews lastObject];
+//        EmergencyPersonnel *aEmergency = aryEmergency[i];
+//        vwEmergency.txtFirstName.text = aEmergency.firstName;
+//        vwEmergency.txtLastName.text = aEmergency.lastName;
+//        vwEmergency.txtMI.text = aEmergency.middileInitial;
+//        vwEmergency.txtCaseNo.text = aEmergency.caseNumber;
+//        vwEmergency.txtPhone.text = aEmergency.phone;
+//        vwEmergency.txtBadge.text = aEmergency.badgeNumber;
+//        vwEmergency.txtTime911Called.text = aEmergency.time911Called;
+//        vwEmergency.txtTimeOfArrival.text = aEmergency.time911Arrival;
+//        vwEmergency.txtTimeOfDeparture.text = aEmergency.time911Departure;
+//        vwEmergency.txvAdditionalInfo.text = aEmergency.additionalInformation;
+//    }
+//}
 
 - (void)populateWitness:(NSArray*)aryWitness {
     for (int i = 0; i < [aryWitness count]; i++) {
@@ -433,12 +435,12 @@
         newFrame.size.height = CGRectGetMaxY(frame);
         _vwFirstSection.frame = newFrame;
         float nextY = CGRectGetMaxY(_vwFirstSection.frame);
-        if (thirdSection && !thirdSection.isHidden) {
-            frame = thirdSection.frame;
-            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-            thirdSection.frame = frame;
-            nextY = CGRectGetMaxY(thirdSection.frame);
-        }
+//        if (thirdSection && !thirdSection.isHidden) {
+//            frame = thirdSection.frame;
+//            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+//            thirdSection.frame = frame;
+//            nextY = CGRectGetMaxY(thirdSection.frame);
+//        }
         
         
         frame = finalSection.frame;
@@ -448,21 +450,22 @@
     else if ([object isEqual:_vwFirstSection]) {
         float nextY = CGRectGetMaxY(_vwFirstSection.frame);
         CGRect frame = CGRectZero;
-        if (thirdSection) {
-            frame = thirdSection.frame;
-            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-            thirdSection.frame = frame;
-            nextY = CGRectGetMaxY(thirdSection.frame);
-        }
+//        if (thirdSection) {
+//            frame = thirdSection.frame;
+//            frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+//            thirdSection.frame = frame;
+//            nextY = CGRectGetMaxY(thirdSection.frame);
+//        }
         frame = finalSection.frame;
         frame.origin.y = nextY;
         finalSection.frame = frame;
     }
-    else if ([object isEqual:thirdSection]) {
-        CGRect frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-        finalSection.frame = frame;
-    }
+//    else if ([object isEqual:thirdSection]) {
+//        CGRect frame = finalSection.frame;
+//        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+//        finalSection.frame = frame;
+//    }
+
     CGRect frame = finalSection.frame;
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
 }
@@ -475,18 +478,18 @@
     [_btnManager setSelected:NO];
     [_btnNone setSelected:NO];
     [sender setSelected:YES];
-    if (_btn911Called.isSelected && [_reportSetupInfo.showEmergencyPersonnel boolValue]) {
-        [thirdSection setHidden:NO];
-        CGRect frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-        finalSection.frame = frame;
-    }
-    else if (thirdSection){
-        [thirdSection setHidden:YES];
-        CGRect frame = finalSection.frame;
-        frame.origin.y = CGRectGetMinY(thirdSection.frame);
-        finalSection.frame = frame;
-    }
+//    if (_btn911Called.isSelected && [_reportSetupInfo.showEmergencyPersonnel boolValue]) {
+//        [thirdSection setHidden:NO];
+//        CGRect frame = finalSection.frame;
+//        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
+//        finalSection.frame = frame;
+//    }
+//    else if (thirdSection){
+//        [thirdSection setHidden:YES];
+//        CGRect frame = finalSection.frame;
+//        frame.origin.y = CGRectGetMinY(thirdSection.frame);
+//        finalSection.frame = frame;
+//    }
     _isUpdate = YES;
 }
 
@@ -502,9 +505,6 @@
     NSArray *aryEmpFields = [fields valueForKeyPath:@"name"];
     
     if (![self validateFirstSection]) {
-        return;
-    }
-    else if (thirdSection && _btn911Called.isSelected && ![thirdSection isThirdSectionValidationSuccess]) {
         return;
     }
     else if (![finalSection isFinalSectionValidationSuccessWith:aryEmpFields]) {
@@ -561,7 +561,7 @@
             [vw.vwPersonalInfo removeObserver:vw forKeyPath:@"frame"];
         }
     }
-    [thirdSection removeObserver:self forKeyPath:@"frame"];
+    //[thirdSection removeObserver:self forKeyPath:@"frame"];
     [finalSection removeObserver:self forKeyPath:@"frame"];
 }
 
@@ -631,15 +631,18 @@
     NSArray *aryAidFields = [fields valueForKeyPath:@"name"];
     [accidentView.vwBodilyFluid setRequiredFields:aryAidFields];
     
+     [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
     accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
+   
     accidentView.vwBodilyFluid.isRefuseCareStatementVisible = NO;
     accidentView.vwBodilyFluid.isSelfCareStatementVisible = NO;
     accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
     accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
     accidentView.vwBodilyFluid.lblSelfCareText.text = _reportSetupInfo.selfCareStatement;
-    [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
-    [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:NO];
-    [accidentView.vwBodilyFluid btnWasBloodPresentTapped:accidentView.vwBodilyFluid.btnBloodNotPresent];
+    [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:[_reportSetupInfo.showParticipantSignature boolValue]];
+    [accidentView.vwBodilyFluid shouldShowEmergencyPersonnelView:NO];
+    accidentView.vwBodilyFluid.isEmergencyPersonnelVisible = NO;
+    accidentView.vwBodilyFluid.isEmergencyResponseSelected = NO;
     
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
@@ -666,49 +669,24 @@
         _btnRemovePerson.hidden=NO;
     }
     
-    if (thirdSection) {
-        frame = thirdSection.frame;
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-        thirdSection.frame = frame;
-        frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-        finalSection.frame = frame;
-        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
-    }else{
-        frame = finalSection.frame;
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-        finalSection.frame = frame;
-        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
-    }
+    frame = finalSection.frame;
+    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+    finalSection.frame = frame;
+    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+    
 }
+
 
 - (void)addViews {
     [self addAccidentView];
-    CGRect frame;
-    if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
-        thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
-        thirdSection.parentVC = self;
-        [thirdSection initialSetUp];
-        CGRect frame = thirdSection.frame;
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-        thirdSection.frame = frame;
-        [_scrlMainView addSubview:thirdSection];
-        [thirdSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
-        
-    }
-    
     
     finalSection = (FinalSection*)[[[NSBundle mainBundle] loadNibNamed:@"FinalSection" owner:self options:nil] firstObject];
     finalSection.parentVC = self;
     [finalSection addWitnessPresentView];
     [finalSection setBackgroundColor:[UIColor clearColor]];
-    frame = finalSection.frame;
-    if ([_reportSetupInfo.showEmergencyPersonnel boolValue]) {
-        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-    }
-    else {
-        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-    }
+    CGRect frame = finalSection.frame;
+    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+
     finalSection.frame = frame;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMPLOYEE];
     NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
@@ -756,7 +734,6 @@
     
     NSString *aStr = [NSString stringWithFormat:@"%@ %@", _txtDateOfIncident.text, _txtTimeOfIncident.text];
     NSDate *incidentDate = [aFormatter dateFromString:aStr];
-    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
     NSString *astrAccidentDate = [aFormatter stringFromDate:incidentDate];
     if (!astrAccidentDate)
@@ -771,32 +748,33 @@
         }
     }
     
+    
     NSMutableArray *mutArrEmergency = [NSMutableArray array];
-    for (EmergencyPersonnelView *vwEmergency in thirdSection.mutArrEmergencyViews) {
-        id time911Called, timeArrival, timeDeparture;
-        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
-            time911Called = [NSNull null];
-        }
-        else {
-            time911Called = vwEmergency.txtTime911Called.text;
-        }
-        
-        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
-            timeArrival = [NSNull null];
-        }
-        else {
-            timeArrival = vwEmergency.txtTime911Called.text;
-        }
-        
-        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
-            timeDeparture = [NSNull null];
-        }
-        else {
-            timeDeparture = vwEmergency.txtTime911Called.text;
-        }
-        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
-        [mutArrEmergency addObject:aDict];
-    }
+//    for (EmergencyPersonnelView *vwEmergency in thirdSection.mutArrEmergencyViews) {
+//        id time911Called, timeArrival, timeDeparture;
+//        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+//            time911Called = [NSNull null];
+//        }
+//        else {
+//            time911Called = vwEmergency.txtTime911Called.text;
+//        }
+//        
+//        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+//            timeArrival = [NSNull null];
+//        }
+//        else {
+//            timeArrival = vwEmergency.txtTime911Called.text;
+//        }
+//        
+//        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+//            timeDeparture = [NSNull null];
+//        }
+//        else {
+//            timeDeparture = vwEmergency.txtTime911Called.text;
+//        }
+//        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
+//        [mutArrEmergency addObject:aDict];
+//    }
     NSMutableArray *mutArrWitness = [NSMutableArray array];
     for (WitnessView *vwWitness in finalSection.mutArrWitnessViews) {
         NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
@@ -809,7 +787,7 @@
     if (selectedLocation.value) {
         locationId = selectedLocation.value;
     }
-    NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+    NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList , @"EmergencyPersonnel":mutArrEmergency , @"Witnesses":mutArrWitness};
     return aDict;
 }
 
@@ -858,6 +836,42 @@
     aPerson.bloodCleanUpRequired = [dict objectForKey:@"WasBloodCleanupRequired"];
     aPerson.wasExposedToBlood = [dict objectForKey:@"WasCaregiverExposedToBlood"];
     aPerson.duringWorkHours = [dict objectForKey:@"OccuredDuringBusinessHours"];
+    aPerson.guestId = [dict objectForKey:@"GuestId"];
+    
+    NSMutableSet *emergencyPersonnel = [NSMutableSet set];
+    for (NSDictionary *aDict  in [dict objectForKey:@"EmergencyPersonnel"]) {
+        Emergency *aEmegency  =  [NSEntityDescription insertNewObjectForEntityForName:@"Emergency" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aEmegency.firstName = [aDict objectForKey:@"FirstName"];
+        aEmegency.middileInitial = [aDict objectForKey:@"MiddleInitial"];
+        aEmegency.lastName = [aDict objectForKey:@"LastName"];
+        aEmegency.phone = [aDict objectForKey:@"Phone"];
+        aEmegency.additionalInformation = [aDict objectForKey:@"AdditionalInformation"];
+        aEmegency.caseNumber = [aDict objectForKey:@"CaseNumber"];
+        aEmegency.badgeNumber = [aDict objectForKey:@"BadgeNumber"];
+        
+        if ([[dict objectForKey:@"Time911Called"] isKindOfClass:[NSNull class]]) {
+            aEmegency.time911Called = @"";
+        }
+        else {
+            aEmegency.time911Called = [dict objectForKey:@"Time911Called"];
+        }
+        if ([[dict objectForKey:@"ArrivalTime"] isKindOfClass:[NSNull class]]) {
+            aEmegency.time911Arrival = @"";
+        }
+        else {
+            aEmegency.time911Arrival = [dict objectForKey:@"ArrivalTime"];
+        }
+        if ([[dict objectForKey:@"DepartureTime"] isKindOfClass:[NSNull class]]) {
+            aEmegency.time911Departure = @"";
+        }
+        else {
+            aEmegency.time911Departure = [dict objectForKey:@"DepartureTime"];
+        }
+        
+        [emergencyPersonnel addObject:aEmegency];
+    }
+    aPerson.emergency = emergencyPersonnel;
+
     
     NSMutableSet *injuryList = [NSMutableSet set];
     for (NSDictionary *aDict in [dict objectForKey:@"Injuries"]) {
@@ -1043,21 +1057,17 @@
                     //frame.size.height = CGRectGetMaxY(_vwFirstSection.frame);
                     _vwAddMoreFirstSection.frame = frame;
                     [_vwFirstSection bringSubviewToFront:_vwAddMoreFirstSection];
-                    if (thirdSection) {
-                        frame = thirdSection.frame;
-                        frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
-                        thirdSection.frame = frame;
-                        frame = finalSection.frame;
-                        frame.origin.y = CGRectGetMaxY(thirdSection.frame);
-                        finalSection.frame = frame;
-                        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width,CGRectGetMaxY(frame))];
-                        int yPositionScrollView = _scrlMainView.contentOffset.y - accidentView.frame.size.height;
-                        
-                        if (yPositionScrollView < _scrlMainView.contentOffset.y) {
-                            [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPositionScrollView)];
-                        }
-                    }
+                 
+                    frame = finalSection.frame;
+                    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+                    finalSection.frame = frame;
+                    [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width,CGRectGetMaxY(frame))];
+                    int yPositionScrollView = _scrlMainView.contentOffset.y - accidentView.frame.size.height;
                     
+                    if (yPositionScrollView < _scrlMainView.contentOffset.y) {
+                        [_scrlMainView setContentOffset:CGPointMake(_scrlMainView.contentOffset.x, yPositionScrollView)];
+                    }
+            
                     totalAccidentFirstSectionCount--;
                     
                     [accidentView removeFromSuperview];

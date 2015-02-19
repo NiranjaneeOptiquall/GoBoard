@@ -10,13 +10,16 @@
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 #import "IncidentReportInfo.h"
 #import "Constants.h"
-
+#import "IncidentDetailViewController.h"
 
 @interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
     UIPopoverController *popOver;
     NSArray *requiredFields;
+    NSInteger totalEmergencyPersonnelCount;
+    
 }
-
+@property (strong, nonatomic)  NSMutableArray *mutArrEmergencyPersonnel;
+@property (strong, nonatomic) IncidentDetailViewController *parentVC;
 @property (weak, nonatomic) IBOutlet UIView *vwPersonalInvolved;
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuest;
@@ -62,6 +65,17 @@
 @property (weak, nonatomic) IBOutlet UIView *vwMinor;
 @property (weak, nonatomic) IBOutlet UIButton *btnNotMinor;
 @property (weak, nonatomic) IBOutlet UIButton *btnMinor;
+
+@property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
+@property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
+@property (strong, nonatomic) IBOutlet UIButton *btnRemoveEmergency;
+
+
+-(void)addEmergencyPersonnel;
+
+- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
+- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender;
+
 @property (weak, nonatomic) IBOutlet UIButton *btnCapturePerson;
 
 @property (weak, nonatomic) IBOutlet UILabel *markerMemberId;
@@ -107,4 +121,6 @@
 - (void)setRequiredFields:(NSArray*)fields;
 
 - (void)callInitialActions:(IncidentReportInfo*)reportSetupInfo;
+
+- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency;
 @end

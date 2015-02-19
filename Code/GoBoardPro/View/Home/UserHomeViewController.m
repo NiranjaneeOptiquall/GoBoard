@@ -19,11 +19,13 @@
 #import "Witness.h"
 #import "AccidentReportSubmit.h"
 #import "AccidentPerson.h"
+#import "Emergency.h"
 #import "InjuryDetail.h"
 #import "SubmitFormAndSurvey.h"
 #import "QuestionDetails.h"
 #import "Memoboard.h"
 #import "DailyLog.h"
+#import "EmergencyPersonnelIncident.h"
 
 @interface UserHomeViewController ()
 
@@ -366,37 +368,65 @@
             if (obj.personPhoto) {
                 aStrPhoto = [obj.personPhoto base64EncodedStringWithOptions:0];
             }
+        
+            NSMutableArray *mutArrEmergency = [NSMutableArray array];
+            for (EmergencyPersonnelIncident *objEmergency in obj.emergencyPersonnelIncident) {
             
-            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"PersonPhoto":aStrPhoto};
+                id time911Called, timeArrival, timeDeparture;
+                if ([objEmergency.time911Called isEqualToString:@""]) {
+                    time911Called = [NSNull null];
+                }
+                else {
+                    time911Called = objEmergency.time911Called;
+                }
+                
+                if ([objEmergency.time911Arrival isEqualToString:@""]) {
+                    timeArrival = [NSNull null];
+                }
+                else {
+                    timeArrival = objEmergency.time911Arrival;
+                }
+                
+                if ([objEmergency.time911Departure isEqualToString:@""]) {
+                    timeDeparture = [NSNull null];
+                }
+                else {
+                    timeDeparture = objEmergency.time911Departure;
+                }
+                NSDictionary *aDict = @{@"FirstName":objEmergency.firstName, @"MiddleInitial":objEmergency.middleInitial, @"LastName":objEmergency.lastName, @"Phone":objEmergency.phone, @"AdditionalInformation":objEmergency.additionalInformation, @"CaseNumber":objEmergency.caseNumber, @"BadgeNumber":objEmergency.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
+                [mutArrEmergency addObject:aDict];
+            }
+            
+            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"PersonPhoto":aStrPhoto, @"EmergencyPersonnel" : mutArrEmergency};
             [mutArrPerson addObject:aDict];
         }
         
         NSMutableArray *mutArrEmergency = [NSMutableArray array];
-        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
-            id time911Called, timeArrival, timeDeparture;
-            if ([obj.time911Called isEqualToString:@""]) {
-                time911Called = [NSNull null];
-            }
-            else {
-                time911Called = obj.time911Called;
-            }
-            
-            if ([obj.time911Arrival isEqualToString:@""]) {
-                timeArrival = [NSNull null];
-            }
-            else {
-                timeArrival = obj.time911Arrival;
-            }
-            
-            if ([obj.time911Departure isEqualToString:@""]) {
-                timeDeparture = [NSNull null];
-            }
-            else {
-                timeDeparture = obj.time911Departure;
-            }
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
-            [mutArrEmergency addObject:aDict];
-        }
+//        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
+//            id time911Called, timeArrival, timeDeparture;
+//            if ([obj.time911Called isEqualToString:@""]) {
+//                time911Called = [NSNull null];
+//            }
+//            else {
+//                time911Called = obj.time911Called;
+//            }
+//            
+//            if ([obj.time911Arrival isEqualToString:@""]) {
+//                timeArrival = [NSNull null];
+//            }
+//            else {
+//                timeArrival = obj.time911Arrival;
+//            }
+//            
+//            if ([obj.time911Departure isEqualToString:@""]) {
+//                timeDeparture = [NSNull null];
+//            }
+//            else {
+//                timeDeparture = obj.time911Departure;
+//            }
+//            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
+//            [mutArrEmergency addObject:aDict];
+//        }
         
         NSMutableArray *mutArrWitness = [NSMutableArray array];
         for (Witness *obj in [aReport.witnesses allObjects]) {
@@ -404,7 +434,7 @@
             [mutArrWitness addObject:aDict];
         }
         
-        NSDictionary *aDict = @{@"IncidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"IncidentDescription":aReport.incidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"ReportFilerAccount":aReport.reportFilerAccount, @"ManagementFollowupDate":aReport.managementFollowUpDate, @"AdditionalInformation": aReport.additionalInfo, @"ManagementFollowupCallMadeType":aReport.followUpCallType, @"ActivityTypeId": aReport.activityTypeID, @"EquipmentTypeId": aReport.equipmentTypeID, @"NatureId": aReport.natureId, @"ActionTakenId": aReport.actionId, @"ConditionId": aReport.conditionTypeID, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
+        NSDictionary *aDict = @{@"ReportType" : aReport.reportType,@"IncidentDate":aReport.dateOfIncident, @"FacilityId":aReport.facilityId, @"LocationId":aReport.locationId, @"IncidentDescription":aReport.incidentDesc, @"IsNotificationField1Selected":aReport.isNotification1Selected, @"IsNotificationField2Selected":aReport.isNotification2Selected, @"IsNotificationField3Selected":aReport.isNotification3Selected, @"IsNotificationField4Selected":aReport.isNotification4Selected, @"EmployeeFirstName":aReport.employeeFirstName, @"EmployeeMiddleInitial": aReport.employeeMiddleInitial, @"EmployeeLastName":aReport.employeeLastName, @"EmployeeHomePhone":aReport.employeeHomePhone, @"EmployeeAlternatePhone":aReport.employeeAlternatePhone, @"EmployeeEmail":aReport.employeeEmail, @"ReportFilerAccount":aReport.reportFilerAccount, @"ManagementFollowupDate":aReport.managementFollowUpDate, @"AdditionalInformation": aReport.additionalInfo, @"ManagementFollowupCallMadeType":aReport.followUpCallType, @"ActivityTypeId": aReport.activityTypeID, @"EquipmentTypeId": aReport.equipmentTypeID, @"NatureId": aReport.natureId, @"ActionTakenId": aReport.actionId, @"ConditionId": aReport.conditionTypeID, @"PersonsInvolved":mutArrPerson, @"EmergencyPersonnel":mutArrEmergency, @"Witnesses":mutArrWitness};
         [gblAppDelegate callWebService:INCIDENT_REPORT_POST parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_POST] complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:aReport];
             isSingleDataSaved = YES;
@@ -435,10 +465,12 @@
         isSingleDataSaved = NO;
         NSMutableArray *mutArrPerson = [NSMutableArray array];
         for (AccidentPerson *obj in [aReport.accidentPerson allObjects]) {
-            NSString *memberId = @"", *employeeId = @"";
+            
+            NSString *memberId = @"", *employeeId = @"", *guestId = @"";
             if ([obj.personTypeID integerValue] == 3) {
                 employeeId = obj.memberId;
-            }
+            }else if ([obj.personTypeID integerValue] == 2)
+                guestId = obj.guestId;
             else {
                 memberId = obj.memberId;
             }
@@ -452,42 +484,46 @@
             }
 
             
+            NSMutableArray *mutArrEmergencyPersonnel = [NSMutableArray array];
+            for (Emergency *aEmegency in obj.emergency.allObjects) {
+                id time911Called, timeArrival, timeDeparture;
+                if ([aEmegency.time911Called isEqualToString:@""]) {
+                    time911Called = [NSNull null];
+                }
+                else {
+                    time911Called = aEmegency.time911Called;
+                }
+                
+                if ([aEmegency.time911Arrival isEqualToString:@""]) {
+                    timeArrival = [NSNull null];
+                }
+                else {
+                    timeArrival = aEmegency.time911Arrival;
+                }
+                
+                if ([aEmegency.time911Departure isEqualToString:@""]) {
+                    timeDeparture = [NSNull null];
+                }
+                else {
+                    timeDeparture = aEmegency.time911Departure;
+                }
+                NSDictionary *aDict = @{@"FirstName":aEmegency.firstName, @"MiddleInitial":aEmegency.middileInitial, @"LastName":aEmegency.lastName, @"Phone":aEmegency.phone, @"AdditionalInformation":aEmegency.additionalInformation, @"CaseNumber":aEmegency.caseNumber, @"BadgeNumber":aEmegency.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
+                [mutArrEmergencyPersonnel addObject:aDict];
+            }
+            
+            
+            
             NSMutableArray *injuryList = [NSMutableArray array];
             for (InjuryDetail *aInjury in obj.injuryList.allObjects) {
                 NSDictionary *aDict = @{@"NatureId":aInjury.natureId, @"GeneralInjuryTypeId":aInjury.generalInjuryTypeId, @"GeneralInjuryOther":aInjury.generalInjuryOther, @"BodyPartInjuryTypeId":aInjury.bodyPartInjuryTypeId, @"BodyPartInjuredId":aInjury.bodyPartInjuredId, @"ActionTakenId":aInjury.actionTakenId};
                 [injuryList addObject:aDict];
             }
             
-            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"PersonPhoto":aStrPhoto, @"FirstAidFirstName":obj.firstAidFirstName, @"FirstAidMiddleInitial":obj.firstAidMiddleInitial, @"FirstAidLastName":obj.firstAidLastName, @"FirstAidPosition":obj.firstAidPosition, @"ActivityTypeId":obj.activityTypeID, @"EquipmentTypeId":obj.equipmentTypeID, @"ConditionId":obj.conditionTypeID, @"":obj.conditionTypeID, @"PersonSignature":strSignature, @"PersonName":obj.participantName, @"BloodbornePathogenTypeId":obj.bloodBornePathogenType, @"StaffMemberWrittenAccount":obj.staffMemberWrittenAccount, @"WasBloodOrBodilyFluidPresent":obj.wasBloodPresent, @"WasBloodCleanupRequired":obj.bloodCleanUpRequired, @"WasCaregiverExposedToBlood":obj.wasExposedToBlood, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"Injuries":injuryList};
+            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"PersonPhoto":aStrPhoto, @"FirstAidFirstName":obj.firstAidFirstName, @"FirstAidMiddleInitial":obj.firstAidMiddleInitial, @"FirstAidLastName":obj.firstAidLastName, @"FirstAidPosition":obj.firstAidPosition, @"ActivityTypeId":obj.activityTypeID, @"EquipmentTypeId":obj.equipmentTypeID, @"ConditionId":obj.conditionTypeID, @"":obj.conditionTypeID, @"PersonSignature":strSignature, @"PersonName":obj.participantName, @"BloodbornePathogenTypeId":obj.bloodBornePathogenType, @"StaffMemberWrittenAccount":obj.staffMemberWrittenAccount, @"WasBloodOrBodilyFluidPresent":obj.wasBloodPresent, @"WasBloodCleanupRequired":obj.bloodCleanUpRequired, @"WasCaregiverExposedToBlood":obj.wasExposedToBlood, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"Injuries":injuryList , @"EmergencyPersonnel" : mutArrEmergencyPersonnel};
             [mutArrPerson addObject:aDict];
         }
         
         NSMutableArray *mutArrEmergency = [NSMutableArray array];
-        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
-            id time911Called, timeArrival, timeDeparture;
-            if ([obj.time911Called isEqualToString:@""]) {
-                time911Called = [NSNull null];
-            }
-            else {
-                time911Called = obj.time911Called;
-            }
-            
-            if ([obj.time911Arrival isEqualToString:@""]) {
-                timeArrival = [NSNull null];
-            }
-            else {
-                timeArrival = obj.time911Arrival;
-            }
-            
-            if ([obj.time911Departure isEqualToString:@""]) {
-                timeDeparture = [NSNull null];
-            }
-            else {
-                timeDeparture = obj.time911Departure;
-            }
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
-            [mutArrEmergency addObject:aDict];
-        }
         
         NSMutableArray *mutArrWitness = [NSMutableArray array];
         for (Witness *obj in [aReport.witnesses allObjects]) {

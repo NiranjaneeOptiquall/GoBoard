@@ -319,7 +319,7 @@
                                     <rect key="frame" x="459" y="180" width="243" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" keyboardType="numberPad"/>
                                     <connections>
                                         <outlet property="delegate" destination="Z35-1Q-5nL" id="brk-b3-sEE"/>
                                     </connections>
@@ -762,6 +762,13 @@
                                             <rect key="frame" x="366" y="33" width="268" height="63"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Equipment used" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hzj-BT-azz">
+                                            <rect key="frame" x="371" y="6" width="223" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Equipment" minimumFontSize="17" id="muR-hN-5f8">
                                             <rect key="frame" x="376" y="37" width="252" height="50"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1489,8 +1496,32 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
+                        <view contentMode="scaleToFill" id="AeM-TP-SO9">
+                            <rect key="frame" x="0.0" y="797" width="768" height="91"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cBU-ym-PPG">
+                                    <rect key="frame" x="55" y="17" width="659" height="63"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal" title="Participant's Signature" backgroundImage="report_filers_text_box.png">
+                                        <color key="titleColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="btnSignatureTapped:" destination="v5Q-PM-O4f" eventType="touchUpInside" id="QqF-il-WXW"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" id="OhJ-K8-gkn">
+                            <rect key="frame" x="0.0" y="888" width="768" height="5"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
                         <view contentMode="scaleToFill" id="ub4-Kk-beL">
-                            <rect key="frame" x="0.0" y="888" width="768" height="141"/>
+                            <rect key="frame" x="0.0" y="908" width="768" height="115"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_filers_text_box.png" id="8Wo-IP-U2n">
@@ -1514,25 +1545,6 @@
                                         <outlet property="delegate" destination="v5Q-PM-O4f" id="h5u-em-oVt"/>
                                     </connections>
                                 </textView>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </view>
-                        <view contentMode="scaleToFill" id="AeM-TP-SO9">
-                            <rect key="frame" x="0.0" y="797" width="768" height="91"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cBU-ym-PPG">
-                                    <rect key="frame" x="55" y="17" width="659" height="63"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                    <state key="normal" title="Participant's Signature" backgroundImage="report_filers_text_box.png">
-                                        <color key="titleColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="btnSignatureTapped:" destination="v5Q-PM-O4f" eventType="touchUpInside" id="QqF-il-WXW"/>
-                                    </connections>
-                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
@@ -1564,6 +1576,7 @@
                         <outlet property="txvStaffMemberAccount" destination="qCL-3V-0Ra" id="12X-qx-wTb"/>
                         <outlet property="vwBloodborne" destination="CUe-Fi-xoh" id="pK4-g4-efh"/>
                         <outlet property="vwBloodbornePathogens" destination="s3u-u7-L42" id="nuK-uq-cyQ"/>
+                        <outlet property="vwEmergencyPersonnel" destination="OhJ-K8-gkn" id="jiy-jQ-mWQ"/>
                         <outlet property="vwFirstAid" destination="99x-hK-HqX" id="MfV-J2-64t"/>
                         <outlet property="vwParticipantSignature" destination="AeM-TP-SO9" id="rEG-Hy-g92"/>
                         <outlet property="vwRefuseCare" destination="8TJ-bo-7gr" id="zTw-so-fOX"/>

@@ -2,8 +2,8 @@
 //  Report.m
 //  GoBoardPro
 //
-//  Created by ind558 on 22/12/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 18/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "Report.h"
@@ -29,6 +29,8 @@
 @dynamic facilityId;
 @dynamic followUpCallType;
 @dynamic incidentDesc;
+@dynamic incidentType;
+@dynamic isCompleted;
 @dynamic isNotification1Selected;
 @dynamic isNotification2Selected;
 @dynamic isNotification3Selected;
@@ -37,9 +39,8 @@
 @dynamic managementFollowUpDate;
 @dynamic natureId;
 @dynamic reportFilerAccount;
-@dynamic isCompleted;
 @dynamic userId;
-@dynamic incidentType;
+@dynamic reportType;
 @dynamic emergencyPersonnels;
 @dynamic persons;
 @dynamic witnesses;

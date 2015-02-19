@@ -15,17 +15,19 @@
 #import "UserFacility.h"
 
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UITextViewDelegate> {
-    NSInteger totalPersonCount, totalEmergencyPersonnelCount, totalWitnessCount;
+    NSInteger totalPersonCount, totalWitnessCount;
     IncidentActionTaken *actionTaken;
-    NSMutableArray *mutArrIncidentPerson, *mutArrEmergencyPersonnel, *mutArrWitnessView;
+    NSMutableArray *mutArrIncidentPerson, *mutArrWitnessView;
     
-    IncidentReportInfo *reportSetupInfo;
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
     
     NSInteger intFollowUpCallType;
+    
+    NSString *strReportType;
 }
+@property (weak, nonatomic)  IncidentReportInfo *reportSetupInfo;
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) IBOutlet UIImageView *imvIncidentIcon;
@@ -37,14 +39,8 @@
 
 
 @property (weak, nonatomic) IBOutlet UIView *vwAfterPersonalInfo;
-@property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
 @property (weak, nonatomic) IBOutlet UIView *vwConditions;
 @property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
-@property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
-@property (strong, nonatomic) IBOutlet UIButton *btnRemoveEmergency;
-@property (strong, nonatomic) IBOutlet UIView *vwWitnessPresent;
-@property (strong, nonatomic) IBOutlet UIButton *btnWitnessPresentYes;
-@property (strong, nonatomic) IBOutlet UIButton *btnWitnessPresentNo;
 
 @property (weak, nonatomic) IBOutlet UIView *vwWitnesses;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddWitness;
@@ -96,12 +92,6 @@
 @property (assign, nonatomic) BOOL isUpdate;
 @property (nonatomic, assign) NSInteger incidentType;
 
-- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
-- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender;
-
-- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender;
-- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender;
-
 - (IBAction)btnAddPersonTapped:(id)sender;
 - (IBAction)btnDeletePersonTapped:(UIButton *)sender;
 
@@ -114,4 +104,7 @@
 - (IBAction)btnSubmitTapped:(id)sender;
 
 - (IBAction)btnBackTapped:(id)sender;
+
+- (void)viewSetup;
+
 @end

@@ -2,8 +2,8 @@
 //  Person.m
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 18/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "Person.h"
@@ -29,12 +29,13 @@
 @dynamic memberId;
 @dynamic middleInitial;
 @dynamic minor;
+@dynamic personPhoto;
 @dynamic personTypeID;
 @dynamic primaryPhone;
 @dynamic state;
 @dynamic streetAddress;
 @dynamic zip;
-@dynamic personPhoto;
 @dynamic report;
+@dynamic emergencyPersonnelIncident;
 
 @end

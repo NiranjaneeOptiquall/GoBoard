@@ -8,9 +8,10 @@
 
 #import "IncidentPersonalInformation.h"
 #import "TPKeyboardAvoidingScrollView.h"
-
+#import "EmergencyPersonnelView.h"
+#import "EmergencyPersonnelIncident.h"
 @implementation IncidentPersonalInformation
-
+@synthesize mutArrEmergencyPersonnel;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -20,7 +21,7 @@
 */
 
 - (void)awakeFromNib {
-    
+     mutArrEmergencyPersonnel = [[NSMutableArray alloc] init];
 }
 
 
@@ -39,7 +40,7 @@
     if ([sender isEqual:_btnGuest]) {
         if (!_isGuestIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
-        [_txtMemberId setPlaceholder:@"Driver's License #"];
+        [_txtMemberId setPlaceholder:@"Guest ID"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
     }
@@ -68,8 +69,12 @@
     }
     _vwCommon.frame = frame;
     
-    frame = _btnCapturePerson.frame;
+    frame = _vwEmergencyPersonnel.frame;
     frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
     _btnCapturePerson.frame = frame;
     
     CGRect mainFrame = self.frame;
@@ -115,6 +120,120 @@
     [actionSheet showFromRect:rect inView:self.superview animated:YES];
 }
 
+- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender
+{
+    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
+    [objEmergency setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [objEmergency setRequiredFields:aryFields];
+    [objEmergency setBackgroundColor:[UIColor clearColor]];
+    
+    CGRect frame = objEmergency.frame;
+    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
+    objEmergency.frame = frame;
+    [_vwEmergencyPersonnel addSubview:objEmergency];
+    totalEmergencyPersonnelCount ++;
+    objEmergency.tag = totalEmergencyPersonnelCount+200;
+    [mutArrEmergencyPersonnel addObject:objEmergency];
+    
+    frame = _btnAddEmergency.frame;
+    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
+    _btnAddEmergency.frame = frame;
+    
+    CGRect frameEmegency = _btnRemoveEmergency.frame;
+    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
+    _btnRemoveEmergency.frame = frameEmegency;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    
+    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _btnCapturePerson.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);\
+    self.frame = frame;
+
+    
+    frame = _parentVC.vwPersonalInfo.frame;
+    frame.size.height = CGRectGetMaxY(self.frame);
+    _parentVC.vwPersonalInfo.frame = frame;
+    
+    if (totalEmergencyPersonnelCount<=1) {
+        _btnRemoveEmergency.hidden=YES;
+    }else{
+        _btnRemoveEmergency.hidden=NO;
+    }
+}
+- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender
+{
+    
+    UIAlertView *aAlertDeleteEmergencyPerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Emergency Personnel?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
+    
+    aAlertDeleteEmergencyPerson.tag = 5;
+    
+    [aAlertDeleteEmergencyPerson show];
+    
+}
+-(void)addEmergencyPersonnel
+{
+    [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
+    
+    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
+    [objEmergency setBackgroundColor:[UIColor clearColor]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+    [objEmergency setRequiredFields:aryFields];
+    [objEmergency setBackgroundColor:[UIColor clearColor]];
+    
+    CGRect frame = objEmergency.frame;
+    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
+    objEmergency.frame = frame;
+    [_vwEmergencyPersonnel addSubview:objEmergency];
+    totalEmergencyPersonnelCount ++;
+    objEmergency.tag = totalEmergencyPersonnelCount+200;
+    [mutArrEmergencyPersonnel addObject:objEmergency];
+    
+    frame = _btnAddEmergency.frame;
+    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
+    _btnAddEmergency.frame = frame;
+    
+    CGRect frameEmegency = _btnRemoveEmergency.frame;
+    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
+    _btnRemoveEmergency.frame = frameEmegency;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _btnCapturePerson.frame = frame;
+    
+    frame = _parentVC.vwPersonalInfo.frame;
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
+    _parentVC.vwPersonalInfo.frame = frame;
+  
+    frame = _parentVC.vwAfterPersonalInfo.frame;
+    frame.origin.y = CGRectGetMaxY(_parentVC.vwPersonalInfo.frame);
+    _parentVC.vwAfterPersonalInfo.frame = frame;
+    
+    if (totalEmergencyPersonnelCount<=1) {
+        _btnRemoveEmergency.hidden=YES;
+    }else{
+        _btnRemoveEmergency.hidden=NO;
+    }
+    //[_parentVC.scrlMainView setContentSize:CGSizeMake(_parentVC.scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+}
 #pragma mark - Methods
 
 - (void)showPhotoLibrary {
@@ -160,6 +279,38 @@
     if ([requiredFields containsObject:@"guestMiddleInitial"]) [_markerGuestMI setHidden:NO];
     if ([requiredFields containsObject:@"guestLastName"]) [_markerGuestLName setHidden:NO];
 }
+
+- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
+    for (int i = 0; i < [aryEmergency count]; i++) {
+        if (i > 0) {
+            [self addEmergencyPersonnel];
+        }
+        EmergencyPersonnelView *vwEmergency = [mutArrEmergencyPersonnel lastObject];
+      
+        EmergencyPersonnelIncident *aEmergencyIncident = aryEmergency[i];
+        
+        vwEmergency.txtFirstName.text = aEmergencyIncident.firstName;
+        vwEmergency.txtLastName.text = aEmergencyIncident.lastName;
+        vwEmergency.txtMI.text = aEmergencyIncident.middleInitial;
+        vwEmergency.txtCaseNo.text = aEmergencyIncident.caseNumber;
+        vwEmergency.txtPhone.text = aEmergencyIncident.phone;
+        vwEmergency.txtBadge.text = aEmergencyIncident.badgeNumber;
+        vwEmergency.txtTime911Called.text = aEmergencyIncident.time911Called;
+        vwEmergency.txtTimeOfArrival.text = aEmergencyIncident.time911Arrival;
+        vwEmergency.txtTimeOfDeparture.text = aEmergencyIncident.time911Departure;
+        vwEmergency.txvAdditionalInfo.text = aEmergencyIncident.additionalInformation;
+    }
+}
+
+- (BOOL)validateEmergencyPersonnel {
+    for (EmergencyPersonnelView *emergency in mutArrEmergencyPersonnel) {
+        if (![emergency isEmergencyPersonnelValidationSucceed]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 - (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
@@ -239,6 +390,11 @@
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
+    else if (![self validateEmergencyPersonnel]) {
+        success = NO;
+        alert(@"", MSG_REQUIRED_FIELDS);
+    }
+    
     return success;
 }
 
@@ -503,6 +659,60 @@
         }
     }
 }
-
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 5)
+    {
+        if (buttonIndex == 0){
+            EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[_vwEmergencyPersonnel viewWithTag:totalEmergencyPersonnelCount+200];
+            
+            
+            CGRect frame = _vwEmergencyPersonnel.frame;
+            frame.size.height = frame.size.height - objEmergency.frame.size.height;
+            _vwEmergencyPersonnel.frame = frame;
+            totalEmergencyPersonnelCount --;
+            [mutArrEmergencyPersonnel removeObject:objEmergency];
+   
+            frame = _btnAddEmergency.frame;
+            frame.origin.y = CGRectGetMinY(objEmergency.frame);
+            _btnAddEmergency.frame = frame;
+            
+            frame = _btnRemoveEmergency.frame;
+            frame.origin.y = _btnAddEmergency.frame.origin.y;
+            _btnRemoveEmergency.frame = frame;
+            
+            frame = _vwEmergencyPersonnel.frame;
+            frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+            frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+            _vwEmergencyPersonnel.frame = frame;
+            
+            
+            frame = _btnCapturePerson.frame;
+            frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+            _btnCapturePerson.frame = frame;
+            
+            frame = self.frame;
+            frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
+            self.frame = frame;
+            
+            frame = _parentVC.vwPersonalInfo.frame;
+            frame.size.height = CGRectGetMaxY(self.frame);
+            _parentVC.vwPersonalInfo.frame = frame;
+            
+            if (totalEmergencyPersonnelCount<=1) {
+                _btnRemoveEmergency.hidden=YES;
+            }else{
+                _btnRemoveEmergency.hidden=NO;
+            }
+            int yPosition = _parentVC.scrlMainView.contentOffset.y - objEmergency.frame.size.height;
+            
+            if (yPosition < _parentVC.scrlMainView.contentOffset.y) {
+                [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, yPosition)];
+            }
+            
+            [objEmergency removeFromSuperview];
+            
+        }
+    }
+}
 
 @end

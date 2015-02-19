@@ -10,10 +10,12 @@
 #import "Constants.h"
 #import "SignatureView.h"
 #import "AccidentReportViewController.h"
+#import "ThirdSection.h"
 
-@interface BodilyFluidView : UIView <UITextFieldDelegate> {
-    
+@interface BodilyFluidView : UIView <UITextFieldDelegate,ThirdSectionFrameDelegate> {
+   
 }
+@property (weak, nonatomic) ThirdSection *thirdSection;
 @property (weak, nonatomic) IBOutlet UIView *vwBloodbornePathogens;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodPresent;
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodNotPresent;
@@ -31,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *txvStaffMemberAccount;
 @property (weak, nonatomic) IBOutlet UILabel *lblStaffMemberAccount;
 @property (strong, nonatomic) SignatureView *signatureView;
+
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 @property (weak, nonatomic) IBOutlet UIView *vwFirstAid;
 @property (weak, nonatomic) IBOutlet UIView *vwBloodborne;
@@ -42,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet UIView *vwStaffMember;
 @property (weak, nonatomic) IBOutlet UILabel *lblRefuseCareCaption;
 @property (weak, nonatomic) IBOutlet UILabel *lblSelfCareCaption;
+@property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
 
 @property (weak, nonatomic) IBOutlet UILabel *markerFName;
 @property (weak, nonatomic) IBOutlet UILabel *markerMI;
@@ -50,10 +54,12 @@
 
 @property (assign, nonatomic) BOOL isBloodBornePathogenVisible;
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
-@property (assign, nonatomic) BOOL isSelfCareStatementVisible;
-@property (assign, nonatomic) BOOL isParticipantSignatureVisible;
 @property (assign, nonatomic) BOOL isRefusedCareSelected;
+@property (assign, nonatomic) BOOL isSelfCareStatementVisible;
 @property (assign, nonatomic) BOOL isSelfCareSelected;
+@property (assign, nonatomic) BOOL isParticipantSignatureVisible;
+@property (assign, nonatomic) BOOL isEmergencyPersonnelVisible;
+@property (assign, nonatomic) BOOL isEmergencyResponseSelected;
 
 
 @property (assign, nonatomic) NSInteger intBloodBornePathogen;
@@ -68,4 +74,5 @@
 
 - (void)shouldShowFirstAddView:(BOOL)show;
 - (void)shouldShowParticipantsSignatureView:(BOOL)show;
+- (void)shouldShowEmergencyPersonnelView:(BOOL)show;
 @end

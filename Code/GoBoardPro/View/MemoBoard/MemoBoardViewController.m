@@ -103,7 +103,7 @@
     NSString *aStrDate = [[aDict[@"Date"] componentsSeparatedByString:@"."] firstObject];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *aDate = [formatter dateFromString:aStrDate];
     [formatter setTimeZone:[NSTimeZone systemTimeZone]];
     [formatter setDateFormat:@"MM/dd/yyyy"];

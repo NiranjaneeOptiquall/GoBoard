@@ -86,7 +86,7 @@
     [formatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
     NSDate *stDt = [formatter dateFromString:aStartDate];
     NSDate *endDt = [formatter dateFromString:aEndDate];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     aStartDate = [formatter stringFromDate:stDt];
     aEndDate = [formatter stringFromDate:endDt];
 

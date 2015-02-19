@@ -29,8 +29,10 @@
 #import "BodyPartInjuryType.h"
 #import "CareProvidedType.h"
 #import "ArmInjuryList.h"
+#import "LeftArmInjuryList.h"
 #import "GeneralInjuryType.h"
 #import "LegInjuryList.h"
+#import "LeftLegInjuryList.h"
 
 #import "SurveyList.h"
 #import "SurveyQuestions.h"
@@ -334,7 +336,7 @@
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         aList.sequence = [aDict objectForKey:@"Sequence"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
         NSDate *aDate = [formatter dateFromString:[[aDict[@"TaskDateTime"] componentsSeparatedByString:@"."] firstObject]];
         aList.taskDateTime = aDate;
@@ -735,7 +737,8 @@
     
     NSMutableSet *leftArmInjurySet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"LeftArmInjuryLocationList"]) {
-        ArmInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftArmInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        LeftArmInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftArmInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
         obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];
@@ -757,7 +760,7 @@
     
     NSMutableSet *leftLegInjurySet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"LeftLegInjuryLocationList"]) {
-        LegInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftLegInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        LeftLegInjuryList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"LeftLegInjuryList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         obj.value = [[dict objectForKey:@"Id"] stringValue];
         obj.name = [dict objectForKey:@"Name"];
         obj.sequence = [[dict objectForKey:@"Sequence"] stringValue];

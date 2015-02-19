@@ -12,8 +12,14 @@
 #import "AccidentReportViewController.h"
 #import "WitnessView.h"
 
-@implementation ThirdSection
+@interface ThirdSection ()
 
+@property (weak, nonatomic) BodilyFluidView *objBodyFluid;
+
+@end
+
+@implementation ThirdSection
+@synthesize delegate,isShowEmergencyResponse;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -36,6 +42,8 @@
 - (IBAction)btnAddEmergencyPersonnel:(id)sender {
     [self addEmergencyPersonnel];
     [self resetSelfFrame];
+    
+    [self.delegate adjustFramingForEmergencyView];
 }
 
 - (IBAction)btnDeleteEmergencyPersonnel:(UIButton *)sender {
@@ -44,25 +52,6 @@
     aAlertDeleteEmergencyPerson.tag = 1;
     
     [aAlertDeleteEmergencyPerson show];
-}
-
-- (IBAction)btnActnWitnessPresentYes:(UIButton *)sender {
-//    _btnWitnessPresentYes.selected = YES;
-//    _btnWitnessPresentNo.selected = NO;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"adjustContentOffsetsToInsertWitnessView" object:nil];
-}
-
-- (IBAction)btnActnWitnessPresentNo:(UIButton *)sender {
-    
-//    _btnWitnessPresentNo.selected = YES;
-//    _btnWitnessPresentYes.selected = NO;
-//    
-//    for (UIView *vw in [_parentVC.scrlMainView subviews]) {
-//        if ([vw isKindOfClass:[FinalSection class]]) {
-//            [self removeWitnessViewFromFinalSection:vw];
-//        }
-//    }
-    
 }
 
 -(void)removeWitnessViewFromFinalSection:(UIView*)vwFinalSection
@@ -118,12 +107,31 @@
     NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     [objEmergency setRequiredFields:aryFields];
+    if (!isShowEmergencyResponse) {
+        
+        [objEmergency.vwResponse setHidden:YES];
+        
+        CGRect frame = objEmergency.vwPersonnel.frame;
+        
+        frame.origin.y = CGRectGetMinY(objEmergency.vwResponse.frame);
+        
+        objEmergency.vwPersonnel.frame = frame;
+        
+        frame = objEmergency.frame;
+        
+        frame.size.height = CGRectGetMaxY(objEmergency.vwPersonnel.frame);
+        
+        objEmergency.frame = frame;
+    }
     CGRect frame = objEmergency.frame;
     frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
     objEmergency.frame = frame;
+    
     [self addSubview:objEmergency];
+    
     totalEmergencyPersonnelCount ++;
     objEmergency.tag = totalEmergencyPersonnelCount+200;
+    
     frame = _btnAddEmergencyPersonnel.frame;
     frame.origin.y = CGRectGetMaxY(objEmergency.frame);
     _btnAddEmergencyPersonnel.frame = frame;
@@ -220,6 +228,8 @@
                 
                 [objEmergency removeFromSuperview];
                 [self resetSelfFrame];
+                
+                [self.delegate adjustFramingForEmergencyView];
             }
         }
     }

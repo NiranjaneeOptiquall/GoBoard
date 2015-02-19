@@ -10,7 +10,7 @@
 #import "AccidentReportViewController.h"
 #import "InjuryDetail.h"
 #import "CareProvidedType.h"
-
+#import "EmergencyPersonnelView.h"
 
 @implementation AccidentFirstSection
 
@@ -58,23 +58,16 @@
 
         float nextY = 0.0;
         
-        [_vwBodilyFluid shouldShowParticipantsSignatureView:NO];
         _vwBodilyFluid.isRefusedCareSelected = NO;
         _vwBodilyFluid.isSelfCareSelected = NO;
-        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"pain meds administered"]) {
-            
+        [_vwBodilyFluid shouldShowParticipantsSignatureView:NO];
+        _vwBodilyFluid.isEmergencyResponseSelected = NO;
+        [_vwBodilyFluid shouldShowEmergencyPersonnelView:NO];
+        
+        if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:[[change objectForKey:@"new"] lowercaseString]]) {
             NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'Pain Meds Administered'"];
-            NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
-            
-            if (aArrOfFilterData.count > 0) {
-                for (CareProvidedType *careProvider in aArrOfFilterData){
-                   nextY = [self showCareProvidedDetails:careProvider];
-                }
-            }
-        }else if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"ice applied"]){
-            NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'Ice Applied'"];
+            NSLog(@"self.name = '%@'",[change objectForKey:@"new"]);
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"self.name = '%@'",[change objectForKey:@"new"]]];
             NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
             
             if (aArrOfFilterData.count > 0) {
@@ -82,77 +75,7 @@
                     nextY = [self showCareProvidedDetails:careProvider];
                 }
             }
-        }else if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"test care"]){
-            NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'Test Care'"];
-            NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
-            
-            if (aArrOfFilterData.count > 0) {
-                for (CareProvidedType *careProvider in aArrOfFilterData){
-                    nextY = [self showCareProvidedDetails:careProvider];
-                }
-            }
-        }else if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"refused care"] || [[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"self care"]) {
-           
-            if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"refused care"]){
-                NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-                
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'Refused Care'"];
-                NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
-                
-                if (aArrOfFilterData.count>0)
-                {
-                    for (CareProvidedType *careProvider in aArrOfFilterData){
-                        nextY = [self showCareProvidedDetails:careProvider];
-                    }
-                }
-            }else{
-                NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-                
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'Self Care'"];
-                NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
-                
-                if (aArrOfFilterData.count>0)
-                {
-                    for (CareProvidedType *careProvider in aArrOfFilterData){
-                        nextY = [self showCareProvidedDetails:careProvider];
-                    }
-                }
-            }
-            if (_vwBodilyFluid.isParticipantSignatureVisible) {
-                [_vwBodilyFluid shouldShowParticipantsSignatureView:YES];
-            }
-          
-            if (_vwBodilyFluid.isParticipantSignatureVisible && (_vwBodilyFluid.isRefusedCareSelected || _vwBodilyFluid.isSelfCareSelected)) {
-                frame = _vwBodilyFluid.vwParticipantSignature.frame;
-                if (_vwBodilyFluid.isSelfCareSelected) {
-                    frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
-                }else{
-                    frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
-                }
-                _vwBodilyFluid.vwParticipantSignature.frame = frame;
-                nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
-            }
-            if (nextY == 0.0) {
-                 nextY = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
-            }
-            frame = _vwBodilyFluid.vwStaffMember.frame;
-            frame.origin.y = nextY;
-            _vwBodilyFluid.vwStaffMember.frame = frame;
-        }
-        else if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:@"emt called"]) {
-            
-            NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name = 'EMT Called'"];
-            NSArray *aArrOfFilterData = [aMutArr filteredArrayUsingPredicate:predicate];
-            
-            if (aArrOfFilterData.count > 0) {
-                for (CareProvidedType *careProvider in aArrOfFilterData){
-                    nextY = [self showCareProvidedDetails:careProvider];
-                }
-            }
-        }
-        else {
+        }else {
             [_vwBodilyFluid shouldShowFirstAddView:NO];
             [_vwBodilyFluid.vwRefuseCare setHidden:YES];
             [_vwBodilyFluid.vwSelfCare setHidden:YES];
@@ -164,7 +87,7 @@
                 if (_vwBodilyFluid.isSelfCareSelected) {
                     frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
                 }else{
-                    frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
+                    frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
                 }
                 _vwBodilyFluid.vwParticipantSignature.frame = frame;
                 nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
@@ -191,11 +114,13 @@
 
 -(float)showCareProvidedDetails:(CareProvidedType *)careProvider
 {
+    
     [_vwBodilyFluid shouldShowFirstAddView:careProvider.firstAid.boolValue];
-
     _vwBodilyFluid.isRefuseCareStatementVisible = careProvider.refusedCare.boolValue;
     _vwBodilyFluid.isSelfCareStatementVisible = careProvider.selfCare.boolValue;
-    
+    [_vwBodilyFluid shouldShowParticipantsSignatureView:_parentVC.reportSetupInfo.showParticipantSignature.boolValue];
+    _vwBodilyFluid.isEmergencyResponseSelected = careProvider.emergencyResponse.boolValue;
+    _vwBodilyFluid.isEmergencyPersonnelVisible = careProvider.emergencyPersonnel.boolValue;
      float nextY =CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame); //New Change
     
     if (careProvider.refusedCare.boolValue == YES) {
@@ -260,9 +185,39 @@
         
         _vwBodilyFluid.vwSelfCare.frame = frame;
         
-        nextY = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
+        frame = _vwBodilyFluid.vwParticipantSignature.frame;
+        
+        frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
+        
+        _vwBodilyFluid.vwParticipantSignature.frame = frame;
+        
+        nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
     }
     
+    if (_vwBodilyFluid.isParticipantSignatureVisible && (_vwBodilyFluid.isRefusedCareSelected || _vwBodilyFluid.isSelfCareSelected)) {
+        CGRect frame = _vwBodilyFluid.vwParticipantSignature.frame;
+        if (_vwBodilyFluid.isSelfCareSelected) {
+            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
+        }else{
+            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
+        }
+        _vwBodilyFluid.vwParticipantSignature.frame = frame;
+        nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+    }
+    
+    if (careProvider.emergencyPersonnel.boolValue == YES) {
+    
+        CGRect frame = _vwBodilyFluid.vwEmergencyPersonnel.frame;
+        
+        if (_vwBodilyFluid.isParticipantSignatureVisible && (_vwBodilyFluid.isRefusedCareSelected || _vwBodilyFluid.isSelfCareSelected)) {
+            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+        }else{
+            frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwParticipantSignature.frame);
+        }
+        _vwBodilyFluid.vwEmergencyPersonnel.frame = frame;
+        
+        nextY = CGRectGetMaxY(_vwBodilyFluid.vwEmergencyPersonnel.frame);
+    }
     return nextY;
 }
 
@@ -319,7 +274,7 @@
         NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         NSDate *aDob = [aFormatter dateFromString:_vwPersonalInfo.txtDob.text];
-        [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [aFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         strDob = [aFormatter stringFromDate:aDob];
     }
@@ -367,7 +322,37 @@
     if (!aSignatureName) {
         aSignatureName = @"";
     }
-    NSDictionary *aDict = @{@"FirstName":_vwPersonalInfo.txtFirstName.trimText, @"MiddleInitial":_vwPersonalInfo.txtMi.trimText, @"LastName":_vwPersonalInfo.txtLastName.trimText, @"PrimaryPhone":_vwPersonalInfo.txtHomePhone.text, @"AlternatePhone":_vwPersonalInfo.txtAlternatePhone.text, @"Email":_vwPersonalInfo.txtEmailAddress.text, @"Address1":_vwPersonalInfo.txtStreetAddress.trimText, @"Address2":_vwPersonalInfo.txtAppartment.trimText, @"City":_vwPersonalInfo.txtCity.trimText, @"State":_vwPersonalInfo.txtState.trimText, @"Zip":_vwPersonalInfo.txtZip.trimText, @"EmployeeTitle":_vwPersonalInfo.txtEmployeePosition.trimText, @"EmployeeId":employeeId, @"GuestId":guestId ,@"MemberId":memberId, @"DateOfBirth":strDob, @"FirstAidFirstName":_vwBodilyFluid.txtFName.text, @"FirstAidMiddleInitial":_vwBodilyFluid.txtMI.text, @"FirstAidLastName":_vwBodilyFluid.txtLName.text, @"FirstAidPosition":_vwBodilyFluid.txtPosition.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved], @"GuestOfFirstName":_vwPersonalInfo.txtGuestFName.text, @"GuestOfMiddleInitial":_vwPersonalInfo.txtGuestMI.text, @"GuestOfLastName":_vwPersonalInfo.txtguestLName.text, @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false", @"ActivityTypeId":activityTypeID, @"EquipmentTypeId":equipmentTypeID, @"ConditionId":conditionTypeID, @"CareProvidedById":careProvidedBy, @"PersonPhoto": strPhoto, @"PersonSignature": strSignature, @"PersonName": aSignatureName, @"BloodbornePathogenTypeId":[NSString stringWithFormat:@"%ld", (long)_vwBodilyFluid.intBloodBornePathogen], @"StaffMemberWrittenAccount": _vwBodilyFluid.txvStaffMemberAccount.text, @"WasBloodOrBodilyFluidPresent":(_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false", @"WasBloodCleanupRequired":(_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false", @"WasCaregiverExposedToBlood":(_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false", @"OccuredDuringBusinessHours":(_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"Injuries": injuryList};
+    
+    NSMutableArray *mutArrEmergency = [NSMutableArray array];
+   
+    for (EmergencyPersonnelView *vwEmergency in  _vwBodilyFluid.thirdSection.mutArrEmergencyViews) {
+        id time911Called, timeArrival, timeDeparture;
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            time911Called = [NSNull null];
+        }
+        else {
+            time911Called = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeArrival = [NSNull null];
+        }
+        else {
+            timeArrival = vwEmergency.txtTime911Called.text;
+        }
+        
+        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+            timeDeparture = [NSNull null];
+        }
+        else {
+            timeDeparture = vwEmergency.txtTime911Called.text;
+        }
+        NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
+        [mutArrEmergency addObject:aDict];
+    }
+    
+    
+    NSDictionary *aDict = @{@"FirstName":_vwPersonalInfo.txtFirstName.trimText, @"MiddleInitial":_vwPersonalInfo.txtMi.trimText, @"LastName":_vwPersonalInfo.txtLastName.trimText, @"PrimaryPhone":_vwPersonalInfo.txtHomePhone.text, @"AlternatePhone":_vwPersonalInfo.txtAlternatePhone.text, @"Email":_vwPersonalInfo.txtEmailAddress.text, @"Address1":_vwPersonalInfo.txtStreetAddress.trimText, @"Address2":_vwPersonalInfo.txtAppartment.trimText, @"City":_vwPersonalInfo.txtCity.trimText, @"State":_vwPersonalInfo.txtState.trimText, @"Zip":_vwPersonalInfo.txtZip.trimText, @"EmployeeTitle":_vwPersonalInfo.txtEmployeePosition.trimText, @"EmployeeId":employeeId, @"GuestId":guestId ,@"MemberId":memberId, @"DateOfBirth":strDob, @"FirstAidFirstName":_vwBodilyFluid.txtFName.text, @"FirstAidMiddleInitial":_vwBodilyFluid.txtMI.text, @"FirstAidLastName":_vwBodilyFluid.txtLName.text, @"FirstAidPosition":_vwBodilyFluid.txtPosition.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved], @"GuestOfFirstName":_vwPersonalInfo.txtGuestFName.text, @"GuestOfMiddleInitial":_vwPersonalInfo.txtGuestMI.text, @"GuestOfLastName":_vwPersonalInfo.txtguestLName.text, @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false", @"ActivityTypeId":activityTypeID, @"EquipmentTypeId":equipmentTypeID, @"ConditionId":conditionTypeID, @"CareProvidedById":careProvidedBy, @"PersonPhoto": strPhoto, @"PersonSignature": strSignature, @"PersonName": aSignatureName, @"BloodbornePathogenTypeId":[NSString stringWithFormat:@"%ld", (long)_vwBodilyFluid.intBloodBornePathogen], @"StaffMemberWrittenAccount": _vwBodilyFluid.txvStaffMemberAccount.text, @"WasBloodOrBodilyFluidPresent":(_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false", @"WasBloodCleanupRequired":(_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false", @"WasCaregiverExposedToBlood":(_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false", @"OccuredDuringBusinessHours":(_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"Injuries": injuryList, @"EmergencyPersonnel" : mutArrEmergency};
     return aDict;
     
 //    aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";

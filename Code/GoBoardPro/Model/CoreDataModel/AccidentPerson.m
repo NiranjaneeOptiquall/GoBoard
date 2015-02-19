@@ -2,8 +2,8 @@
 //  AccidentPerson.m
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 17/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "AccidentPerson.h"
@@ -42,6 +42,7 @@
 @dynamic minor;
 @dynamic participantName;
 @dynamic participantSignature;
+@dynamic personPhoto;
 @dynamic personTypeID;
 @dynamic primaryPhone;
 @dynamic staffMemberWrittenAccount;
@@ -50,8 +51,9 @@
 @dynamic wasBloodPresent;
 @dynamic wasExposedToBlood;
 @dynamic zip;
-@dynamic personPhoto;
+@dynamic guestId;
 @dynamic accidentInfo;
 @dynamic injuryList;
+@dynamic emergency;
 
 @end

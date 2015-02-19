@@ -2,14 +2,14 @@
 //  AccidentPerson.h
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 17/02/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class AccidentReportSubmit, InjuryDetail;
+@class AccidentReportSubmit, InjuryDetail, Emergency;
 
 @interface AccidentPerson : NSManagedObject
 
@@ -42,6 +42,7 @@
 @property (nonatomic, retain) NSString * minor;
 @property (nonatomic, retain) NSString * participantName;
 @property (nonatomic, retain) NSData * participantSignature;
+@property (nonatomic, retain) NSData * personPhoto;
 @property (nonatomic, retain) NSString * personTypeID;
 @property (nonatomic, retain) NSString * primaryPhone;
 @property (nonatomic, retain) NSString * staffMemberWrittenAccount;
@@ -50,9 +51,10 @@
 @property (nonatomic, retain) NSString * wasBloodPresent;
 @property (nonatomic, retain) NSString * wasExposedToBlood;
 @property (nonatomic, retain) NSString * zip;
-@property (nonatomic, retain) NSData * personPhoto;
+@property (nonatomic, retain) NSString * guestId;
 @property (nonatomic, retain) AccidentReportSubmit *accidentInfo;
 @property (nonatomic, retain) NSSet *injuryList;
+@property (nonatomic, retain) NSSet *emergency;
 @end
 
 @interface AccidentPerson (CoreDataGeneratedAccessors)
@@ -61,5 +63,10 @@
 - (void)removeInjuryListObject:(InjuryDetail *)value;
 - (void)addInjuryList:(NSSet *)values;
 - (void)removeInjuryList:(NSSet *)values;
+
+- (void)addEmergencyObject:(NSManagedObject *)value;
+- (void)removeEmergencyObject:(NSManagedObject *)value;
+- (void)addEmergency:(NSSet *)values;
+- (void)removeEmergency:(NSSet *)values;
 
 @end

@@ -96,7 +96,7 @@
     NSDictionary *aDict = [aryMissedTask objectAtIndex:indexPath.row];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"hh:mm a"];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+   // [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *dt = [formatter dateFromString:aDict[@"Time"]];
     [formatter setTimeZone:[NSTimeZone systemTimeZone]];
     [aLblTime setText:[formatter stringFromDate:dt]];
@@ -105,7 +105,7 @@
     if (![aDict[@"LastCompletedOn"] isKindOfClass:[NSNull class]]) {
         
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
         [formatter setTimeZone:[NSTimeZone systemTimeZone]];
         [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];

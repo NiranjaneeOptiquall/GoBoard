@@ -8,8 +8,10 @@
 
 #import "BodilyFluidView.h"
 
-@implementation BodilyFluidView
 
+
+@implementation BodilyFluidView
+@synthesize thirdSection;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -19,7 +21,7 @@
 */
 
 - (void)awakeFromNib {
-    
+   
 }
 
 - (IBAction)btnBloodbornePathogenTapped:(UIButton*)sender {
@@ -49,21 +51,25 @@
     if ([sender isEqual:_btnBloodPresent]) {
         [_vwBloodborne setHidden:NO];
         CGRect frame = _vwBloodbornePathogens.frame;
+        //frame.origin.y = CGRectGetMaxY(_vwBloodborne.frame);
         frame.size.height = CGRectGetMaxY(_vwBloodborne.frame);
         _vwBloodbornePathogens.frame = frame;
     }
     else {
         [_vwBloodborne setHidden:YES];
         CGRect frame = _vwBloodbornePathogens.frame;
+        //frame.origin.y = CGRectGetMinY(_vwBloodborne.frame);
         frame.size.height = CGRectGetMinY(_vwBloodborne.frame);
         _vwBloodbornePathogens.frame = frame;
     }
     CGRect frame = _vwRefuseCare.frame;
     frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
     _vwRefuseCare.frame = frame;
+    
     [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
     [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
     [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
+    [self setIsEmergencyPersonnelVisible:_isEmergencyPersonnelVisible];
 //    _vwParticipantSignature
 //    _vwStaffMember
 }
@@ -109,6 +115,10 @@
             alert(@"", MSG_REQUIRED_FIELDS);
             success = NO;
         }
+    }
+    if (thirdSection && ![thirdSection isThirdSectionValidationSuccess]) {
+        alert(@"", MSG_REQUIRED_FIELDS);
+        success = NO;
     }
     return success;
 }
@@ -165,27 +175,32 @@
         frame.origin.y = CGRectGetMinY(_vwBloodbornePathogens.frame);
         _vwRefuseCare.frame = frame;
         
-        frame = _vwSelfCare.frame;
-        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
-        _vwSelfCare.frame = frame;
-        
-        frame = _vwParticipantSignature.frame;
-        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
-        _vwParticipantSignature.frame = frame;
-        
-        frame = _vwStaffMember.frame;
-        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
-        _vwStaffMember.frame = frame;
-        
-        frame = self.frame;
-        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
-        self.frame = frame;
+//        frame = _vwSelfCare.frame;
+//        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+//        _vwSelfCare.frame = frame;
+//        
+//        frame = _vwParticipantSignature.frame;
+//        frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
+//        _vwParticipantSignature.frame = frame;
+//        
+//        frame = _vwEmergencyPersonnel.frame;
+//        frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+//        _vwEmergencyPersonnel.frame = frame;
+//        
+//        frame = _vwStaffMember.frame;
+//        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+//        _vwStaffMember.frame = frame;
+//        
+//        frame = self.frame;
+//        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+//        self.frame = frame;
     }
 }
 
 - (void)setIsRefuseCareStatementVisible:(BOOL)isRefuseCareStatementVisible {
     _isRefuseCareStatementVisible = isRefuseCareStatementVisible;
     if (!_isRefuseCareStatementVisible) {
+        _isRefusedCareSelected = NO;
         [_vwRefuseCare setHidden:YES];
         
         CGRect frame = _vwSelfCare.frame;
@@ -196,8 +211,13 @@
         frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        
+        frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -205,6 +225,7 @@
         self.frame = frame;
     }
     else {
+        _isRefusedCareSelected = YES;
         [_vwRefuseCare setHidden:NO];
         
         CGRect frame = _vwSelfCare.frame;
@@ -215,8 +236,12 @@
         frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -228,14 +253,19 @@
 - (void)setIsSelfCareStatementVisible:(BOOL)isSelfCareStatementVisible {
     _isSelfCareStatementVisible = isSelfCareStatementVisible;
     if (!_isSelfCareStatementVisible) {
+        _isSelfCareSelected = NO;
         [_vwSelfCare setHidden:YES];
         
         CGRect frame = _vwParticipantSignature.frame;
         frame.origin.y = CGRectGetMinY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -243,14 +273,19 @@
         self.frame = frame;
     }
     else {
+        _isSelfCareSelected = YES;
         [_vwSelfCare setHidden:NO];
         
         CGRect frame = _vwParticipantSignature.frame;
         frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
         _vwParticipantSignature.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -267,8 +302,13 @@
 - (void)shouldShowParticipantsSignatureView:(BOOL)show {
     if (show && (_isRefusedCareSelected || _isSelfCareSelected)) {
         [_vwParticipantSignature setHidden:NO];
-        CGRect frame = _vwStaffMember.frame;
+    
+        CGRect  frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -277,8 +317,13 @@
     }
     else {
         [_vwParticipantSignature setHidden:YES];
-        CGRect frame = _vwStaffMember.frame;
+        
+        CGRect  frame = _vwEmergencyPersonnel.frame;
         frame.origin.y = CGRectGetMinY(_vwParticipantSignature.frame);
+        _vwEmergencyPersonnel.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -286,6 +331,136 @@
         self.frame = frame;
     }
 }
+
+-(void)setIsEmergencyPersonnelVisible:(BOOL)isEmergencyPersonnelVisible{
+    _isEmergencyPersonnelVisible = isEmergencyPersonnelVisible;
+    [self shouldShowEmergencyPersonnelView:_isEmergencyPersonnelVisible];
+}
+
+- (void)shouldShowEmergencyPersonnelView:(BOOL)show {
+    
+    if (show) {
+        [_vwEmergencyPersonnel setHidden:NO];
+        
+        thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+        thirdSection.parentVC = _parentVC;
+        thirdSection.isShowEmergencyResponse = _isEmergencyResponseSelected;
+        thirdSection.delegate = self;
+        [thirdSection initialSetUp];
+        [_vwEmergencyPersonnel addSubview:thirdSection];
+        
+        CGRect frame = _vwEmergencyPersonnel.frame;
+        frame.size.height = CGRectGetMaxY(thirdSection.frame);
+        _vwEmergencyPersonnel.frame = frame;
+
+        if (_isEmergencyPersonnelVisible) {
+            
+            frame = _vwEmergencyPersonnel.frame;
+            
+            if (_isParticipantSignatureVisible && (_isRefusedCareSelected || _isSelfCareSelected)) {
+                frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+            }else{
+                if(_isSelfCareStatementVisible) {
+                    frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
+                }else{
+                    if (_isRefuseCareStatementVisible) {
+                        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+                    }else{
+                        frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
+                    }
+                }
+            }
+            _vwEmergencyPersonnel.frame = frame;
+        }
+        
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+
+    }
+    else {
+        
+        [_vwEmergencyPersonnel setHidden:YES];
+        
+        if ([_vwEmergencyPersonnel.subviews containsObject:thirdSection]) {
+            [thirdSection removeFromSuperview];
+        }
+        if (thirdSection) {
+            thirdSection.isShowEmergencyResponse = NO;
+            thirdSection = nil;
+        }
+        
+        if (_isEmergencyPersonnelVisible) {
+            
+            CGRect frame = _vwEmergencyPersonnel.frame;
+            
+            if (_isParticipantSignatureVisible ) {
+                frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+            }else{
+                if(_isSelfCareStatementVisible) {
+                    frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
+                }else{
+                    if (_isRefuseCareStatementVisible) {
+                        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+                    }else{
+                        frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
+                    }
+                }
+            }
+            _vwEmergencyPersonnel.frame = frame;
+        }
+        
+        CGRect frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMinY(_vwEmergencyPersonnel.frame);
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
+    }
+}
+// Delegate method for EmergencyView Framing increase/Decrease
+-(void)adjustFramingForEmergencyView
+{
+    CGRect frame = _vwEmergencyPersonnel.frame;
+    frame.size.height = CGRectGetMaxY(thirdSection.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    if (_isEmergencyPersonnelVisible) {
+        
+        frame = _vwEmergencyPersonnel.frame;
+        
+        if (_isParticipantSignatureVisible && (_isRefusedCareSelected || _isSelfCareSelected)) {
+            frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
+        }else{
+            if(_isSelfCareStatementVisible) {
+                frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
+            }else{
+                if (_isRefuseCareStatementVisible) {
+                    frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
+                }else{
+                    frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
+                }
+            }
+        }
+        _vwEmergencyPersonnel.frame = frame;
+    }
+    
+    
+    frame = _vwStaffMember.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _vwStaffMember.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+    self.frame = frame;
+}
+
 
 - (void)shouldShowFirstAddView:(BOOL)show {
     if (show) {
@@ -311,18 +486,16 @@
         frame.size.height = CGRectGetMinY(_vwBloodborne.frame);
         _vwBloodbornePathogens.frame = frame;
     }
+    
     CGRect frame = _vwRefuseCare.frame;
     frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
     _vwRefuseCare.frame = frame;
     
-    frame = _vwSelfCare.frame;
-    frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
-    _vwSelfCare.frame = frame;
     
-
     [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
     [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
     [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
+    [self setIsEmergencyPersonnelVisible:_isEmergencyPersonnelVisible];
 }
 
 @end

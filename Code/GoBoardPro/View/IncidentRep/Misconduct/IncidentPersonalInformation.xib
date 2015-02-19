@@ -312,7 +312,7 @@
                             <rect key="frame" x="463" y="182" width="243" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             <connections>
                                 <outlet property="delegate" destination="iN0-l3-epB" id="zIK-P8-Tub"/>
                             </connections>
@@ -679,8 +679,37 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
+                <view contentMode="scaleToFill" id="5RY-v2-BFG">
+                    <rect key="frame" x="0.0" y="913" width="768" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dU1-iF-In8">
+                            <rect key="frame" x="42" y="0.0" width="305" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="add more emergency personnel" image="add_icon.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="btnAddEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="5Al-cy-Qe0"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="HVU-it-D3x">
+                            <rect key="frame" x="390" y="0.0" width="370" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="delete recently added Emergency personnel" image="delete_icon.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="btnDeleteEmergencyPersonnelTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="AJ9-ha-JT4"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.01085100634" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Yxp-gd-cKm">
-                    <rect key="frame" x="650" y="904" width="110" height="84"/>
+                    <rect key="frame" x="650" y="973" width="110" height="84"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <inset key="titleEdgeInsets" minX="-67" minY="0.0" maxX="0.0" maxY="-50"/>
                     <inset key="imageEdgeInsets" minX="17" minY="-25" maxX="0.0" maxY="0.0"/>
@@ -696,6 +725,7 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="btnAddEmergency" destination="dU1-iF-In8" id="LGm-o7-oub"/>
                 <outlet property="btnAlumni" destination="6lw-bI-wE2" id="S5f-d7-Nqz"/>
                 <outlet property="btnAssessedStudent" destination="0vM-lD-8gg" id="ukO-6J-h7a"/>
                 <outlet property="btnCapturePerson" destination="Yxp-gd-cKm" id="G6m-CU-I9i"/>
@@ -713,6 +743,7 @@
                 <outlet property="btnNotMinor" destination="Au5-hD-CtM" id="oaI-Zz-kjE"/>
                 <outlet property="btnOther" destination="MYV-Y5-WAC" id="oaU-HB-4j4"/>
                 <outlet property="btnOtherGender" destination="kMg-pw-UUt" id="P9o-m0-bdH"/>
+                <outlet property="btnRemoveEmergency" destination="HVU-it-D3x" id="TDF-m5-geP"/>
                 <outlet property="btnStaff" destination="F9M-Nf-L1J" id="UXg-mJ-hlD"/>
                 <outlet property="markerAddress1" destination="QBz-qI-dkU" id="bef-vY-qSB"/>
                 <outlet property="markerAlternatePhone" destination="Bjy-nM-BdM" id="y2g-Av-9xg"/>
@@ -750,6 +781,7 @@
                 <outlet property="vwAffiliation" destination="zzk-i1-5Em" id="YM3-Mw-Ewu"/>
                 <outlet property="vwCommon" destination="mKc-WI-ldl" id="TFg-0W-0u5"/>
                 <outlet property="vwDob" destination="kLX-n6-NQo" id="lu5-jo-Yiy"/>
+                <outlet property="vwEmergencyPersonnel" destination="5RY-v2-BFG" id="S1m-jr-NuV"/>
                 <outlet property="vwEmpPosition" destination="JbT-94-PAA" id="4EJ-bY-zBb"/>
                 <outlet property="vwEmployee" destination="msi-ZJ-kxI" id="y7X-xv-hyf"/>
                 <outlet property="vwGender" destination="G24-hh-F8G" id="bh1-yN-Ce4"/>
@@ -763,9 +795,11 @@
         </view>
     </objects>
     <resources>
+        <image name="add_icon.png" width="65" height="65"/>
         <image name="camera_icon.png" width="66" height="66"/>
         <image name="checked_Member.png" width="44" height="44"/>
         <image name="checked_white_radiobutton.png" width="44" height="44"/>
+        <image name="delete_icon.png" width="65" height="65"/>
         <image name="text_box_email.png" width="315" height="62"/>
         <image name="text_box_mi.png" width="80" height="61"/>
         <image name="text_box_name.png" width="261" height="62"/>

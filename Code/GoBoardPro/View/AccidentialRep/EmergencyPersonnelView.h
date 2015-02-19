@@ -39,6 +39,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *markerPhone;
 @property (weak, nonatomic) IBOutlet UILabel *markerBadgeNumber;
 
+@property (strong, nonatomic) IBOutlet UIView *vwResponse;
+@property (strong, nonatomic) IBOutlet UIView *vwPersonnel;
+
+
 
 - (IBAction)btnEmergencyPersonnelTapped:(UIButton *)sender;
 - (BOOL)isEmergencyPersonnelValidationSucceed;

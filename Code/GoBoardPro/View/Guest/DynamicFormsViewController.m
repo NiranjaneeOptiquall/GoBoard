@@ -116,7 +116,7 @@
             }
             else if ([aDict[@"responseType"] isEqualToString:@"date"]) {
                 NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-                [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                 [aFormatter setDateFormat:@"yyyy-MM-dd"];
                 [dict setObject:[aFormatter stringFromDate:aDict[@"answerDate"]] forKey:@"ResponseText"];
             }
@@ -129,7 +129,7 @@
                 NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
                 [aFormatter setDateFormat:@"hh:mm a"];
                 NSDate *dt = [aFormatter dateFromString:aDict[@"answer"]];
-                [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                 [dict setObject:[aFormatter stringFromDate:dt] forKey:@"ResponseText"];
             }
             else {

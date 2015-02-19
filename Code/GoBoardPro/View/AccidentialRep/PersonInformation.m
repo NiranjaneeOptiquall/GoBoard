@@ -43,7 +43,7 @@
     if ([sender isEqual:_btnGuest]) {
         if (!_isGuestIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
-        [_txtMemberId setPlaceholder:@"Driver's License #"];
+        [_txtMemberId setPlaceholder:@"Guest ID"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
         [_parentVC setPersonInvolved:PERSON_GUEST];

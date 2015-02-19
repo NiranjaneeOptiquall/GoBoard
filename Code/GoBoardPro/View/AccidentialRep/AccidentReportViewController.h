@@ -15,7 +15,7 @@
 #import "UserFacility.h"
 
 @interface AccidentReportViewController : UIViewController<DropDownValueDelegate,UIAlertViewDelegate> {
-    ThirdSection *thirdSection;
+    
     FinalSection *finalSection;
     NSMutableArray *mutArrAccidentViews;
     NSInteger totalAccidentFirstSectionCount;
@@ -23,7 +23,6 @@
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
 }
-
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) IBOutlet UITextField *txtDateOfIncident;
