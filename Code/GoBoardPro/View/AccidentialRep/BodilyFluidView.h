@@ -53,6 +53,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *markerPosition;
 
 @property (assign, nonatomic) BOOL isBloodBornePathogenVisible;
+@property (assign, nonatomic) BOOL isFirstAidVisible;
 @property (assign, nonatomic) BOOL isRefuseCareStatementVisible;
 @property (assign, nonatomic) BOOL isRefusedCareSelected;
 @property (assign, nonatomic) BOOL isSelfCareStatementVisible;

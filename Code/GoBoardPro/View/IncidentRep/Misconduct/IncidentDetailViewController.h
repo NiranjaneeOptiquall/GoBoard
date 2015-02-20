@@ -13,7 +13,7 @@
 #import "IncidentReportInfo.h"
 #import "UserLocation.h"
 #import "UserFacility.h"
-
+#import "ThirdSection.h"
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalWitnessCount;
     IncidentActionTaken *actionTaken;
@@ -27,6 +27,7 @@
     
     NSString *strReportType;
 }
+@property (weak, nonatomic) ThirdSection *thirdSection;
 @property (weak, nonatomic)  IncidentReportInfo *reportSetupInfo;
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;

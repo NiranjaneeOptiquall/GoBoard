@@ -26,7 +26,7 @@
 @end
 
 @implementation IncidentDetailViewController
-@synthesize reportSetupInfo;
+@synthesize reportSetupInfo,thirdSection;
 -(void)awakeFromNib
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToRemoveWitness:) name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
@@ -253,14 +253,14 @@
     [_btnManager setTitle:reportSetupInfo.notificationField3 forState:UIControlStateNormal];
     [_btnNone setTitle:reportSetupInfo.notificationField4 forState:UIControlStateNormal];
    
-    [_btn911Called setHidden:reportSetupInfo.showNotificationField1.boolValue];
-    [_btnPoliceCalled setHidden:reportSetupInfo.showNotificationField2.boolValue];
-    [_btnManager setHidden:reportSetupInfo.showNotificationField3.boolValue];
-    [_btnNone setHidden:reportSetupInfo.showNotificationField4.boolValue];
+    [_btn911Called setHidden:!reportSetupInfo.showNotificationField1.boolValue];
+    [_btnPoliceCalled setHidden:!reportSetupInfo.showNotificationField2.boolValue];
+    [_btnManager setHidden:!reportSetupInfo.showNotificationField3.boolValue];
+    [_btnNone setHidden:!reportSetupInfo.showNotificationField4.boolValue];
     
     _lblInstruction.text = reportSetupInfo.instructions;
     NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
-    float height = [reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+    float height = [reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height + 20;
     CGRect frameLblInstruction  = _lblInstruction.frame;
     frameLblInstruction.size.height = height;
     _lblInstruction.frame = frameLblInstruction;
@@ -912,7 +912,30 @@
     personalInfoView.isEmployeeIdVisible = [reportSetupInfo.showEmployeeId boolValue];
     personalInfoView.parentVC = self;
     if ([reportSetupInfo.showEmergencyPersonnel boolValue]) {
-        [personalInfoView addEmergencyPersonnel];
+        //[personalInfoView addEmergencyPersonnel];
+        
+        [personalInfoView.vwEmergencyPersonnel setHidden:NO];
+        
+        thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+        thirdSection.delegate = personalInfoView;
+        thirdSection.isShowEmergencyResponse = YES;
+        [thirdSection initialSetUp];
+        [personalInfoView.vwEmergencyPersonnel addSubview:thirdSection];
+        
+        CGRect frame = personalInfoView.vwEmergencyPersonnel.frame;
+        frame.origin.y = CGRectGetMaxY(personalInfoView.vwCommon.frame);
+        frame.size.height = CGRectGetMaxY(thirdSection.frame);
+        personalInfoView.vwEmergencyPersonnel.frame = frame;
+        
+        
+        frame = personalInfoView.btnCapturePerson.frame;
+        frame.origin.y = CGRectGetMaxY(personalInfoView.vwEmergencyPersonnel.frame);
+        personalInfoView.btnCapturePerson.frame = frame;
+        
+//        frame = _vwPersonalInfo.frame;
+//        frame.size.height = CGRectGetMaxY(personalInfoView.btnCapturePerson.frame);
+//        _vwPersonalInfo.frame = frame;
+        
     }
     [personalInfoView callInitialActions:reportSetupInfo];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];

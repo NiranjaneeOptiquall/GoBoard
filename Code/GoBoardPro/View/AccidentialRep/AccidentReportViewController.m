@@ -586,7 +586,7 @@
     _lblInstruction.text = _reportSetupInfo.instructions;
     NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
     
-    float height = [_reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+    float height = [_reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
     CGRect frameLblInstruction  = _lblInstruction.frame;
     frameLblInstruction.size.height = height;
     _lblInstruction.frame = frameLblInstruction;
@@ -631,18 +631,16 @@
     NSArray *aryAidFields = [fields valueForKeyPath:@"name"];
     [accidentView.vwBodilyFluid setRequiredFields:aryAidFields];
     
-     [accidentView.vwBodilyFluid shouldShowFirstAddView:NO];
-    accidentView.vwBodilyFluid.isBloodBornePathogenVisible = [_reportSetupInfo.showBloodbornePathogens boolValue];
-   
-    accidentView.vwBodilyFluid.isRefuseCareStatementVisible = NO;
-    accidentView.vwBodilyFluid.isSelfCareStatementVisible = NO;
-    accidentView.vwBodilyFluid.isParticipantSignatureVisible = [_reportSetupInfo.showParticipantSignature boolValue];
+    [accidentView.vwBodilyFluid setIsBloodBornePathogenVisible:[_reportSetupInfo.showBloodbornePathogens boolValue]];
+    [accidentView.vwBodilyFluid setIsFirstAidVisible:NO];
+    
+    [accidentView.vwBodilyFluid setIsRefuseCareStatementVisible:NO];
+    [accidentView.vwBodilyFluid setIsSelfCareStatementVisible:NO];
+    [accidentView.vwBodilyFluid setIsParticipantSignatureVisible:[_reportSetupInfo.showParticipantSignature boolValue]];
     accidentView.vwBodilyFluid.lblRefuseCareText.text = _reportSetupInfo.refusedCareStatement;
     accidentView.vwBodilyFluid.lblSelfCareText.text = _reportSetupInfo.selfCareStatement;
-    [accidentView.vwBodilyFluid shouldShowParticipantsSignatureView:[_reportSetupInfo.showParticipantSignature boolValue]];
-    [accidentView.vwBodilyFluid shouldShowEmergencyPersonnelView:NO];
-    accidentView.vwBodilyFluid.isEmergencyPersonnelVisible = NO;
-    accidentView.vwBodilyFluid.isEmergencyResponseSelected = NO;
+    [accidentView.vwBodilyFluid setIsEmergencyPersonnelVisible:NO];
+    [accidentView.vwBodilyFluid setIsEmergencyResponseSelected:NO];
     
     CGRect frame = accidentView.frame;
     frame.origin.y = CGRectGetMaxY([[mutArrAccidentViews lastObject] frame]);
@@ -673,9 +671,7 @@
     frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
     finalSection.frame = frame;
     [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
-    
 }
-
 
 - (void)addViews {
     [self addAccidentView];

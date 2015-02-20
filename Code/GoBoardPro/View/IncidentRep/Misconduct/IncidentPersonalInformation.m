@@ -183,35 +183,23 @@
 }
 -(void)addEmergencyPersonnel
 {
-    [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
     
-    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
-    [objEmergency setBackgroundColor:[UIColor clearColor]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
-    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
-    [objEmergency setRequiredFields:aryFields];
-    [objEmergency setBackgroundColor:[UIColor clearColor]];
     
-    CGRect frame = objEmergency.frame;
-    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
-    objEmergency.frame = frame;
-    [_vwEmergencyPersonnel addSubview:objEmergency];
-    totalEmergencyPersonnelCount ++;
-    objEmergency.tag = totalEmergencyPersonnelCount+200;
-    [mutArrEmergencyPersonnel addObject:objEmergency];
+    //------------------------New Code Start-----------------------------//
     
-    frame = _btnAddEmergency.frame;
-    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
-    _btnAddEmergency.frame = frame;
+    //[_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
     
-    CGRect frameEmegency = _btnRemoveEmergency.frame;
-    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
-    _btnRemoveEmergency.frame = frameEmegency;
+    [_vwEmergencyPersonnel setHidden:NO];
     
-    frame = _vwEmergencyPersonnel.frame;
+    thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+    thirdSection.delegate = self;
+    thirdSection.isShowEmergencyResponse = YES;
+    [thirdSection initialSetUp];
+    [_vwEmergencyPersonnel addSubview:thirdSection];
+    
+    CGRect frame = _vwEmergencyPersonnel.frame;
     frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
-    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+    frame.size.height = CGRectGetMaxY(thirdSection.frame);
     _vwEmergencyPersonnel.frame = frame;
     
     
@@ -222,18 +210,111 @@
     frame = _parentVC.vwPersonalInfo.frame;
     frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
     _parentVC.vwPersonalInfo.frame = frame;
-  
+    
     frame = _parentVC.vwAfterPersonalInfo.frame;
     frame.origin.y = CGRectGetMaxY(_parentVC.vwPersonalInfo.frame);
     _parentVC.vwAfterPersonalInfo.frame = frame;
     
-    if (totalEmergencyPersonnelCount<=1) {
-        _btnRemoveEmergency.hidden=YES;
-    }else{
-        _btnRemoveEmergency.hidden=NO;
-    }
+//    if (totalEmergencyPersonnelCount<=1) {
+//        _btnRemoveEmergency.hidden=YES;
+//    }else{
+//        _btnRemoveEmergency.hidden=NO;
+//    }
+    //--------------------------New Code End------------------------------//
+    
+    
+//    [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
+//    
+//    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
+//    [objEmergency setBackgroundColor:[UIColor clearColor]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
+//    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
+//    NSArray *aryFields = [fields valueForKeyPath:@"name"];
+//    [objEmergency setRequiredFields:aryFields];
+//    [objEmergency setBackgroundColor:[UIColor clearColor]];
+//    
+//    /*CGRect*/ frame = objEmergency.frame;
+//    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
+//    objEmergency.frame = frame;
+//    [_vwEmergencyPersonnel addSubview:objEmergency];
+//    totalEmergencyPersonnelCount ++;
+//    objEmergency.tag = totalEmergencyPersonnelCount+200;
+//    [mutArrEmergencyPersonnel addObject:objEmergency];
+//    
+//    frame = _btnAddEmergency.frame;
+//    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
+//    _btnAddEmergency.frame = frame;
+//    
+//    CGRect frameEmegency = _btnRemoveEmergency.frame;
+//    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
+//    _btnRemoveEmergency.frame = frameEmegency;
+//    
+//    frame = _vwEmergencyPersonnel.frame;
+//    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+//    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+//    _vwEmergencyPersonnel.frame = frame;
+//    
+//    
+//    frame = _btnCapturePerson.frame;
+//    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+//    _btnCapturePerson.frame = frame;
+//    
+//    frame = _parentVC.vwPersonalInfo.frame;
+//    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
+//    _parentVC.vwPersonalInfo.frame = frame;
+//  
+//    frame = _parentVC.vwAfterPersonalInfo.frame;
+//    frame.origin.y = CGRectGetMaxY(_parentVC.vwPersonalInfo.frame);
+//    _parentVC.vwAfterPersonalInfo.frame = frame;
+//    
+//    if (totalEmergencyPersonnelCount<=1) {
+//        _btnRemoveEmergency.hidden=YES;
+//    }else{
+//        _btnRemoveEmergency.hidden=NO;
+//    }
     //[_parentVC.scrlMainView setContentSize:CGSizeMake(_parentVC.scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
 }
+
+// Third Section Delegate Method for adjusting frame after adding Extra Emergecny Personnel
+-(void)adjustFramingForEmergencyView
+{
+//    CGRect frame = _vwEmergencyPersonnel.frame;
+//    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+//    
+//    ThirdSection *objThird;
+//    
+//    for (UIView *aView in [_vwEmergencyPersonnel subviews]) {
+//        
+//        if ([aView isKindOfClass:[ThirdSection class]]) {
+//            
+//            objThird = (ThirdSection*) aView;
+//        }
+//    }
+//    
+//    if (objThird) {
+//        frame.size.height = CGRectGetMaxY(objThird.frame);
+//        _vwEmergencyPersonnel.frame = frame;
+//    }
+    
+    CGRect frame = _vwEmergencyPersonnel.frame;
+    frame.size.height = CGRectGetMaxY(_parentVC.thirdSection.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _btnCapturePerson.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);\
+    self.frame = frame;
+    
+    frame = _parentVC.vwPersonalInfo.frame;
+    frame.size.height = CGRectGetMaxY(self.frame);
+    _parentVC.vwPersonalInfo.frame = frame;
+    
+}
+
+
 #pragma mark - Methods
 
 - (void)showPhotoLibrary {

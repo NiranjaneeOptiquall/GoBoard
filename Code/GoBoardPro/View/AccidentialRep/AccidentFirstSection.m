@@ -58,11 +58,11 @@
 
         float nextY = 0.0;
         
-        _vwBodilyFluid.isRefusedCareSelected = NO;
-        _vwBodilyFluid.isSelfCareSelected = NO;
+        [_vwBodilyFluid setIsRefusedCareSelected:NO];
+        [_vwBodilyFluid setIsSelfCareSelected:NO];
         [_vwBodilyFluid shouldShowParticipantsSignatureView:NO];
-        _vwBodilyFluid.isEmergencyResponseSelected = NO;
-        [_vwBodilyFluid shouldShowEmergencyPersonnelView:NO];
+        [_vwBodilyFluid setIsEmergencyResponseSelected:NO];
+        [_vwBodilyFluid setIsEmergencyPersonnelVisible:NO];
         
         if ([[_vwBodyPartInjury.careProvided lowercaseString] isEqualToString:[[change objectForKey:@"new"] lowercaseString]]) {
             NSMutableArray *aMutArr = [NSMutableArray arrayWithArray:_parentVC.reportSetupInfo.careProviderList.allObjects];
@@ -76,7 +76,7 @@
                 }
             }
         }else {
-            [_vwBodilyFluid shouldShowFirstAddView:NO];
+            [_vwBodilyFluid setIsFirstAidVisible:NO];
             [_vwBodilyFluid.vwRefuseCare setHidden:YES];
             [_vwBodilyFluid.vwSelfCare setHidden:YES];
             _vwBodilyFluid.isRefuseCareStatementVisible = NO;
@@ -115,13 +115,14 @@
 -(float)showCareProvidedDetails:(CareProvidedType *)careProvider
 {
     
-    [_vwBodilyFluid shouldShowFirstAddView:careProvider.firstAid.boolValue];
-    _vwBodilyFluid.isRefuseCareStatementVisible = careProvider.refusedCare.boolValue;
-    _vwBodilyFluid.isSelfCareStatementVisible = careProvider.selfCare.boolValue;
+    [_vwBodilyFluid setIsFirstAidVisible:careProvider.firstAid.boolValue];
+    [_vwBodilyFluid setIsRefuseCareStatementVisible: careProvider.refusedCare.boolValue];
+    [_vwBodilyFluid setIsSelfCareStatementVisible:careProvider.selfCare.boolValue];
     [_vwBodilyFluid shouldShowParticipantsSignatureView:_parentVC.reportSetupInfo.showParticipantSignature.boolValue];
-    _vwBodilyFluid.isEmergencyResponseSelected = careProvider.emergencyResponse.boolValue;
-    _vwBodilyFluid.isEmergencyPersonnelVisible = careProvider.emergencyPersonnel.boolValue;
-     float nextY =CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame); //New Change
+    [_vwBodilyFluid setIsEmergencyResponseSelected:careProvider.emergencyResponse.boolValue];
+    [_vwBodilyFluid setIsEmergencyPersonnelVisible:careProvider.emergencyPersonnel.boolValue];
+    
+     float nextY =CGRectGetMinY(_vwBodilyFluid.vwRefuseCare.frame);
     
     if (careProvider.refusedCare.boolValue == YES) {
         
@@ -129,7 +130,8 @@
         
         NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:15] forKey: NSFontAttributeName];
         
-        float height = [_vwBodilyFluid.lblRefuseCareText.text boundingRectWithSize:CGSizeMake(_vwBodilyFluid.lblRefuseCareText.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+        float height = [_vwBodilyFluid.lblRefuseCareText.text boundingRectWithSize:CGSizeMake(_vwBodilyFluid.lblRefuseCareText.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height + 20;
+       
         CGRect frameLblInstruction  =_vwBodilyFluid.lblRefuseCareText.frame;
         
         frameLblInstruction.origin.y = CGRectGetMaxY(_vwBodilyFluid.lblRefuseCareCaption.frame);
@@ -164,7 +166,7 @@
         
         NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:15] forKey: NSFontAttributeName];
         
-        float height = [_vwBodilyFluid.lblSelfCareText.text boundingRectWithSize:CGSizeMake(_vwBodilyFluid.lblSelfCareText.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height;
+        float height = [_vwBodilyFluid.lblSelfCareText.text boundingRectWithSize:CGSizeMake(_vwBodilyFluid.lblSelfCareText.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height+20;
         CGRect frameLblInstruction  =_vwBodilyFluid.lblSelfCareText.frame;
         
         frameLblInstruction.origin.y = CGRectGetMaxY(_vwBodilyFluid.lblSelfCareCaption.frame);

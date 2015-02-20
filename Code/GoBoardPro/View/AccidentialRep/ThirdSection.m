@@ -40,6 +40,7 @@
 //}
 
 - (IBAction)btnAddEmergencyPersonnel:(id)sender {
+    
     [self addEmergencyPersonnel];
     [self resetSelfFrame];
     
@@ -123,8 +124,15 @@
         
         objEmergency.frame = frame;
     }
+    
     CGRect frame = objEmergency.frame;
-    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
+    if (_mutArrEmergencyViews.count > 0) {
+        CGRect rectLastView = [[_mutArrEmergencyViews lastObject] frame];
+        frame.origin.y = CGRectGetMaxY(rectLastView);
+    }else{
+        frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
+    }
+
     objEmergency.frame = frame;
     
     [self addSubview:objEmergency];
@@ -166,8 +174,7 @@
 
 - (void)initialSetUp {
     _mutArrEmergencyViews = [[NSMutableArray alloc] init];
-//    mutArrBodilyFluidViews = [[NSMutableArray alloc] init];
-//    [self addBodilyFluidView];
+
     [self addEmergencyPersonnel];
     [self resetSelfFrame];
 }

@@ -11,12 +11,14 @@
 #import "IncidentReportInfo.h"
 #import "Constants.h"
 #import "IncidentDetailViewController.h"
+#import "ThirdSection.h"
 
-@interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
+@interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate,ThirdSectionFrameDelegate> {
     UIPopoverController *popOver;
     NSArray *requiredFields;
     NSInteger totalEmergencyPersonnelCount;
     
+    ThirdSection *thirdSection;
 }
 @property (strong, nonatomic)  NSMutableArray *mutArrEmergencyPersonnel;
 @property (strong, nonatomic) IncidentDetailViewController *parentVC;

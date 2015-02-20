@@ -374,6 +374,7 @@
 
 - (void)callServiceForIncidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
+    NSLog(@"%@",[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]]);
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllIncidentReports];
         [self insertIncidentReportSettings:[response objectForKey:@"IncidentReportSetup"]];
@@ -443,7 +444,11 @@
         report.showConditions = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowConditions"] boolValue]];
         report.showEmployeeId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmployeeId"] boolValue]];
         report.showGuestId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuestId"] boolValue]];
-       
+        report.showNotificationField1 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField1"] boolValue]];
+        report.showNotificationField2 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField2"] boolValue]];
+        report.showNotificationField3 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField3"] boolValue]];
+        report.showNotificationField4 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField4"] boolValue]];
+        
         // Add ActionTaker
         NSMutableSet *actionSet = [NSMutableSet set];
         for (NSDictionary *dict in [aDict objectForKey:@"ActionTakenList"]) {
