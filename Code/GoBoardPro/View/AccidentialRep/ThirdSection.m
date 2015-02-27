@@ -19,7 +19,7 @@
 @end
 
 @implementation ThirdSection
-@synthesize delegate,isShowEmergencyResponse;
+@synthesize delegate,isShowEmergencyResponse,totalBodilyFluidCount,totalEmergencyPersonnelCount;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -72,33 +72,6 @@
 
 
 #pragma mark - Methods
-
-/*- (void)addBodilyFluidView {
-    BodilyFluidView *objFluid = (BodilyFluidView*)[[[NSBundle mainBundle] loadNibNamed:@"BodilyFluidView" owner:self options:nil] firstObject];
-    [objFluid setBackgroundColor:[UIColor clearColor]];
-    CGRect frame = objFluid.frame;
-    frame.origin.y = totalBodilyFluidCount * frame.size.height;
-    objFluid.frame = frame;
-    [self addSubview:objFluid];
-    [mutArrBodilyFluidViews addObject:objFluid];
-    totalBodilyFluidCount ++;
-    frame = _vwFixedContent.frame;
-    frame.origin.y = CGRectGetMaxY(objFluid.frame);
-    _vwFixedContent.frame = frame;
-    [_vwFixedContent setBackgroundColor:[UIColor clearColor]];
-    [self bringSubviewToFront:_vwFixedContent];
-    float nextY = CGRectGetMaxY(frame);
-    for (UIView *vw in mutArrEmergencyViews) {
-        CGRect frame = vw.frame;
-        frame.origin.y = nextY;
-        vw.frame = frame;
-        nextY = CGRectGetMaxY(frame);
-    }
-    frame = _btnAddEmergencyPersonnel.frame;
-    frame.origin.y = nextY;
-    _btnAddEmergencyPersonnel.frame = frame;
-}*/
-
 - (void)addEmergencyPersonnel {
     EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
     

@@ -63,13 +63,69 @@
 #pragma mark - IBActions & Selectors
 
 - (IBAction)btnHideCompletedTapped:(UIButton *)sender {
+   
     if (sender.isSelected) {
         
-        mutArrFilteredTaskList =  mutArrTaskList;
+        NSDate* sourceDate = [NSDate date];
+        
+        NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+        
+        NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+        
+        NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+        
+        NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+        
+        NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
+        
+        NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+        
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        
+        NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:destinationDate];
+        [components setHour:0];
+        [components setMinute:0];
+        [components setSecond:0];
+        
+        NSDate *dateSourceTemp = [calendar dateFromComponents:components];
+        
+        //NSDate *dateSourceTemp = [calendar dateBySettingHour:0 minute:0 second:0 ofDate:destinationDate options:0];
+        
+        NSDate* dateSource = [[NSDate alloc] initWithTimeInterval:interval sinceDate:dateSourceTemp];
+        
+        NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+        
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
+        
+        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+        
+        mutArrFilteredTaskList =  mutArrTaskUptoNx2Hrs;
     }
     else {
+        
+        NSDate* sourceDate = [NSDate date];
+        
+        NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+        
+        NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+        
+        NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+        
+        NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+        
+        NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
+        
+        NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+        
+        NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+        
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]];
+        
+        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+        
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
-        mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskList filteredArrayUsingPredicate:predicate]];
+        
+        mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskUptoNx2Hrs filteredArrayUsingPredicate:predicate]];
     }
     [sender setSelected:![sender isSelected]];
     if ([mutArrFilteredTaskList count] == 0) {
@@ -239,7 +295,7 @@
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
     TaskList *aTask = mutArrFilteredTaskList[indexPath.row];
     _lblPopOverTaskTitle.text = [aTask name];
-    _lblPopOverTaskLocation.text = @"";
+    _lblPopOverTaskLocation.text = [aTask location];
     _txvPopOverMessage.text = [aTask comment];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"hh:mm a"];
@@ -277,26 +333,41 @@
     
 }
 
+
+
 - (void)fetchAllTask {
     NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
     NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
     [allTask setSortDescriptors:@[descriptor, sortBySequence]];
-    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"MM/dd/yyyy"];
-
-//    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
-//    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", [aFormatter dateFromString:aStr], [NSDate dateWithTimeIntervalSinceNow:60*60*2]];
-//    [allTask setPredicate:predicate1];
+    
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
-    if ([mutArrTaskList count] == 0) {
+    
+    NSDate* sourceDate = [NSDate date];
+    
+    NSTimeZone* sourceTimeZone =  [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone* destinationTimeZone =  [NSTimeZone systemTimeZone];
+    
+    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+    NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+    NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
+    
+    NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+    
+    NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+    
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]];
+   
+    mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
+    mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskUptoNx2Hrs filteredArrayUsingPredicate:predicate]];
+    _lblTaskRemaining.text = [NSString stringWithFormat:@"%ld", (long)mutArrFilteredTaskList.count];
+    
+    if ([mutArrFilteredTaskList count] == 0) {
         [_lblNoRecords setHidden:NO];
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
-   mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskList filteredArrayUsingPredicate:predicate]];
-    _lblTaskRemaining.text = [NSString stringWithFormat:@"%ld", (long)mutArrFilteredTaskList.count];
 }
-
 
 - (NSIndexPath*)indexPathForCellSubView:(id)view {
     TaskTableViewCell *aCell = (TaskTableViewCell*)[view superview];
@@ -333,13 +404,25 @@
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     BOOL isCompleted = [task.isCompleted boolValue];
     [aCell.btnKeyboardIcon addTarget:self action:@selector(btnKeyboardIconTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    NSDate* sourceDate = task.taskDateTime;
+    
+    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    
+    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+    NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+    NSTimeInterval interval = sourceGMTOffset - destinationGMTOffset ;
+    
+    NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+    
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     [aFormatter setDateFormat:@"hh:mm a"];
-    NSLog(@"%@", [aFormatter stringFromDate:task.taskDateTime]);
-//    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    NSLog(@"%@", [aFormatter stringFromDate:destinationDate]);
     
     [aCell.imvTextBG setHidden:YES];
-    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:task.taskDateTime],task.name];
+    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:destinationDate],task.name];
     if (isCompleted) {
         if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
@@ -455,8 +538,9 @@
     [_lblDetailTitle setText:task.name];
     [_lblDetailDesc setText:task.desc];
     [_lblDetailDesc sizeToFit];
+    [_lblLocation setText:task.location];
     frame = _vwDetailPopOver.frame;
-    frame.size.height = CGRectGetMaxY(_lblDetailDesc.frame) + 18;
+    frame.size.height = CGRectGetMaxY(_lblLocation.frame) + 18;
     _vwDetailPopOver.frame = frame;
     if (popOver) {
         [popOver dismissPopoverAnimated:NO];

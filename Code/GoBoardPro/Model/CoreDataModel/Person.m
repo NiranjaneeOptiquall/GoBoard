@@ -2,11 +2,12 @@
 //  Person.m
 //  GoBoardPro
 //
-//  Created by ind726 on 18/02/15.
+//  Created by ind726 on 25/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "Person.h"
+#import "EmergencyPersonnelIncident.h"
 #import "Report.h"
 
 
@@ -35,7 +36,12 @@
 @dynamic state;
 @dynamic streetAddress;
 @dynamic zip;
-@dynamic report;
+@dynamic natureId;
+@dynamic actionTakenId;
+@dynamic activityTypeId;
+@dynamic equipmentTypeId;
+@dynamic conditionId;
 @dynamic emergencyPersonnelIncident;
+@dynamic report;
 
 @end

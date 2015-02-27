@@ -2,7 +2,7 @@
 //  AccidentReportInfo.h
 //  GoBoardPro
 //
-//  Created by ind726 on 04/02/15.
+//  Created by ind726 on 26/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -53,20 +53,24 @@
 @property (nonatomic, retain) NSNumber * showPhotoIcon;
 @property (nonatomic, retain) NSNumber * showRefusedSelfCareText;
 @property (nonatomic, retain) NSNumber * showSelfCareText;
+@property (nonatomic, retain) NSNumber * notificationField1Alert;
+@property (nonatomic, retain) NSNumber * notificationField2Alert;
+@property (nonatomic, retain) NSNumber * notificationField3Alert;
+@property (nonatomic, retain) NSNumber * notificationField4Alert;
 @property (nonatomic, retain) NSSet *abdomenInjuryList;
 @property (nonatomic, retain) NSSet *actionList;
 @property (nonatomic, retain) NSSet *activityList;
-@property (nonatomic, retain) NSSet *rightArmInjuryList;
 @property (nonatomic, retain) NSSet *bodypartInjuryType;
 @property (nonatomic, retain) NSSet *careProviderList;
 @property (nonatomic, retain) NSSet *conditionList;
 @property (nonatomic, retain) NSSet *equipmentList;
 @property (nonatomic, retain) NSSet *generalInjuryType;
 @property (nonatomic, retain) NSSet *headInjuryList;
-@property (nonatomic, retain) NSSet *rightLegInjuryList;
-@property (nonatomic, retain) NSSet *requiredFields;
 @property (nonatomic, retain) NSSet *leftArmInjuryList;
 @property (nonatomic, retain) NSSet *leftLegInjuryList;
+@property (nonatomic, retain) NSSet *requiredFields;
+@property (nonatomic, retain) NSSet *rightArmInjuryList;
+@property (nonatomic, retain) NSSet *rightLegInjuryList;
 @end
 
 @interface AccidentReportInfo (CoreDataGeneratedAccessors)
@@ -85,11 +89,6 @@
 - (void)removeActivityListObject:(ActivityList *)value;
 - (void)addActivityList:(NSSet *)values;
 - (void)removeActivityList:(NSSet *)values;
-
-- (void)addRightArmInjuryListObject:(ArmInjuryList *)value;
-- (void)removeRightArmInjuryListObject:(ArmInjuryList *)value;
-- (void)addRightArmInjuryList:(NSSet *)values;
-- (void)removeRightArmInjuryList:(NSSet *)values;
 
 - (void)addBodypartInjuryTypeObject:(BodyPartInjuryType *)value;
 - (void)removeBodypartInjuryTypeObject:(BodyPartInjuryType *)value;
@@ -121,16 +120,6 @@
 - (void)addHeadInjuryList:(NSSet *)values;
 - (void)removeHeadInjuryList:(NSSet *)values;
 
-- (void)addRightLegInjuryListObject:(LegInjuryList *)value;
-- (void)removeRightLegInjuryListObject:(LegInjuryList *)value;
-- (void)addRightLegInjuryList:(NSSet *)values;
-- (void)removeRightLegInjuryList:(NSSet *)values;
-
-- (void)addRequiredFieldsObject:(RequiredField *)value;
-- (void)removeRequiredFieldsObject:(RequiredField *)value;
-- (void)addRequiredFields:(NSSet *)values;
-- (void)removeRequiredFields:(NSSet *)values;
-
 - (void)addLeftArmInjuryListObject:(LeftArmInjuryList *)value;
 - (void)removeLeftArmInjuryListObject:(LeftArmInjuryList *)value;
 - (void)addLeftArmInjuryList:(NSSet *)values;
@@ -140,5 +129,20 @@
 - (void)removeLeftLegInjuryListObject:(LeftLegInjuryList *)value;
 - (void)addLeftLegInjuryList:(NSSet *)values;
 - (void)removeLeftLegInjuryList:(NSSet *)values;
+
+- (void)addRequiredFieldsObject:(RequiredField *)value;
+- (void)removeRequiredFieldsObject:(RequiredField *)value;
+- (void)addRequiredFields:(NSSet *)values;
+- (void)removeRequiredFields:(NSSet *)values;
+
+- (void)addRightArmInjuryListObject:(ArmInjuryList *)value;
+- (void)removeRightArmInjuryListObject:(ArmInjuryList *)value;
+- (void)addRightArmInjuryList:(NSSet *)values;
+- (void)removeRightArmInjuryList:(NSSet *)values;
+
+- (void)addRightLegInjuryListObject:(LegInjuryList *)value;
+- (void)removeRightLegInjuryListObject:(LegInjuryList *)value;
+- (void)addRightLegInjuryList:(NSSet *)values;
+- (void)removeRightLegInjuryList:(NSSet *)values;
 
 @end

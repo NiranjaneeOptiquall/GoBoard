@@ -10,8 +10,9 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import "EmergencyPersonnelView.h"
 #import "EmergencyPersonnelIncident.h"
+#import "ActionTakenList.h"
 @implementation IncidentPersonalInformation
-@synthesize mutArrEmergencyPersonnel;
+@synthesize mutArrEmergencyPersonnel,thirdSection;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -21,7 +22,7 @@
 */
 
 - (void)awakeFromNib {
-     mutArrEmergencyPersonnel = [[NSMutableArray alloc] init];
+
 }
 
 
@@ -69,8 +70,12 @@
     }
     _vwCommon.frame = frame;
     
-    frame = _vwEmergencyPersonnel.frame;
+    frame = _vwIncidentDetail.frame;
     frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
     _vwEmergencyPersonnel.frame = frame;
     
     frame = _btnCapturePerson.frame;
@@ -120,184 +125,42 @@
     [actionSheet showFromRect:rect inView:self.superview animated:YES];
 }
 
-- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender
+-(void)addEmergencyPersonnel
 {
-    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
-    [objEmergency setBackgroundColor:[UIColor clearColor]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
-    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-    NSArray *aryFields = [fields valueForKeyPath:@"name"];
-    [objEmergency setRequiredFields:aryFields];
-    [objEmergency setBackgroundColor:[UIColor clearColor]];
-    
-    CGRect frame = objEmergency.frame;
-    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
-    objEmergency.frame = frame;
-    [_vwEmergencyPersonnel addSubview:objEmergency];
-    totalEmergencyPersonnelCount ++;
-    objEmergency.tag = totalEmergencyPersonnelCount+200;
-    [mutArrEmergencyPersonnel addObject:objEmergency];
-    
-    frame = _btnAddEmergency.frame;
-    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
-    _btnAddEmergency.frame = frame;
-    
-    CGRect frameEmegency = _btnRemoveEmergency.frame;
-    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
-    _btnRemoveEmergency.frame = frameEmegency;
-    
-    frame = _vwEmergencyPersonnel.frame;
-    
-    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
+     [_vwEmergencyPersonnel setHidden:NO];
+   
+    if (!thirdSection) {
+        thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
+        thirdSection.delegate = self;
+        thirdSection.isShowEmergencyResponse = YES;
+        thirdSection.totalEmergencyPersonnelCount = 0;
+        [thirdSection initialSetUp];
+        [_vwEmergencyPersonnel addSubview:thirdSection];
+    }else{
+        [thirdSection addEmergencyPersonnel];
+        [thirdSection resetSelfFrame];
+    }
+  
+    CGRect frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    frame.size.height = CGRectGetMaxY(thirdSection.frame);
     _vwEmergencyPersonnel.frame = frame;
-    
     
     frame = _btnCapturePerson.frame;
     frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
     _btnCapturePerson.frame = frame;
     
     frame = self.frame;
-    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);\
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
     self.frame = frame;
 
-    
-    frame = _parentVC.vwPersonalInfo.frame;
-    frame.size.height = CGRectGetMaxY(self.frame);
-    _parentVC.vwPersonalInfo.frame = frame;
-    
-    if (totalEmergencyPersonnelCount<=1) {
-        _btnRemoveEmergency.hidden=YES;
-    }else{
-        _btnRemoveEmergency.hidden=NO;
-    }
-}
-- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender
-{
-    
-    UIAlertView *aAlertDeleteEmergencyPerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Emergency Personnel?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
-    
-    aAlertDeleteEmergencyPerson.tag = 5;
-    
-    [aAlertDeleteEmergencyPerson show];
-    
-}
--(void)addEmergencyPersonnel
-{
-    
-    
-    //------------------------New Code Start-----------------------------//
-    
-    //[_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
-    
-    [_vwEmergencyPersonnel setHidden:NO];
-    
-    thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
-    thirdSection.delegate = self;
-    thirdSection.isShowEmergencyResponse = YES;
-    [thirdSection initialSetUp];
-    [_vwEmergencyPersonnel addSubview:thirdSection];
-    
-    CGRect frame = _vwEmergencyPersonnel.frame;
-    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
-    frame.size.height = CGRectGetMaxY(thirdSection.frame);
-    _vwEmergencyPersonnel.frame = frame;
-    
-    
-    frame = _btnCapturePerson.frame;
-    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
-    _btnCapturePerson.frame = frame;
-    
-    frame = _parentVC.vwPersonalInfo.frame;
-    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
-    _parentVC.vwPersonalInfo.frame = frame;
-    
-    frame = _parentVC.vwAfterPersonalInfo.frame;
-    frame.origin.y = CGRectGetMaxY(_parentVC.vwPersonalInfo.frame);
-    _parentVC.vwAfterPersonalInfo.frame = frame;
-    
-//    if (totalEmergencyPersonnelCount<=1) {
-//        _btnRemoveEmergency.hidden=YES;
-//    }else{
-//        _btnRemoveEmergency.hidden=NO;
-//    }
-    //--------------------------New Code End------------------------------//
-    
-    
-//    [_vwEmergencyPersonnel setBackgroundColor:[UIColor clearColor]];
-//    
-//    EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[[[NSBundle mainBundle] loadNibNamed:@"EmergencyPersonnelView" owner:self options:nil] firstObject];
-//    [objEmergency setBackgroundColor:[UIColor clearColor]];
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_EMERGENCY];
-//    NSArray *fields = [[_parentVC.reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
-//    NSArray *aryFields = [fields valueForKeyPath:@"name"];
-//    [objEmergency setRequiredFields:aryFields];
-//    [objEmergency setBackgroundColor:[UIColor clearColor]];
-//    
-//    /*CGRect*/ frame = objEmergency.frame;
-//    frame.origin.y = totalEmergencyPersonnelCount * frame.size.height;
-//    objEmergency.frame = frame;
-//    [_vwEmergencyPersonnel addSubview:objEmergency];
-//    totalEmergencyPersonnelCount ++;
-//    objEmergency.tag = totalEmergencyPersonnelCount+200;
-//    [mutArrEmergencyPersonnel addObject:objEmergency];
-//    
-//    frame = _btnAddEmergency.frame;
-//    frame.origin.y = CGRectGetMaxY(objEmergency.frame);
-//    _btnAddEmergency.frame = frame;
-//    
-//    CGRect frameEmegency = _btnRemoveEmergency.frame;
-//    frameEmegency.origin.y = _btnAddEmergency.frame.origin.y;
-//    _btnRemoveEmergency.frame = frameEmegency;
-//    
-//    frame = _vwEmergencyPersonnel.frame;
-//    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
-//    frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
-//    _vwEmergencyPersonnel.frame = frame;
-//    
-//    
-//    frame = _btnCapturePerson.frame;
-//    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
-//    _btnCapturePerson.frame = frame;
-//    
-//    frame = _parentVC.vwPersonalInfo.frame;
-//    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
-//    _parentVC.vwPersonalInfo.frame = frame;
-//  
-//    frame = _parentVC.vwAfterPersonalInfo.frame;
-//    frame.origin.y = CGRectGetMaxY(_parentVC.vwPersonalInfo.frame);
-//    _parentVC.vwAfterPersonalInfo.frame = frame;
-//    
-//    if (totalEmergencyPersonnelCount<=1) {
-//        _btnRemoveEmergency.hidden=YES;
-//    }else{
-//        _btnRemoveEmergency.hidden=NO;
-//    }
-    //[_parentVC.scrlMainView setContentSize:CGSizeMake(_parentVC.scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
 }
 
 // Third Section Delegate Method for adjusting frame after adding Extra Emergecny Personnel
 -(void)adjustFramingForEmergencyView
 {
-//    CGRect frame = _vwEmergencyPersonnel.frame;
-//    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
-//    
-//    ThirdSection *objThird;
-//    
-//    for (UIView *aView in [_vwEmergencyPersonnel subviews]) {
-//        
-//        if ([aView isKindOfClass:[ThirdSection class]]) {
-//            
-//            objThird = (ThirdSection*) aView;
-//        }
-//    }
-//    
-//    if (objThird) {
-//        frame.size.height = CGRectGetMaxY(objThird.frame);
-//        _vwEmergencyPersonnel.frame = frame;
-//    }
-    
     CGRect frame = _vwEmergencyPersonnel.frame;
-    frame.size.height = CGRectGetMaxY(_parentVC.thirdSection.frame);
+    frame.size.height = CGRectGetMaxY(thirdSection.frame);
     _vwEmergencyPersonnel.frame = frame;
     
     frame = _btnCapturePerson.frame;
@@ -362,11 +225,12 @@
 }
 
 - (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
+    
     for (int i = 0; i < [aryEmergency count]; i++) {
-        if (i > 0) {
+//        if (i > 0) {
             [self addEmergencyPersonnel];
-        }
-        EmergencyPersonnelView *vwEmergency = [mutArrEmergencyPersonnel lastObject];
+//        }
+        EmergencyPersonnelView *vwEmergency = [thirdSection.mutArrEmergencyViews lastObject];
       
         EmergencyPersonnelIncident *aEmergencyIncident = aryEmergency[i];
         
@@ -486,6 +350,7 @@
     if (!_isGenderVisible) [self hideGender];
     if (!_isMinorVisible) [self hideMinor];
     if (!_isCapturePhotoVisible) [self hideCaptureButton];
+    if (!_isConditionVisible) [self hideCondition];
     
     [_btnMember setTitle:reportSetupInfo.personInvolved1 forState:UIControlStateNormal];
     [_btnGuest setTitle:reportSetupInfo.personInvolved2 forState:UIControlStateNormal];
@@ -505,6 +370,23 @@
     [self btnIsMinorTapped:_btnNotMinor];
 }
 
+-(void)hideCondition{
+    
+    
+    
+        [_vwConditions setHidden:YES];
+        CGRect frame = _vwNatureOfIncident.frame;
+        frame.origin.y = _vwConditions.frame.origin.y;
+        _vwNatureOfIncident.frame = frame;
+        frame = _vwIncidentDetail.frame;
+        frame.size.height = CGRectGetMaxY(_vwNatureOfIncident.frame);
+        _vwIncidentDetail.frame = frame;
+        
+        frame = _vwEmergencyPersonnel.frame;
+        frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+        _vwEmergencyPersonnel.frame = frame;
+    
+}
 
 - (void)hideAffiliation {
     [_vwAffiliation setHidden:YES];
@@ -524,13 +406,17 @@
     frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
     _vwEmployee.frame = frame;
     
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+    
     frame = _vwCommon.frame;
     frame.origin.y = _vwEmployee.frame.origin.y;
     _vwCommon.frame = frame;
     
-    frame = _vwGuest.frame;
-    frame.origin.y = _vwEmployee.frame.origin.y;
-    _vwGuest.frame = frame;
+    frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
 }
 
 
@@ -549,13 +435,19 @@
     frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
     _vwEmployee.frame = frame;
     
+    frame = _vwGuest.frame;
+    frame.origin.y = _vwEmployee.frame.origin.y;
+    _vwGuest.frame = frame;
+    
     frame = _vwCommon.frame;
     frame.origin.y = _vwEmployee.frame.origin.y;
     _vwCommon.frame = frame;
     
-    frame = _vwGuest.frame;
-    frame.origin.y = _vwEmployee.frame.origin.y;
-    _vwGuest.frame = frame;
+    frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+   
 }
 
 - (void)hideDateOfBirth {
@@ -571,6 +463,14 @@
     frame = _vwCommon.frame;
     frame.size.height = CGRectGetMaxY(_vwMinor.frame);
     _vwCommon.frame = frame;
+    
+    frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
 }
 
 - (void)hideMinor {
@@ -578,6 +478,15 @@
     CGRect frame = _vwCommon.frame;
     frame.size.height = CGRectGetMinY(_vwMinor.frame);
     _vwCommon.frame = frame;
+    
+    frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
 }
 
 - (void)hideCaptureButton {
@@ -597,6 +506,8 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
+     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    
     if ([textField isEqual:_txtDob]) {
 //        [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
@@ -608,6 +519,46 @@
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         [dropDown showDropDownWith:STATES view:textField key:nil];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtActivity]) {
+        [self setKeepViewInFrameForTextField:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        NSArray *ary = [[_parentVC.reportSetupInfo.activityList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtWeather]) {
+         [self setKeepViewInFrameForTextField:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        NSArray *ary = [[_parentVC.reportSetupInfo.conditionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtEquipment]) {
+         [self setKeepViewInFrameForTextField:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        NSArray *ary = [[_parentVC.reportSetupInfo.equipmentList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtChooseIncident]) {
+        [self setKeepViewInFrameForTextField:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        NSArray *ary = [[_parentVC.reportSetupInfo.natureList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
+        allowEditing = NO;
+    }
+    else if ([textField isEqual:_txtActionTaken]) {
+         [self setKeepViewInFrameForTextField:textField];
+        DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
+        dropDown.delegate = self;
+        NSArray *ary = [[_parentVC.reportSetupInfo.actionList allObjects] sortedArrayUsingDescriptors:@[sort]];
+        [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }
     return allowEditing;
@@ -682,6 +633,12 @@
     }
     
 }
+- (void)setKeepViewInFrameForTextField:(UIView*)vw {
+    CGPoint point = [vw.superview.superview convertPoint:vw.frame.origin toView:_parentVC.scrlMainView];
+    if (point.y <_parentVC.scrlMainView.contentOffset.y || point.y > _parentVC.scrlMainView.contentOffset.y + _parentVC.scrlMainView.frame.size.height) {
+        [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, point.y - 50) animated:NO];
+    }
+}
 
 #pragma mark - UIActionSheet Delegate
 
@@ -703,6 +660,16 @@
     }
     else {
         [sender setText:[value valueForKey:@"name"]];
+        if (sender == _txtActionTaken) {
+            ActionTakenList *aTask = (ActionTakenList *) value;
+            
+            NSLog(@"%d",aTask.emergencyPersonnel.boolValue);
+            
+            if (aTask.emergencyPersonnel.boolValue)
+                
+                [self addEmergencyPersonnel];
+            
+        }
     }
 }
 
@@ -740,60 +707,4 @@
         }
     }
 }
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 5)
-    {
-        if (buttonIndex == 0){
-            EmergencyPersonnelView *objEmergency = (EmergencyPersonnelView*)[_vwEmergencyPersonnel viewWithTag:totalEmergencyPersonnelCount+200];
-            
-            
-            CGRect frame = _vwEmergencyPersonnel.frame;
-            frame.size.height = frame.size.height - objEmergency.frame.size.height;
-            _vwEmergencyPersonnel.frame = frame;
-            totalEmergencyPersonnelCount --;
-            [mutArrEmergencyPersonnel removeObject:objEmergency];
-   
-            frame = _btnAddEmergency.frame;
-            frame.origin.y = CGRectGetMinY(objEmergency.frame);
-            _btnAddEmergency.frame = frame;
-            
-            frame = _btnRemoveEmergency.frame;
-            frame.origin.y = _btnAddEmergency.frame.origin.y;
-            _btnRemoveEmergency.frame = frame;
-            
-            frame = _vwEmergencyPersonnel.frame;
-            frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
-            frame.size.height = CGRectGetMaxY(_btnAddEmergency.frame);
-            _vwEmergencyPersonnel.frame = frame;
-            
-            
-            frame = _btnCapturePerson.frame;
-            frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
-            _btnCapturePerson.frame = frame;
-            
-            frame = self.frame;
-            frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
-            self.frame = frame;
-            
-            frame = _parentVC.vwPersonalInfo.frame;
-            frame.size.height = CGRectGetMaxY(self.frame);
-            _parentVC.vwPersonalInfo.frame = frame;
-            
-            if (totalEmergencyPersonnelCount<=1) {
-                _btnRemoveEmergency.hidden=YES;
-            }else{
-                _btnRemoveEmergency.hidden=NO;
-            }
-            int yPosition = _parentVC.scrlMainView.contentOffset.y - objEmergency.frame.size.height;
-            
-            if (yPosition < _parentVC.scrlMainView.contentOffset.y) {
-                [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, yPosition)];
-            }
-            
-            [objEmergency removeFromSuperview];
-            
-        }
-    }
-}
-
 @end

@@ -93,9 +93,18 @@
                 nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
             }
         }
+       
+        frame = _vwBodilyFluid.vwBloodbornePathogens.frame;
+        frame.origin.y = nextY;
+        _vwBodilyFluid.vwBloodbornePathogens.frame = frame;
+        
         
         frame = _vwBodilyFluid.vwStaffMember.frame;
-        frame.origin.y = nextY;
+        if (_parentVC.reportSetupInfo.showBloodbornePathogens.boolValue) {
+            frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwBloodbornePathogens.frame);
+        }else{
+            frame.origin.y = CGRectGetMinY(_vwBodilyFluid.vwBloodbornePathogens.frame);
+        }
         _vwBodilyFluid.vwStaffMember.frame = frame;
         
         frame = _vwBodilyFluid.frame;
@@ -302,8 +311,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
     
     NSMutableArray *ary1 = [NSMutableArray arrayWithArray:[_parentVC.reportSetupInfo.careProviderList allObjects]];
-//    [ary1 addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
-//    [ary1 addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
+
     
     NSArray *ary = [ary1 filteredArrayUsingPredicate:predicate];
     if (ary.count > 0) careProvidedBy = [[ary firstObject] valueForKey:@"careProvidedID"];
@@ -324,7 +332,6 @@
     if (!aSignatureName) {
         aSignatureName = @"";
     }
-    
     NSMutableArray *mutArrEmergency = [NSMutableArray array];
    
     for (EmergencyPersonnelView *vwEmergency in  _vwBodilyFluid.thirdSection.mutArrEmergencyViews) {
@@ -336,18 +343,18 @@
             time911Called = vwEmergency.txtTime911Called.text;
         }
         
-        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+        if ([vwEmergency.txtTimeOfArrival.text isEqualToString:@""]) {
             timeArrival = [NSNull null];
         }
         else {
-            timeArrival = vwEmergency.txtTime911Called.text;
+            timeArrival = vwEmergency.txtTimeOfArrival.text;
         }
         
-        if ([vwEmergency.txtTime911Called.text isEqualToString:@""]) {
+        if ([vwEmergency.txtTimeOfDeparture.text isEqualToString:@""]) {
             timeDeparture = [NSNull null];
         }
         else {
-            timeDeparture = vwEmergency.txtTime911Called.text;
+            timeDeparture = vwEmergency.txtTimeOfDeparture.text;
         }
         NSDictionary *aDict = @{@"FirstName":vwEmergency.txtFirstName.trimText, @"MiddleInitial":vwEmergency.txtMI.trimText, @"LastName":vwEmergency.txtLastName.trimText, @"Phone":vwEmergency.txtPhone.text, @"AdditionalInformation":vwEmergency.txvAdditionalInfo.text, @"CaseNumber":vwEmergency.txtCaseNo.trimText, @"BadgeNumber":vwEmergency.txtBadge.trimText, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
         [mutArrEmergency addObject:aDict];

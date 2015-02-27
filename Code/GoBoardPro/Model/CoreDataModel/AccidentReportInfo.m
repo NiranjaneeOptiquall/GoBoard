@@ -2,7 +2,7 @@
 //  AccidentReportInfo.m
 //  GoBoardPro
 //
-//  Created by ind726 on 04/02/15.
+//  Created by ind726 on 26/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -65,19 +65,23 @@
 @dynamic showPhotoIcon;
 @dynamic showRefusedSelfCareText;
 @dynamic showSelfCareText;
+@dynamic notificationField1Alert;
+@dynamic notificationField2Alert;
+@dynamic notificationField3Alert;
+@dynamic notificationField4Alert;
 @dynamic abdomenInjuryList;
 @dynamic actionList;
 @dynamic activityList;
-@dynamic rightArmInjuryList;
 @dynamic bodypartInjuryType;
 @dynamic careProviderList;
 @dynamic conditionList;
 @dynamic equipmentList;
 @dynamic generalInjuryType;
 @dynamic headInjuryList;
-@dynamic rightLegInjuryList;
-@dynamic requiredFields;
 @dynamic leftArmInjuryList;
 @dynamic leftLegInjuryList;
+@dynamic requiredFields;
+@dynamic rightArmInjuryList;
+@dynamic rightLegInjuryList;
 
 @end

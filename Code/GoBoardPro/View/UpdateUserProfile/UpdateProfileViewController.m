@@ -106,7 +106,7 @@
     NSMutableArray *aMutArrCertificate = [NSMutableArray array];
     for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
         if ([certificate isKindOfClass:[AddCertificateView class]]) {
-            id aPhotoData, fileName;
+            id aPhotoData, fileName, strDropDownId,strExpDate,strCertificateId;
             if (certificate.imgCertificate) {
                 NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
                 aPhotoData = [aData base64EncodedStringWithOptions:0];
@@ -115,6 +115,7 @@
             else {
                 aPhotoData = [NSNull null];
             }
+            
             if (certificate.strCertificateFileName) {
                 fileName = certificate.strCertificateFileName;
             }
@@ -122,8 +123,33 @@
                 fileName = [NSNull null];
             }
             
-            [aMutArrCertificate addObject:@{@"RequirementId": certificate.strDropDownId, @"ExpirationDate":certificate.txtExpDate.trimText, @"Id":(certificate.strCertificateId) ? certificate.strCertificateId : @"", @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false"}];
-            //,
+            if (certificate.strDropDownId) {
+                strDropDownId = certificate.strDropDownId;
+            }else{
+               
+                alert(@"", @"Please select Certificate");
+                [certificate.txtCertificateName becomeFirstResponder];
+                return;
+            }
+            
+            if (certificate.txtExpDate.trimText.length >0) {
+                strExpDate = certificate.txtExpDate.text;
+            }else{
+                
+                alert(@"", @"Please select Expiration Date");
+                [certificate btnSelectExpDate:certificate.btnExpDate];
+                return;
+                
+            }
+           
+            if (certificate.strCertificateId) {
+                strCertificateId = certificate.strCertificateId;
+            }else{
+                strCertificateId = [NSNull null];
+            }
+            
+            [aMutArrCertificate addObject:@{@"RequirementId":strDropDownId, @"ExpirationDate": strExpDate, @"Id":strCertificateId, @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false"}];
+            
         }
     }
     [aMutArrCertificate addObjectsFromArray:mutArrDeletedCertificates];

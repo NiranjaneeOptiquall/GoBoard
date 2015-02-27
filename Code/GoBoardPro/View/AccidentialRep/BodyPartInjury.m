@@ -73,6 +73,16 @@
     frame = [self frame];
     frame.size.height = CGRectGetMaxY(_vwInjuryDetails.frame);
     [self setFrame:frame];
+    
+    if (bodyPartIndex>0) {
+        UIButton *aBtn = (UIButton*) [self viewWithTag:bodyPartIndex];
+        [self btnInjureadBodyPartTapped:aBtn];
+        selectedBodyPart = 0;
+    }else{
+        [self btnInjureadBodyPartTapped:_btnHead];
+    }
+    
+    
 }
 
 - (IBAction)btnAddAnotherInjuryTapped:(id)sender {
@@ -200,16 +210,14 @@
         selectedBodyPartLocation = RightLeg;
     }
     bodyPartIndex = [sender tag];
+    
+    selectedBodyPart = 0;
     [_tblInjuredBodyPartList reloadData];
     
 }
 
 - (void)manageData {
-//    mutArrBodyPart = [[NSMutableArray alloc] init];
-//    [mutArrBodyPart addObject:HEAD_INJURY];
-//    [mutArrBodyPart addObject:CHEST_INJURY];
-//    [mutArrBodyPart addObject:ARM_INJURY];
-//    [mutArrBodyPart addObject:LEG_INJURY];
+
     [_tblInjuredBodyPartList registerNib:[UINib nibWithNibName:@"BodyInjuryBodyPartCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"cell"];
     [_tblAddedInjuryList registerNib:[UINib nibWithNibName:@"InjuryListCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"cell"];
 }
@@ -348,8 +356,7 @@
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]]];
-//        [ary addObject:@{@"name":@"Self Care", @"careProvidedID":@"-1"}];
-//        [ary addObject:@{@"name":@"Refused Care", @"careProvidedID":@"-2"}];
+
         [dropDown showDropDownWith:ary view:textField key:@"name"];
         allowEditing = NO;
     }

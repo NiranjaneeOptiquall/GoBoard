@@ -2,7 +2,7 @@
 //  ActionTakenList.m
 //  GoBoardPro
 //
-//  Created by ind726 on 04/02/15.
+//  Created by ind726 on 25/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -16,6 +16,7 @@
 @dynamic actionId;
 @dynamic name;
 @dynamic sequence;
+@dynamic emergencyPersonnel;
 @dynamic accidentInfo;
 @dynamic incidentType;
 

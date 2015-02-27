@@ -13,7 +13,7 @@
 #import "IncidentReportInfo.h"
 #import "UserLocation.h"
 #import "UserFacility.h"
-#import "ThirdSection.h"
+
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalWitnessCount;
     IncidentActionTaken *actionTaken;
@@ -27,7 +27,7 @@
     
     NSString *strReportType;
 }
-@property (weak, nonatomic) ThirdSection *thirdSection;
+
 @property (weak, nonatomic)  IncidentReportInfo *reportSetupInfo;
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
@@ -40,14 +40,17 @@
 
 
 @property (weak, nonatomic) IBOutlet UIView *vwAfterPersonalInfo;
-@property (weak, nonatomic) IBOutlet UIView *vwConditions;
-@property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
+//@property (weak, nonatomic) IBOutlet UIView *vwConditions;
+//@property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
 
 @property (weak, nonatomic) IBOutlet UIView *vwWitnesses;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddWitness;
 @property (strong, nonatomic) IBOutlet UIButton *btnRemoveWitness;
 @property (weak, nonatomic) IBOutlet UIView *vwEmployeeInfo;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpFName;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblDisclaimer;
+@property (strong, nonatomic) IBOutlet UILabel *lblDisclaimerDetail;
 
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpMI;
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpLName;
@@ -66,11 +69,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtLocation;
 @property (weak, nonatomic) IBOutlet UITextView *txvIncidentDesc;
 @property (weak, nonatomic) IBOutlet UILabel *lblIncidentDesc;
-@property (weak, nonatomic) IBOutlet UITextField *txtActivity;
-@property (weak, nonatomic) IBOutlet UITextField *txtWeather;
-@property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
-@property (weak, nonatomic) IBOutlet UITextField *txtChooseIncident;
-@property (weak, nonatomic) IBOutlet UITextField *txtActionTaken;
+//@property (weak, nonatomic) IBOutlet UITextField *txtActivity;
+//@property (weak, nonatomic) IBOutlet UITextField *txtWeather;
+//@property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
+//@property (weak, nonatomic) IBOutlet UITextField *txtChooseIncident;
+//@property (weak, nonatomic) IBOutlet UITextField *txtActionTaken;
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 
 @property (weak, nonatomic) IBOutlet UIButton *btn911Called;

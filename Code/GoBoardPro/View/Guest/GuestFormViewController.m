@@ -178,7 +178,9 @@
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
     [aLbl setText:[obj valueForKey:@"name"]];
-    
+    UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
+    [aLblInstruction setText:[obj valueForKey:@"instructions"]];
+    [aLblInstruction sizeToFit];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;

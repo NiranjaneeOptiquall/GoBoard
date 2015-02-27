@@ -2,7 +2,7 @@
 //  TaskList.m
 //  GoBoardPro
 //
-//  Created by ind558 on 05/01/15.
+//  Created by ind726 on 23/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -23,9 +23,10 @@
 @dynamic name;
 @dynamic response;
 @dynamic responseType;
+@dynamic sequence;
 @dynamic taskDateTime;
 @dynamic taskId;
-@dynamic sequence;
+@dynamic location;
 @dynamic responseTypeValues;
 
 @end

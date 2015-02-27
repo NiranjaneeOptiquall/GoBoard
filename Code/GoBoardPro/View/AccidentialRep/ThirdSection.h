@@ -23,6 +23,8 @@
     
     
 }
+
+@property (nonatomic, assign)  NSInteger totalBodilyFluidCount, totalEmergencyPersonnelCount;
 @property (nonatomic, assign) BOOL isShowEmergencyResponse;
 
 @property (strong, nonatomic) NSMutableArray *mutArrEmergencyViews;
@@ -35,6 +37,8 @@
 - (IBAction)btnAddEmergencyPersonnel:(id)sender;
 - (IBAction)btnDeleteEmergencyPersonnel:(UIButton *)sender;
 
+- (void)resetSelfFrame;
+- (void)addEmergencyPersonnel;
 - (void)initialSetUp;
 - (BOOL)isThirdSectionValidationSuccess;
 

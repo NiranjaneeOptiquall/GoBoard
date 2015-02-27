@@ -335,8 +335,9 @@
         aList.name = [aDict objectForKey:@"Name"];
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         aList.sequence = [aDict objectForKey:@"Sequence"];
+        aList.location = [aDict objectForKey:@"Location"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
         NSDate *aDate = [formatter dateFromString:[[aDict[@"TaskDateTime"] componentsSeparatedByString:@"."] firstObject]];
         aList.taskDateTime = aDate;
@@ -449,12 +450,18 @@
         report.showNotificationField3 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField3"] boolValue]];
         report.showNotificationField4 = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField4"] boolValue]];
         
+        report.notificationField1Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField1Alert"] boolValue]];
+        report.notificationField2Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField2Alert"] boolValue]];
+        report.notificationField3Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField3Alert"] boolValue]];
+        report.notificationField4Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField4Alert"] boolValue]];
+        
         // Add ActionTaker
         NSMutableSet *actionSet = [NSMutableSet set];
         for (NSDictionary *dict in [aDict objectForKey:@"ActionTakenList"]) {
             ActionTakenList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"ActionTakenList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             obj.actionId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
+            obj.emergencyPersonnel = [[dict objectForKey:@"EmergencyPersonnel"] stringValue];
             obj.incidentType = report;
             [actionSet addObject:obj];
         }
@@ -613,6 +620,11 @@
     report.showNotificationField2 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField2"] boolValue]];
     report.showNotificationField3 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField3"] boolValue]];
     report.showNotificationField4 =  [NSNumber numberWithBool:[[aDict objectForKey:@"ShowNotificationField4"] boolValue]];
+    
+    report.notificationField1Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField1Alert"] boolValue]];
+    report.notificationField2Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField2Alert"] boolValue]];
+    report.notificationField3Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField3Alert"] boolValue]];
+    report.notificationField4Alert = [NSNumber numberWithBool:[[aDict objectForKey:@"NotificationField4Alert"] boolValue]];
     
     report.showConditions = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowConditions"] boolValue]];
     report.showEmployeeId = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmployeeId"] boolValue]];

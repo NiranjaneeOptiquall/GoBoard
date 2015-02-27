@@ -2,7 +2,7 @@
 //  TaskList.h
 //  GoBoardPro
 //
-//  Created by ind558 on 05/01/15.
+//  Created by ind726 on 23/02/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -24,9 +24,10 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * response;
 @property (nonatomic, retain) NSString * responseType;
+@property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSDate * taskDateTime;
 @property (nonatomic, retain) NSString * taskId;
-@property (nonatomic, retain) NSNumber * sequence;
+@property (nonatomic, retain) NSString * location;
 @property (nonatomic, retain) NSSet *responseTypeValues;
 @end
 

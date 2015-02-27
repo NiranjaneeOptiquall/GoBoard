@@ -35,6 +35,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnPoliceCalled;
 @property (weak, nonatomic) IBOutlet UIButton *btnManager;
 @property (weak, nonatomic) IBOutlet UIButton *btnNone;
+@property (strong, nonatomic) IBOutlet UILabel *lblDisclaimer;
+@property (strong, nonatomic) IBOutlet UILabel *lblDisclaimerDetail;
 @property (weak, nonatomic) IBOutlet UIView *vwBasicDetail;
 @property (weak, nonatomic) IBOutlet UIView *vwFirstSection;
 @property (weak, nonatomic) IBOutlet UIView *vwAddMoreFirstSection;

@@ -76,4 +76,6 @@
 - (void)shouldShowFirstAddView:(BOOL)show;
 - (void)shouldShowParticipantsSignatureView:(BOOL)show;
 - (void)shouldShowEmergencyPersonnelView:(BOOL)show;
+
+- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency;
 @end

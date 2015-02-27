@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnRemove;
 
 @property (strong, nonatomic) UIImage *imgCertificate;
+@property (strong, nonatomic) IBOutlet UIButton *btnExpDate;
 - (IBAction)btnSelectExpDate:(id)sender;
 - (IBAction)btnCaptureCertificatieImageTapped:(id)sender;
 

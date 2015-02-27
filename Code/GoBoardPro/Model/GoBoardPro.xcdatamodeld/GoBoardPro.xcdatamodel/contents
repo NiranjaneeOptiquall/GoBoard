@@ -59,12 +59,16 @@
         <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField2Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
@@ -134,6 +138,7 @@
     </entity>
     <entity name="ActionTakenList" representedClassName="ActionTakenList" syncable="YES">
         <attribute name="actionId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emergencyPersonnel" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportInfo" inverseName="actionList" inverseEntity="AccidentReportInfo" syncable="YES"/>
@@ -284,12 +289,16 @@
         <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField2Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField3" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
@@ -351,14 +360,18 @@
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="natureList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
+        <attribute name="actionTakenId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="activityTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliationTypeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="alternatePhone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="apartmentNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="conditionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateOfBirth" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="duringWorkHours" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="employeeTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="equipmentTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="genderTypeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfFirstName" optional="YES" attributeType="String" syncable="YES"/>
@@ -368,6 +381,7 @@
         <attribute name="memberId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="middleInitial" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="minor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="natureId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="personTypeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="primaryPhone" optional="YES" attributeType="String" syncable="YES"/>
@@ -501,6 +515,7 @@
         <attribute name="isCommentTask" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isCommentWorkOrder" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
@@ -556,9 +571,9 @@
     <elements>
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="103"/>
         <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="673"/>
-        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="853"/>
+        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="915"/>
         <element name="AccidentReportSubmit" positionX="954" positionY="-385" width="128" height="403"/>
-        <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="118"/>
+        <element name="ActionTakenList" positionX="-432" positionY="-211" width="128" height="133"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="118"/>
         <element name="BodyPartInjuryType" positionX="97" positionY="297" width="128" height="103"/>
         <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="178"/>
@@ -576,13 +591,13 @@
         <element name="FormsList" positionX="-443" positionY="720" width="128" height="148"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
-        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="643"/>
+        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
         <element name="InjuryDetail" positionX="495" positionY="635" width="128" height="148"/>
         <element name="LeftArmInjuryList" positionX="108" positionY="977" width="128" height="103"/>
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
-        <element name="Person" positionX="520" positionY="-738" width="182" height="418"/>
+        <element name="Person" positionX="520" positionY="-738" width="182" height="493"/>
         <element name="QuestionDetails" positionX="124" positionY="1097" width="128" height="118"/>
         <element name="Report" positionX="342" positionY="-684" width="128" height="495"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
@@ -595,7 +610,7 @@
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
         <element name="SurveyQuestions" positionX="-513" positionY="905" width="128" height="148"/>
         <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="88"/>
-        <element name="TaskList" positionX="135" positionY="-972" width="128" height="268"/>
+        <element name="TaskList" positionX="135" positionY="-972" width="128" height="283"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="88"/>

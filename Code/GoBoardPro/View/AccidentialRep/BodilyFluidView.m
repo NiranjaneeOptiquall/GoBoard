@@ -7,8 +7,8 @@
 //
 
 #import "BodilyFluidView.h"
-
-
+#import "EmergencyPersonnelView.h"
+#import "Emergency.h"
 
 @implementation BodilyFluidView
 @synthesize thirdSection;
@@ -22,6 +22,46 @@
 
 - (void)awakeFromNib {
    
+}
+
+#pragma mark - To Populate Emergency Personnel
+- (void)populateEmergencyPersonnel:(NSArray*)aryEmergency {
+    
+    for (int i = 0; i < [aryEmergency count]; i++) {
+        if (i > 0) {
+            [thirdSection addEmergencyPersonnel];
+            [thirdSection resetSelfFrame];
+        }
+        
+        EmergencyPersonnelView *vwEmergency = [thirdSection.mutArrEmergencyViews lastObject];
+        
+        Emergency *aEmergency = aryEmergency[i];
+        
+        vwEmergency.txtFirstName.text = aEmergency.firstName;
+        vwEmergency.txtLastName.text = aEmergency.lastName;
+        vwEmergency.txtMI.text = aEmergency.middileInitial;
+        vwEmergency.txtCaseNo.text = aEmergency.caseNumber;
+        vwEmergency.txtPhone.text = aEmergency.phone;
+        vwEmergency.txtBadge.text = aEmergency.badgeNumber;
+        vwEmergency.txtTime911Called.text = aEmergency.time911Called;
+        vwEmergency.txtTimeOfArrival.text = aEmergency.time911Arrival;
+        vwEmergency.txtTimeOfDeparture.text = aEmergency.time911Departure;
+        vwEmergency.txvAdditionalInfo.text = aEmergency.additionalInformation;
+    }
+    
+    CGRect frame = _vwEmergencyPersonnel.frame;
+    
+    frame.size.height = CGRectGetMaxY(thirdSection.frame);
+    
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _vwStaffMember.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _vwStaffMember.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+    self.frame = frame;
 }
 
 - (IBAction)btnBloodbornePathogenTapped:(UIButton*)sender {
@@ -68,15 +108,19 @@
     }
     
     
-    CGRect frame = _vwFirstAid.frame;
+    CGRect frame = _vwStaffMember.frame;
     frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
-    _vwFirstAid.frame = frame;
+    _vwStaffMember.frame = frame;
+   
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+    self.frame = frame;
     
-    [self setIsFirstAidVisible:_isFirstAidVisible];
-    [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
-    [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
-    [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
-    [self setIsEmergencyPersonnelVisible:_isEmergencyPersonnelVisible];
+//    [self setIsFirstAidVisible:_isFirstAidVisible];
+//    [self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
+//    [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
+//    [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
+//    [self setIsEmergencyPersonnelVisible:_isEmergencyPersonnelVisible];
 
 }
 
@@ -170,6 +214,7 @@
 - (void)setIsBloodBornePathogenVisible:(BOOL)isBloodBornePathogenVisible {
     _isBloodBornePathogenVisible = isBloodBornePathogenVisible;
     if (_isBloodBornePathogenVisible) {
+        [_vwBloodbornePathogens setHidden:NO];
         [self btnWasBloodPresentTapped:_btnBloodNotPresent];
         [self btnBloodbornePathogenTapped:_btnSelfTreated];
         [self btnExposedToBloodTapped:_btnExposedToBlood];
@@ -177,9 +222,13 @@
     }
     else {
         [_vwBloodbornePathogens setHidden:YES];
-        CGRect frame = _vwFirstAid.frame;
+        CGRect frame = _vwStaffMember.frame;
         frame.origin.y = CGRectGetMinY(_vwBloodbornePathogens.frame);
-        _vwFirstAid.frame = frame;
+        _vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
+        self.frame = frame;
     }
 }
 
@@ -202,8 +251,12 @@
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -226,8 +279,12 @@
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -250,8 +307,12 @@
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -270,8 +331,12 @@
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -293,8 +358,12 @@
         frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -308,10 +377,13 @@
         frame.origin.y = CGRectGetMinY(_vwParticipantSignature.frame);
         _vwEmergencyPersonnel.frame = frame;
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
-        _vwStaffMember.frame = frame;
+        _vwBloodbornePathogens.frame = frame;
         
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
+        _vwStaffMember.frame = frame;
         frame = self.frame;
         frame.size.height = CGRectGetMaxY(_vwStaffMember.frame);
         self.frame = frame;
@@ -326,6 +398,12 @@
     
     if (show) {
         [_vwEmergencyPersonnel setHidden:NO];
+        
+        for (UIView *aVW in _vwEmergencyPersonnel.subviews) {
+            if ([aVW isKindOfClass:[ThirdSection class]]) {
+                [aVW removeFromSuperview];
+            }
+        }
         
         thirdSection = (ThirdSection*)[[[NSBundle mainBundle] loadNibNamed:@"ThirdSection" owner:self options:nil] firstObject];
         thirdSection.parentVC = _parentVC;
@@ -359,8 +437,12 @@
         }
         
         
-        frame = _vwStaffMember.frame;
+        frame = _vwBloodbornePathogens.frame;
         frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
+        frame = _vwStaffMember.frame;
+        frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -384,28 +466,6 @@
             thirdSection.isShowEmergencyResponse = NO;
             thirdSection = nil;
         }
-        
-//        if (_isEmergencyPersonnelVisible) {
-//            
-//            CGRect frame = _vwEmergencyPersonnel.frame;
-//            
-//            
-//            if (_isParticipantSignatureVisible && (_isRefusedCareSelected || _isSelfCareSelected)) {
-//                frame.origin.y = CGRectGetMaxY(_vwParticipantSignature.frame);
-//            }else{
-//                if(_isSelfCareStatementVisible) {
-//                    frame.origin.y = CGRectGetMaxY(_vwSelfCare.frame);
-//                }else{
-//                    if (_isRefuseCareStatementVisible) {
-//                        frame.origin.y = CGRectGetMaxY(_vwRefuseCare.frame);
-//                    }else{
-//                        frame.origin.y = CGRectGetMinY(_vwRefuseCare.frame);
-//                    }
-//                }
-//            }
-//            _vwEmergencyPersonnel.frame = frame;
-//        }
-        
         CGRect frame = _vwEmergencyPersonnel.frame;
         
         if (_isParticipantSignatureVisible && (_isRefusedCareSelected || _isSelfCareSelected)) {
@@ -423,8 +483,12 @@
         }
         _vwEmergencyPersonnel.frame = frame;
         
+        frame = _vwBloodbornePathogens.frame;
+        frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+        _vwBloodbornePathogens.frame = frame;
+        
         frame = _vwStaffMember.frame;
-        frame.origin.y = CGRectGetMinY(_vwEmergencyPersonnel.frame);
+        frame.origin.y = CGRectGetMinY(_vwBloodbornePathogens.frame);
         _vwStaffMember.frame = frame;
         
         frame = self.frame;
@@ -435,21 +499,7 @@
 // Third Section Delegate Method for adjusting frame after adding Extra Emergecny Personnel
 -(void)adjustFramingForEmergencyView
 {
-//     CGRect frame = _vwEmergencyPersonnel.frame;
-//    ThirdSection *objThird;
-//    for (UIView *aView in [_vwEmergencyPersonnel subviews]) {
-//        
-//        if ([aView isKindOfClass:[ThirdSection class]]) {
-//            
-//            objThird = (ThirdSection*) aView;
-//        }
-//    }
-//    
-//    CGRect frame = _vwEmergencyPersonnel.frame;
-//    if (objThird) {
-//        frame.size.height = CGRectGetMaxY(objThird.frame);
-//        _vwEmergencyPersonnel.frame = frame;
-//    }
+
     CGRect frame = _vwEmergencyPersonnel.frame;
     frame.size.height = CGRectGetMaxY(thirdSection.frame);
     _vwEmergencyPersonnel.frame = frame;
@@ -475,8 +525,12 @@
     }
     
     
-    frame = _vwStaffMember.frame;
+    frame = _vwBloodbornePathogens.frame;
     frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _vwBloodbornePathogens.frame = frame;
+    
+    frame = _vwStaffMember.frame;
+    frame.origin.y = CGRectGetMaxY(_vwBloodbornePathogens.frame);
     _vwStaffMember.frame = frame;
     
     frame = self.frame;
@@ -505,10 +559,10 @@
         _vwRefuseCare.frame = frame;
     }
     
-    //[self setIsRefuseCareStatementVisible:_isRefuseCareStatementVisible];
     [self setIsSelfCareStatementVisible:_isSelfCareStatementVisible];
     [self setIsParticipantSignatureVisible:_isParticipantSignatureVisible];
     [self setIsEmergencyPersonnelVisible:_isEmergencyPersonnelVisible];
+    [self setIsBloodBornePathogenVisible:_isBloodBornePathogenVisible];
 }
 
 @end

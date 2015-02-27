@@ -13,13 +13,12 @@
 #import "IncidentDetailViewController.h"
 #import "ThirdSection.h"
 
-@interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate,ThirdSectionFrameDelegate> {
+@interface IncidentPersonalInformation : UIView<UIPopoverControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate,ThirdSectionFrameDelegate, UITextFieldDelegate> {
     UIPopoverController *popOver;
     NSArray *requiredFields;
     NSInteger totalEmergencyPersonnelCount;
-    
-    ThirdSection *thirdSection;
 }
+@property (weak, nonatomic) ThirdSection *thirdSection;
 @property (strong, nonatomic)  NSMutableArray *mutArrEmergencyPersonnel;
 @property (strong, nonatomic) IncidentDetailViewController *parentVC;
 @property (weak, nonatomic) IBOutlet UIView *vwPersonalInvolved;
@@ -69,14 +68,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnMinor;
 
 @property (weak, nonatomic) IBOutlet UIView *vwEmergencyPersonnel;
-@property (weak, nonatomic) IBOutlet UIButton *btnAddEmergency;
-@property (strong, nonatomic) IBOutlet UIButton *btnRemoveEmergency;
-
-
 -(void)addEmergencyPersonnel;
 
-- (IBAction)btnAddEmergencyPersonnelTapped:(id)sender;
-- (IBAction)btnDeleteEmergencyPersonnelTapped:(UIButton *)sender;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnCapturePerson;
 
@@ -106,12 +99,27 @@
 @property (assign, nonatomic) BOOL isGenderVisible;
 @property (assign, nonatomic) BOOL isMinorVisible;
 @property (assign, nonatomic) BOOL isCapturePhotoVisible;
+@property (assign, nonatomic) BOOL isConditionVisible;
 
 @property (assign, nonatomic) NSInteger intPersonInvolved;
 @property (assign, nonatomic) NSInteger intAffiliationType;
 @property (assign, nonatomic) NSInteger intGenderType;
 
+
+@property (strong, nonatomic) IBOutlet UIView *vwIncidentDetail;
+@property (weak, nonatomic) IBOutlet UITextField *txtActivity;
+@property (weak, nonatomic) IBOutlet UIView *vwConditions;
+@property (weak, nonatomic) IBOutlet UITextField *txtWeather;
+@property (weak, nonatomic) IBOutlet UITextField *txtEquipment;
+
+@property (weak, nonatomic) IBOutlet UIView *vwNatureOfIncident;
+@property (weak, nonatomic) IBOutlet UITextField *txtChooseIncident;
+@property (weak, nonatomic) IBOutlet UITextField *txtActionTaken;
+
 @property (strong, nonatomic) UIImage *imgIncidentPerson;
+
+
+
 
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;
