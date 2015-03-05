@@ -50,6 +50,7 @@
     else if ([segue.identifier isEqualToString:@"GoToLink"]) {
         WebViewController *webVC = (WebViewController*)segue.destinationViewController;
         webVC.strRequestURL = [sender valueForKey:@"link"];
+        webVC.strInstruction = [sender valueForKey:@"instructions"];
     }
 }
 
@@ -178,9 +179,9 @@
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
     [aLbl setText:[obj valueForKey:@"name"]];
-    UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
-    [aLblInstruction setText:[obj valueForKey:@"instructions"]];
-    [aLblInstruction sizeToFit];
+    //UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
+    //[aLblInstruction setText:[obj valueForKey:@"instructions"]];
+    //[aLblInstruction sizeToFit];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;

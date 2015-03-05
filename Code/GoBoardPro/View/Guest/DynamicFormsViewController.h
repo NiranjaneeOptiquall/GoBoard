@@ -18,6 +18,7 @@
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblForm;
+@property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
 
 @property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
 @property (assign, nonatomic) BOOL isSurvey;

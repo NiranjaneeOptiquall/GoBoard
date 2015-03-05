@@ -302,6 +302,14 @@
         }
         WitnessView *vwWitness = [finalSection.mutArrWitnessViews lastObject];
         Witness *aWitness = aryWitness[i];
+        if (aWitness.personTypeId.intValue == 3) {
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnEmployee];
+        }
+        else if(aWitness.personTypeId.intValue == 2){
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnGuest];
+        }else{
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnMember];
+        }
         vwWitness.txtWitnessFName.text = aWitness.firstName;
         vwWitness.txtWitnessLName.text = aWitness.lastName;
         vwWitness.txtWitnessMI.text = aWitness.middleInitial;
@@ -413,6 +421,8 @@
         aWitness.alternatePhone = [dict objectForKey:@"AlternatePhone"];
         aWitness.email = [dict objectForKey:@"Email"];
         aWitness.witnessWrittenAccount = [dict objectForKey:@"IncidentDescription"];
+        aWitness.personTypeId = [dict objectForKey:@"PersonTypeId"];
+        
         aWitness.accidentInfo = aReport;
         [witnessSet addObject:aWitness];
     }
@@ -803,7 +813,7 @@
 
     NSMutableArray *mutArrWitness = [NSMutableArray array];
     for (WitnessView *vwWitness in finalSection.mutArrWitnessViews) {
-        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
+        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text,@"PersonTypeId" : [NSString stringWithFormat:@"%d",vwWitness.witnessInvolved]};
         [mutArrWitness addObject:aDict];
     }
     NSString *facilityId = [NSString string], *locationId = [NSString string];

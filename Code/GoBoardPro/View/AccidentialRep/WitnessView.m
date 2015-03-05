@@ -26,6 +26,7 @@
     [_btnGuest setSelected:NO];
     [_btnMember setSelected:NO];
     [sender setSelected:YES];
+    _witnessInvolved = sender.tag;
 }
 
 - (void)setRequiredFields:(NSArray*)fields {

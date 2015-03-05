@@ -31,7 +31,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *markerEmail;
 @property (weak, nonatomic) IBOutlet UILabel *lblDescCaption;
 @property (weak, nonatomic) IBOutlet UILabel *markerDescription;
-
+@property (assign, nonatomic) NSInteger witnessInvolved;
 
 - (IBAction)btnWitnessStatusTapped:(UIButton*)sender;
 - (BOOL)isWitnessViewValidationSuccess;

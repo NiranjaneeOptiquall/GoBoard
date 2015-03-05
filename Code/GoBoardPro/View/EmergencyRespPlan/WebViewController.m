@@ -17,6 +17,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [_webDetailView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_strRequestURL]]];
+    
+    if ([_strInstruction isEqualToString:@""]) {
+       [_lblInstruction setText:@"No instructions available."];
+    }else{
+        [_lblInstruction setText:_strInstruction];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

@@ -152,23 +152,44 @@
             
         }
     }
-    [aMutArrCertificate addObjectsFromArray:mutArrDeletedCertificates];
-    NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
-    id aTerms;
-    if ([[User currentUser] isAcceptedTermsAndConditions]) {
-        aTerms = [NSNull null];
-    }
-    else {
-        aTerms = (_btnAgreeTerms.isSelected) ? @"true" : @"false";
-    }
-    NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG, @"AcceptedTermsAndConditions":aTerms};
-    [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
-        [self updateUser];
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-    } failure:^(NSError *error, NSDictionary *response) {
-        
-    }];
     
+    BOOL isDuplicate = NO;
+    
+    for (int i = 0 ; i < aMutArrCertificate.count; i++) {
+        
+        NSString *aStrRequirementId = [[aMutArrCertificate objectAtIndex:i]objectForKey:@"RequirementId"];
+        
+        for (int j = i+1 ; j <= aMutArrCertificate.count-1; j++) {
+            
+            if ([aStrRequirementId isEqualToString:[[aMutArrCertificate objectAtIndex:j] objectForKey:@"RequirementId"]]) {
+                isDuplicate = YES;
+                
+            }
+        }
+    }
+    if (isDuplicate) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"You cannot enter same certificate more than once." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
+        [alert show];
+    }else{
+        
+        [aMutArrCertificate addObjectsFromArray:mutArrDeletedCertificates];
+        
+        NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
+        id aTerms;
+        if ([[User currentUser] isAcceptedTermsAndConditions]) {
+            aTerms = [NSNull null];
+        }
+        else {
+            aTerms = (_btnAgreeTerms.isSelected) ? @"true" : @"false";
+        }
+        NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG, @"AcceptedTermsAndConditions":aTerms};
+        [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
+            [self updateUser];
+            [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        } failure:^(NSError *error, NSDictionary *response) {
+            
+        }];
+    }
 }
 
 - (void)updateUser {

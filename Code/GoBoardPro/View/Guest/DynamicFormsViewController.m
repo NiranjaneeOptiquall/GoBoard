@@ -23,6 +23,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
+    if ([[_objFormOrSurvey valueForKey:@"instructions"] isEqualToString:@""]) {
+        [_lblInstruction setText:@"No instructions available."];
+
+    }else{
+         [_lblInstruction setText:[_objFormOrSurvey valueForKey:@"instructions"]];    }
+   
     [self fetchQuestion];
     // Do any additional setup after loading the view.
 }

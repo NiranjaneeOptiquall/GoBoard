@@ -14,8 +14,12 @@
 }
 
 @property (weak, nonatomic) IBOutlet UIWebView *webDetailView;
+@property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
+
 
 @property (strong, nonatomic) NSString *strRequestURL;
+@property (strong, nonatomic) NSString *strInstruction;
+
 
 - (IBAction)btnBackTapped:(id)sender;
 @end

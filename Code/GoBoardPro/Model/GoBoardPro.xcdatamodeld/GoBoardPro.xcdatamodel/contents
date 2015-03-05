@@ -564,6 +564,7 @@
         <attribute name="homePhone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="middleInitial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="personTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="witnessWrittenAccount" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccidentReportSubmit" inverseName="witnesses" inverseEntity="AccidentReportSubmit" syncable="YES"/>
         <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="witnesses" inverseEntity="Report" syncable="YES"/>
@@ -616,6 +617,6 @@
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="88"/>
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="178"/>
-        <element name="Witness" positionX="520" positionY="-52" width="128" height="178"/>
+        <element name="Witness" positionX="520" positionY="-52" width="128" height="195"/>
     </elements>
 </model>

@@ -430,7 +430,7 @@
         
         NSMutableArray *mutArrWitness = [NSMutableArray array];
         for (Witness *obj in [aReport.witnesses allObjects]) {
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount};
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount, @"PersonTypeId" : obj.personTypeId};
             [mutArrWitness addObject:aDict];
         }
         
@@ -527,7 +527,7 @@
         
         NSMutableArray *mutArrWitness = [NSMutableArray array];
         for (Witness *obj in [aReport.witnesses allObjects]) {
-            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount};
+            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"HomePhone":obj.homePhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"IncidentDescription":obj.witnessWrittenAccount , @"PersonTypeId" : obj.personTypeId};
             [mutArrWitness addObject:aDict];
         }
 

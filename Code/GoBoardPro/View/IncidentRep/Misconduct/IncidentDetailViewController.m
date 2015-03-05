@@ -270,6 +270,16 @@
         }
         WitnessView *vwWitness = [mutArrWitnessView lastObject];
         Witness *aWitness = aryWitness[i];
+        
+        if (aWitness.personTypeId.intValue == 3) {
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnEmployee];
+        }
+        else if(aWitness.personTypeId.intValue == 2){
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnGuest];
+        }else{
+            [vwWitness btnWitnessStatusTapped:vwWitness.btnMember];
+        }
+        
         vwWitness.txtWitnessFName.text = aWitness.firstName;
         vwWitness.txtWitnessLName.text = aWitness.lastName;
         vwWitness.txtWitnessMI.text = aWitness.middleInitial;
@@ -632,7 +642,7 @@
     
     NSMutableArray *mutArrWitness = [NSMutableArray array];
     for (WitnessView *vwWitness in mutArrWitnessView) {
-        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.text, @"MiddleInitial":vwWitness.txtWitnessMI.text, @"LastName":vwWitness.txtWitnessLName.text, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text};
+        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.text, @"MiddleInitial":vwWitness.txtWitnessMI.text, @"LastName":vwWitness.txtWitnessLName.text, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text, @"PersonTypeId" : [NSString stringWithFormat:@"%d",vwWitness.witnessInvolved]};
         [mutArrWitness addObject:aDict];
     }
     NSString *strFollowUpDate = [aFormatter stringFromDate:managementFollowupDate];
@@ -858,6 +868,7 @@
         aPerson.state = [dict objectForKey:@"State"];
         aPerson.zip = [dict objectForKey:@"Zip"];
         aPerson.employeeTitle = [dict objectForKey:@"EmployeeTitle"];
+        
         aPerson.memberId =  ([[dict objectForKey:@"PersonTypeId"] intValue] == 3) ? [dict objectForKey:@"EmployeId"] : [dict objectForKey:@"MemberId"];
         aPerson.dateOfBirth = [dict objectForKey:@"DateOfBirth"];
         aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
@@ -940,6 +951,7 @@
         aWitness.alternatePhone = [dict objectForKey:@"AlternatePhone"];
         aWitness.email = [dict objectForKey:@"Email"];
         aWitness.witnessWrittenAccount = [dict objectForKey:@"IncidentDescription"];
+        aWitness.personTypeId = [dict objectForKey:@"PersonTypeId"];
         aWitness.report = aReport;
         [witnessSet addObject:aWitness];
     }

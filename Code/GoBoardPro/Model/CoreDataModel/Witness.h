@@ -2,8 +2,8 @@
 //  Witness.h
 //  GoBoardPro
 //
-//  Created by ind558 on 26/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 03/03/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -20,7 +20,8 @@
 @property (nonatomic, retain) NSString * lastName;
 @property (nonatomic, retain) NSString * middleInitial;
 @property (nonatomic, retain) NSString * witnessWrittenAccount;
-@property (nonatomic, retain) Report *report;
+@property (nonatomic, retain) NSString * personTypeId;
 @property (nonatomic, retain) AccidentReportSubmit *accidentInfo;
+@property (nonatomic, retain) Report *report;
 
 @end
