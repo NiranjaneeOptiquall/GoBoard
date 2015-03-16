@@ -151,6 +151,16 @@
     }
 }
 
+- (IBAction)btnDailyEndTimeTapped:(UIButton *)sender {
+    [sender setSelected:![sender isSelected]];
+    if ([sender isSelected]) {
+        [_txtDailyEndTime setUserInteractionEnabled:YES];
+    }
+    else {
+        [_txtDailyEndTime setUserInteractionEnabled:NO];
+    }
+}
+
 - (IBAction)btnDailyEveryTapped:(UIButton *)sender {
 
     [sender setSelected:!sender.isSelected];
@@ -189,6 +199,28 @@
 
 - (IBAction)btnWeekDayTapped:(UIButton *)sender {
     [sender setSelected:![sender isSelected]];
+}
+
+- (IBAction)btnWeeklyStartTimeTapped:(UIButton *)sender {
+    
+    [sender setSelected:![sender isSelected]];
+    if ([sender isSelected]) {
+        [_txtWeeklyStartTime setUserInteractionEnabled:YES];
+    }
+    else {
+        [_txtWeeklyStartTime setUserInteractionEnabled:NO];
+    }
+}
+
+- (IBAction)btnWeeklyEndTimeTapped:(UIButton *)sender {
+    
+    [sender setSelected:![sender isSelected]];
+    if ([sender isSelected]) {
+        [_txtWeeklyEndTime setUserInteractionEnabled:YES];
+    }
+    else {
+        [_txtWeeklyEndTime setUserInteractionEnabled:NO];
+    }
 }
 
 - (IBAction)btnMonthlyTapped:(UIButton *)sender {
@@ -800,6 +832,28 @@
         return NO;
     }
     else if ([textField isEqual:_txtDailyStartTime]) {
+        _txtDailyStartTime.text = @"";
+        _txtDailyEndTime.text = @"";
+        [self setKeepViewInFrame:textField];
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        return NO;
+    }else if ([textField isEqual:_txtDailyEndTime]) {
+         _txtDailyEndTime.text = @"";
+        [self setKeepViewInFrame:textField];
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        return NO;
+    }
+    else if ([textField isEqual:_txtWeeklyStartTime]) {
+        _txtWeeklyStartTime.text = @"";
+        _txtWeeklyEndTime.text = @"";
+        [self setKeepViewInFrame:textField];
+        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        return NO;
+    }else if ([textField isEqual:_txtWeeklyEndTime]) {
+        _txtWeeklyEndTime.text = @"";
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
         [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];

@@ -52,7 +52,7 @@
     aLog.desc = _txvDailyLog.text;
     aLog.userId = [[User currentUser] userId];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
     //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     aLog.date = [aFormatter stringFromDate:[NSDate date]];
     aLog.includeInEndOfDayReport = @"false";
@@ -60,8 +60,17 @@
     [gblAppDelegate.managedObjectContext insertObject:aLog];
     [gblAppDelegate.managedObjectContext save:nil];
     [mutArrDailyList addObject:aLog];
+    
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+    NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[mutArrDailyList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
+    [mutArrDailyList removeAllObjects];
+    [mutArrDailyList addObjectsFromArray:aMutArrTemp];
+    aMutArrTemp = nil;
+    
     [_lblNoRecords setHidden:YES];
+    
     [_tblDailyLog reloadData];
+    
     _txvDailyLog.text = @"";
 }
 
@@ -75,6 +84,14 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId MATCHES[cd] %@", [[User currentUser] userId]];
     [request setPredicate:predicate];
     mutArrDailyList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+    
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+    NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[mutArrDailyList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
+    [mutArrDailyList removeAllObjects];
+    [mutArrDailyList addObjectsFromArray:aMutArrTemp];
+    aMutArrTemp = nil;
+
+    [mutArrDailyList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]];
     if ([mutArrDailyList count] == 0) {
         [_lblNoRecords setHidden:NO];
     }
@@ -93,7 +110,7 @@
     UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
     NSDate *aDate = [aFormatter dateFromString:log.date];
     [aFormatter setDateFormat:@"hh:mm a"];
     
@@ -112,7 +129,6 @@
         frame.size.height = aLblLog.frame.size.height + 40;
         bgView.frame = frame;
     }
-    
     return aCell;
 }
 

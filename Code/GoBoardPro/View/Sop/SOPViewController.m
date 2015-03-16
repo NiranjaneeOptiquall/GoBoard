@@ -29,14 +29,67 @@
         CGRect frame = _tblSOPCategory.frame;
         frame.size.height = _mutArrCategoryHierarchy.count * _tblSOPCategory.rowHeight;
         _tblSOPCategory.frame = frame;
+        
         if (CGRectGetMaxY(frame) > _tblSOPList.frame.origin.y) {
             frame = _tblSOPList.frame;
             frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblSOPList.frame = frame;
+    
         }
-//        [_lblTitle setText:[_dictSOPCategory objectForKey:@"Title"]];
-        mutArrSOPList = [_dictSOPCategory objectForKey:@"Categories"];
+        
+        frame = _lblDescription.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_lblDescription setFrame:frame];
+        
+        frame = _viewWeb.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_viewWeb setFrame:frame];
+
+        
+        
+        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
+        mutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        //If Type has a value of 1 (Link) then the 'Link' property should be set
+        //If Type has a value of 2 (Text) then the 'Description' property should be set
+        
+        [_lblDescription setHidden:YES];
+        [_viewWeb setHidden:YES];
+        
+        if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 2) {
+            [_lblDescription setHidden:NO];
+             NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
+            [_lblDescription setText:aStrDescription];
+            
+            NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
+            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_lblDescription.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            CGRect frameLblDescription  = _lblDescription.frame;
+            frameLblDescription.size.height = height;
+            _lblDescription.frame = frameLblDescription;
+            _lblDescription.numberOfLines = 0;
+            [_lblDescription setFont:[UIFont systemFontOfSize:20]];
+            [_lblDescription setTextAlignment:NSTextAlignmentLeft];
+            
+            frame = _tblSOPList.frame;
+            frame.origin.y = CGRectGetMaxY(_lblDescription.frame) + 5;
+            _tblSOPList.frame = frame;
+            
+        }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1){
+            [_viewWeb setHidden:NO];
+            
+            frame = _viewWeb.frame;
+            frame.size.height = self.view.frame.size.height - _tblSOPList.frame.origin.y;
+            [_viewWeb setFrame:frame];
+            
+            NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Link"]];
+             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
+        }
+        
+//        frame = _tblSOPList.frame;
+//        frame.origin.y = frame.origin.y + 400;
+//        _tblSOPList.frame = frame;
     }
 }
 
@@ -98,7 +151,10 @@
 - (void)getSOPCategories {
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
         _dictSOPCategory = response;
-        mutArrSOPList = [response objectForKey:@"SopCategories"];
+        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
+        mutArrSOPList = [NSMutableArray arrayWithArray:[[response objectForKey:@"SopCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+    
         if ([mutArrSOPList count] == 0) {
             [_lblNoRecords setHidden:NO];
         }
@@ -141,8 +197,18 @@
         }
         NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
         UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-        [aLbl setText:[aDict objectForKey:@"Title"]];
-        if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
+       
+        //[aLbl setText:[aDict objectForKey:@"Title"]];
+        
+        NSString *aStrTitle = [NSString stringWithFormat:@"%@ %@",[aDict objectForKey:@"DisplaySequence"],[aDict objectForKey:@"Title"]];
+        [aLbl setText:aStrTitle];
+//        if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
+//            [aCell setAccessoryType:UITableViewCellAccessoryNone];
+//        }
+//        else {
+//            [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+//        }
+        if (![aDict objectForKey:@"Children"]  || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]]) {
             [aCell setAccessoryType:UITableViewCellAccessoryNone];
         }
         else {
@@ -161,16 +227,25 @@
     if (!_mutArrCategoryHierarchy) {
         _mutArrCategoryHierarchy = [NSMutableArray array];
     }
-    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Categories"] count] == 0 ) {
-        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
-    }
-    else {
-        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
-        sopView.dictSOPCategory = aDict;
-        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
-        [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
-        [self.navigationController pushViewController:sopView animated:YES];
-    }
+//    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Categories"] count] == 0 ) {
+//        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
+//    }
+    
+    SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+    sopView.dictSOPCategory = aDict;
+    sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+    [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
+    [self.navigationController pushViewController:sopView animated:YES];
+    
+//    if (![aDict objectForKey:@"Children"] || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Children"] count] == 0 ) {
+//        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
+//    }
+//    else {
+//        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+//        sopView.dictSOPCategory = aDict;
+//        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+//        [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
+//        [self.navigationController pushViewController:sopView animated:YES];
+//    }
 }
-
 @end

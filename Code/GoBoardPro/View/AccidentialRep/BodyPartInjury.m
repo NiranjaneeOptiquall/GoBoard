@@ -102,6 +102,10 @@
         NSArray *ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] filteredArrayUsingPredicate:predicate];
         if ([ary count] > 0) {
             [aDict setObject:[ary firstObject] forKey:@"GeneralInjuryType"];
+        }else if ([ary count] == 0 && [_txtEnjuryType.text isEqualToString:@"Other"]){
+            [aDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:@"-1",@"typeId",@"Other",@"name", nil] forKey:@"GeneralInjuryType"];
+        }else{
+            [aDict setObject:@"" forKey:@"GeneralInjuryType"];
         }
         
     }

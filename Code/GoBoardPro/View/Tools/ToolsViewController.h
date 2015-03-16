@@ -53,7 +53,9 @@
 @property (weak, nonatomic) IBOutlet UIView *vwDaily;
 @property (weak, nonatomic) IBOutlet UIButton *btnDaily;
 @property (weak, nonatomic) IBOutlet UIButton *btnDailyStartTime;
+@property (strong, nonatomic) IBOutlet UIButton *btnDailyEndTime;
 @property (weak, nonatomic) IBOutlet UITextField *txtDailyStartTime;
+@property (strong, nonatomic) IBOutlet UITextField *txtDailyEndTime;
 @property (weak, nonatomic) IBOutlet UIButton *btnDailyEvery;
 @property (weak, nonatomic) IBOutlet UITextField *txtDailyEvery;
 @property (weak, nonatomic) IBOutlet UITextField *txtDailyDays;
@@ -70,6 +72,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnWeekThursday;
 @property (weak, nonatomic) IBOutlet UIButton *btnWeekFriday;
 @property (weak, nonatomic) IBOutlet UIButton *btnWeekSaturday;
+@property (weak, nonatomic) IBOutlet UIButton *btnWeeklyStartTime;
+@property (strong, nonatomic) IBOutlet UIButton *btnWeeklyEndTime;
+@property (weak, nonatomic) IBOutlet UITextField *txtWeeklyStartTime;
+@property (strong, nonatomic) IBOutlet UITextField *txtWeeklyEndTime;
+
 
 @property (weak, nonatomic) IBOutlet UIView *vwMonthly;
 @property (weak, nonatomic) IBOutlet UIButton *btnMonthly;
@@ -105,11 +112,17 @@
 - (IBAction)btnAddDropdownFieldTapped:(id)sender;
 - (IBAction)btnDailyTapped:(UIButton *)sender;
 - (IBAction)btnDailyStartTimeTapped:(UIButton *)sender;
+- (IBAction)btnDailyEndTimeTapped:(UIButton *)sender;
 - (IBAction)btnDailyEveryTapped:(UIButton *)sender;
+
 - (IBAction)btnDailyEveryWeekdayTapped:(UIButton *)sender;
+
 - (IBAction)btnWeeklyTapped:(UIButton *)sender;
 - (IBAction)btnWeeklyEveryTapped:(UIButton *)sender;
 - (IBAction)btnWeekDayTapped:(UIButton *)sender;
+- (IBAction)btnWeeklyStartTimeTapped:(UIButton *)sender;
+- (IBAction)btnWeeklyEndTimeTapped:(UIButton *)sender;
+
 - (IBAction)btnMonthlyTapped:(UIButton *)sender;
 - (IBAction)btnMonthDayTapped:(UIButton *)sender;
 - (IBAction)btnMonthTheTapped:(UIButton *)sender;

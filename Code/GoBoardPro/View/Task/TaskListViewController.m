@@ -119,7 +119,7 @@
         
         NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
-        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]];
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
         
         mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
         
@@ -356,7 +356,7 @@
     
     NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
     
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
    
     mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
     
@@ -405,24 +405,23 @@
     BOOL isCompleted = [task.isCompleted boolValue];
     [aCell.btnKeyboardIcon addTarget:self action:@selector(btnKeyboardIconTapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSDate* sourceDate = task.taskDateTime;
     
+    NSDate* sourceDate = task.taskDateTime;
     NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
     NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
-    
     NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
     NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
     NSTimeInterval interval = sourceGMTOffset - destinationGMTOffset ;
-    
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
-    
+    NSDate* currentDate = [[NSDate alloc]initWithTimeInterval:-interval sinceDate:[NSDate date]]; //Interval is assign by '-' to convert it into EDT Time.
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     [aFormatter setDateFormat:@"hh:mm a"];
-    NSLog(@"%@", [aFormatter stringFromDate:destinationDate]);
+    NSLog(@"String %@", [aFormatter stringFromDate:destinationDate]);
+    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:destinationDate],task.name];
+    
     
     [aCell.imvTextBG setHidden:YES];
-    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:destinationDate],task.name];
     if (isCompleted) {
         if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
@@ -519,7 +518,46 @@
             
             aCell.txtDropDown.userInteractionEnabled = YES;
         }
+        
+        
+        if ( [currentDate compare:task.expirationTime/*sourceDate*/] == NSOrderedDescending) {
+            NSLog(@"Task Is Expire and is passed away.");
+            
+            if ([task.responseType isEqualToString:@"checkbox"]) {
+                [aCell.btnCheckBox setHidden:NO];
+                [aCell.btnCheckBox setUserInteractionEnabled:NO];
+                
+            }
+            else if ([task.responseType isEqualToString:@"numeric"] || [task.responseType isEqualToString:@"textbox"]) {
+                [aCell.imvTextBG setHidden:NO];
+                [aCell.txtTemp setHidden:NO];
+                [aCell.txtTemp setUserInteractionEnabled:NO];
+                [aCell.txtTemp setText:task.response];
+                [aCell.txtTemp setTextColor:[UIColor colorWithRed:120.0/255.0 green:197.0/255.0 blue:121.0/255.0 alpha:1.0]];
+            }
+            else if ([task.responseType isEqualToString:@"yesno"]) {
+                [aCell.btnYes setHidden:NO];
+                [aCell.btnYes setUserInteractionEnabled:NO];
+                [aCell.btnNo setUserInteractionEnabled:NO];
+                
+            }
+            else if ([task.responseType isEqualToString:@"dropdown"]) {
+                [aCell.vwDrpDown setHidden:NO];
+                aCell.txtDropDown.userInteractionEnabled = NO;
+            }
+            NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:aStrTaskName];
+            [attributeString addAttribute:NSStrikethroughStyleAttributeName
+                                    value:@2
+                                    range:NSMakeRange(0, [attributeString length])];
+            [aCell.lblTask setAttributedText:attributeString];
+            [aCell.lblTask setTextColor:[UIColor redColor]];
+            [aCell.btnKeyboardIcon setHidden:YES];
+            
+        }else if ([currentDate compare:sourceDate] == NSOrderedAscending || NSOrderedSame){
+            NSLog(@"Task Is not Expire and will occur after words");
+        }
     }
+    
     [aCell.lblFarenhite setTextColor:aCell.txtTemp.textColor];
     [aCell.lblFarenhite setHidden:aCell.txtTemp.isHidden];
     UIView *aView = [aCell.contentView viewWithTag:4];

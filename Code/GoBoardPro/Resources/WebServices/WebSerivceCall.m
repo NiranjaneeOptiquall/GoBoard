@@ -112,8 +112,10 @@
 - (void)callServiceForEmergencyResponsePlan:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
-        [self deleteAllERPData];
-        [self inserAllERPData:[response objectForKey:@"ErpCategories"]];
+        if ([response objectForKey:@"ErpCategories"] != [NSNull null]) {
+            [self deleteAllERPData];
+            [self inserAllERPData:[response objectForKey:@"ErpCategories"]];
+        }
         if ([gblAppDelegate.managedObjectContext save:nil]) {
             isWSComplete = YES;
         }
@@ -279,7 +281,7 @@
                 [set addObject:subLoc];
             }
         }
-        location.sublocations = set;
+        location.sublocations = [NSOrderedSet orderedSetWithArray:set.allObjects];
         [gblAppDelegate.managedObjectContext insertObject:location];
     }
     [gblAppDelegate.managedObjectContext save:nil];
@@ -336,11 +338,17 @@
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         aList.sequence = [aDict objectForKey:@"Sequence"];
         aList.location = [aDict objectForKey:@"Location"];
+        
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+        
         NSDate *aDate = [formatter dateFromString:[[aDict[@"TaskDateTime"] componentsSeparatedByString:@"."] firstObject]];
         aList.taskDateTime = aDate;
+        
+        NSDate *aDateExpirationTime = [formatter dateFromString:[[aDict[@"ExpirationTime"] componentsSeparatedByString:@"."] firstObject]];
+        aList.expirationTime = aDateExpirationTime;
+       
         if ([[aDict objectForKey:@"Response"] isKindOfClass:[NSNull class]]) {
             aList.response = @"";
         }
@@ -991,6 +999,7 @@
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];
+                        responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
                         responseType.question = aQuestion;
                         [responseTypeSet addObject:responseType];
                     }

@@ -1188,7 +1188,7 @@
                                 <color key="textColor" red="0.092164418750000004" green="0.57348134569999998" blue="0.54913660220000005" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="fhz-50-kGk">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="fhz-50-kGk">
                                 <rect key="frame" x="201" y="32" width="448" height="78"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1291,16 +1291,30 @@
                                     <action selector="btnSOPListTapped:" destination="tPs-ox-bdu" eventType="touchUpInside" id="wiU-Vt-K3h"/>
                                 </connections>
                             </button>
+                            <webView hidden="YES" contentMode="scaleToFill" id="dj6-sS-jAy">
+                                <rect key="frame" x="0.0" y="115" width="768" height="375"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This Lable is for Description of Children.." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vbd-Kv-gg9">
+                                <rect key="frame" x="30" y="175" width="708" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="GoJ-gi-Uc3"/>
                     <connections>
                         <outlet property="btnSOPList" destination="len-Tt-jYF" id="ebt-YO-NZF"/>
+                        <outlet property="lblDescription" destination="Vbd-Kv-gg9" id="wkT-cp-var"/>
                         <outlet property="lblNoRecords" destination="TXw-MF-j8h" id="xHO-bQ-7jb"/>
                         <outlet property="lblTitle" destination="A1V-oF-cqP" id="KVh-LO-aM6"/>
                         <outlet property="tblSOPCategory" destination="fhz-50-kGk" id="WVo-JG-7uu"/>
                         <outlet property="tblSOPList" destination="K6L-zn-Elb" id="rWL-E5-9Fw"/>
+                        <outlet property="viewWeb" destination="dj6-sS-jAy" id="oOq-eD-wvJ"/>
                         <segue destination="XTs-0T-cTc" kind="push" identifier="SOPDetail" id="3q1-JH-hDo"/>
                     </connections>
                 </viewController>
@@ -1340,7 +1354,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GdK-lU-aoN">
-                                                    <rect key="frame" x="0.0" y="2304" width="768" height="16"/>
+                                                    <rect key="frame" x="0.0" y="2532" width="768" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1443,6 +1457,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="survey_icon.png" id="4sY-Lf-dp3">
+                                <rect key="frame" x="110" y="11" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest Survey" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5GZ-MY-Ogv">
+                                <rect key="frame" x="210" y="35" width="403" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" red="0.092164418750000004" green="0.57348134569999998" blue="0.54913660220000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="2T1-nk-Gm4">
                                 <rect key="frame" x="8" y="28" width="98" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1457,7 +1482,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Instruction" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hnv-4K-Wy6">
-                                <rect key="frame" x="16" y="75" width="720" height="50"/>
+                                <rect key="frame" x="16" y="82" width="720" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1476,7 +1501,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="Mkd-Nq-UBy"/>
                     <connections>
+                        <outlet property="imgSurveyIcon" destination="4sY-Lf-dp3" id="fvT-id-94O"/>
                         <outlet property="lblInstruction" destination="hnv-4K-Wy6" id="MbU-P5-q8W"/>
+                        <outlet property="lblSurveyTitle" destination="5GZ-MY-Ogv" id="SXF-Nw-HgQ"/>
                         <outlet property="webDetailView" destination="Q4Z-6o-O6G" id="mAz-eq-2ym"/>
                     </connections>
                 </viewController>
@@ -1543,7 +1570,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7zc-mS-vLg">
-                                                    <rect key="frame" x="0.0" y="3249" width="768" height="8"/>
+                                                    <rect key="frame" x="0.0" y="3590" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921568627447" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2307,7 +2334,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ddM-Zv-SgB">
-                                                    <rect key="frame" x="0.0" y="1929" width="768" height="8"/>
+                                                    <rect key="frame" x="0.0" y="2026" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -2446,7 +2473,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time: ##:## AM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="i09-CX-ZvL">
-                                                                    <rect key="frame" x="15" y="8" width="196" height="21"/>
+                                                                    <rect key="frame" x="15" y="8" width="400" height="21"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2803,7 +2830,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3qq-dw-j9M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="928" y="948"/>
+            <point key="canvasLocation" x="884" y="617"/>
         </scene>
         <!--Graph Detail View Controller-->
         <scene sceneID="ccE-oB-48D">
@@ -3656,7 +3683,6 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rfj-SN-Cl8">
-                                                    <rect key="frame" x="0.0" y="2299" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -4281,7 +4307,7 @@
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </view>
                                             <view contentMode="scaleToFill" id="N9c-5f-djs">
-                                                <rect key="frame" x="0.0" y="867" width="768" height="664"/>
+                                                <rect key="frame" x="0.0" y="869" width="768" height="664"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How often does your task need to be done?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="O5p-P2-41d">
@@ -4324,7 +4350,7 @@
                                                                 </connections>
                                                             </button>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small_text_box.png" id="Bf6-7s-eM7">
-                                                                <rect key="frame" x="283" y="55" width="113" height="45"/>
+                                                                <rect key="frame" x="282" y="55" width="113" height="45"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             </imageView>
                                                             <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="08:00 AM" minimumFontSize="17" id="0qG-2O-jsY">
@@ -4334,6 +4360,32 @@
                                                                 <textInputTraits key="textInputTraits"/>
                                                                 <connections>
                                                                     <outlet property="delegate" destination="XMa-RO-lIx" id="oLp-gz-enx"/>
+                                                                </connections>
+                                                            </textField>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="92D-4v-L9c">
+                                                                <rect key="frame" x="413" y="54" width="138" height="44"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                                <state key="normal" title="End Time" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEndTimeTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="5Ga-te-TOB"/>
+                                                                </connections>
+                                                            </button>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small_text_box.png" id="w0z-a8-tAZ">
+                                                                <rect key="frame" x="558" y="55" width="113" height="45"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            </imageView>
+                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="08:00 AM" minimumFontSize="17" id="l56-Ca-Utb">
+                                                                <rect key="frame" x="561" y="62" width="106" height="30"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="XMa-RO-lIx" id="8Gq-5x-PVB"/>
                                                                 </connections>
                                                             </textField>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="23K-P9-pHJ">
@@ -4366,7 +4418,7 @@
                                                                     <outlet property="delegate" destination="XMa-RO-lIx" id="c7l-Q6-7fN"/>
                                                                 </connections>
                                                             </textField>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="QdO-0t-U2k">
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="QdO-0t-U2k">
                                                                 <rect key="frame" x="546" y="124" width="182" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
@@ -4375,12 +4427,112 @@
                                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </state>
                                                                 <state key="selected" image="selected_check_box.png"/>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TqG-FG-9xL">
+                                                                <rect key="frame" x="117" y="178" width="134" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Sunday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
                                                                 <connections>
-                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="mfU-DD-5xl"/>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="Nwk-ob-cz0"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Nde-I1-t7D">
+                                                                <rect key="frame" x="267" y="178" width="136" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Monday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="rZC-fa-ISL"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IN4-Zh-bLG">
+                                                                <rect key="frame" x="420" y="178" width="143" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Tuesday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="4dA-yo-qxz"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="pIa-v6-cQp">
+                                                                <rect key="frame" x="573" y="178" width="163" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Wednesday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="GWr-Mf-PVB"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="P6U-qm-1eb">
+                                                                <rect key="frame" x="117" y="238" width="134" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Thursday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="LyJ-Me-7TB"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="D3S-U0-lRj">
+                                                                <rect key="frame" x="267" y="238" width="136" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Friday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="kV9-3z-sbm"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZXD-uR-Sus">
+                                                                <rect key="frame" x="420" y="238" width="143" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                <state key="normal" title="Saturday" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnDailyEveryWeekdayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="UVw-ts-bTN"/>
                                                                 </connections>
                                                             </button>
                                                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.png" id="NON-6y-Hh4">
                                                                 <rect key="frame" x="356" y="56" width="38" height="38"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </imageView>
+                                                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.png" id="nnA-fE-rgz">
+                                                                <rect key="frame" x="633" y="57" width="38" height="38"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             </imageView>
@@ -4551,6 +4703,68 @@
                                                                     <action selector="btnWeekDayTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="Hh2-NZ-5ed"/>
                                                                 </connections>
                                                             </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lkr-8a-iJe">
+                                                                <rect key="frame" x="117" y="224" width="134" height="44"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                                <state key="normal" title="Start Time" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnWeeklyStartTimeTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="dhu-15-usO"/>
+                                                                </connections>
+                                                            </button>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small_text_box.png" id="EBS-yw-Ib5">
+                                                                <rect key="frame" x="272" y="223" width="113" height="45"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            </imageView>
+                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="08:00 AM" minimumFontSize="17" id="ncP-NY-mwJ">
+                                                                <rect key="frame" x="276" y="230" width="106" height="30"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="XMa-RO-lIx" id="Ft6-Ys-xRZ"/>
+                                                                </connections>
+                                                            </textField>
+                                                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.png" id="iT9-Ad-hqx">
+                                                                <rect key="frame" x="346" y="227" width="38" height="38"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </imageView>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WIA-Lk-RGD">
+                                                                <rect key="frame" x="420" y="224" width="143" height="44"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                                <state key="normal" title="End Time" image="check_box.png">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <state key="selected" image="selected_check_box.png"/>
+                                                                <connections>
+                                                                    <action selector="btnWeeklyEndTimeTapped:" destination="XMa-RO-lIx" eventType="touchUpInside" id="RNb-zm-sF3"/>
+                                                                </connections>
+                                                            </button>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small_text_box.png" id="4fO-aU-qKy">
+                                                                <rect key="frame" x="569" y="223" width="113" height="45"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            </imageView>
+                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="08:00 AM" minimumFontSize="17" id="WlF-79-zA6">
+                                                                <rect key="frame" x="573" y="230" width="106" height="30"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits"/>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="XMa-RO-lIx" id="0Pk-eb-vzJ"/>
+                                                                </connections>
+                                                            </textField>
+                                                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.png" id="YJU-ZY-Zql">
+                                                                <rect key="frame" x="644" y="227" width="38" height="38"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </imageView>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     </view>
@@ -5087,6 +5301,7 @@
                         <outlet property="btnAddDropdownField" destination="pes-F7-GAR" id="Bw7-uV-UbB"/>
                         <outlet property="btnCheckBox" destination="DvU-ju-AaN" id="dtS-cU-Lx8"/>
                         <outlet property="btnDaily" destination="LpL-NA-eMD" id="FJD-vn-sva"/>
+                        <outlet property="btnDailyEndTime" destination="92D-4v-L9c" id="4FU-tM-daY"/>
                         <outlet property="btnDailyEvery" destination="23K-P9-pHJ" id="6A3-ZH-Yff"/>
                         <outlet property="btnDailyEveryWeekdays" destination="QdO-0t-U2k" id="z2Q-nD-RLl"/>
                         <outlet property="btnDailyStartTime" destination="MSJ-Tm-GIy" id="CiM-Zl-9I5"/>
@@ -5115,12 +5330,15 @@
                         <outlet property="btnWeekTuesday" destination="CSH-xa-Xhe" id="cqy-6L-f1m"/>
                         <outlet property="btnWeekWednesday" destination="Cy7-c3-kf1" id="PpP-2y-2h5"/>
                         <outlet property="btnWeekly" destination="mRR-l5-w0T" id="NfM-Y8-qit"/>
+                        <outlet property="btnWeeklyEndTime" destination="WIA-Lk-RGD" id="EaF-3m-Jao"/>
+                        <outlet property="btnWeeklyStartTime" destination="lkr-8a-iJe" id="1IP-sK-Vcw"/>
                         <outlet property="btnYearly" destination="qCI-iT-5c9" id="20B-RT-jIr"/>
                         <outlet property="btnYesNo" destination="Wfm-7j-t0A" id="2hf-6t-yho"/>
                         <outlet property="imvDropDownArrow" destination="TgI-wG-JY1" id="L4Y-6L-dPt"/>
                         <outlet property="imvSelectTaskBG" destination="J3d-SI-uUq" id="e9S-tt-wsP"/>
                         <outlet property="scrlMainView" destination="2uN-ai-Wgh" id="Srz-RY-3bV"/>
                         <outlet property="txtDailyDays" destination="dcc-cJ-vLx" id="a6M-PL-Jvi"/>
+                        <outlet property="txtDailyEndTime" destination="l56-Ca-Utb" id="9NH-Ma-dx9"/>
                         <outlet property="txtDailyEvery" destination="prN-pg-QKf" id="YHF-Xa-PSV"/>
                         <outlet property="txtDailyStartTime" destination="0qG-2O-jsY" id="jv3-ML-5Ac"/>
                         <outlet property="txtEveryMonth" destination="YdS-29-RxU" id="ZGA-xe-Dcy"/>
@@ -5140,6 +5358,8 @@
                         <outlet property="txtStatus" destination="hTb-n3-vN1" id="zNu-RJ-1fZ"/>
                         <outlet property="txtTaskTitle" destination="dX7-Mr-JzJ" id="tQy-aq-Rf3"/>
                         <outlet property="txtWeekEvery" destination="F16-H9-MZP" id="gfS-zs-LIz"/>
+                        <outlet property="txtWeeklyEndTime" destination="WlF-79-zA6" id="bDT-rY-Xa4"/>
+                        <outlet property="txtWeeklyStartTime" destination="ncP-NY-mwJ" id="miU-ck-vEa"/>
                         <outlet property="txtYearDate" destination="oaO-dc-3PV" id="j1k-Hw-gTv"/>
                         <outlet property="txtYearMonth" destination="Nsg-1R-Uc7" id="xSB-zj-Lal"/>
                         <outlet property="txtYearOnTheMonth" destination="OUO-nn-aVj" id="kmY-dq-PsG"/>
@@ -6909,7 +7129,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="pPR-kw-p2J"/>
         <segue reference="VBZ-Xi-TK3"/>
-        <segue reference="FJt-hn-2yq"/>
         <segue reference="vif-Tr-xCv"/>
+        <segue reference="hDb-ef-3Vz"/>
     </inferredMetricsTieBreakers>
 </document>

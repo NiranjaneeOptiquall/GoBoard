@@ -49,7 +49,7 @@
         [aDict setObject:[question valueForKey:@"responseType"] forKey:@"responseType"];
         [aDict setObject:[question valueForKey:@"sequence"] forKey:@"sequence"];
         [aDict setObject:@"" forKey:@"answer"];
-        NSSortDescriptor *sortRespType = [NSSortDescriptor sortDescriptorWithKey:@"value" ascending:YES];
+        NSSortDescriptor *sortRespType = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
         NSArray *arrayRespType = [[[question valueForKey:@"responseList"] allObjects] sortedArrayUsingDescriptors:@[sortRespType]];
         NSMutableArray *mutArrResponseType = [NSMutableArray array];
         for (NSManagedObject *respType in arrayRespType) {
@@ -123,7 +123,7 @@
             else if ([aDict[@"responseType"] isEqualToString:@"date"]) {
                 NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
                 //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-                [aFormatter setDateFormat:@"yyyy-MM-dd"];
+                [aFormatter setDateFormat:@"MM/dd/yyyy"];
                 [dict setObject:[aFormatter stringFromDate:aDict[@"answerDate"]] forKey:@"ResponseText"];
             }
             else if ([aDict[@"responseType"] isEqualToString:@"radioButtonList"]) {

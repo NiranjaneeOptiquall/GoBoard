@@ -18,12 +18,49 @@
     [super viewDidLoad];
     [_webDetailView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_strRequestURL]]];
     
+    
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    [self setUpInitials:aStrClientId];
+    
     if ([_strInstruction isEqualToString:@""]) {
        [_lblInstruction setText:@"No instructions available."];
     }else{
         [_lblInstruction setText:_strInstruction];
     }
 }
+
+- (void)setUpInitials:(NSString*)aStrClientId {
+    if (_guestFormType == 1) {
+        // Configure for Take a Survey screen
+        [_imgSurveyIcon setImage:[UIImage imageNamed:@"take_a_survey.png"]];
+        [_lblSurveyTitle setText:@"Guest Survey"];
+      
+    }
+    else if (_guestFormType == 2) {
+        // Configure for Complete Form screen
+        [_imgSurveyIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblSurveyTitle setText:@"Guest Forms"];
+        
+    }
+    else if (_guestFormType == 3) {
+        // Configure for Make a Suggestion screen
+        [_imgSurveyIcon setImage:[UIImage imageNamed:@"make_a_suggestion.png"]];
+        [_lblSurveyTitle setText:@"Guest Suggestion"];
+       
+    }
+    else if (_guestFormType == 4) {
+        // Configure for User Forms
+        [_imgSurveyIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblSurveyTitle setText:@"User Form List"];
+       
+    }
+    else if (_guestFormType == 5) {
+        // Configure for User Survey
+        [_imgSurveyIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblSurveyTitle setText:@"User Surveys"];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

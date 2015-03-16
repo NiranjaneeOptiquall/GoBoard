@@ -51,6 +51,7 @@
         WebViewController *webVC = (WebViewController*)segue.destinationViewController;
         webVC.strRequestURL = [sender valueForKey:@"link"];
         webVC.strInstruction = [sender valueForKey:@"instructions"];
+        webVC.guestFormType = self.guestFormType;
     }
 }
 
@@ -131,12 +132,15 @@
     }
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
     NSPredicate *predicate;
-    if (_guestFormType == 2 || _guestFormType == 3) {
-        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[cd] %@ AND typeId MATCHES[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
-    }
-    else {
-        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
-    }
+    
+    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
+    
+//    if (_guestFormType == 2 || _guestFormType == 3) {
+//        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[cd] %@ AND typeId MATCHES[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
+//    }
+//    else {
+//        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
+//    }
     [request setPredicate:predicate];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [request setSortDescriptors:@[sort]];

@@ -2,7 +2,7 @@
 //  UtilizationCount.h
 //  GoBoardPro
 //
-//  Created by ind558 on 05/01/15.
+//  Created by ind726 on 13/03/15.
 //  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
@@ -21,7 +21,8 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) UtilizationCount *location;
-@property (nonatomic, retain) NSSet *sublocations;
+@property (nonatomic, retain) NSOrderedSet *sublocations;
+
 
 
 @property (nonatomic, retain) NSString *originalMessage;
@@ -36,9 +37,14 @@
 
 @interface UtilizationCount (CoreDataGeneratedAccessors)
 
+- (void)insertObject:(UtilizationCount *)value inSublocationsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromSublocationsAtIndex:(NSUInteger)idx;
+- (void)insertSublocations:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeSublocationsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInSublocationsAtIndex:(NSUInteger)idx withObject:(UtilizationCount *)value;
+- (void)replaceSublocationsAtIndexes:(NSIndexSet *)indexes withSublocations:(NSArray *)values;
 - (void)addSublocationsObject:(UtilizationCount *)value;
 - (void)removeSublocationsObject:(UtilizationCount *)value;
-- (void)addSublocations:(NSSet *)values;
-- (void)removeSublocations:(NSSet *)values;
-
+- (void)addSublocations:(NSOrderedSet *)values;
+- (void)removeSublocations:(NSOrderedSet *)values;
 @end

@@ -503,12 +503,14 @@
     </entity>
     <entity name="SurveyResponseTypeValues" representedClassName="SurveyResponseTypeValues" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="question" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestions" inverseName="responseList" inverseEntity="SurveyQuestions" syncable="YES"/>
     </entity>
     <entity name="TaskList" representedClassName="TaskList" syncable="YES">
         <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="expirationTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="isCommentAreaSupervisor" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isCommentBuildingSupervisor" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isCommentGoBoardGroup" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -555,7 +557,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="sublocations" inverseEntity="UtilizationCount" syncable="YES"/>
-        <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="location" inverseEntity="UtilizationCount" syncable="YES"/>
+        <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="UtilizationCount" inverseName="location" inverseEntity="UtilizationCount" syncable="YES"/>
     </entity>
     <entity name="Witness" representedClassName="Witness" syncable="YES">
         <attribute name="alternatePhone" optional="YES" attributeType="String" syncable="YES"/>
@@ -610,8 +612,8 @@
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
         <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
         <element name="SurveyQuestions" positionX="-513" positionY="905" width="128" height="148"/>
-        <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="88"/>
-        <element name="TaskList" positionX="135" positionY="-972" width="128" height="283"/>
+        <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="103"/>
+        <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="88"/>

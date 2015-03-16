@@ -85,7 +85,7 @@
     }
     NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id", nil];
     NSMutableArray *subLocations = [NSMutableArray array];
-    for (UtilizationCount *subLocation in [location.sublocations allObjects]) {
+    for (UtilizationCount *subLocation in [location.sublocations array]) {
         if (subLocation.isUpdateAvailable) {
             [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime}];
         }
@@ -200,7 +200,7 @@
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
         section = indexPath.section;
-        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
     NSInteger current = [location.lastCount integerValue];
     NSInteger max = [location.capacity integerValue];
@@ -212,7 +212,7 @@
     location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
     if (location.location) {
         NSInteger totalCount = 0;
-        for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+        for (UtilizationCount *loc in location.location.sublocations.array) {
             totalCount += [loc.lastCount integerValue];
         }
         location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
@@ -224,7 +224,7 @@
         location.location.lastCountDateTime = [self getCurrentDate];
     }
     else if (location.sublocations.count > 0) {
-        for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+        for (UtilizationCount *subLoc in location.sublocations.array) {
             subLoc.lastCount = @"0";
             subLoc.isUpdateAvailable = YES;
         }
@@ -251,7 +251,7 @@
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
         section = indexPath.section;
-        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
     NSInteger current = [location.lastCount integerValue];
     current--;
@@ -259,7 +259,7 @@
         location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
         if (location.location) {
             NSInteger totalCount = 0;
-            for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+            for (UtilizationCount *loc in location.location.sublocations.array) {
                 totalCount += [loc.lastCount integerValue];
             }
             location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
@@ -267,7 +267,7 @@
             location.location.lastCountDateTime = [self getCurrentDate];
         }
         else if (location.sublocations.count > 0) {
-            for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+            for (UtilizationCount *subLoc in location.sublocations.array) {
                 subLoc.lastCount = @"0";
                 subLoc.isUpdateAvailable = YES;
             }
@@ -295,7 +295,7 @@
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
         editIndexPath = indexPath;
-        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
     
     _lblPopOverLocation.text = location.name;
@@ -336,7 +336,7 @@
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
         section = indexPath.section;
-        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+        location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
     location.isCountRemainSame = !location.isCountRemainSame;
     location.isUpdateAvailable = YES;
@@ -405,6 +405,30 @@
     if (!error) {
         [mutArrCount addObjectsFromArray:aryCategories];
     }
+    NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]init];
+    
+    for (int i = 0; i < mutArrCount.count; i++) {
+        UtilizationCount *location = [mutArrCount objectAtIndex:i];
+        
+        NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"Name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+        NSMutableArray *aArrTemp = [[[location.sublocations array] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]] mutableCopy];
+        location.sublocations=nil;
+        NSOrderedSet *aSet = [NSOrderedSet orderedSetWithArray:aArrTemp];
+        
+        [location setSublocations:aSet];
+        if ([[location.sublocations array] count] > 0) {
+            NSLog(@"%@",location.sublocations);
+        }
+        [aMutArrTemp addObject:location];
+    }
+    [mutArrCount removeAllObjects];
+    
+    [mutArrCount addObjectsFromArray:aMutArrTemp];
+    
+    aMutArrTemp = nil;
+    
+    NSLog(@"THIS IS SHORTED ARRAY : %@",mutArrCount);
+    
     if ([mutArrCount count] == 0) {
         [_lblNoRecords setHidden:NO];
     }
@@ -413,6 +437,7 @@
             [location setInitialValues];
         }
     }
+    
     [self showTotalCount];
 }
 
@@ -457,8 +482,17 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
+    
     UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
-    UtilizationCount *subLocation = [[location.sublocations allObjects] objectAtIndex:indexPath.row];
+   
+//    if ([location.sublocations allObjects] > 0) {
+//    }
+//    
+//    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"Name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+//    NSMutableArray *aArrTemp =  [NSMutableArray arrayWithArray:[[location.sublocations allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
+    
+    UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:indexPath.row];//[aArrTemp objectAtIndex:indexPath.row];
+    
     [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
     int aCurrent = [subLocation.lastCount intValue];
     
@@ -579,7 +613,7 @@
         [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
     }
     
-    if (_btnToggleSummary.isSelected && [[location.sublocations allObjects] count] > 0) {
+    if (_btnToggleSummary.isSelected && [[location.sublocations array] count] > 0) {
         // Breakup is shown
         [aHeaderView.btnIncreaseCount setHidden:YES];
         [aHeaderView.btnDecreaseCount setHidden:YES];
@@ -618,7 +652,7 @@
     if ([textField isEqual:_txtPopOverMessage]) {
         UtilizationCount *location = nil;
         if (editIndexPath) {
-            location = [[[[mutArrCount objectAtIndex:editIndexPath.section] sublocations] allObjects] objectAtIndex:editIndexPath.row];
+            location = [[[[mutArrCount objectAtIndex:editIndexPath.section] sublocations] array] objectAtIndex:editIndexPath.row];
         }
         else {
             location = [mutArrCount objectAtIndex:editingIndex];
@@ -642,7 +676,7 @@
         else {
             NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
             section = indexPath.section;
-            location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] allObjects] objectAtIndex:indexPath.row];
+            location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
         }
         
         int max = [location.capacity intValue];
@@ -657,7 +691,7 @@
 //            int newCount = [location.lastCount intValue];
             if (location.location) {
                 NSInteger totalCount = 0;
-                for (UtilizationCount *loc in location.location.sublocations.allObjects) {
+                for (UtilizationCount *loc in location.location.sublocations.array) {
                     totalCount += [loc.lastCount integerValue];
                 }
                 location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
@@ -670,7 +704,7 @@
 
             }
             else if (location.sublocations.count > 0) {
-                for (UtilizationCount *subLoc in location.sublocations.allObjects) {
+                for (UtilizationCount *subLoc in location.sublocations.array) {
                     subLoc.lastCount = @"0";
                     subLoc.isUpdateAvailable = YES;
                 }
@@ -684,7 +718,7 @@
                 NSIndexPath *indexPath = [_tblCountList indexPathForCell:(UITableViewCell *)aCell];
                 if (indexPath.section==section) {
                     UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
-                    UtilizationCount *subLocation = [[location.sublocations allObjects] objectAtIndex:indexPath.row];
+                    UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:indexPath.row];
                     [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
                     int aCurrent = [subLocation.lastCount intValue];
                     

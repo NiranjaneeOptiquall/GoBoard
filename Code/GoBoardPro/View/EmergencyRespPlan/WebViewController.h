@@ -14,12 +14,15 @@
 }
 
 @property (weak, nonatomic) IBOutlet UIWebView *webDetailView;
-@property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
 
+@property (strong, nonatomic) IBOutlet UIImageView *imgSurveyIcon;
+@property (strong, nonatomic) IBOutlet UILabel *lblSurveyTitle;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
 
 @property (strong, nonatomic) NSString *strRequestURL;
 @property (strong, nonatomic) NSString *strInstruction;
 
-
+@property (assign, nonatomic) NSInteger guestFormType;
 - (IBAction)btnBackTapped:(id)sender;
 @end

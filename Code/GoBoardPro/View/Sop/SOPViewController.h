@@ -22,4 +22,8 @@
 - (IBAction)unwindBackToSOPListScreen:(UIStoryboardSegue*)segue;
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSOPListTapped:(id)sender;
+
+@property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
+@property (strong, nonatomic) IBOutlet UILabel *lblDescription;
+
 @end

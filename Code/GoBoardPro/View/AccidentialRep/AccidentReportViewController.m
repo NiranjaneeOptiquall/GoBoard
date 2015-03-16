@@ -200,6 +200,9 @@
                 if (obj) {
                     [aMutDict setObject:[obj valueForKey:@"name"] forKey:@"injury"];
                     [aMutDict setObject:obj forKey:@"GeneralInjuryType"];
+                }else if (!obj && injury.generalInjuryTypeId.intValue == -1){
+                    [aMutDict setObject:injury.generalInjuryOther forKey:@"injury"];
+                    [aMutDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:@"-1",@"typeId",injury.generalInjuryOther,@"name", nil] forKey:@"GeneralInjuryType"];
                 }
             }
             if (injury.bodyPartInjuryTypeId) {
@@ -526,6 +529,9 @@
         _vwFirstSection.frame = frame;
 
     }
+    CGRect frame = finalSection.frame;
+    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+    finalSection.frame = frame;
 
     _isUpdate = YES;
 }
@@ -670,6 +676,12 @@
     frame.origin.y = CGRectGetMaxY(_vwBasicDetail.frame);
     
     _vwFirstSection.frame = frame;
+    
+    frame = finalSection.frame;
+   
+    frame.origin.y = CGRectGetMaxY(_vwFirstSection.frame);
+    
+    finalSection.frame = frame;
 }
 
 - (void)addAccidentView {
