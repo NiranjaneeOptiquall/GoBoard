@@ -11,6 +11,7 @@
 
 @interface SOPViewController : UIViewController<UITableViewDelegate, UITableViewDataSource> {
     NSMutableArray *mutArrSOPList;
+    
 }
 @property (strong, nonatomic) NSMutableArray *mutArrCategoryHierarchy;
 @property (strong, nonatomic) NSDictionary *dictSOPCategory;

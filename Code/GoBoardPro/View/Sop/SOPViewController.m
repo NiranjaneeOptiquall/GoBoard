@@ -74,6 +74,7 @@
             
             frame = _tblSOPList.frame;
             frame.origin.y = CGRectGetMaxY(_lblDescription.frame) + 5;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblSOPList.frame = frame;
             
         }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1){
@@ -178,11 +179,14 @@
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if ([tableView isEqual:_tblSOPCategory]) {
         [aCell setBackgroundColor:[UIColor clearColor]];
         UILabel *lbl = (UILabel*)[aCell.contentView viewWithTag:2];
-        [lbl setText:[_mutArrCategoryHierarchy objectAtIndex:indexPath.row]];
+        [lbl setText:[[_mutArrCategoryHierarchy objectAtIndex:indexPath.row] objectForKey:@"Title"]];
+        UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:4];
+        [lblDisplaySequence setText:[[_mutArrCategoryHierarchy objectAtIndex:indexPath.row] objectForKey:@"DisplaySequence"]];
         CGRect frame = lbl.frame;
         frame.origin.x = indexPath.row * 50 + 5;
         frame.size.width = 532 - frame.origin.x;
@@ -196,18 +200,28 @@
             [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
         }
         NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
+        UIImageView *aImgView = (UIImageView *)[aCell.contentView viewWithTag:1];
         UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-       
-        //[aLbl setText:[aDict objectForKey:@"Title"]];
+        UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
         
         NSString *aStrTitle = [NSString stringWithFormat:@"%@ %@",[aDict objectForKey:@"DisplaySequence"],[aDict objectForKey:@"Title"]];
         [aLbl setText:aStrTitle];
-//        if (![aDict objectForKey:@"Categories"]  || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]]) {
-//            [aCell setAccessoryType:UITableViewCellAccessoryNone];
-//        }
-//        else {
-//            [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-//        }
+        [lblDisplaySequence setText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"DisplaySequence"]]];
+        
+         //LinkType = 0 Text ,LinkType = 1 Link, LinkType = 2 Photo, LinkType = 3 Video, LinkType = 4 PDF.
+        
+        if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 0) {
+            [aImgView setImage:[UIImage imageNamed:@"list_icon.png"]];
+        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 1){
+            [aImgView setImage:[UIImage imageNamed:@"erp_link_icon.png"]];
+        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 2){
+            [aImgView setImage:[UIImage imageNamed:@"erp_photo_icon.png"]];
+        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 3){
+            [aImgView setImage:[UIImage imageNamed:@"erp_video_icon.png"]];
+        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 4){
+             [aImgView setImage:[UIImage imageNamed:@"erp_pdf_icon.png"]];
+        }
+        
         if (![aDict objectForKey:@"Children"]  || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]]) {
             [aCell setAccessoryType:UITableViewCellAccessoryNone];
         }
@@ -234,7 +248,7 @@
     SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
     sopView.dictSOPCategory = aDict;
     sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
-    [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
+    [sopView.mutArrCategoryHierarchy addObject:[NSDictionary dictionaryWithObjectsAndKeys:[aDict objectForKey:@"Title"],@"Title",[aDict objectForKey:@"DisplaySequence"],@"DisplaySequence", nil]];
     [self.navigationController pushViewController:sopView animated:YES];
     
 //    if (![aDict objectForKey:@"Children"] || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Children"] count] == 0 ) {
