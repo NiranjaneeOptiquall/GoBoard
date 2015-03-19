@@ -1311,24 +1311,25 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This Lable is for Description of Children.." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vbd-Kv-gg9">
+                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" id="m3e-Zo-6tn">
                                 <rect key="frame" x="30" y="175" width="708" height="150"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="GoJ-gi-Uc3"/>
                     <connections>
                         <outlet property="btnSOPList" destination="len-Tt-jYF" id="ebt-YO-NZF"/>
-                        <outlet property="lblDescription" destination="Vbd-Kv-gg9" id="wkT-cp-var"/>
                         <outlet property="lblNoRecords" destination="TXw-MF-j8h" id="xHO-bQ-7jb"/>
                         <outlet property="lblTitle" destination="A1V-oF-cqP" id="KVh-LO-aM6"/>
                         <outlet property="tblSOPCategory" destination="fhz-50-kGk" id="WVo-JG-7uu"/>
                         <outlet property="tblSOPList" destination="K6L-zn-Elb" id="rWL-E5-9Fw"/>
+                        <outlet property="txtDescription" destination="m3e-Zo-6tn" id="qiH-G7-PVI"/>
                         <outlet property="viewWeb" destination="dj6-sS-jAy" id="oOq-eD-wvJ"/>
                         <segue destination="XTs-0T-cTc" kind="push" identifier="SOPDetail" id="3q1-JH-hDo"/>
                     </connections>
@@ -1668,24 +1669,25 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This Lable is for Description of Children.." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fj2-hI-gcj">
+                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" id="4Mx-Dd-ih8">
                                 <rect key="frame" x="30" y="437" width="708" height="150"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" red="0.086274509799999996" green="0.62352941179999999" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="UTh-UR-dD6"/>
                     <connections>
                         <outlet property="btnERPList" destination="Jiw-fp-8P2" id="0d6-yG-BWo"/>
-                        <outlet property="lblDescription" destination="Fj2-hI-gcj" id="NhR-73-PUe"/>
                         <outlet property="lblNoRecords" destination="OzH-H9-BnV" id="CbF-61-9un"/>
                         <outlet property="lblTitle" destination="Sae-GV-P2f" id="8dy-aJ-SdY"/>
                         <outlet property="tblERPCategory" destination="0Di-s1-aOe" id="PvU-U4-p6K"/>
                         <outlet property="tblEmergencyList" destination="VhE-qd-iNN" id="ccO-k7-7dl"/>
+                        <outlet property="txtDescription" destination="4Mx-Dd-ih8" id="myN-cE-0sz"/>
                         <outlet property="viewWeb" destination="Be6-Gk-xPs" id="LuP-BP-hV7"/>
                         <segue destination="Jij-u3-mk1" kind="push" identifier="ERPDetails" id="DH7-9G-Tkl"/>
                     </connections>

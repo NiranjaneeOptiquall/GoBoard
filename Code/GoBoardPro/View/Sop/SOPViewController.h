@@ -25,6 +25,6 @@
 - (IBAction)btnSOPListTapped:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
-@property (strong, nonatomic) IBOutlet UILabel *lblDescription;
+@property (strong, nonatomic) IBOutlet UITextView *txtDescription;
 
 @end

@@ -35,18 +35,15 @@
             frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblSOPList.frame = frame;
-    
         }
         
-        frame = _lblDescription.frame;
+        frame = _txtDescription.frame;
         frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
-        [_lblDescription setFrame:frame];
+        [_txtDescription setFrame:frame];
         
         frame = _viewWeb.frame;
         frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
         [_viewWeb setFrame:frame];
-
-        
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
@@ -55,25 +52,27 @@
         //If Type has a value of 1 (Link) then the 'Link' property should be set
         //If Type has a value of 2 (Text) then the 'Description' property should be set
         
-        [_lblDescription setHidden:YES];
         [_viewWeb setHidden:YES];
+        [_txtDescription setHidden:YES];
         
         if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 2) {
-            [_lblDescription setHidden:NO];
-             NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
-            [_lblDescription setText:aStrDescription];
+          
+            [_txtDescription setHidden:NO];
+            NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
             
+            [_txtDescription setText:aStrDescription];
             NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
-            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_lblDescription.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
-            CGRect frameLblDescription  = _lblDescription.frame;
+
+            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, 499) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            CGRect frameLblDescription  = _txtDescription.frame;
             frameLblDescription.size.height = height;
-            _lblDescription.frame = frameLblDescription;
-            _lblDescription.numberOfLines = 0;
-            [_lblDescription setFont:[UIFont systemFontOfSize:20]];
-            [_lblDescription setTextAlignment:NSTextAlignmentLeft];
+            _txtDescription.frame = frameLblDescription;
+            [_txtDescription setFont:[UIFont systemFontOfSize:20]];
+            [_txtDescription setTextAlignment:NSTextAlignmentLeft];
+            
             
             frame = _tblSOPList.frame;
-            frame.origin.y = CGRectGetMaxY(_lblDescription.frame) + 5;
+            frame.origin.y = CGRectGetMaxY(_txtDescription.frame) + 5;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblSOPList.frame = frame;
             
@@ -87,10 +86,6 @@
             NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Link"]];
              [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
         }
-        
-//        frame = _tblSOPList.frame;
-//        frame.origin.y = frame.origin.y + 400;
-//        _tblSOPList.frame = frame;
     }
 }
 
@@ -204,7 +199,7 @@
         UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
         UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
         
-        NSString *aStrTitle = [NSString stringWithFormat:@"%@ %@",[aDict objectForKey:@"DisplaySequence"],[aDict objectForKey:@"Title"]];
+        NSString *aStrTitle = [NSString stringWithFormat:@"%@",[aDict objectForKey:@"Title"]];
         [aLbl setText:aStrTitle];
         [lblDisplaySequence setText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"DisplaySequence"]]];
         

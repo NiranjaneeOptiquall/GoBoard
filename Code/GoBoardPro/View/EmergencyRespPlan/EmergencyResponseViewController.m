@@ -40,12 +40,10 @@
             frame.origin.y = CGRectGetMaxY(_tblERPCategory.frame) + 5;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblEmergencyList.frame = frame;
-            
         }
-        
-        frame = _lblDescription.frame;
+        frame = _txtDescription.frame;
         frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
-        [_lblDescription setFrame:frame];
+        [_txtDescription setFrame:frame];
         
         frame = _viewWeb.frame;
         frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
@@ -54,29 +52,28 @@
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
         mutArrEmergencies = [NSMutableArray arrayWithArray:[[_dictERPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
-        
+
         //If Type has a value of 1 (Link) then the 'Link' property should be set
         //If Type has a value of 2 (Text) then the 'Description' property should be set
         
-        [_lblDescription setHidden:YES];
+        [_txtDescription setHidden:YES];
         [_viewWeb setHidden:YES];
         
         if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 2) {
-            [_lblDescription setHidden:NO];
+            [_txtDescription setHidden:NO];
             NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Description"]];
-            [_lblDescription setText:aStrDescription];
+            [_txtDescription setText:aStrDescription];
             
             NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
-            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_lblDescription.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
-            CGRect frameLblDescription  = _lblDescription.frame;
+            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, 499) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            CGRect frameLblDescription  = _txtDescription.frame;
             frameLblDescription.size.height = height;
-            _lblDescription.frame = frameLblDescription;
-            _lblDescription.numberOfLines = 0;
-            [_lblDescription setFont:[UIFont systemFontOfSize:20]];
-            [_lblDescription setTextAlignment:NSTextAlignmentLeft];
+            _txtDescription.frame = frameLblDescription;
+            [_txtDescription setFont:[UIFont systemFontOfSize:20]];
+            [_txtDescription setTextAlignment:NSTextAlignmentLeft];
             
             frame = _tblEmergencyList.frame;
-            frame.origin.y = CGRectGetMaxY(_lblDescription.frame) + 5;
+            frame.origin.y = CGRectGetMaxY(_txtDescription.frame) + 5;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblEmergencyList.frame = frame;
             
@@ -240,7 +237,7 @@
         UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
         UIImageView *aImgView = (UIImageView *)[aCell.contentView viewWithTag:1];
        
-        NSString *aStrTitle = [NSString stringWithFormat:@"%@ %@",[aDict objectForKey:@"DisplaySequence"],[aDict objectForKey:@"Title"]];
+        NSString *aStrTitle = [NSString stringWithFormat:@"%@",[aDict objectForKey:@"Title"]];
         [aLbl setText:aStrTitle];
         
         UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
