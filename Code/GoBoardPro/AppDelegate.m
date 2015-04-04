@@ -29,6 +29,7 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"SettingsIsProduction"];
     }
     _isProduction = [[NSUserDefaults standardUserDefaults] boolForKey:@"SettingsIsProduction"];
+    
     return YES;
 }
 
