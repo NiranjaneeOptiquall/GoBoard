@@ -2,8 +2,8 @@
 //  InjuryDetail.h
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 24/03/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,9 +16,10 @@
 @property (nonatomic, retain) NSString * actionTakenId;
 @property (nonatomic, retain) NSString * bodyPartInjuredId;
 @property (nonatomic, retain) NSString * bodyPartInjuryTypeId;
+@property (nonatomic, retain) NSString * generalInjuryOther;
 @property (nonatomic, retain) NSString * generalInjuryTypeId;
 @property (nonatomic, retain) NSString * natureId;
-@property (nonatomic, retain) NSString * generalInjuryOther;
+@property (nonatomic, retain) NSString * bodyPartInjuredLocation;
 @property (nonatomic, retain) AccidentPerson *accidentPerson;
 
 @end

@@ -383,9 +383,17 @@
     if ([sender isEqual:_txtEnjuryType]) {
         if ([[[value valueForKey:@"name"] lowercaseString] isEqualToString:@"other"]) {
             [_txtOtherInjury setHidden:NO];
+            if (_btnBodyPartInjury.selected) {
+                [_lblBodyPart setHidden:YES];
+                [_lblBodyPartNote setHidden:YES];
+            }
         }
         else {
             [_txtOtherInjury setHidden:YES];
+            if (_btnBodyPartInjury.selected) {
+                [_lblBodyPart setHidden:NO];
+                [_lblBodyPartNote setHidden:NO];
+            }
         }
         [_imvOtherInjuryBG setHidden:_txtOtherInjury.isHidden];
     }

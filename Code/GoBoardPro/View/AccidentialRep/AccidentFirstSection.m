@@ -160,13 +160,24 @@
         
         _vwBodilyFluid.vwRefuseCare.frame = frame;
         
-        nextY = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
+        //nextY = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
         
         frame = _vwBodilyFluid.vwSelfCare.frame;
         
         frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwRefuseCare.frame);
         
         _vwBodilyFluid.vwSelfCare.frame = frame;
+        
+        
+        frame = _vwBodilyFluid.vwParticipantSignature.frame;
+        
+        frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwSelfCare.frame);
+        
+        _vwBodilyFluid.vwParticipantSignature.frame = frame;
+        
+        nextY = CGRectGetMaxY(_vwBodilyFluid.vwParticipantSignature.frame);
+        
+        
     }
     
     if (careProvider.selfCare.boolValue == YES) {

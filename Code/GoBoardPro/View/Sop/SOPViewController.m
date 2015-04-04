@@ -63,8 +63,19 @@
             [_txtDescription setText:aStrDescription];
             NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
 
-            float height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, 499) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            float height = 0;
+            
+            if ([[_dictSOPCategory objectForKey:@"Children"] count] > 0) {
+                height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, 625) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            }else{
+                height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, self.view.frame.size.height - _txtDescription.frame.origin.y - 15) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
+            }
+            
             CGRect frameLblDescription  = _txtDescription.frame;
+            if (_txtDescription.frame.origin.y + height >= 745) {
+                height = 745-_txtDescription.frame.origin.y;
+            }
+            
             frameLblDescription.size.height = height;
             _txtDescription.frame = frameLblDescription;
             [_txtDescription setFont:[UIFont systemFontOfSize:20]];
@@ -72,7 +83,7 @@
             
             
             frame = _tblSOPList.frame;
-            frame.origin.y = CGRectGetMaxY(_txtDescription.frame) + 5;
+            frame.origin.y = 765; //CGRectGetMaxY(_txtDescription.frame) + 15;
             frame.size.height = self.view.frame.size.height - frame.origin.y;
             _tblSOPList.frame = frame;
             

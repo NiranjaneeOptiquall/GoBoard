@@ -515,7 +515,7 @@
             
             NSMutableArray *injuryList = [NSMutableArray array];
             for (InjuryDetail *aInjury in obj.injuryList.allObjects) {
-                NSDictionary *aDict = @{@"NatureId":aInjury.natureId, @"GeneralInjuryTypeId":aInjury.generalInjuryTypeId, @"GeneralInjuryOther":aInjury.generalInjuryOther, @"BodyPartInjuryTypeId":aInjury.bodyPartInjuryTypeId, @"BodyPartInjuredId":aInjury.bodyPartInjuredId, @"ActionTakenId":aInjury.actionTakenId};
+                NSDictionary *aDict = @{@"NatureId":aInjury.natureId, @"GeneralInjuryTypeId":aInjury.generalInjuryTypeId, @"GeneralInjuryOther":aInjury.generalInjuryOther, @"BodyPartInjuryTypeId":aInjury.bodyPartInjuryTypeId, @"BodyPartInjuredId":aInjury.bodyPartInjuredId, @"ActionTakenId":aInjury.actionTakenId,@"BodyPartInjuredLocation":aInjury.bodyPartInjuredLocation};
                 [injuryList addObject:aDict];
             }
             

@@ -2,8 +2,8 @@
 //  InjuryDetail.m
 //  GoBoardPro
 //
-//  Created by ind558 on 28/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by ind726 on 24/03/15.
+//  Copyright (c) 2015 IndiaNIC. All rights reserved.
 //
 
 #import "InjuryDetail.h"
@@ -15,9 +15,10 @@
 @dynamic actionTakenId;
 @dynamic bodyPartInjuredId;
 @dynamic bodyPartInjuryTypeId;
+@dynamic generalInjuryOther;
 @dynamic generalInjuryTypeId;
 @dynamic natureId;
-@dynamic generalInjuryOther;
+@dynamic bodyPartInjuredLocation;
 @dynamic accidentPerson;
 
 @end

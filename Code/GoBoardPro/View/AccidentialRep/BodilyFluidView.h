@@ -30,6 +30,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnBloodCleanupNotRequired;
 @property (weak, nonatomic) IBOutlet UIButton *btnExposedToBlood;
 @property (weak, nonatomic) IBOutlet UIButton *btnNotExposedToBlood;
+@property (weak, nonatomic) IBOutlet UIButton *btnSignature;
+
 @property (weak, nonatomic) IBOutlet UITextView *txvStaffMemberAccount;
 @property (weak, nonatomic) IBOutlet UILabel *lblStaffMemberAccount;
 @property (strong, nonatomic) SignatureView *signatureView;

@@ -329,6 +329,7 @@
     <entity name="InjuryDetail" representedClassName="InjuryDetail" syncable="YES">
         <attribute name="actionTakenId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bodyPartInjuredId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="bodyPartInjuredLocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bodyPartInjuryTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="generalInjuryOther" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="generalInjuryTypeId" optional="YES" attributeType="String" syncable="YES"/>
@@ -595,7 +596,7 @@
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
-        <element name="InjuryDetail" positionX="495" positionY="635" width="128" height="148"/>
+        <element name="InjuryDetail" positionX="495" positionY="635" width="128" height="165"/>
         <element name="LeftArmInjuryList" positionX="108" positionY="977" width="128" height="103"/>
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>

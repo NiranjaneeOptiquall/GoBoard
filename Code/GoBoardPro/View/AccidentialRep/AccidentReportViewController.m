@@ -74,7 +74,10 @@
     selectedLocation = [[aryLocation filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", aReport.locationId]] firstObject];
     _txtLocation.text = selectedLocation.name;
     _txvDescription.text = aReport.accidentDesc;
-
+    if (_txvDescription.text.length > 0) {
+        [_lblIncidentDesc setHidden:YES];
+    }
+    
     _btn911Called.selected = ([aReport.isNotification1Selected isEqualToString:@"true"]) ? YES : NO;
     _btnPoliceCalled.selected = ([aReport.isNotification2Selected isEqualToString:@"true"]) ? YES : NO;
     _btnManager.selected = ([aReport.isNotification3Selected isEqualToString:@"true"]) ? YES : NO;
@@ -128,7 +131,15 @@
     finalSection.txtEmpAlternatePhone.text = aReport.employeeAlternatePhone;
     finalSection.txtEmpEmailAddr.text = aReport.employeeEmail;
     finalSection.txvReportFilerAccount.text = aReport.reportFilerAccount;
+    
+    if (finalSection.txvReportFilerAccount.text.length > 0) {
+        [finalSection.lblReportFilerAccount setHidden:YES];
+    }
+    
     finalSection.txvAdditionalInformation.text = aReport.additionalInfo;
+    if (finalSection.txvAdditionalInformation.text.length > 0) {
+        [finalSection.lblAdditionalInfo setHidden:YES];
+    }
 }
 
 - (void)popolatePersonalInformation:(NSArray*)aryPersonInfo {
@@ -179,6 +190,22 @@
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         vwPersonalInfo.txtDob.text = [aFormatter stringFromDate:aDate];
         
+        if (aPerson.genderTypeID.intValue == 2){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnFemale];
+        }else if (aPerson.genderTypeID.intValue == 3){
+           [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnNeutral];
+        }else if (aPerson.genderTypeID.intValue == 4){
+           [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnOtherGender];
+        }else{
+        [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnMale];
+        }
+        
+        if ([aPerson.minor isEqualToString:@"true"]) {
+            [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnMinor];
+        }else{
+            [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnNotMinor];
+        }
+        
         vwPersonalInfo.txtActivity.text = [[[_reportSetupInfo.activityList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"activityId MATCHES[cd] %@", aPerson.activityTypeID]] firstObject] name];
         vwPersonalInfo.txtWheather.text = [[[_reportSetupInfo.conditionList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"conditionId MATCHES[cd] %@", aPerson.conditionTypeID]] firstObject] name];
         vwPersonalInfo.txtEquipment.text = [[[_reportSetupInfo.equipmentList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"equipmentId MATCHES[cd] %@", aPerson.equipmentTypeID]] firstObject] name];
@@ -202,7 +229,7 @@
                     [aMutDict setObject:obj forKey:@"GeneralInjuryType"];
                 }else if (!obj && injury.generalInjuryTypeId.intValue == -1){
                     [aMutDict setObject:injury.generalInjuryOther forKey:@"injury"];
-                    [aMutDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:@"-1",@"typeId",injury.generalInjuryOther,@"name", nil] forKey:@"GeneralInjuryType"];
+                    [aMutDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-1],@"typeId",injury.generalInjuryOther,@"name", nil] forKey:@"GeneralInjuryType"];
                 }
             }
             if (injury.bodyPartInjuryTypeId) {
@@ -210,6 +237,7 @@
                 if (obj) {
                     [aMutDict setObject:[obj valueForKey:@"name"] forKey:@"injury"];
                     [aMutDict setObject:obj forKey:@"BodyPartInjuryType"];
+                    [aMutDict setObject:injury.bodyPartInjuredLocation forKey:@"BodyPartInjuredLocation"];
                 }
                 
                 NSMutableArray *mutArr = [NSMutableArray array];
@@ -239,24 +267,50 @@
         [vwBodyPart.tblAddedInjuryList reloadData];
         
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[_reportSetupInfo.careProviderList allObjects]];
-
         
-        vwBodyPart.txtCareProvided.text = [[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
+        CareProvidedType *careProvider = (CareProvidedType *) [[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject];
+        
+        vwBodyPart.txtCareProvided.text = careProvider.name; //[[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
         
         vwBodyPart.careProvided = vwBodyPart.txtCareProvided.text;
         
         BodilyFluidView *vwBodilyFluid = aFirstSection.vwBodilyFluid;
 
+        [vwBodilyFluid setIsFirstAidVisible:careProvider.firstAid.boolValue];
+        [vwBodilyFluid setIsRefuseCareStatementVisible: careProvider.refusedCare.boolValue];
+        [vwBodilyFluid setIsSelfCareStatementVisible:careProvider.selfCare.boolValue];
+        [vwBodilyFluid setIsEmergencyResponseSelected:careProvider.emergencyResponse.boolValue];
+        [vwBodilyFluid setIsEmergencyPersonnelVisible:careProvider.emergencyPersonnel.boolValue];
+        [vwBodilyFluid shouldShowParticipantsSignatureView:_reportSetupInfo.showParticipantSignature.boolValue];
+        [vwBodilyFluid setIsBloodBornePathogenVisible:[_reportSetupInfo.showBloodbornePathogens boolValue]];
+        
         vwBodilyFluid.txtFName.text = aPerson.firstAidFirstName;
         vwBodilyFluid.txtLName.text = aPerson.firstAidLastName;
         vwBodilyFluid.txtMI.text = aPerson.firstAidMiddleInitial;
         vwBodilyFluid.txtPosition.text = aPerson.firstAidPosition;
         vwBodilyFluid.signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
-//        [vwBodilyFluid.signatureView loadView];
+        //[vwBodilyFluid.signatureView loadView];
         vwBodilyFluid.signatureView.lastSavedName = aPerson.participantName;
         vwBodilyFluid.signatureView.lastSignatureImage = [UIImage imageWithData:aPerson.participantSignature];
         
+        if (vwBodilyFluid.signatureView.lastSignatureImage) {
+            [vwBodilyFluid.btnSignature setTitle:@"Edit Participant's Signature" forState:UIControlStateNormal];
+        }
+        else {
+            [vwBodilyFluid.btnSignature setTitle:@"Participant's Signature" forState:UIControlStateNormal];
+        }
         vwBodilyFluid.txvStaffMemberAccount.text = aPerson.staffMemberWrittenAccount;
+        if (vwBodilyFluid.txvStaffMemberAccount.text.length > 0) {
+            [vwBodilyFluid.lblStaffMemberAccount setHidden:YES];
+        }
+        
+        
+        /* [self btnWasBloodPresentTapped:_btnBloodNotPresent];
+         [self btnBloodbornePathogenTapped:_btnSelfTreated];
+         [self btnExposedToBloodTapped:_btnExposedToBlood];
+         [self btnBloodCleanUpRequiredTapped:_btnBloodCleanupRequired];
+         */
+        
         if ([aPerson.wasBloodPresent isEqualToString:@"true"]) {
             [vwBodilyFluid btnWasBloodPresentTapped:vwBodilyFluid.btnBloodPresent];
         }
@@ -265,36 +319,69 @@
         }
 
         if (vwBodilyFluid.btnSelfTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
-            [vwBodilyFluid.btnSelfTreated setSelected:YES];
+             [vwBodilyFluid btnBloodbornePathogenTapped:vwBodilyFluid.btnSelfTreated];
         }
         else if (vwBodilyFluid.btnEmployeeTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
-            [vwBodilyFluid.btnEmployeeTreated setSelected:YES];
+            
+            [vwBodilyFluid btnBloodbornePathogenTapped:vwBodilyFluid.btnEmployeeTreated];
         }
         else if (vwBodilyFluid.btnMedicalPersonnelTreated.tag == [aPerson.bloodBornePathogenType integerValue]) {
-            [vwBodilyFluid.btnMedicalPersonnelTreated setSelected:YES];
+            [vwBodilyFluid btnBloodbornePathogenTapped:vwBodilyFluid.btnMedicalPersonnelTreated];
         }
         
         if ([aPerson.bloodCleanUpRequired isEqualToString:@"true"]) {
-            [vwBodilyFluid.btnBloodCleanupRequired setSelected:YES];
-            [vwBodilyFluid.btnBloodCleanupNotRequired setSelected:NO];
+            [vwBodilyFluid btnBloodCleanUpRequiredTapped:vwBodilyFluid.btnBloodCleanupRequired];
         }
         else {
-            [vwBodilyFluid.btnBloodCleanupNotRequired setSelected:YES];
-            [vwBodilyFluid.btnBloodCleanupRequired setSelected:NO];
+            [vwBodilyFluid btnBloodCleanUpRequiredTapped:vwBodilyFluid.btnBloodCleanupNotRequired];
         }
         if ([aPerson.wasExposedToBlood isEqualToString:@"true"]) {
-            [vwBodilyFluid.btnExposedToBlood setSelected:YES];
-            [vwBodilyFluid.btnNotExposedToBlood setSelected:NO];
+            [vwBodilyFluid btnExposedToBloodTapped:vwBodilyFluid.btnExposedToBlood];
         }
         else {
-            [vwBodilyFluid.btnExposedToBlood setSelected:NO];
-            [vwBodilyFluid.btnNotExposedToBlood setSelected:YES];
+           [vwBodilyFluid btnExposedToBloodTapped:vwBodilyFluid.btnNotExposedToBlood];
         }
         
         [vwBodilyFluid populateEmergencyPersonnel:aPerson.emergency.allObjects];
         
         aFirstSection.imgBodilyFluid = [UIImage imageWithData:aPerson.personPhoto];
         
+        /////////////////THIS IS FOR MANAGING FRAMES OF VIEW UNDER SIGNATURE VIEW WHEN SIGNATURE VIEW IS VISIBLE WHILE PREVIOUS SAVING REPORT/////////
+        if (_reportSetupInfo.showParticipantSignature.boolValue && (vwBodilyFluid.isSelfCareSelected || vwBodilyFluid.isRefusedCareSelected)) {
+            
+            CGRect frame = vwBodilyFluid.vwBloodbornePathogens.frame;
+            
+            frame.origin.y = CGRectGetMaxY(vwBodilyFluid.vwParticipantSignature.frame);
+            
+            vwBodilyFluid.vwBloodbornePathogens.frame = frame;
+            
+        }else{
+            CGRect frame = vwBodilyFluid.vwBloodbornePathogens.frame;
+            
+            frame.origin.y = CGRectGetMinY(vwBodilyFluid.vwParticipantSignature.frame);
+            
+            vwBodilyFluid.vwBloodbornePathogens.frame = frame;
+            
+        }
+        
+        if ([_reportSetupInfo.showBloodbornePathogens boolValue]) {
+            CGRect frame = vwBodilyFluid.vwStaffMember.frame;
+            frame.origin.y = CGRectGetMaxY(vwBodilyFluid.vwBloodbornePathogens.frame);
+            vwBodilyFluid.vwStaffMember.frame = frame;
+            
+            frame = vwBodilyFluid.frame;
+            frame.size.height = CGRectGetMaxY(vwBodilyFluid.vwStaffMember.frame);
+            vwBodilyFluid.frame = frame;
+        }else{
+            
+            CGRect frame = vwBodilyFluid.vwStaffMember.frame;
+            frame.origin.y = CGRectGetMinY(vwBodilyFluid.vwBloodbornePathogens.frame);
+            vwBodilyFluid.vwStaffMember.frame = frame;
+            
+            frame = vwBodilyFluid.frame;
+            frame.size.height = CGRectGetMaxY(vwBodilyFluid.vwStaffMember.frame);
+            vwBodilyFluid.frame = frame;
+        }
     }
 }
 
@@ -320,6 +407,9 @@
         vwWitness.txtWitnessAlternatePhone.text = aWitness.alternatePhone;
         vwWitness.txtWitnessEmailAddress.text = aWitness.email;
         vwWitness.txvDescIncident.text = aWitness.witnessWrittenAccount;
+        if (vwWitness.txvDescIncident.text.length > 0) {
+            [vwWitness.lblWitnessWrittenAccount setHidden:YES];
+        }
     }
 }
 
@@ -930,6 +1020,7 @@
         aInjury.bodyPartInjuryTypeId = [aDict objectForKey:@"BodyPartInjuryTypeId"];
         aInjury.bodyPartInjuredId = [aDict objectForKey:@"BodyPartInjuredId"];
         aInjury.actionTakenId = [aDict objectForKey:@"ActionTakenId"];
+        aInjury.bodyPartInjuredLocation = [aDict objectForKey:@"BodyPartInjuredLocation"];
         aInjury.accidentPerson = aPerson;
         [injuryList addObject:aInjury];
     }

@@ -17,7 +17,7 @@
 #import "User.h"
 #import "UIColor+HexToRGB.h"
 #import "NSString+Validations.h"
-
+#import "UIDevice+Rotation.h"
 AppDelegate *gblAppDelegate;
 
 #define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
@@ -95,3 +95,10 @@ typedef enum : NSUInteger {
 #define MSG_SERVICE_FAIL            @"An unexpected error occurred.  Please try again.  If the issue persists, please contact support."
 #define MSG_ADDED_TO_SYNC           @"Your information was saved locally.  Please sync from the Home screen to upload the information to GoBoard once you have an Internet connection."
 #endif
+
+
+//#ifdef __DEBUG__
+//#define NSLog(...) NSLog(__VA_ARGS__)
+//#else
+//#define NSLog(...)
+//#endif

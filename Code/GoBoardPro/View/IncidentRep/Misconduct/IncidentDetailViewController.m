@@ -147,6 +147,9 @@
     selectedLocation = [[aryLocation filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"value MATCHES[cd] %@", aReport.locationId]] firstObject];
     _txtLocation.text = selectedLocation.name;
     _txvIncidentDesc.text = aReport.incidentDesc;
+    if (_txvIncidentDesc.text.length > 0) {
+        [_lblIncidentDesc setHidden:YES];
+    }
     
     _btn911Called.selected = ([aReport.isNotification1Selected isEqualToString:@"true"]) ? YES : NO;
     _btnPoliceCalled.selected = ([aReport.isNotification2Selected isEqualToString:@"true"]) ? YES : NO;
@@ -202,6 +205,13 @@
     _txtEmpEmail.text = aReport.employeeEmail;
     _txtReportAccount.text = aReport.reportFilerAccount;
     _txvAdditionalInfo.text = aReport.additionalInfo;
+
+    if (_txtReportAccount.text.length > 0) {
+        [_lblReportFilerPlaceHolder setHidden:YES];
+    }
+    if (_txvAdditionalInfo.text.length > 0) {
+        [_lblAdditonInfo setHidden:YES];
+    }
 }
 
 - (void)popolatePersonalInformation:(NSArray*)aryPersonInfo {
@@ -248,6 +258,22 @@
         vwPersonalInfo.txtDob.text = [aFormatter stringFromDate:aDate];
         vwPersonalInfo.imgIncidentPerson = [UIImage imageWithData:aPerson.personPhoto];
         
+        if (aPerson.genderTypeID.intValue == 2){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnFemale];
+        }else if (aPerson.genderTypeID.intValue == 3){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnNeutral];
+        }else if (aPerson.genderTypeID.intValue == 4){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnOtherGender];
+        }else{
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnMale];
+        }
+        
+        if ([aPerson.minor isEqualToString:@"true"]) {
+            [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnMinor];
+        }else{
+            [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnNotMinor];
+        }
+        
             //              vwBodyPart.txtCareProvided.text = [[[ary filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"careProvidedID MATCHES[cd] %@", aPerson.careProvidedBy]] firstObject] valueForKey:@"name"];
         
         vwPersonalInfo.txtActivity.text = [[[reportSetupInfo.activityList.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"activityId MATCHES[cd] %@", aPerson.activityTypeId]] firstObject] name];
@@ -287,6 +313,9 @@
         vwWitness.txtWitnessAlternatePhone.text = aWitness.alternatePhone;
         vwWitness.txtWitnessEmailAddress.text = aWitness.email;
         vwWitness.txvDescIncident.text = aWitness.witnessWrittenAccount;
+        if (vwWitness.txvDescIncident.text.length > 0) {
+            [vwWitness.lblWitnessWrittenAccount setHidden:YES];
+        }
     }
 }
 

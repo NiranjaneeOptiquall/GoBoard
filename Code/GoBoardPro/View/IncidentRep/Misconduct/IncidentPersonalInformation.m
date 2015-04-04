@@ -634,9 +634,18 @@
     
 }
 - (void)setKeepViewInFrameForTextField:(UIView*)vw {
-    CGPoint point = [vw.superview.superview convertPoint:vw.frame.origin toView:_parentVC.scrlMainView];
-    if (point.y <_parentVC.scrlMainView.contentOffset.y || point.y > _parentVC.scrlMainView.contentOffset.y + _parentVC.scrlMainView.frame.size.height) {
-        [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, point.y - 50) animated:NO];
+//    CGPoint point = [vw.superview.superview convertPoint:vw.frame.origin toView:_parentVC.scrlMainView];
+//    if (point.y <_parentVC.scrlMainView.contentOffset.y || point.y > _parentVC.scrlMainView.contentOffset.y + _parentVC.scrlMainView.frame.size.height) {
+//        [_parentVC.scrlMainView setContentOffset:CGPointMake(_parentVC.scrlMainView.contentOffset.x, point.y - 50) animated:NO];
+//    }
+    
+    TPKeyboardAvoidingScrollView *scrollView = (TPKeyboardAvoidingScrollView*)[self superview];
+    while (![scrollView isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
+        scrollView = (TPKeyboardAvoidingScrollView*)[scrollView superview];
+    }
+    CGPoint point = [vw.superview convertPoint:vw.frame.origin toView:scrollView];
+    if (point.y <scrollView.contentOffset.y || point.y > scrollView.contentOffset.y + scrollView.frame.size.height) {
+        [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, point.y - 50) animated:NO];
     }
 }
 

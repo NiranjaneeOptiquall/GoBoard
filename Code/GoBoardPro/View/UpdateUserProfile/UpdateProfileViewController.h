@@ -31,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnLikeToRcvTextMSG;
 @property (weak, nonatomic) IBOutlet UITextView *txvTerms;
 @property (weak, nonatomic) IBOutlet UIButton *btnAgreeTerms;
+@property (strong, nonatomic) IBOutlet UIWebView *vwWeb;
 @property (weak, nonatomic) IBOutlet UIView *vwTerms;
 @property (strong, nonatomic) NSArray *aryCertificates;
 @property (weak, nonatomic) IBOutlet UILabel *lblSubmit;

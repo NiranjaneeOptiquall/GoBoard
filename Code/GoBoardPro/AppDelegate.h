@@ -34,6 +34,7 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 
 @property (assign, nonatomic) BOOL isAdmin;
 @property (assign, nonatomic) BOOL isProduction;
+@property (assign, nonatomic) BOOL isPortrait;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

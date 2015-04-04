@@ -20,8 +20,16 @@
     [self getCertificateList];
     mutArrDeletedCertificates = [[NSMutableArray alloc] init];
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
-        if ([[[User currentUser] termsAndConditions] isKindOfClass:[NSString class]])
-            _txvTerms.text = [[User currentUser] termsAndConditions];
+//        if ([[[User currentUser] termsAndConditions] isKindOfClass:[NSString class]])
+//            _txvTerms.text = [[User currentUser] termsAndConditions];
+        
+        NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"txt"];
+        
+        NSString *aStr1 = [[NSString alloc]initWithContentsOfFile:aStrPathOfAcceptibleUsePolicy encoding:nil error:nil];
+
+        [_vwWeb loadHTMLString:aStr1 baseURL:nil];
+        
+        aStr1 = nil;
     }
     else {
         [_vwTerms setHidden:YES];

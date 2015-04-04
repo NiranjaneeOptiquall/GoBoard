@@ -12,8 +12,6 @@
 		3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */; };
 		3302B8F11A2DC79A00FC7591 /* SurveyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F01A2DC79A00FC7591 /* SurveyList.m */; };
 		3302B8F41A2DC79B00FC7591 /* FormsList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8F31A2DC79B00FC7591 /* FormsList.m */; };
-		330D66E81A15BC2000C3C656 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = 330D66E61A15BC2000C3C656 /* dsym_upload.sh */; };
-		330D66E91A15BC2000C3C656 /* libCrittercism_v5_0_4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */; };
 		33114CF81A0109FB00DFB37D /* AccidentFirstSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 33114CF71A0109FB00DFB37D /* AccidentFirstSection.m */; };
 		33114CFA1A010A0900DFB37D /* AccidentFirstSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33114CF91A010A0900DFB37D /* AccidentFirstSection.xib */; };
 		331378341A39AAE0001CE8AD /* MemoBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331378331A39AAE0001CE8AD /* MemoBoardViewController.m */; };
@@ -288,6 +286,8 @@
 		33EB4A9E19D1A3A2008EF8FD /* text_box_name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33EB4A9619D1A3A2008EF8FD /* text_box_name@2x.png */; };
 		33FCAF951A1C7778005EA0DB /* SubmittedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FCAF941A1C7778005EA0DB /* SubmittedTask.m */; };
 		33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FE66691A10D7090058BFB6 /* WebSerivceCall.m */; };
+		A908297D1AC978C600BFBB96 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = A908297B1AC978C600BFBB96 /* dsym_upload.sh */; };
+		A908297E1AC978C600BFBB96 /* libCrittercism_v5_0_4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A908297C1AC978C600BFBB96 /* libCrittercism_v5_0_4.a */; };
 		A918943C1AAD6F4200426808 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A918943B1AAD6F4200426808 /* TaskList.m */; };
 		A91D953D1A8A0B0800F46D31 /* IncidentActionTaken.m in Sources */ = {isa = PBXBuildFile; fileRef = A91D95361A8A0B0800F46D31 /* IncidentActionTaken.m */; };
 		A91D953E1A8A0B0800F46D31 /* IncidentActionTaken.xib in Resources */ = {isa = PBXBuildFile; fileRef = A91D95371A8A0B0800F46D31 /* IncidentActionTaken.xib */; };
@@ -295,9 +295,12 @@
 		A91D95401A8A0B0800F46D31 /* IncidentPersonalInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = A91D953B1A8A0B0800F46D31 /* IncidentPersonalInformation.m */; };
 		A91D95411A8A0B0800F46D31 /* IncidentPersonalInformation.xib in Resources */ = {isa = PBXBuildFile; fileRef = A91D953C1A8A0B0800F46D31 /* IncidentPersonalInformation.xib */; };
 		A91D95441A8A0B5F00F46D31 /* AddCertificateView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91D95431A8A0B5F00F46D31 /* AddCertificateView.m */; };
+		A93097B91AC56014002814C5 /* SOPnERP_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A93097B81AC56014002814C5 /* SOPnERP_icon@2x.png */; };
 		A93B56D11A94A66E002BB462 /* EmergencyPersonnelIncident.m in Sources */ = {isa = PBXBuildFile; fileRef = A93B56D01A94A66E002BB462 /* EmergencyPersonnelIncident.m */; };
 		A953CC991AB30653005D4D36 /* SurveyResponseTypeValues.m in Sources */ = {isa = PBXBuildFile; fileRef = A953CC981AB30653005D4D36 /* SurveyResponseTypeValues.m */; };
 		A953CC9C1AB30AAF005D4D36 /* UtilizationCount.m in Sources */ = {isa = PBXBuildFile; fileRef = A953CC9B1AB30AAF005D4D36 /* UtilizationCount.m */; };
+		A95F79171ABC48E5006EFB22 /* NavController.m in Sources */ = {isa = PBXBuildFile; fileRef = A95F79161ABC48E5006EFB22 /* NavController.m */; };
+		A95F791B1ABC4BC4006EFB22 /* UIDevice+Rotation.m in Sources */ = {isa = PBXBuildFile; fileRef = A95F791A1ABC4BC4006EFB22 /* UIDevice+Rotation.m */; };
 		A967DFA31AA5BE3500C426D0 /* Witness.m in Sources */ = {isa = PBXBuildFile; fileRef = A967DFA21AA5BE3500C426D0 /* Witness.m */; };
 		A96B79DB1A9EFD5200D6B19F /* AccidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B79DA1A9EFD5200D6B19F /* AccidentReportInfo.m */; };
 		A96B79DE1A9EFE7E00D6B19F /* IncidentReportInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B79DD1A9EFE7E00D6B19F /* IncidentReportInfo.m */; };
@@ -309,7 +312,6 @@
 		A9793CC81A93072F00DF2568 /* EquipmentList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CB81A93072F00DF2568 /* EquipmentList.m */; };
 		A9793CC91A93072F00DF2568 /* GeneralInjuryType.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CBA1A93072F00DF2568 /* GeneralInjuryType.m */; };
 		A9793CCA1A93072F00DF2568 /* HeadInjuryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CBC1A93072F00DF2568 /* HeadInjuryList.m */; };
-		A9793CCB1A93072F00DF2568 /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CBE1A93072F00DF2568 /* InjuryDetail.m */; };
 		A9793CCC1A93072F00DF2568 /* LeftArmInjuryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CC01A93072F00DF2568 /* LeftArmInjuryList.m */; };
 		A9793CCD1A93072F00DF2568 /* LeftLegInjuryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CC21A93072F00DF2568 /* LeftLegInjuryList.m */; };
 		A9793CCE1A93072F00DF2568 /* LegInjuryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CC41A93072F00DF2568 /* LegInjuryList.m */; };
@@ -317,9 +319,11 @@
 		A9793CD41A93076400DF2568 /* Emergency.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CD31A93076400DF2568 /* Emergency.m */; };
 		A97F0F2C1A9462FF008CC9EB /* Report.m in Sources */ = {isa = PBXBuildFile; fileRef = A97F0F2B1A9462FF008CC9EB /* Report.m */; };
 		A98357561A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
+		A98FA4331ACA721D0020A416 /* Acceptible Use Policy HTML_20150301.txt in Resources */ = {isa = PBXBuildFile; fileRef = A98FA4321ACA721D0020A416 /* Acceptible Use Policy HTML_20150301.txt */; };
 		A9C190D41AB8391900316920 /* attachmentLink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9C190D31AB8391900316920 /* attachmentLink@2x.png */; };
 		A9C190D71AB849FC00316920 /* erp_link_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9C190D51AB849FC00316920 /* erp_link_icon@2x.png */; };
 		A9C190D81AB849FC00316920 /* erp_pdf_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9C190D61AB849FC00316920 /* erp_pdf_icon@2x.png */; };
+		A9C568021AC142DA00072C42 /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C568011AC142DA00072C42 /* InjuryDetail.m */; };
 		A9CE70511A9DD0F700950B21 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CE70501A9DD0F700950B21 /* Person.m */; };
 		A9CE70541A9DFB4F00950B21 /* ActionTakenList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CE70531A9DFB4F00950B21 /* ActionTakenList.m */; };
 		A9F7B7701A8C839500F93760 /* delete_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9F7B76F1A8C839500F93760 /* delete_icon@2x.png */; };
@@ -349,11 +353,6 @@
 		3302B8F01A2DC79A00FC7591 /* SurveyList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyList.m; sourceTree = "<group>"; };
 		3302B8F21A2DC79B00FC7591 /* FormsList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormsList.h; sourceTree = "<group>"; };
 		3302B8F31A2DC79B00FC7591 /* FormsList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormsList.m; sourceTree = "<group>"; };
-		330D66E31A15BC2000C3C656 /* CRFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRFilter.h; sourceTree = "<group>"; };
-		330D66E41A15BC2000C3C656 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
-		330D66E51A15BC2000C3C656 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
-		330D66E61A15BC2000C3C656 /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
-		330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v5_0_4.a; sourceTree = "<group>"; };
 		33114CF61A0109FB00DFB37D /* AccidentFirstSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentFirstSection.h; sourceTree = "<group>"; };
 		33114CF71A0109FB00DFB37D /* AccidentFirstSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccidentFirstSection.m; sourceTree = "<group>"; };
 		33114CF91A010A0900DFB37D /* AccidentFirstSection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccidentFirstSection.xib; sourceTree = "<group>"; };
@@ -744,6 +743,11 @@
 		33FCAF941A1C7778005EA0DB /* SubmittedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmittedTask.m; sourceTree = "<group>"; };
 		33FE66681A10D7090058BFB6 /* WebSerivceCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSerivceCall.h; sourceTree = "<group>"; };
 		33FE66691A10D7090058BFB6 /* WebSerivceCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSerivceCall.m; sourceTree = "<group>"; };
+		A90829781AC978C600BFBB96 /* CRFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRFilter.h; sourceTree = "<group>"; };
+		A90829791AC978C600BFBB96 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
+		A908297A1AC978C600BFBB96 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
+		A908297B1AC978C600BFBB96 /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
+		A908297C1AC978C600BFBB96 /* libCrittercism_v5_0_4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v5_0_4.a; sourceTree = "<group>"; };
 		A918943A1AAD6F4200426808 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskList.h; sourceTree = "<group>"; };
 		A918943B1AAD6F4200426808 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskList.m; sourceTree = "<group>"; };
 		A91D95351A8A0B0800F46D31 /* IncidentActionTaken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncidentActionTaken.h; sourceTree = "<group>"; };
@@ -756,12 +760,17 @@
 		A91D953C1A8A0B0800F46D31 /* IncidentPersonalInformation.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncidentPersonalInformation.xib; sourceTree = "<group>"; };
 		A91D95421A8A0B5F00F46D31 /* AddCertificateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddCertificateView.h; sourceTree = "<group>"; };
 		A91D95431A8A0B5F00F46D31 /* AddCertificateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCertificateView.m; sourceTree = "<group>"; };
+		A93097B81AC56014002814C5 /* SOPnERP_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SOPnERP_icon@2x.png"; sourceTree = "<group>"; };
 		A93B56CF1A94A66E002BB462 /* EmergencyPersonnelIncident.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyPersonnelIncident.h; sourceTree = "<group>"; };
 		A93B56D01A94A66E002BB462 /* EmergencyPersonnelIncident.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyPersonnelIncident.m; sourceTree = "<group>"; };
 		A953CC971AB30653005D4D36 /* SurveyResponseTypeValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyResponseTypeValues.h; sourceTree = "<group>"; };
 		A953CC981AB30653005D4D36 /* SurveyResponseTypeValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyResponseTypeValues.m; sourceTree = "<group>"; };
 		A953CC9A1AB30AAF005D4D36 /* UtilizationCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilizationCount.h; sourceTree = "<group>"; };
 		A953CC9B1AB30AAF005D4D36 /* UtilizationCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilizationCount.m; sourceTree = "<group>"; };
+		A95F79151ABC48E5006EFB22 /* NavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavController.h; sourceTree = "<group>"; };
+		A95F79161ABC48E5006EFB22 /* NavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavController.m; sourceTree = "<group>"; };
+		A95F79191ABC4BC4006EFB22 /* UIDevice+Rotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Rotation.h"; sourceTree = "<group>"; };
+		A95F791A1ABC4BC4006EFB22 /* UIDevice+Rotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Rotation.m"; sourceTree = "<group>"; };
 		A967DFA11AA5BE3500C426D0 /* Witness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Witness.h; sourceTree = "<group>"; };
 		A967DFA21AA5BE3500C426D0 /* Witness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Witness.m; sourceTree = "<group>"; };
 		A96B79D91A9EFD5200D6B19F /* AccidentReportInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccidentReportInfo.h; sourceTree = "<group>"; };
@@ -784,8 +793,6 @@
 		A9793CBA1A93072F00DF2568 /* GeneralInjuryType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralInjuryType.m; sourceTree = "<group>"; };
 		A9793CBB1A93072F00DF2568 /* HeadInjuryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadInjuryList.h; sourceTree = "<group>"; };
 		A9793CBC1A93072F00DF2568 /* HeadInjuryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadInjuryList.m; sourceTree = "<group>"; };
-		A9793CBD1A93072F00DF2568 /* InjuryDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryDetail.h; sourceTree = "<group>"; };
-		A9793CBE1A93072F00DF2568 /* InjuryDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryDetail.m; sourceTree = "<group>"; };
 		A9793CBF1A93072F00DF2568 /* LeftArmInjuryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftArmInjuryList.h; sourceTree = "<group>"; };
 		A9793CC01A93072F00DF2568 /* LeftArmInjuryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftArmInjuryList.m; sourceTree = "<group>"; };
 		A9793CC11A93072F00DF2568 /* LeftLegInjuryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftLegInjuryList.h; sourceTree = "<group>"; };
@@ -800,9 +807,12 @@
 		A97F0F2B1A9462FF008CC9EB /* Report.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Report.m; sourceTree = "<group>"; };
 		A98357541A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
 		A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
+		A98FA4321ACA721D0020A416 /* Acceptible Use Policy HTML_20150301.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Acceptible Use Policy HTML_20150301.txt"; sourceTree = "<group>"; };
 		A9C190D31AB8391900316920 /* attachmentLink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachmentLink@2x.png"; sourceTree = "<group>"; };
 		A9C190D51AB849FC00316920 /* erp_link_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "erp_link_icon@2x.png"; sourceTree = "<group>"; };
 		A9C190D61AB849FC00316920 /* erp_pdf_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "erp_pdf_icon@2x.png"; sourceTree = "<group>"; };
+		A9C568001AC142DA00072C42 /* InjuryDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InjuryDetail.h; sourceTree = "<group>"; };
+		A9C568011AC142DA00072C42 /* InjuryDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InjuryDetail.m; sourceTree = "<group>"; };
 		A9CE704F1A9DD0F700950B21 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		A9CE70501A9DD0F700950B21 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		A9CE70521A9DFB4F00950B21 /* ActionTakenList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionTakenList.h; sourceTree = "<group>"; };
@@ -821,7 +831,7 @@
 			files = (
 				A9F8B7291A8A09A80007D041 /* AssetsLibrary.framework in Frameworks */,
 				333780A419E6BACF00362F82 /* CoreGraphics.framework in Frameworks */,
-				330D66E91A15BC2000C3C656 /* libCrittercism_v5_0_4.a in Frameworks */,
+				A908297E1AC978C600BFBB96 /* libCrittercism_v5_0_4.a in Frameworks */,
 				33D5A59A19E3F27200344278 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -836,18 +846,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		330D66E21A15BC2000C3C656 /* CrittercismSDK */ = {
-			isa = PBXGroup;
-			children = (
-				330D66E31A15BC2000C3C656 /* CRFilter.h */,
-				330D66E41A15BC2000C3C656 /* Crittercism.h */,
-				330D66E51A15BC2000C3C656 /* CrittercismDelegate.h */,
-				330D66E61A15BC2000C3C656 /* dsym_upload.sh */,
-				330D66E71A15BC2000C3C656 /* libCrittercism_v5_0_4.a */,
-			);
-			path = CrittercismSDK;
-			sourceTree = "<group>";
-		};
 		332B31E11A2C3EB1001DE737 /* Survey&Forms */ = {
 			isa = PBXGroup;
 			children = (
@@ -1278,9 +1276,11 @@
 		3397CACC19D0347700788153 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A98FA4321ACA721D0020A416 /* Acceptible Use Policy HTML_20150301.txt */,
+				A90829771AC978C600BFBB96 /* CrittercismSDK */,
+				A95F79181ABC4BC4006EFB22 /* UIDevice+Rotation */,
 				A98357531A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum */,
 				33D879A71A414B8600CC312C /* Categories */,
-				330D66E21A15BC2000C3C656 /* CrittercismSDK */,
 				332B60EC1A146D9C00B7C7EF /* Reachability */,
 				332B60CF1A146CB700B7C7EF /* AFNetworking */,
 				33FE66671A10D6EA0058BFB6 /* WebServices */,
@@ -1297,6 +1297,7 @@
 		3397CACD19D0347700788153 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A95F79141ABC48E5006EFB22 /* Navigation */,
 				335DECB919EBCDC000FFFD4D /* AdminTaskList */,
 				33CFBC3319D2E77900D86E68 /* AccidentialRep */,
 				33C7957A1A3859A50029FA21 /* DailyLog */,
@@ -1499,6 +1500,7 @@
 		33CFBC2A19D2E42B00D86E68 /* Emergency */ = {
 			isa = PBXGroup;
 			children = (
+				A93097B81AC56014002814C5 /* SOPnERP_icon@2x.png */,
 				A9C190D51AB849FC00316920 /* erp_link_icon@2x.png */,
 				A9C190D61AB849FC00316920 /* erp_pdf_icon@2x.png */,
 				A9C190D31AB8391900316920 /* attachmentLink@2x.png */,
@@ -1862,6 +1864,18 @@
 			path = WebServices;
 			sourceTree = "<group>";
 		};
+		A90829771AC978C600BFBB96 /* CrittercismSDK */ = {
+			isa = PBXGroup;
+			children = (
+				A90829781AC978C600BFBB96 /* CRFilter.h */,
+				A90829791AC978C600BFBB96 /* Crittercism.h */,
+				A908297A1AC978C600BFBB96 /* CrittercismDelegate.h */,
+				A908297B1AC978C600BFBB96 /* dsym_upload.sh */,
+				A908297C1AC978C600BFBB96 /* libCrittercism_v5_0_4.a */,
+			);
+			path = CrittercismSDK;
+			sourceTree = "<group>";
+		};
 		A91D95341A8A0B0800F46D31 /* Misconduct */ = {
 			isa = PBXGroup;
 			children = (
@@ -1877,6 +1891,24 @@
 			path = Misconduct;
 			sourceTree = "<group>";
 		};
+		A95F79141ABC48E5006EFB22 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				A95F79151ABC48E5006EFB22 /* NavController.h */,
+				A95F79161ABC48E5006EFB22 /* NavController.m */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		A95F79181ABC4BC4006EFB22 /* UIDevice+Rotation */ = {
+			isa = PBXGroup;
+			children = (
+				A95F79191ABC4BC4006EFB22 /* UIDevice+Rotation.h */,
+				A95F791A1ABC4BC4006EFB22 /* UIDevice+Rotation.m */,
+			);
+			path = "UIDevice+Rotation";
+			sourceTree = "<group>";
+		};
 		A9793CA41A9306DF00DF2568 /* AccidentReport */ = {
 			isa = PBXGroup;
 			children = (
@@ -1890,8 +1922,6 @@
 				A9793CBA1A93072F00DF2568 /* GeneralInjuryType.m */,
 				A9793CBB1A93072F00DF2568 /* HeadInjuryList.h */,
 				A9793CBC1A93072F00DF2568 /* HeadInjuryList.m */,
-				A9793CBD1A93072F00DF2568 /* InjuryDetail.h */,
-				A9793CBE1A93072F00DF2568 /* InjuryDetail.m */,
 				A9793CBF1A93072F00DF2568 /* LeftArmInjuryList.h */,
 				A9793CC01A93072F00DF2568 /* LeftArmInjuryList.m */,
 				A9793CC11A93072F00DF2568 /* LeftLegInjuryList.h */,
@@ -1910,6 +1940,8 @@
 				A9793CD31A93076400DF2568 /* Emergency.m */,
 				A9793CCF1A93076400DF2568 /* AccidentPerson.h */,
 				A9793CD01A93076400DF2568 /* AccidentPerson.m */,
+				A9C568001AC142DA00072C42 /* InjuryDetail.h */,
+				A9C568011AC142DA00072C42 /* InjuryDetail.m */,
 			);
 			name = AccidentReport;
 			sourceTree = "<group>";
@@ -1934,6 +1966,7 @@
 				3397CA9A19D02D7A00788153 /* Frameworks */,
 				332D54B91A43F1DD005AF354 /* ShellScript */,
 				3397CA9B19D02D7A00788153 /* Resources */,
+				A9F01A4F1AC91CF700F4DD02 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2022,6 +2055,7 @@
 				332E3A4319D541950088AB61 /* hide_completed_icon@2x.png in Resources */,
 				33BF861D1A39607E00AE6AD7 /* check_box_sel@2x.png in Resources */,
 				3337805019E6537300362F82 /* building_supervisor_sel@2x.png in Resources */,
+				A908297D1AC978C600BFBB96 /* dsym_upload.sh in Resources */,
 				33DBA21319E559E80041A932 /* Icon-76.png in Resources */,
 				33DBA1FF19E519480041A932 /* collaps_icon_default_small@2x.png in Resources */,
 				33CD6B5D19DA7E840024A02D /* figure_head.png in Resources */,
@@ -2036,7 +2070,9 @@
 				33D630A819D3F66E0090BE80 /* unchecked_Member@2x.png in Resources */,
 				33CFBBBA19D28B9800D86E68 /* checked_white_radiobutton@2x.png in Resources */,
 				33CFBBF619D2D21300D86E68 /* tools_icon@2x.png in Resources */,
+				A98FA4331ACA721D0020A416 /* Acceptible Use Policy HTML_20150301.txt in Resources */,
 				33CFBBCD19D2A27B00D86E68 /* close_btn@2x.png in Resources */,
+				A93097B91AC56014002814C5 /* SOPnERP_icon@2x.png in Resources */,
 				33D6309019D3F3380090BE80 /* date@2x.png in Resources */,
 				33DF9A4C19DC23AA0055841D /* DatePopOverView.xib in Resources */,
 				33DBA20A19E556D90041A932 /* Icon-Small-50@2x.png in Resources */,
@@ -2165,7 +2201,6 @@
 				33DBA21519E559E80041A932 /* Icon-Spotlight-40.png in Resources */,
 				3337809B19E6B6EA00362F82 /* lines1.png in Resources */,
 				33CFBBF519D2D21300D86E68 /* tasks@2x.png in Resources */,
-				330D66E81A15BC2000C3C656 /* dsym_upload.sh in Resources */,
 				334585FE19D98D13000AB7E1 /* BodyInjuryBodyPartCell.xib in Resources */,
 				33B6368119D9250600875A1D /* increase_icon@2x.png in Resources */,
 				33D6309619D3F5F00090BE80 /* checked_red@2x.png in Resources */,
@@ -2203,6 +2238,19 @@
 			shellPath = /bin/bash;
 			shellScript = "echo \"Updating Build\"\n\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nversion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INFOPLIST_FILE\")\n\necho \"Current Version: $version\"\necho \"Latest Build: $buildNumber\"\n\nmajor=$(echo $version | cut -d'.' -f 1)\nminor=$(echo $version | cut -d'.' -f 2)\nrevision=$(echo $buildNumber | cut -d'.' -f 3)\n\necho \"Major: $major\"\necho \"Minor: $minor\"\necho \"Revision: $revision\"\n\nrevision=$(($revision + 1))\n\necho \"This build: $revision\"\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $major.$minor.$revision\" \"$INFOPLIST_FILE\"";
 		};
+		A9F01A4F1AC91CF700F4DD02 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "APP_ID=\"54658465466eda0236000003\"\nAPI_KEY=\"WfygBko9zi3eFQQPGl3H9SXM0BU9ycDq\"\nsource \"${SRCROOT}\"/GoBoardPro/Resources/CrittercismSDK/dsym_upload.sh";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2213,6 +2261,7 @@
 				332B60E51A146CB700B7C7EF /* AFImageRequestOperation.m in Sources */,
 				A91D953D1A8A0B0800F46D31 /* IncidentActionTaken.m in Sources */,
 				332E3A3519D535060088AB61 /* SOPDetailViewController.m in Sources */,
+				A95F79171ABC48E5006EFB22 /* NavController.m in Sources */,
 				A97F0F2C1A9462FF008CC9EB /* Report.m in Sources */,
 				33C7957D1A3859CB0029FA21 /* DailyLogViewController.m in Sources */,
 				A96B79DE1A9EFE7E00D6B19F /* IncidentReportInfo.m in Sources */,
@@ -2225,6 +2274,7 @@
 				33FE666A1A10D7090058BFB6 /* WebSerivceCall.m in Sources */,
 				3397CAD219D0347700788153 /* GoBoardPro.xcdatamodeld in Sources */,
 				3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */,
+				A9C568021AC142DA00072C42 /* InjuryDetail.m in Sources */,
 				3337809F19E6B6EA00362F82 /* MIMLineGraph.m in Sources */,
 				3366BC131A1724B8003FA3BF /* ERPSubcategory.m in Sources */,
 				33D5A59519E3F17C00344278 /* GraphDetailViewController.m in Sources */,
@@ -2278,6 +2328,7 @@
 				A9793CD11A93076400DF2568 /* AccidentPerson.m in Sources */,
 				33BF860E1A395EEC00AE6AD7 /* EndOfDayViewController.m in Sources */,
 				3337809D19E6B6EA00362F82 /* MIMColor.m in Sources */,
+				A95F791B1ABC4BC4006EFB22 /* UIDevice+Rotation.m in Sources */,
 				3337809E19E6B6EA00362F82 /* MIMColorClass.m in Sources */,
 				3337808D19E6B6EA00362F82 /* AnchorInfo.m in Sources */,
 				3397CAD319D0347700788153 /* LoginViewController.m in Sources */,
@@ -2328,7 +2379,6 @@
 				33CFBBD519D2ADE000D86E68 /* WelcomeUserViewController.m in Sources */,
 				33D879AD1A414DE900CC312C /* NSString+Validations.m in Sources */,
 				332F545E1A2344BB00F2A40A /* ConditionList.m in Sources */,
-				A9793CCB1A93072F00DF2568 /* InjuryDetail.m in Sources */,
 				A918943C1AAD6F4200426808 /* TaskList.m in Sources */,
 				332B60EB1A146CB700B7C7EF /* UIImageView+AFNetworking.m in Sources */,
 				A9CE70541A9DFB4F00950B21 /* ActionTakenList.m in Sources */,

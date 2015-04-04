@@ -1194,7 +1194,7 @@
                         <outlet property="vwInjuryListHeader" destination="Add-Xl-NTG" id="S3c-gc-kuE"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" id="v5Q-PM-O4f" customClass="BodilyFluidView">
+                <view clipsSubviews="YES" contentMode="scaleToFill" id="v5Q-PM-O4f" customClass="BodilyFluidView">
                     <rect key="frame" x="0.0" y="2286" width="768" height="989"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
@@ -1560,6 +1560,7 @@
                         <outlet property="btnMedicalPersonnelTreated" destination="bQY-MH-oh3" id="VVa-bl-xn1"/>
                         <outlet property="btnNotExposedToBlood" destination="FKs-Pj-egJ" id="qqm-td-qO2"/>
                         <outlet property="btnSelfTreated" destination="KKC-jn-ake" id="rm6-Gl-5fS"/>
+                        <outlet property="btnSignature" destination="cBU-ym-PPG" id="2ct-w3-AG1"/>
                         <outlet property="lblRefuseCareCaption" destination="Sen-JQ-hIY" id="TeG-Gt-H90"/>
                         <outlet property="lblRefuseCareText" destination="hTF-1v-zWr" id="aBE-Yx-WPG"/>
                         <outlet property="lblSelfCareCaption" destination="6Rs-YP-hPf" id="WHV-PI-Zp3"/>
