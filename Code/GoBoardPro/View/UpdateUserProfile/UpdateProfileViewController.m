@@ -19,17 +19,22 @@
     [super viewDidLoad];
     [self getCertificateList];
     mutArrDeletedCertificates = [[NSMutableArray alloc] init];
+    
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
 //        if ([[[User currentUser] termsAndConditions] isKindOfClass:[NSString class]])
 //            _txvTerms.text = [[User currentUser] termsAndConditions];
         
-        NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"txt"];
+        NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"html"];
         
-        NSString *aStr1 = [[NSString alloc]initWithContentsOfFile:aStrPathOfAcceptibleUsePolicy encoding:nil error:nil];
+        NSURL *aUrl = [NSURL fileURLWithPath:aStrPathOfAcceptibleUsePolicy];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
+        
+        [_vwWeb loadRequest:request];
+        
+        //NSString *aStr1 = [NSString stringWithContentsOfFile:aStrPathOfAcceptibleUsePolicy encoding:NSUTF8StringEncoding error:nil];
 
-        [_vwWeb loadHTMLString:aStr1 baseURL:nil];
-        
-        aStr1 = nil;
+        //[_vwWeb loadHTMLString:aStr1 baseURL:nil];
     }
     else {
         [_vwTerms setHidden:YES];

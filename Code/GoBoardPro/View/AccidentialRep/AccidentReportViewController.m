@@ -793,6 +793,8 @@
     NSArray *fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     [accidentView.vwPersonalInfo setRequiredFields:aryFields];
+    
+    
     predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_FIRST_AID];
     fields = [[_reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryAidFields = [fields valueForKeyPath:@"name"];

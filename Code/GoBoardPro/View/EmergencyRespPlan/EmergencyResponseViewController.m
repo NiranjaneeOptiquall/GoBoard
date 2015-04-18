@@ -51,7 +51,12 @@
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-        mutArrEmergencies = [NSMutableArray arrayWithArray:[[_dictERPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSMutableArray *aMutArrEmergenciesList = [NSMutableArray arrayWithArray:[[_dictERPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+        
+        mutArrEmergencies = [NSMutableArray arrayWithArray:[aMutArrEmergenciesList filteredArrayUsingPredicate:predicate]];
 
         //If Type has a value of 1 (Link) then the 'Link' property should be set
         //If Type has a value of 2 (Text) then the 'Description' property should be set
@@ -149,7 +154,12 @@
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-        mutArrEmergencies = [NSMutableArray arrayWithArray:[[response objectForKey:@"ErpCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSMutableArray *aMutArrEmergenciesList = [NSMutableArray arrayWithArray:[[response objectForKey:@"ErpCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+        
+        mutArrEmergencies = [NSMutableArray arrayWithArray:[aMutArrEmergenciesList filteredArrayUsingPredicate:predicate]];
         
         if ([mutArrEmergencies count] == 0) {
             [_lblNoRecords setHidden:NO];

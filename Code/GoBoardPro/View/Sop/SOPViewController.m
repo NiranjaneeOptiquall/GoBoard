@@ -47,7 +47,12 @@
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-        mutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+
+        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
         
         //If Type has a value of 1 (Link) then the 'Link' property should be set
         //If Type has a value of 2 (Text) then the 'Description' property should be set
@@ -160,8 +165,13 @@
         _dictSOPCategory = response;
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-        mutArrSOPList = [NSMutableArray arrayWithArray:[[response objectForKey:@"SopCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
-    
+        
+        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[response objectForKey:@"SopCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+        
+        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
+        
         if ([mutArrSOPList count] == 0) {
             [_lblNoRecords setHidden:NO];
         }

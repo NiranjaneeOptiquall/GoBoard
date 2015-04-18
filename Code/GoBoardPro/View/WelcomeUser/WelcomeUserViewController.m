@@ -25,6 +25,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
         [_lblAcceptTerms setHidden:NO];
         [_vwFacility setHidden:YES];

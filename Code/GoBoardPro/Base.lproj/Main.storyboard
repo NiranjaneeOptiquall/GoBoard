@@ -632,7 +632,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cQR-mM-M4y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1843" y="2154"/>
+            <point key="canvasLocation" x="1629" y="2244"/>
         </scene>
         <!--User Registration View Controller-->
         <scene sceneID="Erv-Vk-Ucq">
@@ -1370,7 +1370,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GdK-lU-aoN">
-                                                    <rect key="frame" x="0.0" y="2806" width="768" height="16"/>
+                                                    <rect key="frame" x="0.0" y="3028" width="768" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1846,6 +1846,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="xHK-rh-4UD">
                                 <rect key="frame" x="184" y="121" width="172" height="61"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2231,7 +2232,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iv4-xa-TBg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3049" y="-1652"/>
+            <point key="canvasLocation" x="3038" y="-1683"/>
         </scene>
         <!--Memo Board View Controller-->
         <scene sceneID="Bl3-TE-sBd">
@@ -2423,7 +2424,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ddM-Zv-SgB">
-                                                    <rect key="frame" x="0.0" y="2274" width="768" height="8"/>
+                                                    <rect key="frame" x="0.0" y="2474" width="768" height="8"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <color key="backgroundColor" red="0.69803921570000005" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -6268,7 +6269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b1i-r5-9YQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6073" y="-432"/>
+            <point key="canvasLocation" x="5989" y="-515"/>
         </scene>
         <!--End Of Day View Controller-->
         <scene sceneID="8LU-hP-RcF">
@@ -6991,11 +6992,11 @@
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </webView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms &amp; Contiditons" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Od7-CF-E6o">
-                                                        <rect key="frame" x="294" y="0.0" width="181" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Acceptable Use Policy (AUP)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Od7-CF-E6o">
+                                                        <rect key="frame" x="269" y="0.0" width="230" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="highlightedColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I agree to the Acceptable Use Policy (AUP)." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="XsK-r9-xHA">
@@ -7071,6 +7072,16 @@
                                             <action selector="btnBackTapped:" destination="5Vn-H6-D0X" eventType="touchUpInside" id="XNN-GJ-8Wc"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="yde-lX-EXW">
+                                        <rect key="frame" x="9" y="354" width="40" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="question_mark.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnPasswordHintTapped:" destination="5Vn-H6-D0X" eventType="touchUpInside" id="Hqr-C3-c73"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Pap-gA-a0M">
                                         <rect key="frame" x="411" y="260" width="317" height="56"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -7081,16 +7092,6 @@
                                         <state key="selected" image="checked_white_radiobutton.png"/>
                                         <connections>
                                             <action selector="btnLikeToRcvTextMSGTapped:" destination="5Vn-H6-D0X" eventType="touchUpInside" id="JCW-Em-ZKj"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="yde-lX-EXW">
-                                        <rect key="frame" x="9" y="354" width="40" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="question_mark.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="btnPasswordHintTapped:" destination="5Vn-H6-D0X" eventType="touchUpInside" id="Hqr-C3-c73"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -7223,7 +7224,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="pPR-kw-p2J"/>
         <segue reference="VBZ-Xi-TK3"/>
-        <segue reference="FJt-hn-2yq"/>
         <segue reference="vif-Tr-xCv"/>
+        <segue reference="v6e-GR-DHO"/>
     </inferredMetricsTieBreakers>
 </document>
