@@ -191,14 +191,16 @@
     while (![view isKindOfClass:[UtilizationCountTableViewCell class]] && ![view isKindOfClass:[UtilizationHeaderView class]]) {
         view = [view superview];
     }
+    NSLog(@"---tag---%i",[view tag]);
     UtilizationCount *location;
     NSInteger section;
+    NSIndexPath *indexPath;
     if ([view isKindOfClass:[UtilizationHeaderView class]]) {
         section = [(UtilizationHeaderView*)view section];
         location = [mutArrCount objectAtIndex:section];
     }
     else {
-        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+      indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
         section = indexPath.section;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
@@ -232,7 +234,7 @@
     location.lastCountDateTime = [self getCurrentDate];
     location.isUpdateAvailable = YES;
     [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
-//    [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+   // [_tblCountList reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self showTotalCount];
 }
 
@@ -249,7 +251,7 @@
         location = [mutArrCount objectAtIndex:section];
     }
     else {
-        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
         section = indexPath.section;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
@@ -293,7 +295,7 @@
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
     }
     else {
-        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
         editIndexPath = indexPath;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
@@ -334,7 +336,7 @@
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
     }
     else {
-        NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+        NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
         section = indexPath.section;
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
     }
@@ -477,6 +479,8 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UtilizationCountTableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    aCell.tag=indexPath.section;
+    
     if (indexPath.section == 0 || indexPath.section % 2 == 0) {
         [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
@@ -675,7 +679,7 @@
             location = [mutArrCount objectAtIndex:section];
         }
         else {
-            NSIndexPath *indexPath = [_tblCountList indexPathForCell:view];
+            NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
             section = indexPath.section;
             location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
         }
@@ -716,7 +720,7 @@
             //Update Current Section Data
             NSArray *visibleRows = [_tblCountList visibleCells];
             for (UtilizationCountTableViewCell *aCell in visibleRows) {
-                NSIndexPath *indexPath = [_tblCountList indexPathForCell:(UITableViewCell *)aCell];
+                NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[(UITableViewCell *)aCell center]];
                 if (indexPath.section==section) {
                     UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
                     UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:indexPath.row];

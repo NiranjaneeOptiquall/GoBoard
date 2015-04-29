@@ -21,6 +21,7 @@
     // Override point for customization after application launch.
     gblAppDelegate = self;
     NSLog(@"%@", [self applicationDocumentsDirectory]);
+    NSURL *path=[self applicationDocumentsDirectory];
     [Crittercism enableWithAppID:@"54658465466eda0236000003"];
     //    //sync Breadcrumb Mode
     [Crittercism setAsyncBreadcrumbMode:YES];
