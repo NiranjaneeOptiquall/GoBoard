@@ -55,7 +55,8 @@
 
 #pragma mark - GetAllData
 
-- (void)getAllData {
+- (void)getAllData
+{
     [self callServiceForHomeSetup:YES complition:nil];
     [self callServiceForEmergencyResponsePlan:YES complition:nil];
     [self callServiceForTaskList:YES complition:nil];

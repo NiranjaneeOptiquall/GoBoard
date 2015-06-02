@@ -16,7 +16,7 @@
 
 @implementation SOPViewController
 
-- (void)viewDidLoad {
+/*- (void)viewDidLoad {
     [super viewDidLoad];
     if (!_dictSOPCategory) {
         [_btnSOPList setHidden:YES];
@@ -104,6 +104,89 @@
         }
     }
 }
+*/
+
+/* 
+changes by chetan kasundra
+Put the webview in place  of textview for type 2( for html Description set in webview)
+*/
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    if (!_dictSOPCategory)
+    {
+        [_btnSOPList setHidden:YES];
+        [_lblTitle setText:@"Standard Operating Procedures"];
+        [_tblSOPCategory setHidden:YES];
+        [self getSOPCategories];
+    }
+    else
+    {
+        [_lblTitle setHidden:YES];
+        CGRect frame = _tblSOPCategory.frame;
+        frame.size.height = _mutArrCategoryHierarchy.count * _tblSOPCategory.rowHeight;
+        _tblSOPCategory.frame = frame;
+        
+        if (CGRectGetMaxY(frame) > _tblSOPList.frame.origin.y) {
+            frame = _tblSOPList.frame;
+            frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
+            _tblSOPList.frame = frame;
+        }
+        
+        frame = _viewWebDescription.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_viewWebDescription setFrame:frame];
+        
+        frame = _viewWeb.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_viewWeb setFrame:frame];
+        
+        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
+        
+        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+        
+        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
+        
+        //If Type has a value of 1 (Link) then the 'Link' property should be set
+        //If Type has a value of 2 (Text) then the 'Description' property should be set
+        
+        [_viewWeb setHidden:YES];
+        [_viewWebDescription setHidden:YES];
+        
+        if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 2)
+        {
+        
+            [_viewWebDescription setHidden:NO];
+            _viewWebDescription.delegate=self;
+            NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
+            [_viewWebDescription loadHTMLString:aStrDescription baseURL:nil];
+
+            frame = _tblSOPList.frame;
+            frame.origin.y = 765; //CGRectGetMaxY(_txtDescription.frame) + 15;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
+            _tblSOPList.frame = frame;
+            
+        }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1)
+        {
+            [_viewWeb setHidden:NO];
+            
+            frame = _viewWeb.frame;
+            frame.size.height = self.view.frame.size.height - _tblSOPList.frame.origin.y;
+            [_viewWeb setFrame:frame];
+            
+            NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Link"]];
+            [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
+        }
+    }
+}
+
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -113,6 +196,28 @@
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
+
+#pragma mark UIWebViewDelgate
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if ([webView isEqual:_viewWebDescription])
+    {
+        CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        
+        CGRect frameWebView=_viewWebDescription.frame;
+        
+        if (_viewWebDescription.frame.origin.y + height >= 745)
+        {
+            height= 745 - _viewWebDescription.frame.origin.y;
+        }
+        
+        frameWebView.size.height=height;
+        _viewWebDescription.frame= frameWebView;
+    }
+    
+}
+
 
 #pragma mark - Navigation
 

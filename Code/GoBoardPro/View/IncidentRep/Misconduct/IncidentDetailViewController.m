@@ -361,6 +361,8 @@
     [_lblDisclaimer setHidden:YES];
     [_lblDisclaimerDetail setHidden:YES];
     
+
+    
     _lblInstruction.text = reportSetupInfo.instructions;
     NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
     float height = [reportSetupInfo.instructions boundingRectWithSize:CGSizeMake(_lblInstruction.frame.size.width, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height + 20;
@@ -534,8 +536,27 @@
         
         _vwPersonalInfo.frame = frame;
         
+        
+        //--- changes by chetan kasundra-----//
+        //--- Problem when user click on Police called notification type. photo button of personalInvolved not click----
+        frame = _vwAfterPersonalInfo.frame;
+        frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+        _vwAfterPersonalInfo.frame = frame;
+        
+        frame = _vwWitnesses.frame;
+        frame.origin.y = CGRectGetMaxY(_vwAfterPersonalInfo.frame);
+        _vwWitnesses.frame = frame;
+        
+        frame = _vwEmployeeInfo.frame;
+        frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
+        _vwEmployeeInfo.frame = frame;
+        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+        
+        //-----------//
+        
     }
-    else{
+    else
+    {
         [_lblDisclaimer setHidden:YES];
         [_lblDisclaimerDetail setHidden:YES];
         
@@ -550,6 +571,27 @@
         frame.origin.y = CGRectGetMaxY(_vwBasicInfo.frame);
         
         _vwPersonalInfo.frame = frame;
+        
+        
+        
+        //--- changes by chetan kasundra-----//
+        //--- Problem when user click on Police called notification type. photo button of personalInvolved not click----
+        
+        frame = _vwAfterPersonalInfo.frame;
+        frame.origin.y = CGRectGetMaxY(_vwPersonalInfo.frame);
+        _vwAfterPersonalInfo.frame = frame;
+        
+        frame = _vwWitnesses.frame;
+        frame.origin.y = CGRectGetMaxY(_vwAfterPersonalInfo.frame);
+        _vwWitnesses.frame = frame;
+        
+        frame = _vwEmployeeInfo.frame;
+        frame.origin.y = CGRectGetMaxY(_vwWitnesses.frame);
+        _vwEmployeeInfo.frame = frame;
+        [_scrlMainView setContentSize:CGSizeMake(_scrlMainView.frame.size.width, CGRectGetMaxY(frame))];
+        
+        //-----------//
+
     }
 }
 

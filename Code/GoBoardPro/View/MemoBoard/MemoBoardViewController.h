@@ -13,6 +13,7 @@
     NSMutableArray *mutArrMemoList;
     UIPopoverController *popOver;
     NSMutableArray *mutArrSelectedMemo;
+    NSMutableArray *mutArrMemoListTemp;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tblMemoList;
 @property (weak, nonatomic) IBOutlet UIView *vwPopOver;

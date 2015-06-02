@@ -656,8 +656,16 @@
         if (buttonIndex == 0) {
             [self showPhotoLibrary];
         }
-        else if (buttonIndex == 1) {
-            [self showCamera];
+        else if (buttonIndex == 1)
+        {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+            {
+                [self showCamera];
+            }
+            else
+            {
+                alert(@"Error!!", @"Camera is not available");
+            }
         }
     }];
 }

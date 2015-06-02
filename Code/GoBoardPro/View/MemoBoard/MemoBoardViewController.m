@@ -14,9 +14,40 @@
 
 @implementation MemoBoardViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    mutArrMemoList = gblAppDelegate.mutArrMemoList;
+
+    //changes by chetan kasundra
+    // Add the sorting Funcationality with Date and Time
+    
+    mutArrMemoListTemp=[[NSMutableArray alloc]init];
+    for (NSDictionary *dic in [gblAppDelegate.mutArrMemoList mutableCopy])
+    {
+        NSString *strDate=[[dic[@"Date"] componentsSeparatedByString:@"."] firstObject ];
+        NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+        NSDate *date=[formatter dateFromString:strDate];
+        
+        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+        [formatter setDateFormat:@"yyyy-MM-dd"];
+        NSString *date1=[formatter stringFromDate:date];
+        [formatter setDateFormat:@"HH:mm:ss"];
+        NSString *time1=[formatter stringFromDate:date];
+        [dic setValue:date1 forKey:@"Date1"];
+        [dic setValue:time1 forKey:@"Time1"];
+    
+        [mutArrMemoListTemp addObject:dic];
+    }
+    
+    NSSortDescriptor *sortDescriptorDate=[[NSSortDescriptor alloc]initWithKey:@"Date1" ascending:YES];
+    NSSortDescriptor *sortDescriptorTime=[[NSSortDescriptor alloc]initWithKey:@"Time1" ascending:NO];
+        
+    [mutArrMemoListTemp sortUsingDescriptors:@[sortDescriptorDate,sortDescriptorTime]];
+    mutArrMemoList=mutArrMemoListTemp;
+
+    //-------------------------------//
+    
     mutArrSelectedMemo = [NSMutableArray array];
     // Do any additional setup after loading the view.
 }

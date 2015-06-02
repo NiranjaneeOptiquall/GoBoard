@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface SOPViewController : UIViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface SOPViewController : UIViewController<UITableViewDelegate, UITableViewDataSource,UIWebViewDelegate> {
     NSMutableArray *mutArrSOPList;
     
 }
@@ -25,6 +25,7 @@
 - (IBAction)btnSOPListTapped:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
+@property (strong, nonatomic) IBOutlet UIWebView *viewWebDescription;
 @property (strong, nonatomic) IBOutlet UITextView *txtDescription;
 
 @end

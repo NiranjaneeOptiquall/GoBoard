@@ -19,7 +19,7 @@
 
 @implementation EmergencyResponseViewController
 
-- (void)viewDidLoad {
+/*- (void)viewDidLoad {
     [super viewDidLoad];
     //[self getAllEmergencyList];
    
@@ -105,6 +105,77 @@
         }
     }
 }
+*/
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    //[self getAllEmergencyList];
+    
+    if (!_dictERPCategory) {
+        [_btnERPList setHidden:YES];
+        [_lblTitle setText:@"Emergency Reponse Plan"];
+        [_tblERPCategory setHidden:YES];
+        [self getAllEmergencyList];
+    }
+    else {
+        [_lblTitle setHidden:YES];
+        CGRect frame = _tblERPCategory.frame;
+        frame.size.height = _mutArrCategoryHierarchy.count * _tblEmergencyList.rowHeight;
+        _tblERPCategory.frame = frame;
+        
+        if (CGRectGetMaxY(frame) > _tblERPCategory.frame.origin.y) {
+            frame = _tblEmergencyList.frame;
+            frame.origin.y = CGRectGetMaxY(_tblERPCategory.frame) + 5;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
+            _tblEmergencyList.frame = frame;
+        }
+        frame = _viewWebDescription.frame;
+        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
+        [_viewWebDescription setFrame:frame];
+        
+        frame = _viewWeb.frame;
+        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
+        [_viewWeb setFrame:frame];
+        
+        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
+        
+        NSMutableArray *aMutArrEmergenciesList = [NSMutableArray arrayWithArray:[[_dictERPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+        
+        mutArrEmergencies = [NSMutableArray arrayWithArray:[aMutArrEmergenciesList filteredArrayUsingPredicate:predicate]];
+        
+        //If Type has a value of 1 (Link) then the 'Link' property should be set
+        //If Type has a value of 2 (Text) then the 'Description' property should be set
+        
+        [_viewWebDescription setHidden:YES];
+        [_viewWeb setHidden:YES];
+        
+        if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 2)
+        {
+            [_viewWebDescription setHidden:NO];
+            NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Description"]];
+            _viewWebDescription.delegate=self;
+            [_viewWebDescription loadHTMLString:aStrDescription baseURL:nil];
+            
+            frame = _tblEmergencyList.frame;
+            frame.origin.y = 765;//CGRectGetMaxY(_txtDescription.frame) + 15;
+            frame.size.height = self.view.frame.size.height - frame.origin.y;
+            _tblEmergencyList.frame = frame;
+            
+        }else if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 1){
+            [_viewWeb setHidden:NO];
+            
+            frame = _viewWeb.frame;
+            frame.size.height = self.view.frame.size.height - _tblEmergencyList.frame.origin.y;
+            [_viewWeb setFrame:frame];
+            
+            NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Link"]];
+            [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
+        }
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -113,6 +184,28 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+
+
+#pragma mark UIWebViewDelgate
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if ([webView isEqual:_viewWebDescription])
+    {
+        CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        
+        CGRect frameWebView=_viewWebDescription.frame;
+        
+        if (_viewWebDescription.frame.origin.y + height >= 745)
+        {
+            height= 745 - _viewWebDescription.frame.origin.y;
+        }
+        
+        frameWebView.size.height=height;
+        _viewWebDescription.frame= frameWebView;
+    }
+    
 }
 
 #pragma mark - Navigation

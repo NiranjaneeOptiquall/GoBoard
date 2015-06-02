@@ -552,6 +552,9 @@
 
 
 - (BOOL)syncSurveysAndForms {
+    
+
+    
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type MATCHES[cd] %@", @"2"];
 //    [request setPredicate:predicate];
@@ -559,13 +562,26 @@
     isErrorOccurred = NO;
     __block BOOL isSingleDataSaved = NO;
     for (SubmitFormAndSurvey *record in aryOfflineData) {
+        
+        isSingleDataSaved = NO;
+
         NSMutableArray *mutArrReq = [NSMutableArray array];
         for (QuestionDetails *obj in record.questionList.allObjects) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
             [dict setObject:obj.questionId forKey:@"QuestionId"];
             [dict setObject:obj.questionText forKey:@"QuestionText"];
             [dict setObject:obj.responseText forKey:@"ResponseText"];
-            [dict setObject:obj.responseId forKey:@"ResponseId"];
+            
+            //chetan kasundra
+            // put the nil condition particulary for textbox,date,time,checkbox,numeric field in survey and form screen because all this field not set the ResponseID when user submit the form in offline mode.Before application is crash after putting this conditon crash was solve.
+            if (obj.responseId == nil)
+            {
+                [dict setObject:[NSNull null] forKey:@"ResponseId"];
+            }
+            else
+            {
+                [dict setObject:obj.responseId forKey:@"ResponseId"];
+            }
             [mutArrReq addObject:dict];
         }
         NSString *strIDKeyName, *strWebServiceName = @"";

@@ -9,7 +9,7 @@
 #import "LoginViewController.h"
 #import "GuestFormViewController.h"
 #import "DailyLog.h"
-
+#import <Raygun4iOS/Raygun.h>
 @interface LoginViewController ()
 
 @end
@@ -138,6 +138,9 @@
                 [self deleteAllDailyLogData];
             }
         }
+
+        [[Raygun sharedReporter] identify:[NSString stringWithFormat:@"%@ %@",[User currentUser].firstName , [User currentUser].lastName]];
+        
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];

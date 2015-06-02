@@ -10,6 +10,10 @@
 #import "Constants.h"
 #import "Reachability.h"
 #import "Crittercism.h"
+#import <Raygun4iOS/Raygun.h>
+
+
+
 @interface AppDelegate () 
 
 @end
@@ -22,9 +26,21 @@
     gblAppDelegate = self;
     NSLog(@"%@", [self applicationDocumentsDirectory]);
     NSURL *path=[self applicationDocumentsDirectory];
+    
+    
+    // add the code for Raygun and comment the code for Crittercism
+    
+    [Raygun sharedReporterWithApiKey:@"H9rd3/e0MvpkTsO4clZM1A=="];
+    [[Raygun sharedReporter] identify:@"Guest"];
+    
+    /*
     [Crittercism enableWithAppID:@"54658465466eda0236000003"];
     //    //sync Breadcrumb Mode
-    [Crittercism setAsyncBreadcrumbMode:YES];
+    [Crittercism setAsyncBreadcrumbMode:YES]; */
+    
+    
+    
+    
     _shouldHideActivityIndicator = YES;
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"SettingsIsProduction"]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"SettingsIsProduction"];
@@ -139,7 +155,8 @@
 }
 
 
-- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
+- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure
+{
     if ([self isNetworkReachable]) {
         [self showActivityIndicator];
         [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
@@ -327,10 +344,6 @@
 
 
 
-
-
-
-
 //==================================== Categories ======================================\\
 
 
@@ -345,7 +358,7 @@
 }
 
 - (NSString *)trimText {
-   return [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 - (void)awakeFromNib {
@@ -354,7 +367,11 @@
     [self setExclusiveTouch:YES];
 }
 
+
+
 @end
+
+
 
 @implementation UIButton (exclusive)
 

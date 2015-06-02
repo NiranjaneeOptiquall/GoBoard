@@ -89,7 +89,7 @@
     NSDictionary *aDict = [[[mutArrTaskList objectAtIndex:indexPath.section] objectForKey:@"Tasks"] objectAtIndex:indexPath.row];
     UILabel *aLblTask = (UILabel*)[aCell.contentView viewWithTag:3];
     [aLblTask setText:[aDict objectForKey:@"Name"]];
-    UILabel *aLblFrequency = (UILabel*)[aCell.contentView viewWithTag:3];
+    UILabel *aLblFrequency = (UILabel*)[aCell.contentView viewWithTag:4];
     [aLblFrequency setText:[aDict objectForKey:@"Frequency"]];
     [aCell setBackgroundColor:[UIColor clearColor]];
     [aCell.contentView setBackgroundColor:[UIColor clearColor]];

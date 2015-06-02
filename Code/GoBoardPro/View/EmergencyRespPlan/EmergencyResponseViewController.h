@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EmergencyResponseViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface EmergencyResponseViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,UIWebViewDelegate> {
     NSMutableArray *mutArrEmergencies;
     NSIndexPath *selectedIndexPath;
 }
@@ -29,5 +29,7 @@
 - (IBAction)btnERPListTapped:(UIButton *)sender;
 @property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
 @property (strong, nonatomic) IBOutlet UITextView *txtDescription;
+@property (strong, nonatomic) IBOutlet UIWebView *viewWebDescription;
+
 
 @end
