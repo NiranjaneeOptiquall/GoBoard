@@ -12,7 +12,7 @@ typedef NSInteger DateSelectionOption;
 typedef NSInteger DateLimitOption;
 
 typedef enum : NSUInteger {
-    DATE_LIMIT_FUTURE_ONLY = 1,
+    DATE_LIMIT_FETURE_ONLY = 1,
     DATE_LIMIT_PAST_ONLY,
     DATE_LIMIT_ALL_DATE,
     DATE_LIMIT_NONE

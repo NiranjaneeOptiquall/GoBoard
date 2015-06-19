@@ -97,8 +97,8 @@ typedef enum : NSUInteger {
 #endif
 
 
-//#ifdef __DEBUG__
-//#define NSLog(...) NSLog(__VA_ARGS__)
-//#else
-//#define NSLog(...)
-//#endif
+#ifdef DEBUG
+#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSLog(...)
+#endif

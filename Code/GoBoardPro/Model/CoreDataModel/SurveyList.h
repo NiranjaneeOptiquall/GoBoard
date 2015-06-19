@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString * surveyId;
 @property (nonatomic, retain) NSString * typeId;
 @property (nonatomic, retain) NSString * userTypeId;
+@property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSSet *questionList;
 @end
 

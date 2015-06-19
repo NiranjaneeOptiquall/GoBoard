@@ -14,17 +14,92 @@
     [super viewDidLoad];
     [self fetchFacilities];
     selectedFacility = [[User currentUser] selectedFacility];
-    selectedLocation = [[[User currentUser] mutArrSelectedPositions] firstObject];
+//    selectedLocation = [[[User currentUser] mutArrSelectedLocations] firstObject];
+    arySelectedLocation=[[User currentUser] mutArrSelectedLocations];
+    NSSortDescriptor *sortDescriptor=[[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES];
+    [arySelectedLocation sortUsingDescriptors:@[sortDescriptor]];
+    selectedLocation=[arySelectedLocation objectAtIndex:0];
+    arySelectedPostion=[[User currentUser] mutArrSelectedPositions];
     [self fetchLocation];
     _txtFacility.text = selectedFacility.name;
     _txtLocation.text = selectedLocation.name;
     mutArrTaskList = [[NSMutableArray alloc] init];
+    aryFilterPostion =[[NSMutableArray alloc] init];
     [self GetAdminTask];
 }
 
 - (void)GetAdminTask {
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@", ADMIN_TASK_LIST, selectedFacility.value, selectedLocation.value] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ADMIN_TASK_LIST] complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&locationId=%@", ADMIN_TASK_LIST, selectedFacility.value, selectedLocation.value] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ADMIN_TASK_LIST] complition:^(NSDictionary *response)
+    {
         mutArrTaskList = [response objectForKey:@"TaskList"];
+        [aryFilterPostion removeAllObjects];
+        
+        
+        //--------- changes by chetan kasundra----------
+        //--------- sorting with default location and postion based on user login time selcted location and postion---------
+        
+        for (UserPosition *postion in arySelectedPostion)
+        {
+            for (int i=0; i<[mutArrTaskList count]; i++)
+            {
+        
+                NSString *postionName=[[mutArrTaskList objectAtIndex:i] valueForKey:@"Position"];
+                
+                if ([postion.name isEqualToString:postionName])
+                {
+                    [aryFilterPostion addObject:[mutArrTaskList objectAtIndex:i]];
+                    [mutArrTaskList removeObjectAtIndex:i];
+                }
+            }
+        }
+        
+        NSSortDescriptor *sortDescriptorPostion=[[NSSortDescriptor alloc] initWithKey:@"Position" ascending:YES];
+        
+        [aryFilterPostion sortUsingDescriptors:@[sortDescriptorPostion]];
+        [mutArrTaskList sortUsingDescriptors:@[sortDescriptorPostion]];
+        
+        if ([aryFilterPostion count] > 0)
+        {
+            [aryFilterPostion addObjectsFromArray:mutArrTaskList];
+            mutArrTaskList=aryFilterPostion;
+        }
+        
+        
+        
+        for (int i =0; i< [mutArrTaskList count]; i++)
+        {
+            NSMutableDictionary *arrayPostion=[mutArrTaskList objectAtIndex:i];
+            NSSortDescriptor *sortDescriptorFrequency=[[NSSortDescriptor alloc] initWithKey:@"FrequencyType" ascending:YES];
+            NSMutableArray *arryTask=arrayPostion[@"Tasks"];
+            [arryTask sortUsingDescriptors:@[sortDescriptorFrequency]];
+            [arrayPostion setObject:arryTask forKey:@"Tasks"];
+            
+            [mutArrTaskList replaceObjectAtIndex:i withObject:arrayPostion];
+        }
+        
+        
+        
+       // NSSortDescriptor *sortDescriptorFrequency=[[NSSortDescriptor alloc] initWithKey:@"Tasks" ascending:YES];
+//         NSSortDescriptor *sortDescriptorFrequency1=[[NSSortDescriptor alloc] initWithKey:@"Tasks.Name" ascending:YES];
+//        
+//        [mutArrTaskList sortUsingDescriptors:@[sortDescriptorFrequency1]];
+        
+//        
+//        [aryFilterPostion removeAllObjects];
+//        for (NSMutableArray *aryTask in mutArrTaskList)
+//        {
+//            NSSortDescriptor *sortDescriptorFrequency=[[NSSortDescriptor alloc] initWithKey:@"FrequencyType" ascending:YES];
+//            [aryTask sortUsingDescriptors:@[sortDescriptorFrequency]];
+//            [aryFilterPostion addObject:aryTask];
+//
+//        }
+        
+        
+        
+        //------------------------------------------
+        
+        
+        
         if ([mutArrTaskList count] == 0) {
             [_lblNoRecords setHidden:NO];
         }
@@ -32,7 +107,9 @@
             [_lblNoRecords setHidden:YES];
         }
         [_tblTaskList reloadData];
-    } failure:^(NSError *error, NSDictionary *response) {
+    } failure:^(NSError *error, NSDictionary *response)
+    {
+        alert(nil, response[@"ErrorMessage"]);
         [_lblNoRecords setHidden:NO];
     }];
 }

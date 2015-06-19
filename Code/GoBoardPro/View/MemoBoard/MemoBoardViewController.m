@@ -22,7 +22,8 @@
     // Add the sorting Funcationality with Date and Time
     
     mutArrMemoListTemp=[[NSMutableArray alloc]init];
-    for (NSDictionary *dic in [gblAppDelegate.mutArrMemoList mutableCopy])
+    
+    for (NSMutableDictionary *dic in [gblAppDelegate.mutArrMemoList mutableCopy])
     {
         NSString *strDate=[[dic[@"Date"] componentsSeparatedByString:@"."] firstObject ];
         NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
@@ -40,7 +41,7 @@
         [mutArrMemoListTemp addObject:dic];
     }
     
-    NSSortDescriptor *sortDescriptorDate=[[NSSortDescriptor alloc]initWithKey:@"Date1" ascending:YES];
+    NSSortDescriptor *sortDescriptorDate=[[NSSortDescriptor alloc]initWithKey:@"Date1" ascending:NO];
     NSSortDescriptor *sortDescriptorTime=[[NSSortDescriptor alloc]initWithKey:@"Time1" ascending:NO];
         
     [mutArrMemoListTemp sortUsingDescriptors:@[sortDescriptorDate,sortDescriptorTime]];
@@ -172,6 +173,7 @@
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
     
+   // _txvPopOver.text=@"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?";
     _txvPopOver.text = [[mutArrMemoList objectAtIndex:indexPath.row] objectForKey:@"Body"];
     UIViewController *viewController = [[UIViewController alloc] init];
     viewController.view = _vwPopOver;

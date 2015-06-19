@@ -170,15 +170,20 @@
 - (IBAction)btnCountCommentTapped:(UIButton *)sender {
 }
 
+//chetan kasundra changes starts
+//change alert message
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
     if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+         [[[UIAlertView alloc] initWithTitle:@"WARNING" message:@"If you press \"Back\" you will lose your information. Do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+
+//chages ends
+
 
 - (IBAction)btnToggleSummaryTapped:(UIButton *)sender {
     [sender setSelected:!sender.isSelected];
@@ -207,21 +212,36 @@
     NSInteger current = [location.lastCount integerValue];
     NSInteger max = [location.capacity integerValue];
     current++;
-    if (current > max && !location.location) {
-        NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
-        alert(@"Exceed Limit", strMsg);
+    if (!location.isExceedMaximumCapacity)
+    {
+        if (current > max && !location.location)
+        {
+            location.isExceedMaximumCapacity=YES;
+            NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
+            alert(@"Exceed Limit", strMsg);
+        }
     }
+    
     location.lastCount = [NSString stringWithFormat:@"%ld", (long)current];
-    if (location.location) {
+    if (location.location)
+    {
         NSInteger totalCount = 0;
         for (UtilizationCount *loc in location.location.sublocations.array) {
             totalCount += [loc.lastCount integerValue];
         }
         location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
-        if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
-            NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
-            alert(@"Exceed Limit", strMsg);
+        
+        if (!location.location.isExceedMaximumCapacity)
+        {
+            if ([location.location.lastCount intValue] > [location.location.capacity intValue])
+            {
+                
+                location.location.isExceedMaximumCapacity=YES;
+                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
+                alert(@"Exceed Limit", strMsg);
+            }
         }
+       
         location.location.isUpdateAvailable = YES;
         location.location.lastCountDateTime = [self getCurrentDate];
     }
@@ -686,10 +706,16 @@
         
         int max = [location.capacity intValue];
         int current = [textField.trimText intValue];
-        if (current >= 0) {
-            if ( current > max && !location.location) {
-                NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
-                alert(@"Exceed Limit", strMsg);
+        if (current >= 0)
+        {
+            if (!location.isExceedMaximumCapacity)
+            {
+                if ( current > max && !location.location)
+                {
+                    location.isExceedMaximumCapacity=YES;
+                    NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.name, location.capacity, location.name];
+                    alert(@"Exceed Limit", strMsg);
+                }
             }
 //            int previousCount = [location.lastCount intValue];
             location.lastCount = [NSString stringWithFormat:@"%d", current];
@@ -700,10 +726,17 @@
                     totalCount += [loc.lastCount integerValue];
                 }
                 location.location.lastCount = [NSString stringWithFormat:@"%ld", (long)totalCount];
-                if ([location.location.lastCount intValue] > [location.location.capacity intValue]) {
-                    NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
-                    alert(@"Exceed Limit", strMsg);
+                if (!location.location.isExceedMaximumCapacity)
+                {
+                    if ([location.location.lastCount intValue] > [location.location.capacity intValue])
+                    {
+                        location.location.isExceedMaximumCapacity=YES;
+                        NSString *strMsg = [NSString stringWithFormat:@"Maximum capacity for %@ is %@, %@ is over capacity now.", location.location.name, location.location.capacity, location.location.name];
+                        alert(@"Exceed Limit", strMsg);
+                    }
                 }
+                
+                
                 location.location.isUpdateAvailable = YES;
                 location.location.lastCountDateTime = [self getCurrentDate];
 

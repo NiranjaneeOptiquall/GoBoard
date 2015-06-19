@@ -264,6 +264,7 @@
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="formList" inverseEntity="SurveyQuestions" syncable="YES"/>
@@ -488,6 +489,7 @@
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="surveyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
@@ -592,7 +594,7 @@
         <element name="ERPHistoryTask" positionX="-37" positionY="-358" width="128" height="88"/>
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
-        <element name="FormsList" positionX="-443" positionY="720" width="128" height="148"/>
+        <element name="FormsList" positionX="-551" positionY="680" width="128" height="163"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
@@ -611,9 +613,9 @@
         <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
-        <element name="SurveyList" positionX="-584" positionY="720" width="128" height="148"/>
-        <element name="SurveyQuestions" positionX="-513" positionY="905" width="128" height="148"/>
-        <element name="SurveyResponseTypeValues" positionX="-351" positionY="950" width="128" height="103"/>
+        <element name="SurveyList" positionX="-738" positionY="657" width="128" height="163"/>
+        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="133"/>
+        <element name="SurveyResponseTypeValues" positionX="-675" positionY="1103" width="128" height="103"/>
         <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-679" width="128" height="103"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>

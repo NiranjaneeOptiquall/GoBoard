@@ -19,5 +19,5 @@
 @dynamic link;
 @dynamic name;
 @dynamic questionList;
-
+@dynamic sequence;
 @end

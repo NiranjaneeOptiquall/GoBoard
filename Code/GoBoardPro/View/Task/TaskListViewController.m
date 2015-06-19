@@ -222,15 +222,20 @@
     [self submitTask:YES];
 }
 
+//chetan kasundra changes starts
+//change alert message
 - (IBAction)btnBackTapped:(id)sender {
     [self.view endEditing:YES];
-    if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+    if (isUpdate)
+    {
+        [[[UIAlertView alloc] initWithTitle:@"WARNING" message:@"If you press \"Back\" you will lose your information. Do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+
+//chages ends
 
 - (IBAction)btnPopOverTaskTapped:(UIButton *)sender {
     [sender setSelected:!sender.isSelected];
@@ -568,15 +573,28 @@
     return aCell;
 }
 
+//--------- changes by chetan kasundra -------------
+//--------- show the description in full area ------------
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
-    CGRect frame = _lblDetailDesc.frame;
-    frame.size.width = 470;
-    _lblDetailDesc.frame = frame;
+    
     [_lblDetailTitle setText:task.name];
+
+    float height=[task.desc boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.height;
+    
+    CGRect frame = _lblDetailDesc.frame;
+    frame.size.height = height;
+    _lblDetailDesc.frame = frame;
     [_lblDetailDesc setText:task.desc];
-    [_lblDetailDesc sizeToFit];
+
+    
+    frame=_lblLocation.frame;
+    frame.origin.y=CGRectGetMaxY(_lblDetailDesc.frame) + 8;
+    _lblLocation.frame=frame;
     [_lblLocation setText:task.location];
+    
+    
     frame = _vwDetailPopOver.frame;
     frame.size.height = CGRectGetMaxY(_lblLocation.frame) + 18;
     _vwDetailPopOver.frame = frame;
@@ -597,8 +615,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [popOver presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     });
-    
+
 }
+//--------------------------------------------------
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     if (popOverMessage) {

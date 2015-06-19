@@ -29,7 +29,7 @@
 @property (nonatomic, assign) NSInteger originalCount;
 @property (nonatomic, assign) BOOL isCountRemainSame;
 @property (nonatomic, assign) BOOL isUpdateAvailable;
-
+@property (nonatomic, assign) BOOL isExceedMaximumCapacity;
 
 
 - (void)setInitialValues;

@@ -15,6 +15,9 @@
     NSMutableArray *mutArrTaskList;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
+    NSMutableArray *arySelectedPostion;
+    NSMutableArray *arySelectedLocation;
+    NSMutableArray *aryFilterPostion;
     NSArray *aryFacilities, *aryLocation;
 }
 

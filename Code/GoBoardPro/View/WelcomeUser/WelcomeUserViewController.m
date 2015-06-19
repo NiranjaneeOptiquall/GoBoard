@@ -149,6 +149,23 @@
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     [request setSortDescriptors:@[sortByName]];
      aryFacilities = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    
+   /* if ([aryFacilities count]>0)
+    {
+        selectedFacility = [aryFacilities objectAtIndex:0];
+        _txtFacility.text=selectedFacility.name;
+        [[[User currentUser] mutArrSelectedPositions] removeAllObjects];
+        [[[User currentUser] mutArrSelectedLocations] removeAllObjects];
+        [self fetchPositionAndLocation];
+        if ([aryLocation count]>0)
+        {
+            NSManagedObject *object=[aryLocation objectAtIndex:0];
+            [[[User currentUser] mutArrSelectedLocations] addObject:object];
+        }
+        [_tblLocation reloadData];
+        [_tblPosition reloadData];
+    }*/
+    
 }
 
 - (void)fetchPositionAndLocation {

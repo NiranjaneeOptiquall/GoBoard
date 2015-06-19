@@ -897,6 +897,7 @@
         survey.name = [aDict objectForKey:@"Name"];
         survey.typeId = [[aDict objectForKey:@"SurveyTypeId"] stringValue];
         survey.userTypeId = [[aDict objectForKey:@"SurveyUserTypeId"] stringValue];
+        survey.sequence=[aDict objectForKey:@"Sequence"];
         NSMutableSet *aSetQuestions = [NSMutableSet set];
         if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
             for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
@@ -986,6 +987,7 @@
         form.name = [aDict objectForKey:@"Name"];
         form.typeId = [[aDict objectForKey:@"FormTypeId"] stringValue];
         form.userTypeId = [[aDict objectForKey:@"FormUserTypeId"] stringValue];
+        form.sequence=[aDict objectForKey:@"Sequence"] ;
         NSMutableSet *aSetQuestions = [NSMutableSet set];
         if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
             for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {

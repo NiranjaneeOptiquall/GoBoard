@@ -19,5 +19,5 @@
 @dynamic typeId;
 @dynamic userTypeId;
 @dynamic questionList;
-
+@dynamic sequence;
 @end

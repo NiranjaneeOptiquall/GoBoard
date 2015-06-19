@@ -66,7 +66,7 @@
 
 - (void)configurePickerWithOption:(DateSelectionOption)option andLimit:(DateLimitOption)limit {
     switch (limit) {
-        case DATE_LIMIT_FUTURE_ONLY:
+        case DATE_LIMIT_FETURE_ONLY:
             [self allowFutureDateOnly];
             break;
         case DATE_LIMIT_PAST_ONLY:

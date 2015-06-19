@@ -13,13 +13,14 @@
 @implementation UtilizationCount
 
 
-@synthesize originalCount, originalMessage, isCountRemainSame, isUpdateAvailable;
+@synthesize originalCount, originalMessage, isCountRemainSame, isUpdateAvailable,isExceedMaximumCapacity;
 
 - (void)setInitialValues {
     self.originalMessage = self.message;
     self.originalCount = [self.lastCount integerValue];
     self.isCountRemainSame = NO;
     self.isUpdateAvailable = NO;
+    self.isExceedMaximumCapacity=NO;
 }
 
 @dynamic capacity;

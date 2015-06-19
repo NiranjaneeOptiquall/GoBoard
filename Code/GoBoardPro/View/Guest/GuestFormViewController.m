@@ -116,7 +116,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strSurveyUserType];
     [request setPredicate:predicate];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
     [request setSortDescriptors:@[sort]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {
@@ -142,7 +142,7 @@
 //        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
 //    }
     [request setPredicate:predicate];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
     [request setSortDescriptors:@[sort]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {

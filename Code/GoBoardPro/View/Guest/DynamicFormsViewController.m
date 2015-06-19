@@ -85,15 +85,22 @@
     }
 }
 
+//chetan kasundra changes starts
+//change the Alert Message
 
 - (IBAction)btnBackTapped:(id)sender {
-    if (isUpdate) {
-        [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Do you want to save your information? If you press “Back” you will lose all entered information, do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
-    }
-    else {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+//    if (isUpdate)
+//    {
+        [[[UIAlertView alloc] initWithTitle:@"WARNING" message:@"If you press \"Back\" you will lose your information. Do you want to proceed?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil] show];
+//    }
+//    else {
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
 }
+
+
+//chages ends
+
 
 - (IBAction)btnSubmitTapped:(id)sender {
     [self.view endEditing:YES];
@@ -194,7 +201,9 @@
     }
 }
 
-- (void)btnCheckMarkTapped:(UIButton *)sender {
+- (void)btnCheckMarkTapped:(UIButton *)sender
+{
+    isUpdate=YES;
     [sender setSelected:!sender.isSelected];
     NSIndexPath *indexPath = [self indexPathForView:sender];
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];

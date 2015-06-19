@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString * instructions;
 @property (nonatomic, retain) NSString * link;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSSet *questionList;
 @end
 
