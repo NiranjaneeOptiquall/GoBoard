@@ -317,7 +317,6 @@
 		A9793CD41A93076400DF2568 /* Emergency.m in Sources */ = {isa = PBXBuildFile; fileRef = A9793CD31A93076400DF2568 /* Emergency.m */; };
 		A97F0F2C1A9462FF008CC9EB /* Report.m in Sources */ = {isa = PBXBuildFile; fileRef = A97F0F2B1A9462FF008CC9EB /* Report.m */; };
 		A98357561A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = A98357551A7D090C00ACECCE /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
-		A988BD981AD4033300BBFDD8 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = A988BD961AD4033300BBFDD8 /* dsym_upload.sh */; };
 		A988BD991AD4033300BBFDD8 /* libCrittercism_v5_0_4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A988BD971AD4033300BBFDD8 /* libCrittercism_v5_0_4.a */; };
 		A9A9998F1ADD42AE000D4881 /* Calibri.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9A9998E1ADD42AE000D4881 /* Calibri.ttf */; };
 		A9C190D41AB8391900316920 /* attachmentLink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9C190D31AB8391900316920 /* attachmentLink@2x.png */; };
@@ -326,6 +325,7 @@
 		A9C568021AC142DA00072C42 /* InjuryDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C568011AC142DA00072C42 /* InjuryDetail.m */; };
 		A9CE70511A9DD0F700950B21 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CE70501A9DD0F700950B21 /* Person.m */; };
 		A9CE70541A9DFB4F00950B21 /* ActionTakenList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CE70531A9DFB4F00950B21 /* ActionTakenList.m */; };
+		A9D1E5B21AF1E9EE00028FC1 /* Raygun4iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D1E5B11AF1E9EE00028FC1 /* Raygun4iOS.framework */; };
 		A9DCC21E1AD4F89B00E2E055 /* Acceptible Use Policy HTML_20150301.html in Resources */ = {isa = PBXBuildFile; fileRef = A9DCC21D1AD4F89B00E2E055 /* Acceptible Use Policy HTML_20150301.html */; };
 		A9F7B7701A8C839500F93760 /* delete_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9F7B76F1A8C839500F93760 /* delete_icon@2x.png */; };
 		A9F8B7201A8A081D0007D041 /* WitnessPresent.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9F8B71D1A8A081D0007D041 /* WitnessPresent.xib */; };
@@ -818,6 +818,7 @@
 		A9CE70501A9DD0F700950B21 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		A9CE70521A9DFB4F00950B21 /* ActionTakenList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionTakenList.h; sourceTree = "<group>"; };
 		A9CE70531A9DFB4F00950B21 /* ActionTakenList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionTakenList.m; sourceTree = "<group>"; };
+		A9D1E5B11AF1E9EE00028FC1 /* Raygun4iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Raygun4iOS.framework; sourceTree = "<group>"; };
 		A9DCC21D1AD4F89B00E2E055 /* Acceptible Use Policy HTML_20150301.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "Acceptible Use Policy HTML_20150301.html"; sourceTree = "<group>"; };
 		A9F7B76F1A8C839500F93760 /* delete_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_icon@2x.png"; sourceTree = "<group>"; };
 		A9F8B71D1A8A081D0007D041 /* WitnessPresent.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WitnessPresent.xib; sourceTree = "<group>"; };
@@ -832,6 +833,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9F8B7291A8A09A80007D041 /* AssetsLibrary.framework in Frameworks */,
+				A9D1E5B21AF1E9EE00028FC1 /* Raygun4iOS.framework in Frameworks */,
 				333780A419E6BACF00362F82 /* CoreGraphics.framework in Frameworks */,
 				A988BD991AD4033300BBFDD8 /* libCrittercism_v5_0_4.a in Frameworks */,
 				33D5A59A19E3F27200344278 /* QuartzCore.framework in Frameworks */,
@@ -1202,6 +1204,7 @@
 		3397CA9419D02D7A00788153 = {
 			isa = PBXGroup;
 			children = (
+				A9D1E5B11AF1E9EE00028FC1 /* Raygun4iOS.framework */,
 				A9F8B7281A8A09A80007D041 /* AssetsLibrary.framework */,
 				333780A319E6BACF00362F82 /* CoreGraphics.framework */,
 				33D5A59919E3F27200344278 /* QuartzCore.framework */,
@@ -2069,7 +2072,6 @@
 				33DBA21319E559E80041A932 /* Icon-76.png in Resources */,
 				33DBA1FF19E519480041A932 /* collaps_icon_default_small@2x.png in Resources */,
 				33CD6B5D19DA7E840024A02D /* figure_head.png in Resources */,
-				A988BD981AD4033300BBFDD8 /* dsym_upload.sh in Resources */,
 				33D630A719D3F66E0090BE80 /* checked_orange@2x.png in Resources */,
 				33B6368219D9250600875A1D /* keyboard_icon_large@2x.png in Resources */,
 				33DBA20719E556D90041A932 /* Defalut@2x.png in Resources */,
@@ -2541,8 +2543,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2557,7 +2559,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
 			};
 			name = Debug;
 		};
@@ -2566,8 +2568,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2582,7 +2584,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
 			};
 			name = Release;
 		};
