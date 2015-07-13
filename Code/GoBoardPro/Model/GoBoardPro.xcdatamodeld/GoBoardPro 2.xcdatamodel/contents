@@ -359,6 +359,7 @@
     <entity name="NatureList" representedClassName="NatureList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="natureId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="natureList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
@@ -602,7 +603,7 @@
         <element name="LeftArmInjuryList" positionX="108" positionY="977" width="128" height="103"/>
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
-        <element name="NatureList" positionX="79" positionY="18" width="128" height="88"/>
+        <element name="NatureList" positionX="79" positionY="18" width="128" height="103"/>
         <element name="Person" positionX="520" positionY="-738" width="182" height="493"/>
         <element name="QuestionDetails" positionX="124" positionY="1097" width="128" height="118"/>
         <element name="Report" positionX="342" positionY="-684" width="128" height="495"/>

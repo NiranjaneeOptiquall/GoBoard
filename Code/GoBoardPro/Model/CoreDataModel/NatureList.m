@@ -15,5 +15,5 @@
 @dynamic name;
 @dynamic natureId;
 @dynamic incidentType;
-
+@dynamic sequence;
 @end

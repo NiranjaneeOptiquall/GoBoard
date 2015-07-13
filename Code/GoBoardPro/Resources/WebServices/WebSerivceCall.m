@@ -471,6 +471,7 @@
             obj.actionId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
             obj.emergencyPersonnel = [[dict objectForKey:@"EmergencyPersonnel"] stringValue];
+            obj.sequence=[[dict objectForKey:@"Sequence"] stringValue];
             obj.incidentType = report;
             [actionSet addObject:obj];
         }
@@ -514,9 +515,10 @@
             NatureList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"NatureList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             obj.natureId = [[dict objectForKey:@"Id"] stringValue];
             obj.name = [dict objectForKey:@"Name"];
+            obj.sequence=[[dict objectForKey:@"Sequence"] stringValue];
             obj.incidentType = report;
             [natureSet addObject:obj];
-        }
+        } 
         report.natureList = natureSet;
         
         NSMutableSet *requiredSet = [NSMutableSet set];

@@ -24,7 +24,7 @@
 
 - (IBAction)btnSelectExpDate:(UIButton*)sender {
     DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-    [datePopOver showInPopOverFor:sender limit:DATE_LIMIT_FUTURE_ONLY option:DATE_SELECTION_DATE_ONLY updateField:_txtExpDate];
+    [datePopOver showInPopOverFor:sender limit:DATE_LIMIT_FETURE_ONLY option:DATE_SELECTION_DATE_ONLY updateField:_txtExpDate];
 }
 
 - (IBAction)btnCaptureCertificatieImageTapped:(UIButton*)sender {

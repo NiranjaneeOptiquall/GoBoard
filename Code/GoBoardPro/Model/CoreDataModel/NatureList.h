@@ -15,6 +15,8 @@
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * natureId;
+@property (nonatomic, retain) NSString * sequence;
+
 @property (nonatomic, retain) IncidentReportInfo *incidentType;
 
 @end
