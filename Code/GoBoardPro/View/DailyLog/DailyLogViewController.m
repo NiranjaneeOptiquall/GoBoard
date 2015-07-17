@@ -70,6 +70,7 @@
     [_lblNoRecords setHidden:YES];
     
     [_tblDailyLog reloadData];
+   
     
     _txvDailyLog.text = @"";
 }
@@ -103,7 +104,8 @@
     return [mutArrDailyList count];
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     [aCell setBackgroundColor:[UIColor clearColor]];
     UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
@@ -117,33 +119,41 @@
     
     [aLblTime setText:[aFormatter stringFromDate:aDate]];
     [aLblLog setText:log.desc];
-    [aLblLog sizeToFit];
+    //----Changes By Chetan Kasundra-------------
+    //-----Before prb in cell height,Content Overlap each other
+    
+    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+    CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+    
     CGRect frame = aLblLog.frame;
-    if (frame.size.height < 21) {
+    if (aHeight < 21) {
         frame.size.height = 21;
         aLblLog.frame = frame;
     }
-    else {
-        UIView *bgView = [aCell.contentView viewWithTag:2];
-        frame = bgView.frame;
-        frame.size.height = aLblLog.frame.size.height + 40;
-        bgView.frame = frame;
+    else
+    {
+        frame.size.height=aHeight;
+        aLblLog.frame=frame;
     }
+    
+    UIView *bgView = [aCell.contentView viewWithTag:2];
+    frame = bgView.frame;
+    frame.size.height = aHeight + 40;
+    bgView.frame = frame;
+    //---------------------------------
     return aCell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-    UILabel *aLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 664, 10)];
-    [aLbl setText:log.desc];
-    [aLbl setFont:[UIFont boldSystemFontOfSize:17.0]];
-    [aLbl setNumberOfLines:0];
-    [aLbl sizeToFit];
-    CGFloat height = aLbl.frame.size.height;
-    if (height < 21) {
-        height = 21;
+    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+    CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+    
+    if (aHeight < 21)
+    {
+        aHeight = 21;
     }
-    return height + 49;
+    return aHeight + 49;
 }
 
 

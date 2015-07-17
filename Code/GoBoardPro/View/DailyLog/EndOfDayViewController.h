@@ -15,7 +15,9 @@
 @property (weak, nonatomic) IBOutlet UITableView *tblDailyLog;
 @property (weak, nonatomic) IBOutlet UILabel *lblTodayDate;
 @property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
+@property (weak, nonatomic) IBOutlet UITextView *txtDescription;
 
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;
+- (IBAction)btnSubmitClick:(id)sender;
 @end

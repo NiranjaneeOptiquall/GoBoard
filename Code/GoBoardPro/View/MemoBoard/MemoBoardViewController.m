@@ -46,7 +46,7 @@
         
     [mutArrMemoListTemp sortUsingDescriptors:@[sortDescriptorDate,sortDescriptorTime]];
     mutArrMemoList=mutArrMemoListTemp;
-
+    gblAppDelegate.mutArrMemoList=mutArrMemoListTemp;
     //-------------------------------//
     
     mutArrSelectedMemo = [NSMutableArray array];
@@ -81,14 +81,23 @@
         return;
     }
     NSMutableArray *mutArrIds = [NSMutableArray array];
-    for (NSIndexPath *indexPath in mutArrSelectedMemo) {
-        [mutArrIds addObject:mutArrMemoList[indexPath.row][@"Id"]];
+//    for (NSIndexPath *indexPath in mutArrSelectedMemo) {
+//        [mutArrIds addObject:mutArrMemoList[indexPath.row][@"Id"]];
+//    }
+    
+    for (id aObject in mutArrSelectedMemo) {
+        [mutArrIds addObject:aObject[@"Id"]];
     }
     NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"MemoIds":mutArrIds};
     [gblAppDelegate callWebService:MEMO parameters:aDict httpMethod:@"DELETE" complition:^(NSDictionary *response) {
-        for (NSIndexPath *indexPath in mutArrSelectedMemo) {
-            [mutArrMemoList removeObjectAtIndex:indexPath.row];
+//        for (NSIndexPath *indexPath in mutArrSelectedMemo) {
+//            [mutArrMemoList removeObjectAtIndex:indexPath.row];
+//        }
+        for (id aObject in mutArrSelectedMemo) {
+            [mutArrMemoList removeObject:aObject];
         }
+        [mutArrSelectedMemo removeAllObjects];
+        gblAppDelegate.mutArrMemoList=mutArrMemoList;
         alert(@"", @"Selected memos has been deleted");
         [_tblMemoList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
@@ -103,11 +112,12 @@
         aCell = (UITableViewCell *)aCell.superview;
     }
     NSIndexPath *indexPath = [_tblMemoList indexPathForCell:aCell];
+    id aObject=[mutArrMemoList objectAtIndex:indexPath.row];
     if (sender.isSelected) {
-        [mutArrSelectedMemo addObject:indexPath];
+        [mutArrSelectedMemo addObject:aObject];
     }
     else {
-        [mutArrSelectedMemo removeObject:indexPath];
+        [mutArrSelectedMemo removeObject:aObject];
     }
 }
 
@@ -128,6 +138,10 @@
     UILabel *aLblFrom = (UILabel*)[aCell.contentView viewWithTag:7];
     UIButton *aBtn = (UIButton*)[aCell.contentView viewWithTag:8];
     NSDictionary *aDict = mutArrMemoList[indexPath.row];
+    if (aBtn.selected)
+    {
+        [mutArrSelectedMemo addObject:aDict];
+    }
     [aLblTo setText:[NSString stringWithFormat:@"To: %@", aDict[@"To"]]];
     [aLblFrom setText:[NSString stringWithFormat:@"From: %@", aDict[@"From"]]];
     [aLblSubject setText:[NSString stringWithFormat:@"Subject: %@", aDict[@"Subject"]]];

@@ -14,8 +14,21 @@
 
 @implementation DailyLogReviewProgressViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
+    [_scrView setContentSize:CGSizeMake(768, 1200)];
+    _lblUserName.text=[NSString stringWithFormat:@"%@ %@",[User currentUser].firstName,[User currentUser].lastName];
+    NSDateFormatter *formate=[[NSDateFormatter alloc] init];
+    [formate setDateFormat:@"EEEE MM/dd/YYYY"];
+    NSDate *date=[NSDate date];
+    _lblTodayTime.text= [NSString stringWithFormat:@"Today's Date: %@",[formate stringFromDate:date]];
+    aryLocations=[User currentUser].mutArrSelectedLocations;
+    aryPostions=[User currentUser].mutArrSelectedPositions;
+    
+    [_tblLoginUserInfo reloadData];
+    
     [self getMissedTask];
 }
 
@@ -63,66 +76,151 @@
     }];
 }
 
-- (void)createCompletedList {
+- (void)createCompletedList
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0",[User currentUser].userId];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
+    [request setPredicate:predicate];
+    intPendingAccidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+
+    request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
+    [request setPredicate:predicate];
+    intPendingIncidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    
+    
     mutArrCompletedCount = [[NSMutableArray alloc] init];
-    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue]}];
-    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue]}];
-    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue]}];
-    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue]}];
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue]}];
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intPendingIncidentReport]}];
+    
+    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue],@"openCount":@"0"}];
+    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue],@"openCount":@"0"}];
+    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intPendingAccidentReport]}];
+    
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue],@"openCount":@"0"}];
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue],@"openCount":@"0"}];
+    
     [_colCompleteCount reloadData];
 }
 
 #pragma mark - UITableView DataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if ([tableView isEqual:_tblLoginUserInfo])
+    {
+        if ([aryLocations count] > [aryPostions count])
+        {
+            return [aryLocations count];
+        }
+        else
+        {
+            return [aryPostions count];
+        }
+    }
     return [aryMissedTask count];
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    if (indexPath.row % 2 == 0) {
-        [aCell setBackgroundColor:[UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1.0]];
-    }
-    else {
-        [aCell setBackgroundColor:[UIColor colorWithRed:214.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0]];
-    }
-    UILabel *aLblTime = (UILabel *)[aCell.contentView viewWithTag:2];
-    UILabel *aLblTitle = (UILabel *)[aCell.contentView viewWithTag:3];
-    UILabel *aLblRecurrance = (UILabel *)[aCell.contentView viewWithTag:4];
-    UILabel *aLblLastComplete = (UILabel *)[aCell.contentView viewWithTag:6];
-    UILabel *aLblPastDue = (UILabel *)[aCell.contentView viewWithTag:5];
-    NSDictionary *aDict = [aryMissedTask objectAtIndex:indexPath.row];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
-   // [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    NSDate *dt = [formatter dateFromString:aDict[@"Time"]];
-    [formatter setTimeZone:[NSTimeZone systemTimeZone]];
-    [aLblTime setText:[formatter stringFromDate:dt]];
-    [aLblTitle setText:aDict[@"Name"]];
-    [aLblRecurrance setText:[NSString stringWithFormat:@"Reoccurrence: %@", aDict[@"Recurrence"]]];
-    if (![aDict[@"LastCompletedOn"] isKindOfClass:[NSNull class]]) {
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *aCell;
+    //------Chetan Kasundra--------
+    //------Add the new Section for login user info
+    if ([tableView isEqual:_tblLoginUserInfo])
+    {
+        aCell = [tableView dequeueReusableCellWithIdentifier:@"cellUserInfo"];
         
-        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
-        //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-        NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
+        UILabel *lblFacility = (UILabel *)[aCell.contentView viewWithTag:1];
+
+        if (indexPath.row == 0)
+        {
+            lblFacility.text = [User currentUser].selectedFacility.name;
+        }
+        else
+        {
+            lblFacility.text = @"";
+        }
+        
+        UILabel *lblLocatin = (UILabel *)[aCell.contentView viewWithTag:2];
+        
+        if (aryLocations.count > indexPath.row)
+        {
+            UserLocation *aLocation = [aryLocations objectAtIndex:indexPath.row];
+            lblLocatin.text = aLocation.name;
+        }
+        else
+        {
+            lblLocatin.text = @"";
+        }
+        
+        UILabel *lblPostion = (UILabel *)[aCell.contentView viewWithTag:3];
+        
+        if (aryPostions.count > indexPath.row)
+        {
+            UserPosition *aPostion = [aryPostions objectAtIndex:indexPath.row];
+            lblPostion.text = aPostion.name;
+        }
+        else
+        {
+            lblPostion.text = @"";
+        }
+        aCell.backgroundColor = [UIColor clearColor];
+      
+    }
+    //-------------------------------//
+    else
+    {
+
+        aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        
+        if (indexPath.row % 2 == 0) {
+            [aCell setBackgroundColor:[UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1.0]];
+        }
+        else {
+            [aCell setBackgroundColor:[UIColor colorWithRed:214.0/255.0 green:235.0/255.0 blue:235.0/255.0 alpha:1.0]];
+        }
+        UILabel *aLblTime = (UILabel *)[aCell.contentView viewWithTag:2];
+        UILabel *aLblTitle = (UILabel *)[aCell.contentView viewWithTag:3];
+        UILabel *aLblRecurrance = (UILabel *)[aCell.contentView viewWithTag:4];
+        UILabel *aLblLastComplete = (UILabel *)[aCell.contentView viewWithTag:6];
+        UILabel *aLblPastDue = (UILabel *)[aCell.contentView viewWithTag:5];
+        NSDictionary *aDict = [aryMissedTask objectAtIndex:indexPath.row];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"hh:mm a"];
+       // [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        NSDate *dt = [formatter dateFromString:aDict[@"Time"]];
         [formatter setTimeZone:[NSTimeZone systemTimeZone]];
-        [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-        aLblLastComplete.text = [formatter stringFromDate:aDate];
+        [aLblTime setText:[formatter stringFromDate:dt]];
+        [aLblTitle setText:aDict[@"Name"]];
+        [aLblRecurrance setText:[NSString stringWithFormat:@"Reoccurrence: %@", aDict[@"Recurrence"]]];
+        if (![aDict[@"LastCompletedOn"] isKindOfClass:[NSNull class]]) {
+            
+            [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+            //[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+            NSDate *aDate = [formatter dateFromString:[[aDict[@"LastCompletedOn"] componentsSeparatedByString:@"."] firstObject]];
+            [formatter setTimeZone:[NSTimeZone systemTimeZone]];
+            [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+            aLblLastComplete.text = [formatter stringFromDate:aDate];
+        }
+        else {
+            aLblLastComplete.text = @"";
+        }
+        
+        [aLblPastDue setHidden:![aDict[@"PastDue"] boolValue]];
+        
+        
+    //    UILabel *aLblTime = (UILabel *)[aCell.contentView viewWithTag:2];
+        
     }
-    else {
-        aLblLastComplete.text = @"";
-    }
-    
-    [aLblPastDue setHidden:![aDict[@"PastDue"] boolValue]];
-    
-    
-//    UILabel *aLblTime = (UILabel *)[aCell.contentView viewWithTag:2];
     return aCell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if ([tableView isEqual:_tblLoginUserInfo])
+    {
+        return nil;
+    }
+    
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 22)];
     [view setBackgroundColor:[UIColor colorWithRed:204.0/255.0 green:1.0 blue:1.0 alpha:1.0]];
     UILabel *aLbl = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, view.frame.size.width - 20, 22)];
@@ -149,6 +247,17 @@
     else {
         [bgView setBackgroundColor:[UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1.0]];
     }
+    
+    UIImageView *imgOpen=(UIImageView *)[aCell.contentView viewWithTag:5];
+    if ([mutArrCompletedCount[indexPath.row][@"openCount"] integerValue] >=1 )
+    {
+        imgOpen.image=[UIImage imageNamed:@"radio_btn_checked.png"];
+    }
+    else
+    {
+        imgOpen.image=[UIImage imageNamed:@"radio_btn_unchecked.png"];
+    }
+
     UILabel *aLblTitle = (UILabel*)[aCell.contentView viewWithTag:3];
     aLblTitle.text = mutArrCompletedCount[indexPath.item][@"name"];
     
