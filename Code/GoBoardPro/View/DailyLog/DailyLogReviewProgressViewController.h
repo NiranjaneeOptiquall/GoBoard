@@ -15,7 +15,7 @@
     NSArray *aryPostions;
     NSDictionary *dictDailyMatrics;
     NSMutableArray *mutArrCompletedCount;
-    NSInteger intPendingAccidentReport, intPendingIncidentReport;
+    NSInteger intOpenAccidentReport, intOpenIncidentReport, intOpenGuestForm, intOpenGuestSurvey, intOpenUserForm, intOpenUserSurvey;
 
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTodayTime;

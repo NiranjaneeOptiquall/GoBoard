@@ -140,7 +140,8 @@
     NSDictionary *aDict = mutArrMemoList[indexPath.row];
     if (aBtn.selected)
     {
-        [mutArrSelectedMemo addObject:aDict];
+        //[mutArrSelectedMemo addObject:aDict];
+        aBtn.selected = !aBtn.selected;
     }
     [aLblTo setText:[NSString stringWithFormat:@"To: %@", aDict[@"To"]]];
     [aLblFrom setText:[NSString stringWithFormat:@"From: %@", aDict[@"From"]]];

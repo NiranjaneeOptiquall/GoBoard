@@ -78,26 +78,61 @@
 
 - (void)createCompletedList
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0",[User currentUser].userId];
+    //Those Report or Form are submit in offline means waiting for syn.Those all are consider in "OPEN" status.
+    //All Offline AccidentReport are store in "AccidentReportSubmit" table.
+    //All Offline IncidentReport are store in "SubmitFormAndSurvey" table.
+    //All Offline FormAndSurvey(Guest Or User) are store in "SubmitFormAndSurvey" table.
+    
+    
+    //fetch the Open Report(Incident or Accident) Count From DB.
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND (isCompleted = 1 OR isCompleted = 0)",[User currentUser].userId];
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
     [request setPredicate:predicate];
-    intPendingAccidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    intOpenAccidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
 
     request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
     [request setPredicate:predicate];
-    intPendingIncidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    intOpenIncidentReport = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     
+    // type = 1 --->Survey , type = 2 --->Form
+    // When User is Guest, In "SubmitFormAndSurvey" table userId is emptyString(NULL) otherwise there is an Id of user.
+    
+    //fetch the Open FormAndSurvey(Guest or User) Count From DB.
+
+    predicate = [NSPredicate predicateWithFormat:@"userId = '' AND type = 1"];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    [request setPredicate:predicate];
+    intOpenGuestSurvey = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    predicate = [NSPredicate predicateWithFormat:@"userId = '' AND type = 2"];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    [request setPredicate:predicate];
+    intOpenGuestForm = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND type = 1",[User currentUser].userId];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    [request setPredicate:predicate];
+    intOpenUserSurvey = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND type = 2",[User currentUser].userId];
+    request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    [request setPredicate:predicate];
+    intOpenUserForm = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     
     
     mutArrCompletedCount = [[NSMutableArray alloc] init];
-    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intPendingIncidentReport]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenIncidentReport]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue],@"openCount":@"0"}];
-    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue],@"openCount":@"0"}];
-    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intPendingAccidentReport]}];
+    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenUserForm]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue],@"openCount":@"0"}];
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue],@"openCount":@"0"}];
+    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenUserSurvey]}];
+    
+    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenAccidentReport]}];
+    
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenGuestForm]}];
+    
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenGuestSurvey]}];
     
     [_colCompleteCount reloadData];
 }
