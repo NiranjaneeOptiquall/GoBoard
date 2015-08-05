@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D87E41B1B6F958D00706B56 /* SopCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D87E41A1B6F958D00706B56 /* SopCategory.m */; };
 		330010711A2EF16500239D8D /* SubmitFormAndSurvey.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */; };
 		330010741A2EF16600239D8D /* QuestionDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010731A2EF16600239D8D /* QuestionDetails.m */; };
 		3302B8EB1A2DBC8900FC7591 /* SurveyQuestions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3302B8EA1A2DBC8900FC7591 /* SurveyQuestions.m */; };
@@ -344,6 +345,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2D87E4181B6F80E700706B56 /* GoBoardPro 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "GoBoardPro 3.xcdatamodel"; sourceTree = "<group>"; };
+		2D87E4191B6F958C00706B56 /* SopCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SopCategory.h; sourceTree = "<group>"; };
+		2D87E41A1B6F958D00706B56 /* SopCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SopCategory.m; sourceTree = "<group>"; };
 		3300106F1A2EF16500239D8D /* SubmitFormAndSurvey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitFormAndSurvey.h; sourceTree = "<group>"; };
 		330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitFormAndSurvey.m; sourceTree = "<group>"; };
 		330010721A2EF16600239D8D /* QuestionDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionDetails.h; sourceTree = "<group>"; };
@@ -851,6 +855,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D87E41C1B6F961B00706B56 /* Sop */ = {
+			isa = PBXGroup;
+			children = (
+				2D87E4191B6F958C00706B56 /* SopCategory.h */,
+				2D87E41A1B6F958D00706B56 /* SopCategory.m */,
+			);
+			name = Sop;
+			sourceTree = "<group>";
+		};
 		332B31E11A2C3EB1001DE737 /* Survey&Forms */ = {
 			isa = PBXGroup;
 			children = (
@@ -908,6 +921,7 @@
 		332B61031A14BDFE00B7C7EF /* CoreDataModel */ = {
 			isa = PBXGroup;
 			children = (
+				2D87E41C1B6F961B00706B56 /* Sop */,
 				33EA6A951A3AC78C0069B310 /* DailyLog&Memoboard */,
 				332B31E11A2C3EB1001DE737 /* Survey&Forms */,
 				A9793CA41A9306DF00DF2568 /* AccidentReport */,
@@ -1981,7 +1995,6 @@
 				3397CA9A19D02D7A00788153 /* Frameworks */,
 				332D54B91A43F1DD005AF354 /* ShellScript */,
 				3397CA9B19D02D7A00788153 /* Resources */,
-				A9A8BAD51AD40D8800240D0A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2253,19 +2266,6 @@
 			shellPath = /bin/bash;
 			shellScript = "echo \"Updating Build\"\n\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nversion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INFOPLIST_FILE\")\n\necho \"Current Version: $version\"\necho \"Latest Build: $buildNumber\"\n\nmajor=$(echo $version | cut -d'.' -f 1)\nminor=$(echo $version | cut -d'.' -f 2)\nrevision=$(echo $buildNumber | cut -d'.' -f 3)\n\necho \"Major: $major\"\necho \"Minor: $minor\"\necho \"Revision: $revision\"\n\nrevision=$(($revision + 1))\n\necho \"This build: $revision\"\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $major.$minor.$revision\" \"$INFOPLIST_FILE\"";
 		};
-		A9A8BAD51AD40D8800240D0A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "APP_ID=\"54658465466eda0236000003\"\nAPI_KEY=\"WfygBko9zi3eFQQPGl3H9SXM0BU9ycDq\"\nsource \"${SRCROOT}\"/GoBoardPro/Resources/CrittercismSDK/dsym_upload.sh";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2293,6 +2293,7 @@
 				3337809F19E6B6EA00362F82 /* MIMLineGraph.m in Sources */,
 				3366BC131A1724B8003FA3BF /* ERPSubcategory.m in Sources */,
 				33D5A59519E3F17C00344278 /* GraphDetailViewController.m in Sources */,
+				2D87E41B1B6F958D00706B56 /* SopCategory.m in Sources */,
 				33CD8DFA1A1B59EC006A6EC2 /* SubmitUtilizationCount.m in Sources */,
 				33CFBC5019D2EC6300D86E68 /* ERPHeaderView.m in Sources */,
 				33585F381A1DB70800B6D28A /* NatureList.m in Sources */,
@@ -2593,8 +2594,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -2606,7 +2607,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Debug;
@@ -2615,8 +2616,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -2624,7 +2625,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Release;
@@ -2665,6 +2666,7 @@
 		3397CACA19D0347700788153 /* GoBoardPro.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2D87E4181B6F80E700706B56 /* GoBoardPro 3.xcdatamodel */,
 				A925D18C1B4FFA0200831D52 /* GoBoardPro 2.xcdatamodel */,
 				3397CACB19D0347700788153 /* GoBoardPro.xcdatamodel */,
 			);

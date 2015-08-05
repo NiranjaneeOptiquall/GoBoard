@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface LoginViewController : UIViewController <UITextFieldDelegate> {
+@interface LoginViewController : UIViewController <UITextFieldDelegate,UIAlertViewDelegate> {
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *imvLogo;

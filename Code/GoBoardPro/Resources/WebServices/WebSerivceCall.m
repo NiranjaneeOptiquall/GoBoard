@@ -64,6 +64,10 @@
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
     [self callServiceForMemos:YES complition:nil];
+    [self callServiceForForms:YES complition:nil];
+    //[self callServiceForSop:YES complition:nil];
+    [self callServiceForSurvey:YES complition:nil];
+   
 }
 
 #pragma mark - HOME Setup
@@ -106,6 +110,50 @@
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
         }
     }
+}
+
+
+#pragma mark - Sop
+
+-(void)callServiceForSop:(BOOL)waitUntilDone complition:(void(^)(void))completion {
+    
+    __block BOOL isWSComplete = NO;
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY,[[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
+        
+        
+        [self inserAllSopData:response];
+        isWSComplete = YES;
+        
+        if (completion) {
+            completion();
+        }
+        
+        
+    } failure:^(NSError *error, NSDictionary *response){
+        isWSComplete = YES;
+        
+        if (completion) {
+            completion();
+        }
+        
+    }];
+    
+    if (waitUntilDone) {
+        if (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+
+-(void)inserAllSopData:(NSDictionary *)aDictSop
+{
+    
+    NSString *strDocumentPath = [NSString stringWithFormat:@"%@",gblAppDelegate.applicationDocumentsDirectory.path];
+    NSString *strSopFilePath = [strDocumentPath stringByAppendingPathComponent:@"SopCategory.txt"];
+    NSString *aStrJSON = [[NSString alloc]initWithData:[NSJSONSerialization dataWithJSONObject:aDictSop options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    [aStrJSON writeToFile:strSopFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 #pragma mark - Emergency Response Plan
@@ -1019,6 +1067,7 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
 }
+
 
 
 #pragma mark - MemoBoard

@@ -12,8 +12,8 @@
 	<dict>
 		<key>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</key>
 		<string>https://elitedev.visualstudio.com/DefaultCollection/_git/GoBoard.iOS</string>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>https://10.2.1.98/projects/goboarpro_ipad_app/Code/iPhone</string>
+		<key>ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5</key>
+		<string>https://elitedev.visualstudio.com/DefaultCollection/_git/Soprema.TechApp</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Code/GoBoardPro.xcodeproj</string>
@@ -21,13 +21,8 @@
 	<dict>
 		<key>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</key>
 		<string>../../..</string>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>../../../../Code</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</key>
-		<string>https://10.2.1.98/projects/goboarpro_ipad_app</string>
+		<key>ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5</key>
+		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://elitedev.visualstudio.com/DefaultCollection/_git/GoBoard.iOS</string>
@@ -39,11 +34,11 @@
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2c69a38b-ea7a-4ba1-b6f1-a8c1f51010f6++8952</string>
+			<string>ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Code</string>
+			<string></string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -51,7 +46,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>169DB6B09FD354DBDAF87E2AB430FC00EDC872D2</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Git%20Copy</string>
+			<string>GoBoardPro</string>
 		</dict>
 	</array>
 </dict>

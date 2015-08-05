@@ -30,6 +30,8 @@
     [_tblLoginUserInfo reloadData];
     
     [self getMissedTask];
+    [self getAllTask];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,20 +57,90 @@
 
 #pragma  mark - Method
 
+
+-(void)getAllTask
+{
+    [[WebSerivceCall webServiceObject] callServiceForTaskList:NO complition:^{
+        [self fetchAllTask];
+    }];
+}
+
+-(void)fetchAllTask
+{
+    NSFetchRequest *allTask = [[NSFetchRequest alloc]initWithEntityName:@"TaskList"];
+    NSSortDescriptor *sortByDateTime = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
+    NSSortDescriptor *sortBySequence = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+    [allTask setSortDescriptors:@[sortByDateTime,sortBySequence]];
+    mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
+    
+    
+    NSDate *sourceDate = [NSDate date];
+    
+    NSTimeZone *sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone *destinationTimeZone = [NSTimeZone systemTimeZone];
+    
+    NSInteger sourceGMTOffest = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+    NSInteger destinationGMTOffest = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+    
+    NSInteger interval = destinationGMTOffest - sourceGMTOffest ;
+    
+    NSDate *destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:destinationDate];
+    [components setHour:0];
+    [components setMinute:0];
+    [components setSecond:0];
+    
+    NSDate *dateSourceTemp = [calendar dateFromComponents:components];
+    
+    //NSDate *dateSourceTemp = [calendar dateBySettingHour:0 minute:0 second:0 ofDate:destinationDate options:0];
+    
+    NSDate* dateSource = [[NSDate alloc] initWithTimeInterval:interval sinceDate:dateSourceTemp];
+    
+    NSPredicate *aPredicateTime = [NSPredicate predicateWithFormat:@"taskDateTime >= %@  AND  taskDateTime < %@",dateSource,destinationDate];
+    mutArrTaskList = [mutArrTaskList filteredArrayUsingPredicate:aPredicateTime];
+    
+    NSPredicate *aPredicateCompletedTask = [NSPredicate predicateWithFormat:@"isCompleted == YES"];
+    mutArrCompletedTaskList = [mutArrTaskList filteredArrayUsingPredicate:aPredicateCompletedTask];
+    
+    NSPredicate *aPredicateMissedTask = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
+    mutArrMissedTaskList = [mutArrTaskList filteredArrayUsingPredicate:aPredicateMissedTask];
+    
+    
+    [_lblCompletedTaskCount setText:[NSString stringWithFormat:@"%ld",(unsigned long)[mutArrCompletedTaskList count] ]];
+    [_lblScheduledTaskCount setText:[NSString stringWithFormat:@"%ld",(unsigned long)[mutArrTaskList count] ]];
+    
+//    float aPercentage = (float)(((float)[mutArrCompletedTaskList count] / (float)[mutArrTaskList count]) *100);
+//    NSLog(@"--Percentage --%0.1f%%",aPercentage);
+//    NSLog(@"--StringPercentage--%@",[NSString stringWithFormat:@"%0.1f%%",aPercentage]);
+    
+    if ([mutArrCompletedTaskList count] == 0 && [mutArrTaskList count] == 0)
+    {
+         _lblPercentage.text = @"0.0%";
+    }
+    else
+    {
+        _lblPercentage.text = [NSString stringWithFormat:@"%0.1f%%",(float)(((float)[mutArrCompletedTaskList count] / (float)[mutArrTaskList count]) * 100)];
+    }
+    
+}
 - (void)getMissedTask {
 //    IncompleteTask
 //    [[[User currentUser] mutArrSelectedPositions] value]
     NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
     NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?positionIds=%@&locationIds=%@", DAILY_MATRICS, strPositionIds, strLocationIds] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?positionIds=%@&locationIds=%@&userId=%@", DAILY_MATRICS, strPositionIds, strLocationIds,[User currentUser].userId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_MATRICS] complition:^(NSDictionary *response) {
         dictDailyMatrics = response;
         aryMissedTask = [response objectForKey:@"IncompleteTasks"];
         if ([aryMissedTask count]) {
+            [_lblNoRecords setHidden:YES];
+        }
+        else
+        {
             [_lblNoRecords setHidden:NO];
         }
-        [_lblCompletedTaskCount setText:[NSString stringWithFormat:@"%ld", [dictDailyMatrics[@"CompletedTaskCount"] longValue]]];
-        [_lblScheduledTaskCount setText:[NSString stringWithFormat:@"%ld", [dictDailyMatrics[@"ScheduledTaskCount"] longValue]]];
-        _lblPercentage.text = [NSString stringWithFormat:@"%0.1f%%", ([dictDailyMatrics[@"CompletedTaskCount"] floatValue] / [dictDailyMatrics[@"ScheduledTaskCount"] floatValue]) * 100];
         [_tblTaskList reloadData];
         [self createCompletedList];
     } failure:^(NSError *error, NSDictionary *response) {
@@ -236,7 +308,8 @@
             [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
             aLblLastComplete.text = [formatter stringFromDate:aDate];
         }
-        else {
+        else
+        {
             aLblLastComplete.text = @"";
         }
         

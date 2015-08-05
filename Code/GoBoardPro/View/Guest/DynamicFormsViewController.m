@@ -417,10 +417,45 @@
     }
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
+        
         NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
+        
+//        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"-.0123456789"];
+//        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
+//            return NO;
+//        }
+//
+//        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+//        if ([string isEqualToString:@"-"]) {
+//            
+//            if (aStr.length > 1)
+//            {
+//                return NO;
+//            }
+//            return YES;
+//        }
+//        
+//        if ([string isEqualToString:@"."]) {
+//        
+//            if ([textField.text rangeOfString:@"."].length > 0 || ([textField.text containsString:@"-"] && textField.text.length < 2) || (![textField.text containsString:@"-"] && textField.text.length < 1) )
+//            {
+//                return NO;
+//            }
+//            return YES;
+//        }
+//        
+//        if ([[aStr componentsSeparatedByString:@"."] count] > 1)
+//        {
+//             if([[[aStr componentsSeparatedByString:@"."] lastObject] length] > 2)
+//             {
+//                 return NO;
+//             }
+//            return YES;
+//        }
+
     }
     return YES;
 }

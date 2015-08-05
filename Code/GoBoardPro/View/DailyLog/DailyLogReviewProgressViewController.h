@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "TaskList.h"
+
 
 @interface DailyLogReviewProgressViewController : UIViewController <UITableViewDataSource, UICollectionViewDataSource> {
     NSArray *aryMissedTask;
@@ -16,7 +18,9 @@
     NSDictionary *dictDailyMatrics;
     NSMutableArray *mutArrCompletedCount;
     NSInteger intOpenAccidentReport, intOpenIncidentReport, intOpenGuestForm, intOpenGuestSurvey, intOpenUserForm, intOpenUserSurvey;
-
+    NSArray *mutArrTaskList;
+    NSArray *mutArrMissedTaskList;
+    NSArray *mutArrCompletedTaskList;
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTodayTime;
 @property (weak, nonatomic) IBOutlet UITableView *tblTaskList;

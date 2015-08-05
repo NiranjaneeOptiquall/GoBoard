@@ -283,6 +283,27 @@ Put the webview in place  of textview for type 2( for html Description set in we
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
         [_lblNoRecords setHidden:NO];
+        
+//        NSString *strDocumentPath = [NSString stringWithFormat:@"%@",gblAppDelegate.applicationDocumentsDirectory.path];
+//        NSString *strSopFilePath = [strDocumentPath stringByAppendingPathComponent:@"SopCategory.txt"];
+//        
+//        NSString *strData = [[NSString alloc] initWithContentsOfFile:strSopFilePath encoding:NSUTF8StringEncoding error:nil];
+//
+//        _dictSOPCategory = [NSJSONSerialization JSONObjectWithData:[strData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+//        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
+//        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
+//        
+//        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"SopCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
+//        
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
+//        
+//        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
+//        
+//        if ([mutArrSOPList count] == 0) {
+//            [_lblNoRecords setHidden:NO];
+//        }
+//        [_tblSOPList reloadData];
+
     }];
 }
 

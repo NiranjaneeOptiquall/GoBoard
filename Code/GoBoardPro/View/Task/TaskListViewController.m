@@ -95,7 +95,7 @@
         
         NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
-        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime > %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime >= %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
         
         mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
         
@@ -419,6 +419,11 @@
     NSTimeInterval interval = sourceGMTOffset - destinationGMTOffset ;
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
     NSDate* currentDate = [[NSDate alloc]initWithTimeInterval:-interval sinceDate:[NSDate date]]; //Interval is assign by '-' to convert it into EDT Time.
+    
+//    NSTimeInterval interval1 = destinationGMTOffset - sourceGMTOffset ;
+//    NSDate* destinationDate1 = [[NSDate alloc] initWithTimeInterval:interval1 sinceDate:sourceDate];
+//    NSDate* currentDate1 = [[NSDate alloc]initWithTimeInterval:interval1 sinceDate:[NSDate date]];
+    
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     [aFormatter setDateFormat:@"hh:mm a"];

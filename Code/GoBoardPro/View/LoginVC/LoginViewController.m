@@ -25,6 +25,9 @@
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     [self initialUIConfig];
+    gblAppDelegate.shouldHideActivityIndicator = NO;
+    [self checkAppVersion];
+    gblAppDelegate.shouldHideActivityIndicator = YES;
 }
 
 
@@ -127,7 +130,7 @@
         else {
             currentUser.phone = [response objectForKey:@"Phone"];
         }
-        currentUser.Email = [response objectForKey:@"Email"];
+        currentUser.email = [response objectForKey:@"Email"];
         currentUser.clientName = [response objectForKey:@"ClientName"];
         currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
         currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
@@ -218,6 +221,31 @@
     [_vwUserSignIn setHidden:NO];
 }
 
+-(void)checkAppVersion
+{
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@",APPVERSION] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:APPVERSION] complition:^(NSDictionary *response)
+    {
+        NSString *strCurrentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        
+        if (![strCurrentVersion isEqualToString:[response objectForKey:@"Version"]]){
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:MSG_NEWVERSION delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+            alert.delegate = self;
+            [alert show];
+        }
+        else
+        {
+            NSLog(@"--SameVersion as AppStoreVersion---");
+        }
+        
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+        NSLog(@"--Error AppVersionCheck %@---",[response objectForKey:@"ErrorMessage"]);
+    }];
+    
+}
+
 #pragma mark - UITextField Delegate
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
@@ -246,5 +274,19 @@
     }
 }
 
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex==1)
+    {
+        NSURL *aAppUrl = [NSURL URLWithString:ITUENS_APPLINK];
+        
+        if ([[UIApplication sharedApplication] canOpenURL:aAppUrl])
+        {
+            [[UIApplication sharedApplication] openURL:aAppUrl];
+        }
+    }
+}
 
 @end
