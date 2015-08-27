@@ -193,16 +193,26 @@
 - (void)getSyncCount {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ERPHistory"];
     syncCount = [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitCountUser"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"userId == %@",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
     request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+   // [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
     request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+  //  [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
     }
@@ -348,7 +358,7 @@
 
 - (BOOL)syncIncidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == 1"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
     [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
@@ -456,7 +466,7 @@
 
 - (BOOL)syncAccidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"AccidentReportSubmit"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == 1"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
     [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
@@ -556,8 +566,8 @@
 
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type MATCHES[cd] %@", @"2"];
-//    [request setPredicate:predicate];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId];
+    [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
     __block BOOL isSingleDataSaved = NO;

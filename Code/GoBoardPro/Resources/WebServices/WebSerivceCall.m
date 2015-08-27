@@ -962,6 +962,7 @@
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];
+                        responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
                         responseType.question = aQuestion;
                         [responseTypeSet addObject:responseType];
                     }

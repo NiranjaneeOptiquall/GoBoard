@@ -2561,7 +2561,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
 			};
 			name = Debug;
 		};
@@ -2586,7 +2586,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
 			};
 			name = Release;
 		};

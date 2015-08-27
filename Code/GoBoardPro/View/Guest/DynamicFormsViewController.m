@@ -49,7 +49,7 @@
         [aDict setObject:[question valueForKey:@"responseType"] forKey:@"responseType"];
         [aDict setObject:[question valueForKey:@"sequence"] forKey:@"sequence"];
         [aDict setObject:@"" forKey:@"answer"];
-        NSSortDescriptor *sortRespType = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+        NSSortDescriptor *sortRespType = [NSSortDescriptor sortDescriptorWithKey:@"sequence.intValue" ascending:YES];
         NSArray *arrayRespType = [[[question valueForKey:@"responseList"] allObjects] sortedArrayUsingDescriptors:@[sortRespType]];
         NSMutableArray *mutArrResponseType = [NSMutableArray array];
         for (NSManagedObject *respType in arrayRespType) {

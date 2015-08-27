@@ -152,7 +152,7 @@
 {
     //Those Report or Form are submit in offline means waiting for syn.Those all are consider in "OPEN" status.
     //All Offline AccidentReport are store in "AccidentReportSubmit" table.
-    //All Offline IncidentReport are store in "SubmitFormAndSurvey" table.
+    //All Offline IncidentReport are store in "Report" table.
     //All Offline FormAndSurvey(Guest Or User) are store in "SubmitFormAndSurvey" table.
     
     

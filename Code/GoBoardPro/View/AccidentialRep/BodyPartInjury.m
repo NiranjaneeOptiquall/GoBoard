@@ -143,10 +143,12 @@
     
     [_mutArrInjuryList addObject:aDict];
     [_tblAddedInjuryList reloadData];
+    selectedBodyPart = 0;
+    [_tblInjuredBodyPartList reloadData];
+    
     _txtActionTaken.text = @"";
     _txtEnjuryType.text = @"";
     _txtOtherInjury.text = @"";
-    selectedBodyPart = 0;
     selectedBodyPartLocation = 0;
     
 }

@@ -133,14 +133,14 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
     NSPredicate *predicate;
     
-    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
+//    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
     
-//    if (_guestFormType == 2 || _guestFormType == 3) {
-//        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[cd] %@ AND typeId MATCHES[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
-//    }
-//    else {
-//        predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
-//    }
+    if (_guestFormType == 3) {
+        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[cd] %@ AND typeId MATCHES[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
+    }
+    else {
+        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[CD] %@ AND NOT (typeId MATCHES[cd] %@)",strFormUserType,[NSString stringWithFormat:@"%d", 3]];
+    }
     [request setPredicate:predicate];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
     [request setSortDescriptors:@[sort]];
