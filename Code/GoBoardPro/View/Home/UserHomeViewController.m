@@ -334,9 +334,9 @@
         isSingleDataSaved = NO;
         NSMutableArray *mutArrTask = [NSMutableArray array];
         for (SubmittedTask *task in [user.submittedTask allObjects]) {
-            [mutArrTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":task.comment, @"IsCommentTask": task.isCommentTask, @"IsCommentGoBoardGroup":task.isCommentGoBoardGroup, @"IsCommentBuildingSupervisor":task.isCommentBuildingSupervisor, @"IsCommentAreaSupervisor":task.isCommentAreaSupervisor, @"IsCommentWorkOrder":task.isCommentWorkOrder}];
+            [mutArrTask addObject:@{@"Id": task.taskId, @"Response":task.response, @"ResponseType":task.responseType, @"Comment":task.comment, @"IsCommentTask": task.isCommentTask, @"IsCommentGoBoardGroup":task.isCommentGoBoardGroup, @"IsCommentBuildingSupervisor":task.isCommentBuildingSupervisor, @"IsCommentAreaSupervisor":task.isCommentAreaSupervisor, @"IsCommentWorkOrder":task.isCommentWorkOrder,@"Completed":@"true"}];
         }
-        NSDictionary *aDict = @{@"UserId":user.userId, @"Locations":mutArrTask};
+        NSDictionary *aDict = @{@"UserId":user.userId, @"Tasks":mutArrTask};
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:user];
             isSingleDataSaved = YES;

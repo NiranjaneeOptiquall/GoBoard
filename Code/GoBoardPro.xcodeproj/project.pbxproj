@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D41E1171BAAC85400CE7289 /* FormCustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D41E1161BAAC85400CE7289 /* FormCustomButton.m */; };
 		2D87E41B1B6F958D00706B56 /* SopCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D87E41A1B6F958D00706B56 /* SopCategory.m */; };
 		330010711A2EF16500239D8D /* SubmitFormAndSurvey.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010701A2EF16500239D8D /* SubmitFormAndSurvey.m */; };
 		330010741A2EF16600239D8D /* QuestionDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 330010731A2EF16600239D8D /* QuestionDetails.m */; };
@@ -345,6 +346,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2D41E1151BAAC85400CE7289 /* FormCustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormCustomButton.h; sourceTree = "<group>"; };
+		2D41E1161BAAC85400CE7289 /* FormCustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormCustomButton.m; sourceTree = "<group>"; };
 		2D87E4181B6F80E700706B56 /* GoBoardPro 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "GoBoardPro 3.xcdatamodel"; sourceTree = "<group>"; };
 		2D87E4191B6F958C00706B56 /* SopCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SopCategory.h; sourceTree = "<group>"; };
 		2D87E41A1B6F958D00706B56 /* SopCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SopCategory.m; sourceTree = "<group>"; };
@@ -1807,6 +1810,8 @@
 				332B31F21A2C92C0001DE737 /* DynamicFormCell.m */,
 				33BA3F3D1A42B71E00626AE7 /* ThankYouViewController.h */,
 				33BA3F3E1A42B71E00626AE7 /* ThankYouViewController.m */,
+				2D41E1151BAAC85400CE7289 /* FormCustomButton.h */,
+				2D41E1161BAAC85400CE7289 /* FormCustomButton.m */,
 			);
 			path = Guest;
 			sourceTree = "<group>";
@@ -2412,6 +2417,7 @@
 				334585F519D98672000AB7E1 /* PersonInformation.m in Sources */,
 				3341572319E8F39800A71E02 /* LineGraphView.m in Sources */,
 				332B610C1A14BE1300B7C7EF /* UserPosition.m in Sources */,
+				2D41E1171BAAC85400CE7289 /* FormCustomButton.m in Sources */,
 				332B60E71A146CB700B7C7EF /* AFNetworkActivityIndicatorManager.m in Sources */,
 				332B60E41A146CB700B7C7EF /* AFHTTPRequestOperation.m in Sources */,
 				332F544C1A2344BA00F2A40A /* RequiredField.m in Sources */,
@@ -2497,7 +2503,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -2533,7 +2539,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -2561,7 +2567,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
+				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
 			};
 			name = Debug;
 		};
@@ -2586,7 +2592,7 @@
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
+				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
 			};
 			name = Release;
 		};

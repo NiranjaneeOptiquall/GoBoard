@@ -12,7 +12,7 @@
 #import "QuestionDetails.h"
 #import "DynamicFormCell.h"
 #import "ThankYouViewController.h"
-
+#import "FormCustomButton.h"
 
 @interface DynamicFormsViewController ()
 
@@ -215,9 +215,10 @@
     }
 }
 
-- (void)btnListTypeTapped:(UIButton*)sender {
+- (void)btnListTypeTapped:(FormCustomButton*)sender {
     isUpdate = YES;
-    NSIndexPath *indexPath = [self indexPathForView:sender];
+//NSIndexPath *indexPath = [self indexPathForView:sender];
+    NSIndexPath *indexPath = sender.indexPath;
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
         [sender setSelected:!sender.selected];
@@ -239,6 +240,7 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    NSLog(@"cell:%@",aCell);
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
     [aCell.btnCheckMark setHidden:YES];
@@ -246,7 +248,7 @@
     [aCell.vwTextArea setHidden:YES];
     [aCell.vwButtonList setHidden:YES];
     [aCell.vwTextBox setHidden:YES];
-    for (UIButton *btn in aCell.vwButtonList.subviews) {
+    for (FormCustomButton *btn in aCell.vwButtonList.subviews) {
         [btn removeFromSuperview];
     }
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"] || [[aDict objectForKey:@"responseType"] isEqualToString:@"radioButtonList"]) {
@@ -270,7 +272,7 @@
         NSInteger index = 0;
         for (NSDictionary *dict in [aDict objectForKey:@"responseList"]) {
             
-            UIButton *aBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            FormCustomButton *aBtn = [FormCustomButton buttonWithType:UIButtonTypeCustom];
             if (index % 2 == 0) {
                 x = 0;
                 y = height * (index / 2);
@@ -286,12 +288,19 @@
             [aBtn addTarget:self action:@selector(btnListTypeTapped:) forControlEvents:UIControlEventTouchUpInside];
             [aBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             [aBtn setTag:index];
+            [aBtn setIndexPath:indexPath];
+            
             [aCell.vwButtonList addSubview:aBtn];
             if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"]) {
                 [aBtn setSelected:[dict[@"isSelected"] boolValue]];
             }
-            else if ([aDict[@"answer"] integerValue] == index) {
-                [self btnListTypeTapped:aBtn];
+            else if (![aDict[@"answer"] isEqualToString:@""]) {
+                
+                if ([aDict[@"answer"] integerValue] == index) {
+                
+                    [self btnListTypeTapped:aBtn];
+                }
+                
             }
             index++;
         }
@@ -371,7 +380,11 @@
     while (![aCell isKindOfClass:[DynamicFormCell class]]) {
         aCell = (DynamicFormCell *)[aCell superview];
     }
-    NSIndexPath *indexPath = [_tblForm indexPathForCell:aCell];
+   // CGPoint boundsCenter = CGRectOffset(view.bounds, view.frame.size.width/2, view.frame.size.height/2).origin;
+
+    //CGPoint viewPosition = [[view superview] convertPoint:boundsCenter toView:self.tblForm];
+   // NSIndexPath *indexPath = [_tblForm indexPathForRowAtPoint:viewPosition];
+    NSIndexPath *indexPath = [_tblForm indexPathForRowAtPoint:aCell.center];
     return indexPath;
 }
 

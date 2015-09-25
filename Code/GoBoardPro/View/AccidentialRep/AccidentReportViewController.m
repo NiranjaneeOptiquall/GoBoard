@@ -628,7 +628,7 @@
 
 - (void)btnFinalSubmitTapped:(id)sender {
 
-    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank]) {
+    if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txvDescription isTextViewBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
     }

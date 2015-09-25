@@ -26,7 +26,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     [self initialUIConfig];
     gblAppDelegate.shouldHideActivityIndicator = NO;
-    [self checkAppVersion];
+    [self checkAppVersions];
     gblAppDelegate.shouldHideActivityIndicator = YES;
 }
 
@@ -221,27 +221,40 @@
     [_vwUserSignIn setHidden:NO];
 }
 
--(void)checkAppVersion
+-(void)checkAppVersions
 {
     
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@",APPVERSION] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:APPVERSION] complition:^(NSDictionary *response)
     {
-        NSString *strCurrentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
         
-        if (![strCurrentVersion isEqualToString:[response objectForKey:@"Version"]]){
+        NSArray *arryCurrentVersion = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] componentsSeparatedByString:@"."];
+        NSArray *arryNewVersion = [[response objectForKey:@"Version"] componentsSeparatedByString:@"."];
+        
+        NSMutableString *mutbStr = [[NSMutableString alloc]init];
+        
+        for (NSString *str in arryCurrentVersion){
+            [mutbStr appendString:str];
+        }
+        
+        NSInteger currentVersion = [mutbStr integerValue];
+        
+        mutbStr = [[NSMutableString alloc]init];
+        
+        for (NSString *str in arryNewVersion){
+            [mutbStr appendString:str];
+        }
+        
+        NSInteger newVersion = [mutbStr integerValue];
+        
+        
+        if ( currentVersion < newVersion){
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:MSG_NEWVERSION delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
             alert.delegate = self;
             [alert show];
         }
-        else
-        {
-            NSLog(@"--SameVersion as AppStoreVersion---");
-        }
-        
+    
     } failure:^(NSError *error, NSDictionary *response) {
-        
-        NSLog(@"--Error AppVersionCheck %@---",[response objectForKey:@"ErrorMessage"]);
     }];
     
 }

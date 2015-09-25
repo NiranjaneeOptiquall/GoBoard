@@ -55,3 +55,9 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 - (BOOL)isTextFieldBlank;
 - (NSString *)trimText;
 @end
+
+
+@interface UITextView (Additions)
+- (BOOL)isTextViewBlank;
+- (NSString *)trimText;
+@end

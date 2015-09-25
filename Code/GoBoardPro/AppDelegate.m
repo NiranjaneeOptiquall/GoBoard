@@ -366,11 +366,24 @@
     [self setFont:[UIFont systemFontOfSize:16.0]];
     [self setExclusiveTouch:YES];
 }
+@end
 
+@implementation UITextView (Additions)
+
+- (BOOL)isTextViewBlank {
+    BOOL isEmpty = [[self trimText] isEqualToString:@""];
+    if (isEmpty) {
+        [self becomeFirstResponder];
+    }
+    return isEmpty;
+}
+
+- (NSString *)trimText {
+    return [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
 
 
 @end
-
 
 
 @implementation UIButton (exclusive)

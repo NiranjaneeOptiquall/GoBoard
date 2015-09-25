@@ -43,6 +43,14 @@
     if ([sender isEqual:_btnGuest]) {
         if (!_isGuestIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
+        
+        if ([requiredFields containsObject:@"driverLicenseNumber"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+        
         [_txtMemberId setPlaceholder:@"Guest ID"];
         [_vwGuest setHidden:NO];
         frame.origin.y = CGRectGetMaxY(_vwGuest.frame);
@@ -51,6 +59,14 @@
     else if ([sender isEqual:_btnMember]) {
         if (!_isMemberIdVisible) [self hideMemberId:YES];
         else [self hideMemberId:NO];
+        
+        if ([requiredFields containsObject:@"memberId"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+        
         [_txtMemberId setPlaceholder:@"Member ID"];
         frame.origin.y = _vwEmployee.frame.origin.y;
         [_parentVC setPersonInvolved:PERSON_MEMBER];
@@ -59,6 +75,14 @@
         [self hideMemberId:NO];
         if (!_isEmployeeIdVisible) [_vwMemberId setHidden:YES];
         else [self hideMemberId:NO];
+        
+        if ([requiredFields containsObject:@"employeeId"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+        
         [_txtMemberId setPlaceholder:@"Employee ID"];
         [_vwEmpPosition setHidden:NO];
         [_vwEmployee setHidden:NO];
@@ -112,7 +136,35 @@
 
 - (void)setRequiredFields:(NSArray*)fields {
     requiredFields = fields;
-    if ([requiredFields containsObject:@"memberId"] || [requiredFields containsObject:@"driverLicenseNumber"] || [requiredFields containsObject:@"employeeId"]) [_markerMemberId setHidden:NO];
+    if (_intPersonInvolved == 1) // For Member
+    {
+        if ([requiredFields containsObject:@"memberId"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+    }
+    else if (_intPersonInvolved == 2) // For Guest
+    {
+        if ([requiredFields containsObject:@"driverLicenseNumber"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+    }
+    else if (_intPersonInvolved==3) // For Employee
+    {
+        if ([requiredFields containsObject:@"employeeId"]) {
+            [_markerMemberId setHidden:NO];
+        }
+        else{
+            [_markerMemberId setHidden:YES];
+        }
+    }
+    
+    //if ([requiredFields containsObject:@"memberId"] || [requiredFields containsObject:@"driverLicenseNumber"] || [requiredFields containsObject:@"employeeId"]) [_markerMemberId setHidden:NO];
     if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
     if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
@@ -134,9 +186,24 @@
 - (BOOL)isPersonalInfoValidationSuccess {
     BOOL success = YES;
     
-    if ([requiredFields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
-        success = NO;
-        alert(@"", MSG_REQUIRED_FIELDS);
+    if (_intPersonInvolved == 1) {
+        if ([requiredFields containsObject:@"memberId"] && [_txtMemberId isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+
+    }
+    else if (_intPersonInvolved == 2){
+        if ([requiredFields containsObject:@"driverLicenseNumber"] && [_txtMemberId isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
+    }
+    else if (_intPersonInvolved == 3){
+        if ([requiredFields containsObject:@"employeeId"] && [_txtMemberId isTextFieldBlank]) {
+            success = NO;
+            alert(@"", MSG_REQUIRED_FIELDS);
+        }
     }
     else if ([requiredFields containsObject:@"employeePosition"] && ([_btnEmployee isSelected] && [_txtEmployeePosition isTextFieldBlank])) {
         success = NO;
