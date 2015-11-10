@@ -283,6 +283,7 @@
 
 - (void)showActivityIndicatorWithMessage:(NSString*)strMessage atPosition:(ActivityIndicatorPosition)pos {
     if (!viewActivity) {
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         viewActivity = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         [viewActivity setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8]];
         indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -327,6 +328,7 @@
 
 - (void)hideActivityIndicator {
     if (_shouldHideActivityIndicator) {
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         if (viewActivity) {
             [indicatorView stopAnimating];
             [viewActivity removeFromSuperview];

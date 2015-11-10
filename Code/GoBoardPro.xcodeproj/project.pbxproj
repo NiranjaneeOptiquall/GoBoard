@@ -2483,7 +2483,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2503,7 +2503,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -2526,7 +2526,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2539,7 +2539,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "ccb32992-1b6e-4dc8-92f7-232cb95284df";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -2551,9 +2551,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2566,8 +2567,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.connect2concepts.goboardprodev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 			};
 			name = Debug;
 		};
@@ -2576,9 +2578,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2591,8 +2594,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/GoBoardPro/Resources/CrittercismSDK",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.connect2concepts.goboardprodev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3e8118e8-a944-43d7-b591-20a9ed0d1f7c";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 			};
 			name = Release;
 		};
@@ -2600,8 +2604,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -2613,7 +2617,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Debug;
@@ -2622,8 +2626,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: DAVID TSCHANTZ (8NQF7UHVNW)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -2631,7 +2635,7 @@
 				INFOPLIST_FILE = GoBoardProTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "aed423a0-4813-467b-95c8-239affceaf2e";
+				PROVISIONING_PROFILE = "23f9a36c-f33c-4631-87fb-4fdb623ab598";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoBoardPro.app/GoBoardPro";
 			};
 			name = Release;

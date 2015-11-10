@@ -225,8 +225,11 @@
         [aDict[@"responseList"][sender.tag] setObject:[NSNumber numberWithBool:sender.isSelected] forKey:@"isSelected"];
     }
     else if ([aDict[@"responseType"] isEqualToString:@"radioButtonList"]) {
-        for (UIButton *aBtn in sender.superview.subviews) {
-            [aBtn setSelected:NO];
+        for (UIView *aView in sender.superview.subviews) {
+            if ([aView isKindOfClass:[UIButton class]]) {
+                UIButton *aBtn = (UIButton *)aView;
+                [aBtn setSelected:NO];
+            }
         }
         [sender setSelected:YES];
         [aDict setObject:[NSString stringWithFormat:@"%ld", (long)sender.tag] forKey:@"answer"];
@@ -248,8 +251,8 @@
     [aCell.vwTextArea setHidden:YES];
     [aCell.vwButtonList setHidden:YES];
     [aCell.vwTextBox setHidden:YES];
-    for (FormCustomButton *btn in aCell.vwButtonList.subviews) {
-        [btn removeFromSuperview];
+    for (UIView *view in aCell.vwButtonList.subviews) {
+        [view removeFromSuperview];
     }
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"] || [[aDict objectForKey:@"responseType"] isEqualToString:@"radioButtonList"]) {
         [aCell.vwButtonList setHidden:NO];
@@ -268,11 +271,12 @@
             strImageName = @"check_box.png";
             strSelectedImageName = @"selected_check_box.png";
         }
-        float x = 0, y = 0, width = 360;
+        float x = 0, y = 0, width = 44;
         NSInteger index = 0;
         for (NSDictionary *dict in [aDict objectForKey:@"responseList"]) {
             
             FormCustomButton *aBtn = [FormCustomButton buttonWithType:UIButtonTypeCustom];
+            UILabel *lblName = [[UILabel alloc]init];
             if (index % 2 == 0) {
                 x = 0;
                 y = height * (index / 2);
@@ -283,14 +287,20 @@
             [aBtn setFrame:CGRectMake(x, y, width, height)];
             [aBtn setImage:[UIImage imageNamed:strImageName] forState:UIControlStateNormal];
             [aBtn setImage:[UIImage imageNamed:strSelectedImageName] forState:UIControlStateSelected];
-            [aBtn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
-            [aBtn.titleLabel setFont:[UIFont systemFontOfSize:15.0]];
+            [lblName setFrame:CGRectMake(x+45, y, 364 - width, height)];
+            [lblName setFont:[UIFont systemFontOfSize:15.0]];
+            [lblName setText:[dict objectForKey:@"name"]];
+            [lblName setTextColor:[UIColor whiteColor]];
+           // [lblName setBackgroundColor:[UIColor greenColor]];
+            //[aBtn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
+           // [aBtn.titleLabel setFont:[UIFont systemFontOfSize:15.0]];
             [aBtn addTarget:self action:@selector(btnListTypeTapped:) forControlEvents:UIControlEventTouchUpInside];
             [aBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             [aBtn setTag:index];
             [aBtn setIndexPath:indexPath];
             
             [aCell.vwButtonList addSubview:aBtn];
+            [aCell.vwButtonList addSubview:lblName];
             if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"]) {
                 [aBtn setSelected:[dict[@"isSelected"] boolValue]];
             }

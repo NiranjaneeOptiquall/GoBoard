@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "169DB6B09FD354DBDAF87E2AB430FC00EDC872D2",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "169DB6B09FD354DBDAF87E2AB430FC00EDC872D2" : 0,
+    "ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "41EA505D-EB62-49DB-B3E8-695EB222924B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "169DB6B09FD354DBDAF87E2AB430FC00EDC872D2" : "GoBoardPro",
+    "ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "GoBoardPro",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Code\/GoBoardPro.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/elitedev.visualstudio.com\/DefaultCollection\/_git\/GoBoard.iOS",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "169DB6B09FD354DBDAF87E2AB430FC00EDC872D2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/elitedev.visualstudio.com\/DefaultCollection\/_git\/Soprema.TechApp",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ADB2BA0A967D3CEDB08F09620B75D02AEC4DA0E5"
+    }
+  ]
+}

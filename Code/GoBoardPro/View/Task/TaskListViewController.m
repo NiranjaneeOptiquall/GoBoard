@@ -459,7 +459,13 @@
         }
         else if ([task.responseType isEqualToString:@"dropdown"]) {
             [aCell.vwDrpDown setHidden:NO];
-            aCell.txtDropDown.text = task.response;
+            
+            for (TaskResponseTypeValues *type in task.responseTypeValues) {
+                if ([type.typeId isEqualToString:task.response]) {
+                    aCell.txtDropDown.text = type.value;
+                    break;
+                }
+            }
             aCell.txtDropDown.userInteractionEnabled = NO;
         }
         NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:aStrTaskName];
@@ -521,7 +527,7 @@
             [aCell.vwDrpDown setHidden:NO];
             for (TaskResponseTypeValues *type in task.responseTypeValues) {
                 if ([type.typeId isEqualToString:task.response]) {
-                    aCell.txtDropDown.text = type.code;
+                    aCell.txtDropDown.text = type.value;
                     break;
                 }
             }
@@ -736,7 +742,7 @@
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:editingIndex];
     task.response = [(TaskResponseTypeValues*)value typeId];
-    [(UITextField*)sender setText:[(TaskResponseTypeValues*)value code]];
+    [(UITextField*)sender setText:[(TaskResponseTypeValues*)value value]];
 }
 
 @end

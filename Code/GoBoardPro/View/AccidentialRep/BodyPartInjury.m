@@ -149,7 +149,7 @@
     _txtActionTaken.text = @"";
     _txtEnjuryType.text = @"";
     _txtOtherInjury.text = @"";
-    selectedBodyPartLocation = 0;
+    //selectedBodyPartLocation = 0;
     
 }
 
