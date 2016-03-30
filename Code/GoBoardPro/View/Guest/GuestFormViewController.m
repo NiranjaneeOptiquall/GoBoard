@@ -114,13 +114,14 @@
         strSurveyUserType = @"2";
     }
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strSurveyUserType];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K ==[cd] %@", @"userTypeId", strSurveyUserType];
     [request setPredicate:predicate];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
     [request setSortDescriptors:@[sort]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {
         [_lblNoRecord setHidden:NO];
+        [_lblNoRecord setText:@"No survey available."];
     }
 }
 
@@ -136,10 +137,10 @@
 //    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
     
     if (_guestFormType == 3) {
-        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[cd] %@ AND typeId MATCHES[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
+        predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[cd] %@ AND typeId ==[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
     }
     else {
-        predicate = [NSPredicate predicateWithFormat:@"userTypeId MATCHES[CD] %@ AND NOT (typeId MATCHES[cd] %@)",strFormUserType,[NSString stringWithFormat:@"%d", 3]];
+        predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strFormUserType,[NSString stringWithFormat:@"%d", 3]];
     }
     [request setPredicate:predicate];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
@@ -147,6 +148,7 @@
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {
         [_lblNoRecord setHidden:NO];
+         [_lblNoRecord setText:@"No form available."];
     }
 }
 

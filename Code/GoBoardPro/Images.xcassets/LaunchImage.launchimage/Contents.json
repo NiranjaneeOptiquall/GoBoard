@@ -17,9 +17,9 @@
     {
       "orientation" : "portrait",
       "idiom" : "ipad",
+      "filename" : "Defalut@2x.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "Defalut@2x.png",
       "scale" : "2x"
     },
     {

@@ -26,6 +26,11 @@
 #import "Memoboard.h"
 #import "DailyLog.h"
 #import "EmergencyPersonnelIncident.h"
+#import "TeamLog.h"
+#import "TeamSubLog.h"
+#import "TeamLogTrace.h"
+
+#import "DailyLogViewController.h"
 
 @interface UserHomeViewController ()
 
@@ -51,6 +56,11 @@
     [_lblMemoCount.layer setBorderWidth:1.0];
     [_lblMemoCount setClipsToBounds:YES];
     [_lblMemoCount.layer setBorderColor:[UIColor whiteColor].CGColor];
+    
+    [self.lblVersion setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
+    
+    self.intUnreadLogCount += gblAppDelegate.teamLogCountAfterLogin;
+
     // Do any additional setup after loading the view.
 }
 
@@ -69,7 +79,23 @@
     
     [_cvMenuGrid reloadData];
     [self getSyncCount];
+    [self callWebserviceToUpdateTeamLog];
+
+    
+//#warning Remove this in Live
+    
+    self.allowMemoWSCall = YES;
+    [self callWebserviceToUpdateMemo];
+
 }
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    self.allowMemoWSCall = NO;
+
+    [super viewDidDisappear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -92,6 +118,11 @@
     else if([[segue identifier] isEqualToString:@"userForms"]) {
         GuestFormViewController *forms = (GuestFormViewController*)[segue destinationViewController];
         forms.guestFormType = 4;
+    }
+    else if ([[segue identifier] isEqualToString:@"DailyLog"])
+    {
+        DailyLogViewController *aVCObj= (DailyLogViewController *)segue.destinationViewController;
+        aVCObj.boolISWSCallNeeded = self.boolUpdateTeamLog;
     }
     
 //
@@ -146,6 +177,10 @@
             else if ([aDict[@"SystemModule"] integerValue] == 15 && intUnreadMemoCount > 0) {
                 count = intUnreadMemoCount;
             }
+            else if ([aDict[@"SystemModule"] integerValue] == 14 && self.intUnreadLogCount > 0) {
+                count = self.intUnreadLogCount;
+            }
+           
             if (count > 0) {
                 aLblBadge.text = [NSString stringWithFormat:@"%ld", (long)count];
                 [aLblBadge.layer setCornerRadius:5.0];
@@ -212,7 +247,10 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     
-    
+    request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND (shouldSync == 1 OR (ANY teamSubLog.shouldSync == 1))",[[User currentUser]userId]]];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+
     if (syncCount == 0) {
         [_lblPendingCount setHidden:YES];
     }
@@ -237,6 +275,8 @@
         isSyncError = [self syncAccidentReport];
     if (!isSyncError)
         isSyncError = [self syncSurveysAndForms];
+    if (!isSyncError)
+        isSyncError = [self syncTeamLog];
     if (!isSyncError) {
         alert(@"", @"All data is synchronized with the server.");
     }
@@ -358,7 +398,7 @@
 
 - (BOOL)syncIncidentReport {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Report"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId ==[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
     [request setPredicate:predicate];
     NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     isErrorOccurred = NO;
@@ -369,10 +409,18 @@
         for (Person *obj in [aReport.persons allObjects]) {
             NSString *memberId = @"", *employeeId = @"";
             if ([obj.personTypeID integerValue] == 3) {
-                employeeId = obj.memberId;
+                if (obj.memberId==nil) {
+                    employeeId = @"";
+                }
+                else
+                    employeeId = obj.memberId;
             }
             else {
-                memberId = obj.memberId;
+                if (obj.memberId==nil) {
+                    memberId = @"";
+                }
+                else
+                    memberId = obj.memberId;
             }
             NSString *aStrPhoto = @"";
             if (obj.personPhoto) {
@@ -621,5 +669,213 @@
     [gblAppDelegate.managedObjectContext save:nil];
     return isErrorOccurred;
 }
+
+
+- (BOOL)syncTeamLog
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+    NSPredicate *predicateOne = [NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND shouldSync == 1",[[User currentUser]userId]];
+
+    [request setPredicate:predicateOne];
+    NSArray *aArrTeamLogOne = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    
+    NSPredicate *predicateTwo = [NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND ANY teamSubLog.shouldSync == 1",[[User currentUser]userId]];
+    [request setPredicate:predicateTwo];
+    NSArray *aArrTeamLogTwo = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+
+    __block BOOL isSingleDataSaved = NO;
+
+    for (TeamLog *aTeamLogObj in aArrTeamLogOne) {
+        
+         isSingleDataSaved = NO;
+        NSString *aParamDate = [gblAppDelegate getUTCDate:aTeamLogObj.date];
+
+        NSMutableDictionary *aMutDicParam = [NSMutableDictionary dictionary];
+        NSMutableArray *aArrayTeamSubLog = [NSMutableArray array];
+      
+        aMutDicParam[@"FacilityId"] = aTeamLogObj.facilityId;
+        aMutDicParam[@"PositionId"] = aTeamLogObj.positionId;
+        aMutDicParam[@"IsTeamLog"] = [NSNumber numberWithBool:YES];
+        aMutDicParam[@"IsAlwaysVisible"] = [NSNumber numberWithBool:NO];
+        aMutDicParam[@"Date"] = aParamDate;
+        aMutDicParam[@"UserId"] = aTeamLogObj.userId;
+
+        [aArrayTeamSubLog addObject:@{@"Id":@"0",
+                                     @"Date":aParamDate,
+                                     @"Description":aTeamLogObj.desc,
+                                     @"IncludeInEndOfDayReport":[NSNumber numberWithBool:NO],
+                                     @"UserId":[[User currentUser]userId],
+                                      @"UserName":aTeamLogObj.username
+
+                                      }];
+        
+        NSDictionary *aDictParams = @{@"Id":@"0",
+                                      @"FacilityId":aTeamLogObj.facilityId,
+                                      @"PositionId":aTeamLogObj.positionId,
+                                      @"IsTeamLog":[NSNumber numberWithBool:YES],
+                                      @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
+                                      @"Date":aParamDate,
+                                      @"UserId":aTeamLogObj.userId,
+                                      @"DailyLogDetails":aArrayTeamSubLog
+                                      };
+        
+        [gblAppDelegate callWebService:TEAM_LOG parameters:aDictParams httpMethod:@"POST" complition:^(NSDictionary *response) {
+            if ([response[@"Success"]boolValue]) {
+                aTeamLogObj.shouldSync = [NSNumber numberWithBool:NO];
+                aTeamLogObj.teamLogId = response[@"Id"];
+                
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLogTrace"];
+                [request setPredicate:[NSPredicate predicateWithFormat:@"userId==[cd]%@",[[User currentUser]userId]]];
+                NSArray *aArrLogs = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+                TeamLogTrace *aTeamLogTraceObj;
+                if (aArrLogs.count>0) {
+                    aTeamLogTraceObj = aArrLogs[0];
+                   
+                }
+                else
+                    aTeamLogTraceObj = (TeamLogTrace *)[NSEntityDescription
+                                                        insertNewObjectForEntityForName:@"TeamLogTrace" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                
+                aTeamLogTraceObj.userId= aTeamLogObj.userId;
+                aTeamLogTraceObj.byuserId = aTeamLogObj.userId;
+                aTeamLogTraceObj.date = aTeamLogObj.date;
+                aTeamLogTraceObj.teamLogId  = aTeamLogObj.teamLogId;
+                [gblAppDelegate.managedObjectContext save:nil];
+                
+            }
+            isSingleDataSaved = YES;
+
+            
+        } failure:^(NSError *error, NSDictionary *response) {
+            
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    
+    for (TeamLog *aTeamLogObj in aArrTeamLogTwo) {
+        
+        isSingleDataSaved = NO;
+        
+        for (TeamSubLog *aTeamSubLogObj  in aTeamLogObj.teamSubLog.allObjects)
+        {
+            if (aTeamSubLogObj.shouldSync.integerValue==1) {
+                NSMutableDictionary *aMutDict = [NSMutableDictionary dictionary];
+                
+                NSString *aParamDateLog = [gblAppDelegate getUTCDate:aTeamSubLogObj.date];
+                
+                
+                aMutDict[@"Id"] = @"0";
+                aMutDict[@"Date"] = aParamDateLog;
+                aMutDict[@"Description"]=aTeamSubLogObj.desc;
+                aMutDict[@"FacilityId"] = aTeamLogObj.facilityId;
+                aMutDict[@"PositionId"] = aTeamLogObj.positionId;
+                aMutDict[@"UserId"] = aTeamLogObj.userId;
+                aMutDict[@"IsAlwaysVisible"] = [NSNumber numberWithBool:NO];
+                aMutDict[@"DailyLogHeaderId"] = aTeamLogObj.teamLogId;
+                aMutDict[@"UserName"] = aTeamLogObj.username;
+
+                [gblAppDelegate callWebService:POSTCOMMENTS parameters:aMutDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+                    
+                    if ([response[@"Success"]boolValue]) {
+                        aTeamSubLogObj.shouldSync = [NSNumber numberWithBool:NO];
+                        [gblAppDelegate.managedObjectContext save:nil];
+                    }
+                    isSingleDataSaved = YES;
+
+                    
+                } failure:^(NSError *error, NSDictionary *response) {
+                    
+                    isSingleDataSaved = YES;
+                    isErrorOccurred = YES;
+                }];
+                
+                while (!isSingleDataSaved) {
+                    [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+                }
+                if (isErrorOccurred) {
+                    break;
+                }
+
+            }
+        }
+    }
+    
+    return isErrorOccurred;
+}
+
+
+#pragma - mark UpdateMemo
+
+-(void)callWebserviceToUpdateMemo
+{
+    [[WebSerivceCall webServiceObject]callServiceForMemos:NO complition:^{
+        
+        intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
+        [self.cvMenuGrid reloadData];
+        NSLog(@"MemoUpdated");
+        if (self.allowMemoWSCall) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self callWebserviceToUpdateMemo];
+                
+            });
+        }
+        
+    }];
+    
+}
+#pragma - mark UpdateMemo
+
+-(void)callWebserviceToUpdateTeamLog
+{
+    [[WebSerivceCall webServiceObject]callServiceForTeamLogInBackground:NO complition:^(NSDictionary *aDict){
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+        
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"teamLogId" ascending:NO]];
+        
+        NSArray *aArrayTeamLogs  =[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+        NSNumber *aMaxID;
+        if (aArrayTeamLogs.count>0) {
+            aMaxID  = [aArrayTeamLogs[0] valueForKeyPath:@"teamLogId"];
+        }
+        else
+            aMaxID = [NSNumber numberWithInt:0];
+     
+        NSArray *aArray = aDict[@"DailyLogs"];
+        
+        NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"IsTeamLog==%@",[NSNumber numberWithBool:YES]];
+        NSArray *aFilteredArray = [aArray filteredArrayUsingPredicate:aPredicate];
+        
+        
+        NSInteger count = [[aFilteredArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Id > %i",aMaxID.integerValue]] count];
+       
+        self.intUnreadLogCount = 0;
+        self.intUnreadLogCount += gblAppDelegate.teamLogCountAfterLogin+count;
+
+        if ((aArray.count<aArrayTeamLogs.count)||self.intUnreadLogCount>0) {
+            self.boolUpdateTeamLog  = YES;
+        }
+        [self.cvMenuGrid reloadData];
+        
+        NSLog(@"Team Log Updated");
+        
+        if (self.allowMemoWSCall) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self callWebserviceToUpdateTeamLog];
+                
+            });
+        }
+    }];
+}
+
 
 @end

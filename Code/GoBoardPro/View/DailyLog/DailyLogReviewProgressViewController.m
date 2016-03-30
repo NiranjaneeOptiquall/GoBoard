@@ -86,7 +86,7 @@
     
     NSDate *destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
     
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
     NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:destinationDate];
     [components setHour:0];
@@ -194,17 +194,17 @@
     
     
     mutArrCompletedCount = [[NSMutableArray alloc] init];
-    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenIncidentReport]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Incident Report", @"count":[dictDailyMatrics[@"CompletedIncidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenIncidentReport]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenUserForm]}];
+    [mutArrCompletedCount addObject:@{@"name":@"User Forms", @"count":[dictDailyMatrics[@"CompletedUserFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenUserForm]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenUserSurvey]}];
+    [mutArrCompletedCount addObject:@{@"name":@"User Survey", @"count":[dictDailyMatrics[@"CompletedUserSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenUserSurvey]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenAccidentReport]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Accident Report", @"count":[dictDailyMatrics[@"CompletedAccidentReportCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenAccidentReport]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenGuestForm]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Forms", @"count":[dictDailyMatrics[@"CompletedGuestFormCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenGuestForm]}];
     
-    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%i",intOpenGuestSurvey]}];
+    [mutArrCompletedCount addObject:@{@"name":@"Guest Survey", @"count":[dictDailyMatrics[@"CompletedGuestSurveyCount"] stringValue],@"openCount":[NSString stringWithFormat:@"%li",(long)intOpenGuestSurvey]}];
     
     [_colCompleteCount reloadData];
 }

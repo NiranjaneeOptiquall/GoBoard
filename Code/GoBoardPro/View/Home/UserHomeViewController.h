@@ -15,6 +15,10 @@
     BOOL isErrorOccurred;
     NSInteger intUnreadMemoCount, intPendingAccidentReport, intPendingIncidentReport;
 }
+//Team Log
+@property (nonatomic,assign)NSInteger intUnreadLogCount;
+@property (nonatomic,assign)BOOL boolUpdateTeamLog;
+
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;
 @property (weak, nonatomic) IBOutlet UIButton *btnDailyLog;
@@ -22,6 +26,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblMemoCount;
 @property (weak, nonatomic) IBOutlet UILabel *lblWelcomeUser;
 @property (weak, nonatomic) IBOutlet UICollectionView *cvMenuGrid;
+@property (strong, nonatomic) IBOutlet UILabel *lblVersion;
+@property (nonatomic) BOOL allowMemoWSCall;
 
 
 - (IBAction)btnStartSyncCount:(id)sender;

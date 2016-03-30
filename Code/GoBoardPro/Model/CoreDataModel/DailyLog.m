@@ -2,19 +2,14 @@
 //  DailyLog.m
 //  GoBoardPro
 //
-//  Created by ind558 on 12/12/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by E2M183 on 2/20/16.
+//  Copyright © 2016 IndiaNIC. All rights reserved.
 //
 
 #import "DailyLog.h"
 
-
 @implementation DailyLog
 
-@dynamic userId;
-@dynamic date;
-@dynamic desc;
-@dynamic includeInEndOfDayReport;
-@dynamic shouldSync;
+// Insert code here to add functionality to your managed object subclass
 
 @end

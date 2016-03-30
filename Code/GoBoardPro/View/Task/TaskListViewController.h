@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate, DropDownValueDelegate> {
+@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate, DropDownValueDelegate,UIPopoverPresentationControllerDelegate,UIViewControllerTransitioningDelegate> {
     NSArray *mutArrTaskList;
     NSArray *mutArrTaskUptoNx2Hrs;
     NSArray *mutArrFilteredTaskList;

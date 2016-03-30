@@ -9,27 +9,61 @@
 #import "User.h"
 
 @implementation User
-static User *user;
+static User *user = nil;
 
 + (User *)currentUser {
     
     @synchronized(self) {
-        if (!user) {
-            user = [[User alloc] init];
-            user.mutArrSelectedLocations = [[NSMutableArray alloc] init];
-            user.mutArrSelectedPositions = [[NSMutableArray alloc] init];
-        }
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+         
+            if (!user) {
+                user = [[User alloc] init];
+                user.mutArrSelectedLocations = [[NSMutableArray alloc] init];
+                user.mutArrSelectedPositions = [[NSMutableArray alloc] init];
+            }
+            
+        });
+
+        
+       
     }
     return user;
 }
 
 
 + (void)destroyCurrentUser {
-    user = nil;
+    
+  
+    user.firstName = nil;
+    user.lastName = nil;
+    user.middleInitials = nil;
+    user.email = nil;
+    user.phone = nil;
+    user.mobile = nil;
+    user.userId = nil;
+    user.clientId = nil;
+    user.clientName = nil;
+    user.termsAndConditions = nil;
+    user.selectedFacility = nil;
+    user.username = nil;
+    
+    user.username=@"";
+    user.firstName = @"";
+    user.lastName = @"";
+    user.middleInitials = @"";
+    user.email = @"";
+    user.phone = @"";
+    user.mobile = @"";
+    user.userId = @"";
+    user.clientId = @"";
+    user.clientName = @"";
+    user.termsAndConditions = @"";
 }
 
 + (BOOL)checkUserExist {
-    if(user) {
+    if([user.userId integerValue]>0) {
         return YES;
     }
     return NO;

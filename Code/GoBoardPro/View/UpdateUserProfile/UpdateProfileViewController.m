@@ -95,11 +95,11 @@
         alert(@"", @"Please enter valid Email address");
         return;
     }
-    else if (![_txtPhone isTextFieldBlank] && ![_txtPhone.text isValidPhoneNumber]) {
+    else if ([_txtPhone.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0 &&![_txtPhone.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Phone Number");
         return;
     }
-    else if (![_txtMobile isTextFieldBlank] && ![_txtMobile.text isValidPhoneNumber]) {
+    else if ([_txtMobile.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0 && ![_txtMobile.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Mobile Number");
         return;
     }
@@ -107,7 +107,7 @@
 //        alert(@"", MSG_REQUIRED_FIELDS);
 //        return;
 //    }
-    else if (![_txtPassword isTextFieldBlank] && ![_txtPassword.text isValidPassword]) {
+    else if ([_txtPassword.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0 && ![_txtPassword.text isValidPassword]) {
         alert(@"", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
         return;
     }
@@ -138,7 +138,8 @@
             
             if (certificate.strDropDownId) {
                 strDropDownId = certificate.strDropDownId;
-            }else{
+            }
+            else{
                
                 alert(@"", @"Please select Certificate");
                 [certificate.txtCertificateName becomeFirstResponder];

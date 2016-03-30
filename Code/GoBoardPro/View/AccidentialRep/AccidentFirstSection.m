@@ -11,7 +11,7 @@
 #import "InjuryDetail.h"
 #import "CareProvidedType.h"
 #import "EmergencyPersonnelView.h"
-
+#import "GeneralInjuryType.h"
 @implementation AccidentFirstSection
 
 - (void)awakeFromNib {
@@ -256,7 +256,7 @@
     for (NSDictionary *aDict in _vwBodyPartInjury.mutArrInjuryList) {
         NSMutableDictionary *aMutDict = [NSMutableDictionary dictionary];
         [aMutDict setObject:[aDict objectForKey:@"nature"] forKey:@"NatureId"];
-        if ([aDict objectForKey:@"GeneralInjuryType"]) {
+        if ([[aDict objectForKey:@"GeneralInjuryType"]isKindOfClass:[GeneralInjuryType class]]) {
             [aMutDict setObject:[[aDict objectForKey:@"GeneralInjuryType"] valueForKey:@"typeId"] forKey:@"GeneralInjuryTypeId"];
             [aMutDict setObject:[aDict objectForKey:@"generalOther"] forKey:@"GeneralInjuryOther"];
         }
@@ -445,7 +445,7 @@
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
         
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        [library saveImage:_imgBodilyFluid toAlbum:@"GoBoard Pro" withCompletionBlock:^(NSError *error) {
+        [library saveImage:_imgBodilyFluid toAlbum:@"Connect2" withCompletionBlock:^(NSError *error) {
             if (error!=nil)
             {
                 NSLog(@"error: %@", [error description]);

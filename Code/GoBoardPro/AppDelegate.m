@@ -25,12 +25,12 @@
     // Override point for customization after application launch.
     gblAppDelegate = self;
     NSLog(@"%@", [self applicationDocumentsDirectory]);
-    NSURL *path=[self applicationDocumentsDirectory];
+   // NSURL *path=[self applicationDocumentsDirectory];
     
     
     // add the code for Raygun and comment the code for Crittercism
     
-    [Raygun sharedReporterWithApiKey:@"H9rd3/e0MvpkTsO4clZM1A=="];
+    [Raygun sharedReporterWithApiKey:@"lmj784kqfMpBWsj6ylF4dA=="];
     [[Raygun sharedReporter] identify:@"Guest"];
     
     /*
@@ -49,6 +49,17 @@
     
     return YES;
 }
+
+-(void)showSimpleAlertWithMessage:(NSString *)aStrMessage
+{
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Alert"
+                                          message:aStrMessage
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -94,6 +105,7 @@
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
+
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it.
@@ -155,11 +167,124 @@
 }
 
 
-- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure
-{
+- (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
+    if ([self isNetworkReachable]) {
+      
+        
+        [self showActivityIndicator];
+
+        
+        NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
+        aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
+        
+        [request setHTTPMethod:httpMethod];
+        if (params) {
+            NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
+            NSString *aStrJson = [[NSString alloc]initWithData:aData encoding:NSUTF8StringEncoding];
+         //  NSLog(@"requestParam:%@",aStrJson);
+            [request setHTTPBody:aData];
+        }
+        [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:@"vKDx#'D4i}qxj,0Q9@$tWPb!Y69RhS" forHTTPHeaderField:@"ApiKey"];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+        
+        manager.responseSerializer =
+        [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
+        NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+            
+            if (error) {
+               
+                failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
+                
+            } else {
+                
+                
+                NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+          //      NSData *d = [request HTTPBody];
+            //    NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+              //  NSLog(@"%@", aStr);
+                if ([[aDict objectForKey:@"Success"] boolValue]) {
+                    completion(aDict);
+                }
+                else {
+                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
+                    failure (nil, aDict);
+                }
+                
+            }
+             [self hideActivityIndicator];
+        }];
+        [dataTask resume];
+        
+    }
+    else {
+        failure(nil, @{@"ErrorMessage":MSG_NO_INTERNET});
+        
+    }
+}
+
+
+- (void)callSynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
     if ([self isNetworkReachable]) {
         [self showActivityIndicator];
-        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
+        
+        
+        
+        //        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
+        NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
+        aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
+        
+        [request setHTTPMethod:httpMethod];
+        if (params) {
+            NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
+            NSString *aStr = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
+          //  NSLog(@"%@", aStr);
+            [request setHTTPBody:aData];
+        }
+        [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
+        
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+        
+        manager.responseSerializer =
+        [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
+        NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+            
+            if (error) {
+                [self hideActivityIndicator];
+                failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
+                
+            } else {
+                
+                [self hideActivityIndicator];
+                NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                if ([[aDict objectForKey:@"Success"] boolValue]) {
+                    completion(aDict);
+                }
+                else {
+                    failure (nil, aDict);
+                }
+                
+            }
+        }];
+        [dataTask resume];
+        
+        
+    }
+    else {
+        failure(nil, nil);
+        
+    }
+}
+
+- (void)callAsynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
+    if ([self isNetworkReachable]) {
+
         NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
         aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
@@ -172,27 +297,33 @@
         }
         [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:@"vKDx#'D4i}qxj,0Q9@$tWPb!Y69RhS" forHTTPHeaderField:@"ApiKey"];
-        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^
-                                             (NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                                 [self hideActivityIndicator];
-                                                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:JSON];
-                                                 NSData *d = [request HTTPBody];
-                                                 NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-                                                 NSLog(@"%@", aStr);
-                                                 if ([[aDict objectForKey:@"Success"] boolValue]) {
-                                                     completion(aDict);
-                                                 }
-                                                 else {
-                                                     alert(@"", [aDict objectForKey:@"ErrorMessage"]);
-                                                     failure (nil, aDict);
-                                                 }
-                                             }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                 [self hideActivityIndicator];
-                                                 failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
-                                                 
-                                             }];
         
-        [operation start];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+        
+        manager.responseSerializer =
+        [AFJSONResponseSerializer serializerWithReadingOptions: NSJSONReadingMutableContainers];
+        NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+            
+            if (error) {
+                [self hideActivityIndicator];
+                failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
+                
+            } else {
+                
+                [self hideActivityIndicator];
+                NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                if ([[aDict objectForKey:@"Success"] boolValue]) {
+                    completion(aDict);
+                }
+                else {
+                    failure (nil, aDict);
+                }
+                
+            }
+        }];
+        [dataTask resume];
+
     }
     else {
         failure(nil, @{@"ErrorMessage":MSG_NO_INTERNET});
@@ -200,46 +331,6 @@
     }
 }
 
-- (void)callSynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure {
-    if ([self isNetworkReachable]) {
-        [self showActivityIndicator];
-        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"text/json",nil]];
-        NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
-        aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
-        
-        [request setHTTPMethod:httpMethod];
-        if (params) {
-            NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
-            NSString *aStr = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", aStr);
-            [request setHTTPBody:aData];
-        }
-        [request setValue:@"text/json" forHTTPHeaderField:@"Content-Type"];
-//        AFJSONRequestOperation *operation = [AFJSONRequestOperation ]
-        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^
-                                             (NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                                 [self hideActivityIndicator];
-                                                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:JSON];
-                                                 if ([[aDict objectForKey:@"Success"] boolValue]) {
-                                                     completion(aDict);
-                                                 }
-                                                 else {
-                                                     failure (nil, aDict);
-                                                 }
-                                             }failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                 [self hideActivityIndicator];
-                                                 failure (error, JSON);
-                                                 
-                                             }];
-        
-        [operation start];
-    }
-    else {
-        failure(nil, nil);
-        
-    }
-}
 
 #pragma mark Reachability
 
@@ -266,7 +357,7 @@
 }
 
 - (NSString *)appName {
-    return @"GoBoardPro";
+    return @"Connect2";
 }
 
 - (void)showActivityIndicator {
@@ -337,6 +428,28 @@
         }
     }
     
+}
+
+-(NSString *)getUTCDate:(NSDate *)aDate
+{
+    NSDate* datetime =aDate;
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]]; // Prevent adjustment to user's local time zone.
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
+    NSString* dateTimeInIsoFormatForUTCTimeZone = [dateFormatter stringFromDate:datetime];
+    return  dateTimeInIsoFormatForUTCTimeZone;
+}
+-(NSDate *)getLocalDate:(NSString *)aStrDate
+{
+    NSDateFormatter* aDateFormatter = [[NSDateFormatter alloc] init];
+    [aDateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]]; // Prevent adjustment to user's local time zone.
+    [aDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    NSDate *aDateUTC = [aDateFormatter dateFromString:aStrDate];
+    if (aDateUTC==nil) {
+        [aDateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
+        aDateUTC =[aDateFormatter dateFromString:aStrDate];
+    }
+    return aDateUTC;
 }
 
 

@@ -123,7 +123,9 @@
             [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
             [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
             if ([aDict[@"responseType"] isEqualToString:@"dropdown"]) {
-                NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name MATCHES[cd] %@", [aDict objectForKey:@"answer"]]] firstObject];
+                
+                NSPredicate *aPredicate =[NSPredicate predicateWithFormat:@"name ==[cd] %@", [aDict objectForKey:@"answer"]];
+                NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:aPredicate]firstObject];
                 [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
                 [dict setObject:resp[@"value"] forKey:@"ResponseId"];
             }
@@ -151,27 +153,44 @@
             [mutArrReq addObject:dict];
         }
     }
-    NSString *strUserId = @"", *strIDKeyName, *strIdValue, *strWebServiceName = @"";
-    if ([User checkUserExist]) {
-        strUserId = [[User currentUser] userId];
+    
+    
+    if (mutArrReq.count>0) {
+        NSString *strUserId = @"", *strIDKeyName, *strIdValue, *strWebServiceName = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        if (!_isSurvey) {
+            strIDKeyName = @"FormId";
+            strIdValue = [_objFormOrSurvey valueForKey:@"formId"];
+            strWebServiceName = FORM_HISTORY_POST;
+        }
+        else {
+            strIdValue = [_objFormOrSurvey valueForKey:@"surveyId"];
+            strIDKeyName = @"SurveyId";
+            strWebServiceName = SURVEY_HISTORY_POST;
+        }
+        
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+        NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
+        [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+            [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+        } failure:^(NSError *error, NSDictionary *response) {
+            [self saveDataToLocal:dictReq];
+        }];
+
     }
-    if (!_isSurvey) {
-        strIDKeyName = @"FormId";
-        strIdValue = [_objFormOrSurvey valueForKey:@"formId"];
-        strWebServiceName = FORM_HISTORY_POST;
+    else
+    {
+        if (!_isSurvey) {
+            alert(@"", @"Please enter some data to submit form");
+
+        }
+        else {
+            alert(@"", @"Please enter some data to submit survey");
+
+        }
     }
-    else {
-        strIdValue = [_objFormOrSurvey valueForKey:@"surveyId"];
-        strIDKeyName = @"SurveyId";
-        strWebServiceName = SURVEY_HISTORY_POST;
-    }
-    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
-    [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
-        [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
-    } failure:^(NSError *error, NSDictionary *response) {
-        [self saveDataToLocal:dictReq];
-    }];
 }
 
 - (void)saveDataToLocal:(NSDictionary*)aDict {

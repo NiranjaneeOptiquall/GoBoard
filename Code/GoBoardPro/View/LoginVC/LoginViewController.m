@@ -21,8 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
-    
-    [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
+    [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     [self initialUIConfig];
     gblAppDelegate.shouldHideActivityIndicator = NO;
@@ -108,6 +107,21 @@
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
         
         User *currentUser = [User currentUser];
+        currentUser.firstName = nil;
+        currentUser.lastName = nil;
+        currentUser.middleInitials = nil;
+        currentUser.email = nil;
+        currentUser.phone = nil;
+        currentUser.mobile = nil;
+        currentUser.userId = nil;
+        currentUser.clientId = nil;
+        currentUser.clientName = nil;
+        currentUser.termsAndConditions = nil;
+        currentUser.selectedFacility = nil;
+        currentUser.username = nil;
+        
+        currentUser.username = self.txtUserId.text;
+       
         currentUser.firstName = [response objectForKey:@"FirstName"];
         if ([[response objectForKey:@"MiddleInitial"] isKindOfClass:[NSNull class]]) {
             currentUser.middleInitials = @"";
@@ -148,6 +162,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
         [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        
+        _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+
 //            if (currentUser.isAdmin) {
 //                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
 //            }
@@ -227,7 +245,7 @@
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@",APPVERSION] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:APPVERSION] complition:^(NSDictionary *response)
     {
         
-        NSArray *arryCurrentVersion = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] componentsSeparatedByString:@"."];
+        NSArray *arryCurrentVersion = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] componentsSeparatedByString:@"."];
         NSArray *arryNewVersion = [[response objectForKey:@"Version"] componentsSeparatedByString:@"."];
         
         NSMutableString *mutbStr = [[NSMutableString alloc]init];

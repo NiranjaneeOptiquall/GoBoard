@@ -80,7 +80,7 @@
         
         NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
         
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         
         NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:destinationDate];
         [components setHour:0];
@@ -299,7 +299,10 @@
     NSIndexPath *indexPath = [self indexPathForCellSubView:btn];
     TaskTableViewCell *aCell = (TaskTableViewCell*)[_tblTaskList cellForRowAtIndexPath:indexPath];
     TaskList *aTask = mutArrFilteredTaskList[indexPath.row];
-    _lblPopOverTaskTitle.text = [aTask name];
+    
+//#warning Delete code when client approves
+
+  /*  _lblPopOverTaskTitle.text = [aTask name];
     _lblPopOverTaskLocation.text = [aTask location];
     _txvPopOverMessage.text = [aTask comment];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
@@ -326,7 +329,109 @@
     [popOverMessage setPopoverContentSize:_vwMessagePopOver.frame.size];
     CGRect frame = [aCell convertRect:aCell.btnKeyboardIcon.frame toView:_tblTaskList];
     frame = [_tblTaskList convertRect:frame toView:self.view];
-    [popOverMessage presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [popOverMessage presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];*/
+    
+//#warning edited by Imaginovation
+    
+    if ([aTask.isCompleted boolValue] == 0) {
+        _lblPopOverTaskTitle.text = [aTask name];
+        _lblPopOverTaskLocation.text = [aTask location];
+        _txvPopOverMessage.text = [aTask comment];
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"hh:mm a"];
+        [_lblPopOverTime setText:[aFormatter stringFromDate:[NSDate date]]];
+        
+        [_btnCommentAreaSupervisor setSelected:[aTask.isCommentAreaSupervisor boolValue]];
+        [_btnCommentBuildingSupervisor setSelected:[aTask.isCommentBuildingSupervisor boolValue]];
+        [_btnCommentGoBoardGroup setSelected:[aTask.isCommentGoBoardGroup boolValue]];
+        [_btnCommentTask setSelected:[aTask.isCommentTask boolValue]];
+        [_btnCommentWorkOrder setSelected:[aTask.isCommentWorkOrder boolValue]];
+        
+        editingIndex = indexPath.row;
+        if (popOverMessage) {
+            [popOverMessage dismissPopoverAnimated:NO];
+            popOverMessage.contentViewController.view = nil;
+            popOverMessage = nil;
+        }
+        UIViewController *viewController = [[UIViewController alloc] init];
+        viewController.view = _vwMessagePopOver;
+        popOverMessage = [[UIPopoverController alloc] initWithContentViewController:viewController];
+        viewController = nil;
+        [popOverMessage setDelegate:self];
+        [popOverMessage setPopoverContentSize:_vwMessagePopOver.frame.size];
+        CGRect frame = [aCell convertRect:aCell.btnKeyboardIcon.frame toView:_tblTaskList];
+        frame = [_tblTaskList convertRect:frame toView:self.view];
+        [popOverMessage presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+//#warning edited by Imaginovation
+        
+    }else{
+        
+        
+        float height=[aTask.comment boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.height;
+        
+        
+        float heightTaskTitle=[aTask.name boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblDetailTitle.font} context:nil].size.height;
+        
+        CGRect frameTitle = _lblDetailTitle.frame;
+        frameTitle.size.height = heightTaskTitle;
+        _lblDetailTitle.frame = frameTitle;
+        [_lblDetailTitle setText:aTask.name];
+        
+        
+        CGRect frame = _lblDetailDesc.frame;
+        frame.origin.y = heightTaskTitle + 10;
+        frame.size.height = height;
+        _lblDetailDesc.frame = frame;
+        [_lblDetailDesc setText:aTask.desc];
+        
+        
+        if (aTask.comment) {
+            [_lblDetailDesc setText:aTask.comment];
+        }else {
+            [_lblDetailDesc setText:@""];
+        }
+       // [_lblDetailDesc sizeToFit];
+        [_lblLocation setText:aTask.location];
+        
+        frame=_lblLocation.frame;
+        frame.origin.y=CGRectGetMaxY(_lblDetailDesc.frame) + 8;
+        _lblLocation.frame=frame;
+        
+        
+        
+        frame = _vwDetailPopOver.frame;
+        frame.size.height = CGRectGetMaxY(_lblLocation.frame) + 18;
+        frame.size.width = 470;
+        _vwDetailPopOver.frame = frame;
+//        if (popOver) {
+//            [popOver dismissPopoverAnimated:NO];
+//            popOver.contentViewController.view = nil;
+//            popOver = nil;
+//        }
+        
+        UIViewController *viewController = [[UIViewController alloc] init];
+        viewController.view = _vwDetailPopOver;
+        viewController.view.backgroundColor = [UIColor clearColor];
+        CGRect aNewframe = [aCell convertRect:btn.frame toView:_tblTaskList];
+         aNewframe = [_tblTaskList convertRect:aNewframe toView:self.view];
+ 
+        viewController.modalPresentationStyle = UIModalPresentationPopover;
+        viewController.transitioningDelegate = self;
+        viewController.popoverPresentationController.sourceView = self.view;
+        viewController.popoverPresentationController.sourceRect = aNewframe;
+        viewController.preferredContentSize = CGSizeMake(500, frame.size.height);
+
+        viewController.popoverPresentationController.delegate = self;
+        [self presentViewController:viewController animated:YES completion:nil];
+
+      
+    }
+}
+
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    popoverPresentationController = nil;
 }
 #pragma mark - Methods
 
@@ -347,6 +452,8 @@
     [allTask setSortDescriptors:@[descriptor, sortBySequence]];
     
     mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
+    
+    
     
     NSDate* sourceDate = [NSDate date];
     
@@ -412,9 +519,10 @@
     
     
     NSDate* sourceDate = task.taskDateTime;
+    
     NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
     NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
-    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:[NSDate date]];
     NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
     NSTimeInterval interval = sourceGMTOffset - destinationGMTOffset ;
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
@@ -474,13 +582,22 @@
                                 range:NSMakeRange(0, [attributeString length])];
         [aCell.lblTask setAttributedText:attributeString];
         [aCell.lblTask setTextColor:[UIColor lightGrayColor]];
-        [aCell.btnKeyboardIcon setHidden:YES];
+      //  [aCell.btnKeyboardIcon setHidden:YES];
+//#warning edited by Imaginovation
+//#warning btnkeyboard icon gray here
+        [aCell.btnKeyboardIcon setImage:[UIImage imageNamed:@"keyboard_icon_large@2x.png"] forState:UIControlStateNormal];
+        aCell.btnKeyboardIcon.hidden = [task.comment stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0?NO:YES;
     }
     else {
+        
+//#warning edited by Imaginovation
+        [aCell.btnKeyboardIcon setImage:[UIImage imageNamed:@"keyboard_icon@2x.png"] forState:UIControlStateNormal];
+        
         [aCell.lblTask setAttributedText:nil];
         [aCell.lblTask setText:aStrTaskName];
         [aCell.lblTask setTextColor:[UIColor darkGrayColor]];
-        [aCell.btnKeyboardIcon setHidden:NO];
+        aCell.btnKeyboardIcon.hidden = NO;
+        
         if ([task.responseType isEqualToString:@"checkbox"]) {
             [aCell.btnCheckBox setHidden:NO];
             [aCell.btnCheckBox setUserInteractionEnabled:YES];
@@ -594,7 +711,17 @@
 
     float height=[task.desc boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.height;
     
+    
+    float heightTaskTitle=[task.name boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblDetailTitle.font} context:nil].size.height;
+    
+    CGRect frameTitle = _lblDetailTitle.frame;
+    frameTitle.size.height = heightTaskTitle;
+    _lblDetailTitle.frame = frameTitle;
+    [_lblDetailTitle setText:task.name];
+    
+    
     CGRect frame = _lblDetailDesc.frame;
+    frame.origin.y = heightTaskTitle + 10;
     frame.size.height = height;
     _lblDetailDesc.frame = frame;
     [_lblDetailDesc setText:task.desc];

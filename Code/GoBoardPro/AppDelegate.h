@@ -35,6 +35,7 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 @property (assign, nonatomic) BOOL isAdmin;
 @property (assign, nonatomic) BOOL isProduction;
 @property (assign, nonatomic) BOOL isPortrait;
+@property (assign, nonatomic) int teamLogCountAfterLogin;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
@@ -45,6 +46,10 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 - (void)callWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure;
 - (void)showActivityIndicator;
 - (void)hideActivityIndicator;
+-(void)showSimpleAlertWithMessage:(NSString *)aStrMessage;
+- (void)callAsynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure;
+-(NSString *)getUTCDate:(NSDate *)aDate;
+-(NSDate *)getLocalDate:(NSString *)aStrDate;
 @end
 
 

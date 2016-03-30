@@ -20,7 +20,10 @@
 #import "UIDevice+Rotation.h"
 AppDelegate *gblAppDelegate;
 
-#define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
+//#define alert(title, msg)              [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show]
+
+#define alert(title, msg) [gblAppDelegate showSimpleAlertWithMessage:msg];
+
 
 #define ITUENS_APPLINK @"https://itunes.apple.com/us/app/goboardpro/id941499495"
 
@@ -76,18 +79,23 @@ typedef enum : NSUInteger {
 #define MEMO                        @"Memo"
 #define DAILY_MATRICS               @"DailyMetrics"
 #define DAILY_LOG                   @"DailyLog"
+#define TEAM_LOG                    @"DailyLog/PostDailyLog"
+#define POSTCOMMENTS                @"DailyLogTeam/PostDailyLogTeamDetail"
 #define ADMIN_TASK_LIST             @"AdminTaskList"
 #define HOME_SCREEN_MODULES         @"HomeScreenModules"
 #define APPVERSION                  @"AppVersion"
+#define CLIENT_POSITIONS             @"UserFacility/GetFacilitesByUser"
+
+
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET",CLIENT_POSITIONS:@"GET"}
 
 
 
-#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET"}
 
 
-
-
-
+#define kScreenBounds                           ([[UIScreen mainScreen] bounds])
+#define kScreenWidth                            (kScreenBounds.size.width)
+#define kScreenHeight                           (kScreenBounds.size.height)
 
 
 #define MSG_REQUIRED_FIELDS         @"Please complete all required fields."
@@ -96,12 +104,15 @@ typedef enum : NSUInteger {
 #define MSG_LOGIN_FAILURE           @"Email id or password does not match, Please check your email id or password"
 #define MSG_NO_INTERNET             @"Please make sure you have an Internet connection and try again."
 #define MSG_SERVICE_FAIL            @"An unexpected error occurred.  Please try again.  If the issue persists, please contact support."
-#define MSG_ADDED_TO_SYNC           @"Your information was saved locally.  Please sync from the Home screen to upload the information to GoBoard once you have an Internet connection."
+//#define MSG_ADDED_TO_SYNC           @"Your information was saved locally.  Please sync from the Home screen to upload the information to GoBoard once you have an Internet connection."
+#define  MSG_ADDED_TO_SYNC          @"You appear to be working offline. Your information was saved locally.Please Sync from the Home Screen to upload the information to your web portal once you have an internet connection."
 #define MSG_NEWVERSION              @"There is a newer version of the app, please visit the app store to download the latest version"
 #endif
 
 
-#ifdef DEBUG
+//#define DEBUG_LOG
+
+#ifdef DEBUG_LOG
 #define NSLog(...) NSLog(__VA_ARGS__)
 #else
 #define NSLog(...)

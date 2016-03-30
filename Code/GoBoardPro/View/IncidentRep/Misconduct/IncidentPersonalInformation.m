@@ -704,7 +704,7 @@
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
         
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        [library saveImage:_imgIncidentPerson toAlbum:@"GoBoard Pro" withCompletionBlock:^(NSError *error) {
+        [library saveImage:_imgIncidentPerson toAlbum:@"Connect2" withCompletionBlock:^(NSError *error) {
             if (error!=nil)
             {
                 NSLog(@"error: %@", [error description]);

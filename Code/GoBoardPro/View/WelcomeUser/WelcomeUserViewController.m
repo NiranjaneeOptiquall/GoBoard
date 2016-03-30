@@ -20,6 +20,8 @@
     [_txtLocation setEnabled:NO];
     [_txtPosition setEnabled:NO];
     [self getUserFacilities];
+    [self.lblVersion setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
+
     // Do any additional setup after loading the view.
 }
 

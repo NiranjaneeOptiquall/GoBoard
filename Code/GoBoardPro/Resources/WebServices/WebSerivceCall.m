@@ -39,7 +39,12 @@
 #import "SurveyResponseTypeValues.h"
 #import "FormsList.h"
 
+#import "TeamLog.h"
+#import "TeamSubLog.h"
+#import "TeamLogTrace.h"
 
+#import "ClientPositions.h"
+#import "NSDictionary+NullReplacement.h"
 
 @implementation WebSerivceCall
 
@@ -67,6 +72,8 @@
     [self callServiceForForms:YES complition:nil];
     //[self callServiceForSop:YES complition:nil];
     [self callServiceForSurvey:YES complition:nil];
+    [self callServiceForTeamLog:YES complition:nil];
+    [self callServiceForAllClienntPositions:YES complition:nil];
    
 }
 
@@ -387,7 +394,8 @@
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         aList.sequence = [aDict objectForKey:@"Sequence"];
         aList.location = [aDict objectForKey:@"Location"];
-        
+//#warning edited by Imaginovation
+        aList.comment = [aDict objectForKey:@"Comment"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
@@ -637,6 +645,8 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
 }
+
+
 
 - (void)insertAccidentReportSettings:(NSMutableDictionary*)aDict {
     AccidentReportInfo *report = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportInfo" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -1075,7 +1085,7 @@
 
 - (void)callServiceForMemos:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@", MEMO, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+    [gblAppDelegate callAsynchronousWebService:[NSString stringWithFormat:@"%@?userId=%@", MEMO, [[User currentUser] userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         gblAppDelegate.mutArrMemoList = [response objectForKey:@"Memos"];
         isWSComplete = YES;
         if (completion)
@@ -1092,4 +1102,238 @@
         }
     }
 }
+
+#pragma mark - Team Log
+
+
+- (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
+  //  NSString *aStrPositionID = [self getPositionsID];
+    NSString *aStrUserID = [[User currentUser]userId];
+    
+    NSString *aStrURL = [NSString stringWithFormat:@"%@?userId=%@&facilityId=%@&positionIds=&isTeamLog=True",DAILY_LOG,aStrUserID,aStrFacilityID];
+    
+    [gblAppDelegate callAsynchronousWebService:aStrURL parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        [self deleteAllTeamLogs];
+        
+        NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"IsTeamLog==%@",[NSNumber numberWithBool:YES]];
+        NSArray *aFilteredArray = [response[@"DailyLogs"] filteredArrayUsingPredicate:aPredicate];
+        [self insertTeamLog:aFilteredArray];
+        [self updateLogCountInDashboard];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+- (void)callServiceForTeamLogInBackground:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition {
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
+ //   NSString *aStrPositionID = [self getPositionsID];
+    NSString *aStrUserID = [[User currentUser]userId];
+    
+    NSString *aStrURL = [NSString stringWithFormat:@"%@?userId=%@&facilityId=%@&positionIds=&isTeamLog=True",DAILY_LOG,aStrUserID,aStrFacilityID];
+    
+    [gblAppDelegate callAsynchronousWebService:aStrURL parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+       
+     
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+-(NSString *)getPositionsID
+{
+    NSMutableString *aStrSelectedPositions = [NSMutableString stringWithString:@""];;
+    for (UserPosition *aObj in [[User currentUser]mutArrSelectedPositions])
+    {
+        [aStrSelectedPositions appendFormat:@"%@,",aObj.value];
+    }
+    NSString *aStrID;
+    if (aStrSelectedPositions.length>2) {
+        aStrID = [aStrSelectedPositions substringWithRange:NSMakeRange(0, aStrSelectedPositions.length-1)];
+        return aStrID;
+    }
+    else
+        return @"";
+    
+}
+- (void)deleteAllTeamLogs {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(shouldSync != 1 OR (ANY teamSubLog.shouldSync != 1))"]];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+-(void)updateLogCountInDashboard
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLogTrace"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"userId==[cd]%@",[[User currentUser]userId]]];
+    NSArray *aArrLogs = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    if (aArrLogs.count>0)
+    {
+        TeamLogTrace *aTeamLogTraceObj = aArrLogs[0];
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+        [request setPredicate:[NSPredicate predicateWithFormat:@"teamLogId > %@",aTeamLogTraceObj.teamLogId]];
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"teamLogId" ascending:NO]];
+        
+        NSArray *aArrayTeamLogs  =[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+        if (aArrayTeamLogs.count>0) {
+            gblAppDelegate.teamLogCountAfterLogin = aArrayTeamLogs.count;
+            
+            TeamLog *aTeamLog = aArrayTeamLogs[0];
+            aTeamLogTraceObj.userId= [[User currentUser]userId];
+            aTeamLogTraceObj.byuserId = aTeamLog.userId;
+            aTeamLogTraceObj.date = aTeamLog.date;
+            aTeamLogTraceObj.teamLogId  = aTeamLog.teamLogId;
+            [gblAppDelegate.managedObjectContext save:nil];
+
+        }
+        else
+            gblAppDelegate.teamLogCountAfterLogin = 0;
+        
+    }
+    else
+    {
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+        
+        request.fetchLimit = 1;
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"teamLogId" ascending:NO]];
+        NSArray *aArrayTeamLogs  =[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+        if (aArrayTeamLogs.count>0) {
+            TeamLogTrace *aTeamLogTraceObj = (TeamLogTrace *)[NSEntityDescription
+                                                              insertNewObjectForEntityForName:@"TeamLogTrace" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            
+            TeamLog *aTeamLog = aArrayTeamLogs[0];
+            aTeamLogTraceObj.userId= [[User currentUser]userId];
+            aTeamLogTraceObj.byuserId = aTeamLog.userId;
+            aTeamLogTraceObj.date = aTeamLog.date;
+            aTeamLogTraceObj.teamLogId  = aTeamLog.teamLogId;
+            
+            [gblAppDelegate.managedObjectContext save:nil];
+        }
+    }
+}
+
+
+- (void)insertTeamLog:(NSArray*)array {
+    for (NSDictionary *aDict in array) {
+        
+        [aDict dictionaryByReplacingNullsWithBlanks];
+        
+        TeamLog *aTeamLogObj = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aTeamLogObj.facilityId = [aDict[@"FacilityId"] stringValue];
+        aTeamLogObj.positionId = [aDict[@"PositionId"] stringValue];
+        aTeamLogObj.teamLogId =aDict[@"Id"];
+       
+        aTeamLogObj.userId = [aDict[@"UserId"] stringValue];
+        NSArray *aArrDailLog =aDict[@"DailyLogDetails"];
+        NSMutableDictionary *aMutDictLogDetails =aArrDailLog[0];
+        
+        aMutDictLogDetails = [aMutDictLogDetails dictionaryByReplacingNullsWithBlanks];
+        aTeamLogObj.desc = aMutDictLogDetails[@"Description"];
+        aTeamLogObj.username = aMutDictLogDetails[@"UserName"];
+        
+        aTeamLogObj.date =[gblAppDelegate getLocalDate:aMutDictLogDetails[@"Date"]];
+        aTeamLogObj.shouldSync = [NSNumber numberWithInt:0];
+        NSArray *aArrDailLogDetails =aDict[@"DailyLogTeamDetails"];
+
+        for (NSDictionary *aSubDict in aArrDailLogDetails) {
+            
+            NSMutableDictionary *aMutDictFiltered = [aSubDict dictionaryByReplacingNullsWithBlanks];
+
+            TeamSubLog *aTeamSubLogObj = (TeamSubLog *)[NSEntityDescription insertNewObjectForEntityForName:@"TeamSubLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            
+            aTeamSubLogObj.desc = aMutDictFiltered[@"Description"];
+           
+            aTeamSubLogObj.date =[gblAppDelegate getLocalDate:aSubDict[@"Date"]];
+            aTeamSubLogObj.userId = [aMutDictFiltered[@"UserId"]stringValue];
+            aTeamSubLogObj.username =aMutDictFiltered[@"UserName"];
+            aTeamSubLogObj.shouldSync = [NSNumber numberWithInt:0];
+
+            [aTeamLogObj addTeamSubLogObject:aTeamSubLogObj];
+            
+        }
+    }
+    
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+#pragma mark - Client Positions
+
+- (void)callServiceForAllClienntPositions:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+    __block BOOL isWSComplete = NO;
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=0", CLIENT_POSITIONS, aStrClientId, strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:CLIENT_POSITIONS] complition:^(NSDictionary *response) {
+        [self deleteAllPositions];
+        [self insertPositions:[response objectForKey:@"FacilityPositions"]];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+}
+
+
+- (void)deleteAllPositions {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"ClientPositions"];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+- (void)insertPositions:(NSArray*)array {
+    for (NSDictionary *aDict in array) {
+        ClientPositions *aClientPosition = [NSEntityDescription insertNewObjectForEntityForName:@"ClientPositions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aClientPosition.name = aDict[@"Name"];
+        aClientPosition.positionId = aDict[@"Id"];
+
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+
+
 @end

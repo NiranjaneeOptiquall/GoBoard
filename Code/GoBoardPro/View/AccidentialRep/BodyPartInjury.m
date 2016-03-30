@@ -96,7 +96,7 @@
     }
     
     NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES %@", @"name", _txtEnjuryType.text];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"name", _txtEnjuryType.text];
     if ([_btnGeneralInjury isSelected]) {
         [aDict setObject:[NSString stringWithFormat:@"%ld", (long)_btnGeneralInjury.tag] forKey:@"nature"];
         NSArray *ary = [[_parentVC.reportSetupInfo.generalInjuryType allObjects] filteredArrayUsingPredicate:predicate];

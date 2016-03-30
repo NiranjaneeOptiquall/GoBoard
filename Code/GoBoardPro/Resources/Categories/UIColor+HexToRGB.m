@@ -11,9 +11,15 @@
 @implementation UIColor (HexToRGB)
 
 + (UIColor *)colorWithHexCodeString:(NSString*)hexCode {
-    const char *cStr = [hexCode cStringUsingEncoding:NSASCIIStringEncoding];
-    long x = strtol(cStr+1, NULL, 16);
-    return [UIColor colorWithHex:x alpha:1.0];
+    
+    if (hexCode!=nil) {
+        const char *cStr = [hexCode cStringUsingEncoding:NSASCIIStringEncoding];
+        long x = strtol(cStr+1, NULL, 16);
+        return [UIColor colorWithHex:(UInt32)x alpha:1.0];
+    }
+    else
+       return [UIColor clearColor];
+    
 }
 
 + (UIColor *)colorWithHex:(UInt32)col alpha:(float)alpha{

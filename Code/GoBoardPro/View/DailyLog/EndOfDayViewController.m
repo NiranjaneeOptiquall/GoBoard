@@ -46,21 +46,52 @@
         return;
     }
     NSMutableArray *mutAryLogs = [NSMutableArray array];
-    for (DailyLog *aLog in mutArrDailyList) {
-        [mutAryLogs addObject:@{@"Date":aLog.date, @"Description":aLog.desc, @"IncludeInEndOfDayReport": aLog.includeInEndOfDayReport}];
-    }
-    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
-    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    NSDictionary *aDict = @{@"UserId":[[User currentUser] userId], @"Date":[aFormatter stringFromDate:[NSDate date]], @"DailyLogDetails":mutAryLogs};
-    [gblAppDelegate callWebService:DAILY_LOG parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_LOG] complition:^(NSDictionary *response) {
-        for (DailyLog *aLog in mutArrDailyList) {
-            [gblAppDelegate.managedObjectContext deleteObject:aLog];
+    
+    
+    NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"IncludeInEndOfDayReport == %@",@"true"];
+    NSArray *aArrFiltered = [mutArrDailyList filteredArrayUsingPredicate:aPredicate];
+    if (aArrFiltered.count>0)
+    {
+#warning updateted array
+        /*
+        / Change By VA
+        */
+        
+        
+        for (DailyLog *aLog in aArrFiltered) {
+            NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+            [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
+            NSString *aStrName = [[User currentUser]username];
+            
+            [mutAryLogs addObject:@{@"Date":[gblAppDelegate getUTCDate:aLog.date],@"UserId":[[User currentUser] userId],  @"Description":aLog.desc, @"IncludeInEndOfDayReport": aLog.includeInEndOfDayReport,@"UserName":aStrName,@"Id":@"0"}];
         }
-        [gblAppDelegate.managedObjectContext save:nil];
-        [[[UIAlertView alloc] initWithTitle:gblAppDelegate.appName message:@"Daily log has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-    } failure:^(NSError *error, NSDictionary *response) {
-    }];
+        
+        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+        [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+        //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        NSDictionary *aDict = @{@"UserId":[[User currentUser] userId],
+                                @"Date":[gblAppDelegate getUTCDate:[NSDate date]],
+                                @"DailyLogDetails":mutAryLogs,
+                                @"Id":@"0",
+                                @"FacilityId":[[User currentUser]selectedFacility].value,
+                                @"PositionId":@"0",
+                                @"IsTeamLog":[NSNumber numberWithBool:NO],
+                                @"IsAlwaysVisible":[NSNumber numberWithBool:NO]};
+        
+        [gblAppDelegate callWebService:DAILY_LOG parameters:aDict httpMethod:[SERVICE_HTTP_METHOD objectForKey:DAILY_LOG] complition:^(NSDictionary *response) {
+            for (DailyLog *aLog in mutArrDailyList) {
+                [gblAppDelegate.managedObjectContext deleteObject:aLog];
+            }
+            [gblAppDelegate.managedObjectContext save:nil];
+            [[[UIAlertView alloc] initWithTitle:gblAppDelegate.appName message:@"Daily log has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        } failure:^(NSError *error, NSDictionary *response) {
+        }];
+
+    }
+    else
+    {
+        alert(@"", @"Please add a log entry to submit a report.");
+    }
     
 }
 
@@ -79,7 +110,7 @@
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
     //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    aLog.date = [aFormatter stringFromDate:[NSDate date]];
+    aLog.date = [NSDate date];
     aLog.includeInEndOfDayReport = @"false";
     aLog.shouldSync = [NSNumber numberWithBool:NO];
     [gblAppDelegate.managedObjectContext insertObject:aLog];
@@ -94,6 +125,9 @@
     [_tblDailyLog scrollToRowAtIndexPath:aIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
     _txtDescription.text = @"";
+    
+    [_lblNoRecords setHidden:YES];
+
     
 }
 
@@ -124,6 +158,8 @@
     if ([mutArrDailyList count] == 0) {
         [_lblNoRecords setHidden:NO];
     }
+    else
+        [_lblNoRecords setHidden:YES];
 }
 
 #pragma mark - UITableView DataSource
@@ -138,7 +174,11 @@
     UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
     UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-    NSArray *aryDateComp = [log.date componentsSeparatedByString:@" "];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
+
+    NSArray *aryDateComp = [[aFormatter stringFromDate:log.date] componentsSeparatedByString:@" "];
+    
     [aLblTime setText:[NSString stringWithFormat:@"%@ %@", aryDateComp[1], aryDateComp[2]]];
     [aLblLog setText:log.desc];
     

@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSString *password;
 @property (assign, nonatomic) BOOL isAdmin;
 @property (strong, nonatomic) NSString *userId;
+@property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSString *clientId;
 @property (strong, nonatomic) NSString *clientName;
 @property (strong, nonatomic) NSString *termsAndConditions;
