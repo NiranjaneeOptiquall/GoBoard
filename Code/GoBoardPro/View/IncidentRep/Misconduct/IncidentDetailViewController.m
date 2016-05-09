@@ -413,7 +413,7 @@
     NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];
     NSArray *aryFields = [fields valueForKeyPath:@"name"];
     if ([aryFields containsObject:@"firstName"]) [_markerEmpFName setHidden:NO];
-    if ([aryFields containsObject:@"middleInital"]) [_markerEmpMI setHidden:NO];
+    if ([aryFields containsObject:@"middleInitial"]) [_markerEmpMI setHidden:NO];
     if ([aryFields containsObject:@"lastName"]) [_markerEmpLName setHidden:NO];
     if ([aryFields containsObject:@"phone"]) [_markerEmpPhone setHidden:NO];
     if ([aryFields containsObject:@"alternatePhone"]) [_markerEmpAltPhone setHidden:NO];
@@ -1224,7 +1224,7 @@
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }
-    else if ([aryFields containsObject:@"middleInital"] && [_txtEmpMI isTextFieldBlank]) {
+    else if ([aryFields containsObject:@"middleInitial"] && [_txtEmpMI isTextFieldBlank]) {
         success = NO;
         alert(@"", MSG_REQUIRED_FIELDS);
     }

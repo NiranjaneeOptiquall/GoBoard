@@ -39,7 +39,9 @@
     [Crittercism setAsyncBreadcrumbMode:YES]; */
     
     
-    
+    CGRect aRect = [[UIScreen mainScreen]bounds];
+    NSString *aStrRect = NSStringFromCGRect(aRect);
+    NSLog(@"Frame:%@", aStrRect);
     
     _shouldHideActivityIndicator = YES;
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"SettingsIsProduction"]) {

@@ -167,7 +167,7 @@
     //if ([requiredFields containsObject:@"memberId"] || [requiredFields containsObject:@"driverLicenseNumber"] || [requiredFields containsObject:@"employeeId"]) [_markerMemberId setHidden:NO];
     if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
-    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"middleInitial"]) [_markerMI setHidden:NO];
     if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
     if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
     if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];

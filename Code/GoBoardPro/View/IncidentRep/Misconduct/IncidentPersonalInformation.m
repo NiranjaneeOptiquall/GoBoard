@@ -208,7 +208,7 @@
     if ([requiredFields containsObject:@"memberId"]) [_markerMemberId setHidden:NO];
     if ([requiredFields containsObject:@"employeePosition"]) [_markerEmployeeTitle setHidden:NO];
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
-    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"middleInitial"]) [_markerMI setHidden:NO];
     if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
     if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
     if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
@@ -676,16 +676,21 @@
         [sender setText:value];
     }
     else {
-        [sender setText:[value valueForKey:@"name"]];
         if (sender == _txtActionTaken) {
-            ActionTakenList *aTask = (ActionTakenList *) value;
             
-            NSLog(@"%d",aTask.emergencyPersonnel.boolValue);
             
-            if (aTask.emergencyPersonnel.boolValue)
+            if (_txtActionTaken.text.length==0) {
+                ActionTakenList *aTask = (ActionTakenList *) value;
                 
-                [self addEmergencyPersonnel];
+                NSLog(@"%d",aTask.emergencyPersonnel.boolValue);
+                
+                if (aTask.emergencyPersonnel.boolValue)
+                    
+                    [self addEmergencyPersonnel];
+            }
             
+            [sender setText:[value valueForKey:@"name"]];
+
         }
     }
 }

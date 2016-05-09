@@ -35,7 +35,7 @@
 - (void)setRequiredFields:(NSArray*)fields {
     requiredFields = fields;
     if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
-    if ([requiredFields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([requiredFields containsObject:@"middleInitial"]) [_markerMI setHidden:NO];
     if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
     if ([requiredFields containsObject:@"phone"]) [_markerPhone setHidden:NO];
     if ([requiredFields containsObject:@"911called"]) [_marker911Called setHidden:NO];

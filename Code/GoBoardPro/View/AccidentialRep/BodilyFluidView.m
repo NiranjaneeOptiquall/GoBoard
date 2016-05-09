@@ -141,7 +141,7 @@
 
 - (void)setRequiredFields:(NSArray*)fields {
     if ([fields containsObject:@"firstName"]) [_markerFName setHidden:NO];
-    if ([fields containsObject:@"middleInital"]) [_markerMI setHidden:NO];
+    if ([fields containsObject:@"middleInitial"]) [_markerMI setHidden:NO];
     if ([fields containsObject:@"lastName"]) [_markerLName setHidden:NO];
     if ([fields containsObject:@"position"]) [_markerPosition setHidden:NO];
 }
