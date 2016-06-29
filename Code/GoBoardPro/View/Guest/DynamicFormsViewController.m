@@ -104,18 +104,42 @@
 
 - (IBAction)btnSubmitTapped:(id)sender {
     [self.view endEditing:YES];
+   
+    
     NSMutableArray *mutArrReq = [NSMutableArray array];
     for (NSDictionary *aDict in mutArrQuestions) {
         if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
+            
+            int i=0;
+             NSMutableString *strTemp=[[NSMutableString alloc]init];
+            
             // create separate entry for each option selected. So if 2 options are selected then two entries of same question will be there with different response.
             NSArray *arySelectedOptions = [aDict[@"responseList"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isSelected == YES"]];
             for (NSDictionary *dictResponse in arySelectedOptions) {
                 NSMutableDictionary *dict = [NSMutableDictionary dictionary];
                 [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
                 [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
-                [dict setObject:dictResponse[@"name"] forKey:@"ResponseText"];
-                [dict setObject:dictResponse[@"value"] forKey:@"ResponseId"];
-                [mutArrReq addObject:dict];
+                
+                
+                if([arySelectedOptions valueForKey:@"isSelected"])
+                {
+                    
+                    [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                    i++;
+                    
+                }
+                
+                if(i==arySelectedOptions.count)
+                {
+                 
+                    [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
+                    [dict setValue:strTemp forKey:@"ResponseText"];
+                    [dict setObject:dictResponse[@"value"] forKey:@"ResponseId"];
+                    [mutArrReq addObject:dict];
+                }
+                
+        
+                
             }
         }
         else if (![aDict[@"answer"] isEqualToString:@""]) {
@@ -264,7 +288,18 @@
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
-    [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
+ [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
+    
+ // aCell.lblQuestion.text=@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been simply dummy text of the printing ";
+    
+    CGSize maximumLabelSize = CGSizeMake(654, 50);
+    
+    CGSize expectedLabelSize = [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
+    CGRect newFrame = aCell.lblQuestion.frame;
+    newFrame.size.height = expectedLabelSize.height;
+    aCell.lblQuestion.frame = newFrame;
+    
+
     [aCell.btnCheckMark setHidden:YES];
     [aCell.btnCheckMark addTarget:self action:@selector(btnCheckMarkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.vwTextArea setHidden:YES];
@@ -291,6 +326,7 @@
             strSelectedImageName = @"selected_check_box.png";
         }
         float x = 0, y = 0, width = 44;
+        
         NSInteger index = 0;
         for (NSDictionary *dict in [aDict objectForKey:@"responseList"]) {
             
@@ -453,6 +489,7 @@
 }
 
 
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
         return YES;
@@ -460,7 +497,7 @@
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:currentIndex];
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
         
-        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
         if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
             return NO;
         }
@@ -545,4 +582,7 @@
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+
+
+
 @end
