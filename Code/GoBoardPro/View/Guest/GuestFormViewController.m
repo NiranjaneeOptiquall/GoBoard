@@ -184,7 +184,7 @@
     }
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-    [aLbl setText:[obj valueForKey:@"name"]];
+    [aLbl setText:[obj valueForKey:@"Name"]];
     //UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
     //[aLblInstruction setText:[obj valueForKey:@"instructions"]];
     //[aLblInstruction sizeToFit];
@@ -202,6 +202,8 @@
 //    typeId 1 = Link: sends user to the provided URL and open it in native browser
 //    typeId 2 = Form: displays form within the app
 //    typeId 2 = Make A Suggestion: displays form within the app
+    NSLog(@"%@",[mutArrFormList objectAtIndex:indexPath.row]);
+    
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     if ([[obj valueForKey:@"typeId"] integerValue] == 1) {
 //        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[obj valueForKey:@"link"]]]) {

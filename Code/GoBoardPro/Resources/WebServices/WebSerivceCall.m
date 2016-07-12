@@ -962,6 +962,9 @@
         if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
             for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
                 SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                
+
+                 aQuestion.mandatory=[[dictQuest objectForKey:@"IsMandatory"] stringValue];
                 aQuestion.questionId = [[dictQuest objectForKey:@"Id"] stringValue];
                 aQuestion.question = [dictQuest objectForKey:@"Question"];
                 aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
@@ -972,8 +975,10 @@
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];
+                        //
                         responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
                         responseType.question = aQuestion;
+                        //responseType.mandatory=aQuestion;
                         [responseTypeSet addObject:responseType];
                     }
                 }
@@ -1053,6 +1058,9 @@
         if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
             for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
                 SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                
+                
+                aQuestion.mandatory=[[dictQuest objectForKey:@"IsMandatory"] stringValue];
                 aQuestion.questionId = [[dictQuest objectForKey:@"Id"] stringValue];
                 aQuestion.question = [dictQuest objectForKey:@"Question"];
                 aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];

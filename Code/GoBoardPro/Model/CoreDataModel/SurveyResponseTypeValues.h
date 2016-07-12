@@ -18,4 +18,5 @@
 @property (nonatomic, retain) NSString * sequence;
 @property (nonatomic, retain) SurveyQuestions *question;
 
+
 @end

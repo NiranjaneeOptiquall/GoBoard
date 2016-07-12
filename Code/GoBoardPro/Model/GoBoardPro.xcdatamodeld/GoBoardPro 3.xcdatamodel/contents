@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -510,6 +510,7 @@
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="survey" inverseEntity="SurveyQuestions" syncable="YES"/>
     </entity>
     <entity name="SurveyQuestions" representedClassName="SurveyQuestions" syncable="YES">
+        <attribute name="mandatory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="questionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
@@ -623,12 +624,13 @@
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="RightArmInjuryList" positionX="106" positionY="860" width="128" height="103"/>
         <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
+        <element name="SopCategory" positionX="-693" positionY="-592" width="128" height="208"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="118"/>
         <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
         <element name="SurveyList" positionX="-738" positionY="657" width="128" height="163"/>
-        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="133"/>
+        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="165"/>
         <element name="SurveyResponseTypeValues" positionX="-675" positionY="1103" width="128" height="103"/>
         <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-616" width="128" height="103"/>
@@ -637,6 +639,5 @@
         <element name="UserPosition" positionX="-189" positionY="-826" width="128" height="88"/>
         <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="178"/>
         <element name="Witness" positionX="520" positionY="-52" width="128" height="195"/>
-        <element name="SopCategory" positionX="-693" positionY="-592" width="128" height="208"/>
     </elements>
 </model>

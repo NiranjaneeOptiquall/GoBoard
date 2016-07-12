@@ -23,6 +23,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
+    
+  //  NSString *str=[_objFormOrSurvey valueForKey:@"question"];
     if ([[_objFormOrSurvey valueForKey:@"instructions"] isEqualToString:@""]) {
         [_lblInstruction setText:@"No instructions available."];
 
@@ -44,6 +46,7 @@
     mutArrQuestions = [[NSMutableArray alloc] init];
     for (SurveyQuestions *question in array) {
         NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
+        [aDict setObject:[question valueForKey:@"mandatory"] forKey:@"isMandatory"];
         [aDict setObject:[question valueForKey:@"question"] forKey:@"question"];
         [aDict setObject:[question valueForKey:@"questionId"] forKey:@"questionId"];
         [aDict setObject:[question valueForKey:@"responseType"] forKey:@"responseType"];
@@ -105,9 +108,28 @@
 - (IBAction)btnSubmitTapped:(id)sender {
     [self.view endEditing:YES];
    
-    
     NSMutableArray *mutArrReq = [NSMutableArray array];
+    NSMutableArray *isManArray=[NSMutableArray new]; // For Storing  mandatory question value
+    
+    
+    int intVal=0;// Varaible used for replacing "NO" atIndexPath
+    BOOL flag=NO;
+    
+    
+    for(int i=0;i<mutArrQuestions.count;i++)
+    {
+        if([[[mutArrQuestions valueForKey:@"isMandatory"]objectAtIndex:i]boolValue])
+        {
+            [isManArray addObject:@"YES"];
+            
+            flag =YES;
+        }
+        
+    }
+    
+    
     for (NSDictionary *aDict in mutArrQuestions) {
+        
         if ([aDict[@"responseType"] isEqualToString:@"checkboxList"]) {
             
             int i=0;
@@ -135,13 +157,54 @@
                     [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
                     [dict setValue:strTemp forKey:@"ResponseText"];
                     [dict setObject:dictResponse[@"value"] forKey:@"ResponseId"];
+                    
+                    [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
                     [mutArrReq addObject:dict];
                 }
                 
-        
-                
             }
         }
+        
+        else if (![aDict[@"answer"] isEqualToString:@""] && [[aDict valueForKey:@"isMandatory"]boolValue]) {
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            
+                [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
+                [dict setObject:aDict[@"question"] forKey:@"QuestionText"];
+                if ([aDict[@"responseType"] isEqualToString:@"dropdown"]) {
+                    
+                    NSPredicate *aPredicate =[NSPredicate predicateWithFormat:@"name ==[cd] %@", [aDict objectForKey:@"answer"]];
+                    NSDictionary *resp = [[aDict[@"responseList"] filteredArrayUsingPredicate:aPredicate]firstObject];
+                    [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
+                    [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+                }
+                else if ([aDict[@"responseType"] isEqualToString:@"date"]) {
+                    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+                    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                    [aFormatter setDateFormat:@"MM/dd/yyyy"];
+                    [dict setObject:[aFormatter stringFromDate:aDict[@"answerDate"]] forKey:@"ResponseText"];
+                }
+                else if ([aDict[@"responseType"] isEqualToString:@"radioButtonList"]) {
+                    NSDictionary *resp = [aDict[@"responseList"] objectAtIndex:[aDict[@"answer"] integerValue]];
+                    [dict setObject:resp[@"name"] forKey:@"ResponseText"];
+                    [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+                }
+                else if ([aDict[@"responseType"] isEqualToString:@"time"]) {
+                    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+                    [aFormatter setDateFormat:@"hh:mm a"];
+                    NSDate *dt = [aFormatter dateFromString:aDict[@"answer"]];
+                    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                    [dict setObject:[aFormatter stringFromDate:dt] forKey:@"ResponseText"];
+                }
+                else {
+                    [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
+                }
+            
+                [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
+                [mutArrReq addObject:dict];
+            }
+
+        
+        
         else if (![aDict[@"answer"] isEqualToString:@""]) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
             [dict setObject:aDict[@"questionId"] forKey:@"QuestionId"];
@@ -176,42 +239,62 @@
             }
             [mutArrReq addObject:dict];
         }
-    }
-    
-    
-    if (mutArrReq.count>0) {
-        NSString *strUserId = @"", *strIDKeyName, *strIdValue, *strWebServiceName = @"";
-        if ([User checkUserExist]) {
-            strUserId = [[User currentUser] userId];
-        }
-        if (!_isSurvey) {
-            strIDKeyName = @"FormId";
-            strIdValue = [_objFormOrSurvey valueForKey:@"formId"];
-            strWebServiceName = FORM_HISTORY_POST;
-        }
-        else {
-            strIdValue = [_objFormOrSurvey valueForKey:@"surveyId"];
-            strIDKeyName = @"SurveyId";
-            strWebServiceName = SURVEY_HISTORY_POST;
-        }
-        
-        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-        NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
-        [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
-            [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
-        } failure:^(NSError *error, NSDictionary *response) {
-            [self saveDataToLocal:dictReq];
-        }];
 
+
+        
     }
+    
+    if (mutArrReq.count>0 && ![isManArray containsObject:@"YES"]) {
+        
+            NSString *strUserId = @"", *strIDKeyName, *strIdValue, *strWebServiceName = @"";
+            if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+            }
+            if (!_isSurvey) {
+                strIDKeyName = @"FormId";
+                strIdValue = [_objFormOrSurvey valueForKey:@"formId"];
+                strWebServiceName = FORM_HISTORY_POST;
+            }
+            else {
+                strIdValue = [_objFormOrSurvey valueForKey:@"surveyId"];
+                strIDKeyName = @"SurveyId";
+                strWebServiceName = SURVEY_HISTORY_POST;
+            }
+        
+            NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+            NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId};
+            [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+            [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+            } failure:^(NSError *error, NSDictionary *response) {
+            [self saveDataToLocal:dictReq];
+            }];
+            }
+        
+  
     else
     {
         if (!_isSurvey) {
-            alert(@"", @"Please enter some data to submit form");
+            if(flag)
+            {
+                 alert(@"", @"Please complete required fields marked with a red *");
+            }
+            else
+            {
+                alert(@"", @"Please enter some data to submit form");
+            }
+            
 
         }
         else {
-            alert(@"", @"Please enter some data to submit survey");
+            if(flag)
+            {
+                alert(@"", @"Please complete required fields marked with a red *");
+            }
+            else
+            {
+                alert(@"", @"Please enter some data to submit survey");
+            }
+            
 
         }
     }
@@ -227,6 +310,7 @@
     NSMutableSet *questionSet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"Details"]) {
         QuestionDetails *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"QuestionDetails" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+       // aQuestion.isMandatory=[dict objectForKey:@"IsMandatory"];
         aQuestion.questionId = [dict objectForKey:@"QuestionId"];
         aQuestion.questionText = [dict objectForKey:@"QuestionText"];
         aQuestion.responseText = [dict objectForKey:@"ResponseText"];
@@ -287,10 +371,21 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
-    NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
+  NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
+    BOOL isMandatory=[[aDict valueForKey:@"isMandatory"]boolValue];
+    
+    if(isMandatory)
+    {
+        aCell.lblForIsMandatory.hidden=NO;
+    }
+    else
+    {
+       aCell.lblForIsMandatory.hidden=YES;
+    }
+    
  [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
     
- // aCell.lblQuestion.text=@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been simply dummy text of the printing ";
+//aCell.lblQuestion.text=@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been simply dummy text of the printing ";
     
     CGSize maximumLabelSize = CGSizeMake(654, 50);
     
@@ -310,7 +405,7 @@
     }
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"] || [[aDict objectForKey:@"responseType"] isEqualToString:@"radioButtonList"]) {
         [aCell.vwButtonList setHidden:NO];
-        NSInteger rows = [[aDict objectForKey:@"responseList"] count] / 2;
+        NSInteger rows = [[aDict objectForKey:@"responseList"]count]/2;
         if ([[aDict objectForKey:@"responseList"] count] % 2 == 1) {
             rows += 1;
         }
@@ -339,12 +434,16 @@
             else {
                 x = 364;
             }
-            [aBtn setFrame:CGRectMake(x, y, width, height)];
+            [aBtn setFrame:CGRectMake(x, y, width, height+20)];
             [aBtn setImage:[UIImage imageNamed:strImageName] forState:UIControlStateNormal];
             [aBtn setImage:[UIImage imageNamed:strSelectedImageName] forState:UIControlStateSelected];
-            [lblName setFrame:CGRectMake(x+45, y, 364 - width, height)];
-            [lblName setFont:[UIFont systemFontOfSize:15.0]];
+            [lblName setFrame:CGRectMake(x+45, y, 364 - width, height+20)];
+           // [lblName setText:@"[UIApplication endIgnoringInteractionEvents] called without matching -beginIgnoring"];
             [lblName setText:[dict objectForKey:@"name"]];
+            lblName.numberOfLines=2;
+            [lblName setFont:[UIFont systemFontOfSize:13.0]];
+            //
+            
             [lblName setTextColor:[UIColor whiteColor]];
            // [lblName setBackgroundColor:[UIColor greenColor]];
             //[aBtn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];

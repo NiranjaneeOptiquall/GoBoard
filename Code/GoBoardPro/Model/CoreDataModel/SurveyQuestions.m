@@ -14,6 +14,7 @@
 
 @implementation SurveyQuestions
 
+@dynamic mandatory;
 @dynamic question;
 @dynamic questionId;
 @dynamic responseType;
@@ -21,5 +22,6 @@
 @dynamic responseList;
 @dynamic survey;
 @dynamic formList;
+
 
 @end
