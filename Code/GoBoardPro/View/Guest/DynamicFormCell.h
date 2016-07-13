@@ -19,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblDevider;
 @property (weak, nonatomic) IBOutlet UIView *vwTextBox;
 @property (weak, nonatomic) IBOutlet UITextView *txvView;
+@property (weak, nonatomic) IBOutlet UILabel *lblForIsMandatory;
 @end
