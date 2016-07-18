@@ -15,6 +15,9 @@
 #import "FormCustomButton.h"
 
 @interface DynamicFormsViewController ()
+{
+    int tempInt;
+}
 
 @end
 
@@ -22,6 +25,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+   _tblForm.contentInset=UIEdgeInsetsMake(0, 0, 50, 0);
     _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
     
   //  NSString *str=[_objFormOrSurvey valueForKey:@"question"];
@@ -46,7 +51,14 @@
     mutArrQuestions = [[NSMutableArray alloc] init];
     for (SurveyQuestions *question in array) {
         NSMutableDictionary *aDict = [NSMutableDictionary dictionary];
-        [aDict setObject:[question valueForKey:@"mandatory"] forKey:@"isMandatory"];
+        
+        
+        if([question valueForKey:@"mandatory"]!=nil)
+        {
+            [aDict setObject:[question valueForKey:@"mandatory"] forKey:@"isMandatory"];
+        }
+            
+        
         [aDict setObject:[question valueForKey:@"question"] forKey:@"question"];
         [aDict setObject:[question valueForKey:@"questionId"] forKey:@"questionId"];
         [aDict setObject:[question valueForKey:@"responseType"] forKey:@"responseType"];
@@ -67,7 +79,10 @@
     }
     NSLog(@"%@", mutArrQuestions);
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+}
 
 #pragma mark - Navigation
 
@@ -158,7 +173,11 @@
                     [dict setValue:strTemp forKey:@"ResponseText"];
                     [dict setObject:dictResponse[@"value"] forKey:@"ResponseId"];
                     
-                    [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
+                    if(isManArray.count>0)
+                    {
+                        [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
+                    }
+                    
                     [mutArrReq addObject:dict];
                 }
                 
@@ -199,7 +218,11 @@
                     [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
                 }
             
-                [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
+                if(isManArray.count>0)
+                {
+                    [isManArray replaceObjectAtIndex:intVal++ withObject:@"NO"];
+                }
+            
                 [mutArrReq addObject:dict];
             }
 
@@ -338,7 +361,16 @@
         [aDict setObject:@"true" forKey:@"answer"];
     }
     else {
-        [aDict setObject:@"false" forKey:@"answer"];
+        
+        if([[aDict valueForKey:@"isMandatory"]boolValue])
+        {
+            [aDict setObject:@"" forKey:@"answer"];
+        }
+        else
+        {
+            [aDict setObject:@"false" forKey:@"answer"];
+        }
+        
     }
 }
 
@@ -383,7 +415,7 @@
        aCell.lblForIsMandatory.hidden=YES;
     }
     
- [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
+[aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
     
 //aCell.lblQuestion.text=@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been simply dummy text of the printing ";
     
@@ -434,11 +466,11 @@
             else {
                 x = 364;
             }
-            [aBtn setFrame:CGRectMake(x, y, width, height+20)];
+            [aBtn setFrame:CGRectMake(x, y, width, height)];
             [aBtn setImage:[UIImage imageNamed:strImageName] forState:UIControlStateNormal];
             [aBtn setImage:[UIImage imageNamed:strSelectedImageName] forState:UIControlStateSelected];
-            [lblName setFrame:CGRectMake(x+45, y, 364 - width, height+20)];
-           // [lblName setText:@"[UIApplication endIgnoringInteractionEvents] called without matching -beginIgnoring"];
+            [lblName setFrame:CGRectMake(x+45, y, 364 - width, height)];
+            //[lblName setText:@"[UIApplication endIgnoringInteractionEvents] called without matching -beginIgnoring"];
             [lblName setText:[dict objectForKey:@"name"]];
             lblName.numberOfLines=2;
             [lblName setFont:[UIFont systemFontOfSize:13.0]];
@@ -520,13 +552,16 @@
 
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+   
+    NSInteger rows;
+    
     CGFloat height = 50;
     NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     CGRect frame = [[aDict objectForKey:@"question"] boundingRectWithSize:CGSizeMake(650,100) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:20.0]} context:nil];
     height = frame.size.height + 26;
     
     if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkboxList"] || [[aDict objectForKey:@"responseType"] isEqualToString:@"radioButtonList"]) {
-        NSInteger rows = [[aDict objectForKey:@"responseList"] count] / 2;
+        rows = [[aDict objectForKey:@"responseList"] count] / 2;
         if ([[aDict objectForKey:@"responseList"] count] % 2 == 1) {
             rows += 1;
         }
@@ -535,7 +570,7 @@
     else if (![[aDict objectForKey:@"responseType"] isEqualToString:@"checkbox"]) {
         height += 75;
     }
-    
+   
     return height;
 }
 
