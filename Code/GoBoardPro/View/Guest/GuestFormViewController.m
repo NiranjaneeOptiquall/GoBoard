@@ -230,7 +230,7 @@
         NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
         if (networkStatus == NotReachable)
         {
-            UIAlertView *networkAlert= [[UIAlertView alloc]initWithTitle:@"Network Alert" message:@"We're sorry.This link is not available while working offline.  Please connect to the internet and try again"
+            UIAlertView *networkAlert= [[UIAlertView alloc]initWithTitle:@"Connect2" message:@"We're sorry.This link is not available while working offline.  Please connect to the internet and try again"
                                                                 delegate:Nil cancelButtonTitle:@"ok" otherButtonTitles:Nil, nil];
             [networkAlert show];
 //            alert(@"Connect2", @"We're sorry.This link is not available while working offline.  Please connect to the internet and try again");
