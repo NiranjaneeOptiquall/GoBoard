@@ -9,6 +9,7 @@
 #import "GuestFormViewController.h"
 #import"WebViewController.h"
 #import "DynamicFormsViewController.h"
+#import "Reachability.h"
 
 @interface GuestFormViewController ()
 
@@ -36,6 +37,7 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"ShowDynamicForm"]) {
         DynamicFormsViewController *aDynamicView = (DynamicFormsViewController*)segue.destinationViewController;
@@ -47,12 +49,15 @@
             aDynamicView.isSurvey = NO;
         }
     }
-    else if ([segue.identifier isEqualToString:@"GoToLink"]) {
-        WebViewController *webVC = (WebViewController*)segue.destinationViewController;
-        webVC.strRequestURL = [sender valueForKey:@"link"];
-        webVC.strInstruction = [sender valueForKey:@"instructions"];
-        webVC.guestFormType = self.guestFormType;
-    }
+//   else if ([self shouldPerformSegueWithIdentifier:@"GoToLink" sender:sender]) {
+//            WebViewController *webVC = (WebViewController*)segue.destinationViewController;
+//           webVC.strRequestURL = [sender valueForKey:@"link"];
+//           webVC.strInstruction = [sender valueForKey:@"instructions"];
+//           webVC.guestFormType = self.guestFormType;
+//        }
+//        
+//    }
+    
 }
 
 
@@ -209,11 +214,38 @@
 //        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[obj valueForKey:@"link"]]]) {
 //            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[obj valueForKey:@"link"]]];
 //        }
-        [self performSegueWithIdentifier:@"GoToLink" sender:obj];
+        //[self performSegueWithIdentifier:@"GoToLink" sender:obj];
+        [self initWithIdentifier:@"GoToLink" sender:obj];
     }
     else {
         selectedIndex = indexPath.row;
         [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+    }
+}
+-(void)initWithIdentifier:(NSString*)identifier sender:(id)sender
+{
+    if([identifier isEqualToString:@"GoToLink"])
+    {
+        Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+        if (networkStatus == NotReachable)
+        {
+            UIAlertView *networkAlert= [[UIAlertView alloc]initWithTitle:@"Network Alert" message:@"We're sorry.This link is not available while working offline.  Please connect to the internet and try again"
+                                                                delegate:Nil cancelButtonTitle:@"ok" otherButtonTitles:Nil, nil];
+            [networkAlert show];
+//            alert(@"Connect2", @"We're sorry.This link is not available while working offline.  Please connect to the internet and try again");
+            
+            
+        }
+        else
+        {
+            WebViewController *webVC =[self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
+            webVC.strRequestURL = [sender valueForKey:@"link"];
+            webVC.strInstruction = [sender valueForKey:@"instructions"];
+            webVC.guestFormType = self.guestFormType;
+            [self.navigationController pushViewController:webVC animated:YES];
+        }
+
     }
 }
 

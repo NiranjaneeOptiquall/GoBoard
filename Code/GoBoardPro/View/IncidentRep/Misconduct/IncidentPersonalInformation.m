@@ -692,6 +692,17 @@
             [sender setText:[value valueForKey:@"name"]];
 
         }
+        else if (sender == _txtActivity)
+        {
+            
+            [sender setText:[value valueForKey:@"name"]];
+            
+        }
+        else if (sender == _txtChooseIncident)
+        {            
+            [sender setText:[value valueForKey:@"name"]];
+            
+        }
     }
 }
 

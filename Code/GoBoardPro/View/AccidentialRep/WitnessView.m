@@ -19,6 +19,7 @@
 */
 - (void)awakeFromNib {
     [self btnWitnessStatusTapped:_btnMember];
+   
 }
 
 - (IBAction)btnWitnessStatusTapped:(UIButton*)sender {
@@ -30,14 +31,46 @@
 }
 
 - (void)setRequiredFields:(NSArray*)fields {
-    requiredFields = fields;
-    if ([requiredFields containsObject:@"firstName"]) [_markerFirstName setHidden:NO];
-    if ([requiredFields containsObject:@"middleInitial"]) [_markerMI setHidden:NO];
-    if ([requiredFields containsObject:@"lastName"]) [_markerLastName setHidden:NO];
-    if ([requiredFields containsObject:@"homePhone"]) [_markerPhone setHidden:NO];
-    if ([requiredFields containsObject:@"alternatePhone"]) [_markerAlternatePhone setHidden:NO];
-    if ([requiredFields containsObject:@"email"]) [_markerEmail setHidden:NO];
-    if ([requiredFields containsObject:@"descriptionOfIncident"]) [_markerDescription setHidden:NO];
+   
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+     requiredFields= [userDefaults objectForKey:@"required"];
+    
+
+    
+    
+    if ([requiredFields containsObject:@"firstName"])
+    {
+        [_markerFirstName setHidden:NO];
+    }
+    
+    
+    if ([requiredFields containsObject:@"middleInitial"])
+    {
+        [_markerMI setHidden:NO];
+    }
+        
+    if ([requiredFields containsObject:@"lastName"])
+    {
+        [_markerLastName setHidden:NO];
+    }
+    if ([requiredFields containsObject:@"homePhone"])
+    {
+        [_markerPhone setHidden:NO];
+    }
+    if ([requiredFields containsObject:@"alternatePhone"])
+    {
+        [_markerAlternatePhone setHidden:NO];
+    }
+    if ([requiredFields containsObject:@"email"])
+    {
+        [_markerEmail setHidden:NO];
+    }
+    if ([requiredFields containsObject:@"descriptionOfIncident"])
+    {
+        [_markerDescription setHidden:NO];
+    }
+    
+    
 }
 
 - (BOOL)isWitnessViewValidationSuccess {

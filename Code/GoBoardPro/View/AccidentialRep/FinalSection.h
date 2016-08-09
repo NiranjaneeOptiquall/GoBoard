@@ -61,6 +61,7 @@
 
 @property (strong, nonatomic) SignatureView *signatureView;
 
+@property (strong, nonatomic) IBOutlet UILabel *MarkerAccountOfAccident;
 
 @property (strong, nonatomic) IBOutlet UIButton *btnAddWitness;
 @property (strong, nonatomic) IBOutlet UIButton *btnRemoveWitness;

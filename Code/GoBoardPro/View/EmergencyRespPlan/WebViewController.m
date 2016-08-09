@@ -7,6 +7,7 @@
 //
 
 #import "WebViewController.h"
+#import "Reachability.h"
 
 @interface WebViewController ()
 
@@ -87,16 +88,23 @@
 #pragma mark - WebView Delegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [gblAppDelegate showActivityIndicator];
-    isWebLoaded = NO;
+ 
+        [gblAppDelegate showActivityIndicator];
+        isWebLoaded = NO;
+ 
+  
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    isWebLoaded = YES;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (isWebLoaded)
-            [gblAppDelegate hideActivityIndicator];
-    });
+   
+   
+        isWebLoaded = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (isWebLoaded)
+                [gblAppDelegate hideActivityIndicator];
+        });
+  
+   
     
 }
 @end

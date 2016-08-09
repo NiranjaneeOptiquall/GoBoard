@@ -29,6 +29,9 @@
 @synthesize reportSetupInfo;
 -(void)awakeFromNib
 {
+    
+   
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToRemoveWitness:) name:@"adjustContentOffsetsToDeleteWitnessView" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAdjustContentOffsetsToInsertWitness:) name:@"adjustContentOffsetsToInsertWitnessView" object:nil];
 }

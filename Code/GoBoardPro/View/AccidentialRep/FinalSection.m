@@ -247,6 +247,10 @@
     if ([aryFields containsObject:@"homePhone"]) [_markerEmpPhone setHidden:NO];
     if ([aryFields containsObject:@"alternatePhone"]) [_markerEmpAltPhone setHidden:NO];
     if ([aryFields containsObject:@"email"]) [_markerEmpEmail setHidden:NO];
+    if ([aryFields containsObject:@"accountOfIncident"])[_MarkerAccountOfAccident setHidden:NO];
+
+    
+    
 }
 
 - (BOOL)isFinalSectionValidationSuccessWith:(NSArray *)aryFields {

@@ -12,6 +12,7 @@
 @interface WitnessView : UIView {
     NSArray *requiredFields;
 }
+@property(nonatomic,retain)NSArray *temp;
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuest;
 @property (weak, nonatomic) IBOutlet UIButton *btnEmployee;
