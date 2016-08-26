@@ -703,6 +703,21 @@
             [sender setText:[value valueForKey:@"name"]];
             
         }
+        else if (sender == _txtWeather)
+        {
+            [sender setText:[value valueForKey:@"name"]];
+            
+        }
+        else if (sender == _txtWeather)
+        {
+            [sender setText:[value valueForKey:@"name"]];
+            
+        }
+        else if (sender == _txtEquipment)
+        {
+            [sender setText:[value valueForKey:@"name"]];
+            
+        }
     }
 }
 
