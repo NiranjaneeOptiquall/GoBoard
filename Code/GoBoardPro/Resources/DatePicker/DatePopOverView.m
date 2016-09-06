@@ -20,10 +20,20 @@
 }
 */
 - (void)awakeFromNib {
-    [_datePicker setMaximumDate:[NSDate date]];
+   NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDate *currentDate = [NSDate date];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    [comps setYear:30];
+    NSDate *maxDate = [calendar dateByAddingComponents:comps toDate:currentDate options:0];
+    [comps setYear:-30];
+
+    [_datePicker setMaximumDate:maxDate];
 }
 
 - (void)allowAllDates {
+    
+  
+    
     [_datePicker setMaximumDate:nil];
     [_datePicker setMinimumDate:nil];
 }
