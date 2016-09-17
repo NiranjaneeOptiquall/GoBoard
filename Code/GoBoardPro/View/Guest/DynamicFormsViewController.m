@@ -13,12 +13,20 @@
 #import "DynamicFormCell.h"
 #import "ThankYouViewController.h"
 #import "FormCustomButton.h"
+#import "SignatureView.h"
 
 @interface DynamicFormsViewController ()
 {
     int tempInt;
+   
+    CGFloat contentHight;
+    
+    NSMutableArray *imageArray;
+    NSMutableArray *arrOfBtnTitleString;
+  
+   
 }
-
+@property(nonatomic,retain)SignatureView *signatureView;
 @end
 
 @implementation DynamicFormsViewController
@@ -26,10 +34,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-   _tblForm.contentInset=UIEdgeInsetsMake(0, 0, 50, 0);
+   _tblForm.contentInset=UIEdgeInsetsMake(0, 0, 80, 0);
     _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
+  
     
-  //  NSString *str=[_objFormOrSurvey valueForKey:@"question"];
+   imageArray =[NSMutableArray new];
+arrOfBtnTitleString=[NSMutableArray new];
+    
+  
     if ([[_objFormOrSurvey valueForKey:@"instructions"] isEqualToString:@""]) {
         [_lblInstruction setText:@"No instructions available."];
 
@@ -211,9 +223,16 @@
                     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
                     [aFormatter setDateFormat:@"hh:mm a"];
                     NSDate *dt = [aFormatter dateFromString:aDict[@"answer"]];
-                    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+                
                     [dict setObject:[aFormatter stringFromDate:dt] forKey:@"ResponseText"];
                 }
+//                else if ([aDict[@"responseType"] isEqualToString:@"signature"]) {
+////                    NSDictionary *resp = [aDict[@"responseList"] objectAtIndex:[aDict[@"answer"] integerValue]];
+////                    [dict setObject:resp[@"name"] forKey:@"ResponseText"];
+////                    [dict setObject:resp[@"value"] forKey:@"ResponseId"];
+//                    [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
+//                    
+//                }
                 else {
                     [dict setObject:aDict[@"answer"] forKey:@"ResponseText"];
                 }
@@ -403,7 +422,13 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
-  NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
+    
+   
+    [imageArray addObject:@"temp"];
+    [arrOfBtnTitleString addObject:@""];
+  
+    
+    NSDictionary *aDict = [mutArrQuestions objectAtIndex:indexPath.row];
     BOOL isMandatory=[[aDict valueForKey:@"isMandatory"]boolValue];
     
     if(isMandatory)
@@ -415,23 +440,47 @@
        aCell.lblForIsMandatory.hidden=YES;
     }
     
-[aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
+    CGSize maximumLabelSize;
+     CGSize expectedLabelSize;
     
-//aCell.lblQuestion.text=@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been simply dummy text of the printing ";
+    CGRect newFrame;
     
-    CGSize maximumLabelSize = CGSizeMake(654, 50);
-    
-    CGSize expectedLabelSize = [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
-    CGRect newFrame = aCell.lblQuestion.frame;
-    newFrame.size.height = expectedLabelSize.height;
-    aCell.lblQuestion.frame = newFrame;
-    
+    if([[aDict valueForKey:@"responseType"]isEqualToString:@"content"])
+    {
 
+        
+    aCell.lblQuestion.attributedText=[self attributedText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"question"]]];
+        
+        aCell.lblQuestion.numberOfLines=0;
+        maximumLabelSize=CGSizeMake(654, 1500);
+        expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
+        contentHight=expectedLabelSize.height;
+        
+        newFrame = aCell.lblQuestion.frame;
+        newFrame.size.height = expectedLabelSize.height;
+        aCell.lblQuestion.frame = newFrame;
+
+    }
+    else
+    {
+        [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
+        
+        aCell.lblQuestion.numberOfLines=2;
+        maximumLabelSize=CGSizeMake(654, 50);
+        expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
+        newFrame = aCell.lblQuestion.frame;
+        newFrame.size.height = expectedLabelSize.height;
+
+  }
+    
     [aCell.btnCheckMark setHidden:YES];
     [aCell.btnCheckMark addTarget:self action:@selector(btnCheckMarkTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.vwTextArea setHidden:YES];
     [aCell.vwButtonList setHidden:YES];
     [aCell.vwTextBox setHidden:YES];
+    [aCell.btnSignature setHidden:YES];
+
+    
     for (UIView *view in aCell.vwButtonList.subviews) {
         [view removeFromSuperview];
     }
@@ -469,17 +518,18 @@
             [aBtn setFrame:CGRectMake(x, y, width, height)];
             [aBtn setImage:[UIImage imageNamed:strImageName] forState:UIControlStateNormal];
             [aBtn setImage:[UIImage imageNamed:strSelectedImageName] forState:UIControlStateSelected];
+            
+           
+            
             [lblName setFrame:CGRectMake(x+45, y, 364 - width, height)];
-            //[lblName setText:@"[UIApplication endIgnoringInteractionEvents] called without matching -beginIgnoring"];
+            
             [lblName setText:[dict objectForKey:@"name"]];
-            lblName.numberOfLines=2;
+            lblName.numberOfLines=0;
             [lblName setFont:[UIFont systemFontOfSize:13.0]];
-            //
+          
             
             [lblName setTextColor:[UIColor whiteColor]];
-           // [lblName setBackgroundColor:[UIColor greenColor]];
-            //[aBtn setTitle:[dict objectForKey:@"name"] forState:UIControlStateNormal];
-           // [aBtn.titleLabel setFont:[UIFont systemFontOfSize:15.0]];
+          
             [aBtn addTarget:self action:@selector(btnListTypeTapped:) forControlEvents:UIControlEventTouchUpInside];
             [aBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             [aBtn setTag:index];
@@ -506,7 +556,29 @@
         [aCell.txvView setDelegate:self];
         [aCell.txvView setText:[aDict objectForKey:@"answer"]];
     }
-    else if (![[aDict objectForKey:@"responseType"] isEqualToString:@"checkbox"]) {
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"content"]) {
+        [aCell.btnCheckMark setHidden:YES];
+        [aCell.vwTextArea setHidden:YES];
+        [aCell.vwButtonList setHidden:YES];
+        [aCell.vwTextBox setHidden:YES];
+        [aCell.btnSignature setHidden:YES];
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
+        
+        [aCell.lblQuestion setHidden:YES];
+        [aCell.btnSignature setHidden:NO];
+        [aCell.btnSignature setTitle:[aDict objectForKey:@"question"] forState:UIControlStateNormal];
+        
+        [aCell.btnSignature addTarget:self action:@selector(signatureAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        
+        [arrOfBtnTitleString replaceObjectAtIndex:indexPath.row withObject:[aDict objectForKey:@"question"]];
+        
+        aCell.btnSignature.tag=indexPath.row;
+        
+    }
+    else if (![[aDict valueForKey:@"responseType"] isEqualToString:@"checkbox"]) {
         [aCell.vwTextArea setHidden:NO];
         [aCell.txtField setDelegate:self];
         [aCell.txtField setText:[aDict objectForKey:@"answer"]];
@@ -541,11 +613,7 @@
         }
     }
     
-    //UIView *aView = [aCell.contentView viewWithTag:4];
-    //CGRect frame = aView.frame;
-    //frame.origin.y = aCell.frame.size.height - 3;
-    //frame.size.height = 3;
-    //[aView setFrame:frame];
+  
     [aCell setBackgroundColor:[UIColor clearColor]];
     return aCell;
 }
@@ -567,10 +635,48 @@
         }
         height += 44*rows;
     }
-    else if (![[aDict objectForKey:@"responseType"] isEqualToString:@"checkbox"]) {
-        height += 75;
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"checkbox"]) {
+        
+        height +=10;
+        
+        
     }
-   
+    //checkboxList
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"textbox"]) {
+        
+        height +=75;
+        
+        
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
+        
+         height +=75;
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"time"]) {
+        
+         height +=75;
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"dropdown"]) {
+      
+         height +=75;
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"date"]) {
+        
+         height +=75;
+    }
+
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"content"]) {
+        
+        height=0;
+        height += contentHight+15;
+        
+        
+    }
+    else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
+        
+        height=65;
+    }
+    
     return height;
 }
 
@@ -579,10 +685,6 @@
     while (![aCell isKindOfClass:[DynamicFormCell class]]) {
         aCell = (DynamicFormCell *)[aCell superview];
     }
-   // CGPoint boundsCenter = CGRectOffset(view.bounds, view.frame.size.width/2, view.frame.size.height/2).origin;
-
-    //CGPoint viewPosition = [[view superview] convertPoint:boundsCenter toView:self.tblForm];
-   // NSIndexPath *indexPath = [_tblForm indexPathForRowAtPoint:viewPosition];
     NSIndexPath *indexPath = [_tblForm indexPathForRowAtPoint:aCell.center];
     return indexPath;
 }
@@ -636,38 +738,7 @@
             return NO;
         }
         
-//        NSCharacterSet *numericCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"-.0123456789"];
-//        if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
-//            return NO;
-//        }
-//
-//        NSString *aStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
-//        if ([string isEqualToString:@"-"]) {
-//            
-//            if (aStr.length > 1)
-//            {
-//                return NO;
-//            }
-//            return YES;
-//        }
-//        
-//        if ([string isEqualToString:@"."]) {
-//        
-//            if ([textField.text rangeOfString:@"."].length > 0 || ([textField.text containsString:@"-"] && textField.text.length < 2) || (![textField.text containsString:@"-"] && textField.text.length < 1) )
-//            {
-//                return NO;
-//            }
-//            return YES;
-//        }
-//        
-//        if ([[aStr componentsSeparatedByString:@"."] count] > 1)
-//        {
-//             if([[[aStr componentsSeparatedByString:@"."] lastObject] length] > 2)
-//             {
-//                 return NO;
-//             }
-//            return YES;
-//        }
+
 
     }
     return YES;
@@ -718,5 +789,68 @@
 }
 
 
+-(void)signatureAction:(UIButton*)button
+{
+    NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:button.tag];
+    
+    _signatureView.btntag=[NSString stringWithFormat:@"%ld",(long)button.tag];
+    
+    [[NSUserDefaults standardUserDefaults]setObject:@"yes" forKey:@"isForm"];
+    if (!_signatureView)
+        _signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
+    __weak SignatureView *weakSignature = _signatureView;
+    
+      weakSignature.txtName.hidden=YES;
+    
+    [_signatureView setCompletion:^{
+        if (weakSignature.tempDrawImage.image) {
+            
+            
+            [button setTitle:@"Edit Participant's Signature" forState:UIControlStateNormal];
+            
+            NSString *tempstr=@"data:image/png;base64,";
+            NSString  *strSignature = @"";
+            
+            strSignature=[UIImagePNGRepresentation(_signatureView.tempDrawImage.image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            
+            [imageArray replaceObjectAtIndex:button.tag withObject:strSignature];
+            
+            _signatureView.arrTempSignatureImage=imageArray;
+    
+            tempstr=[tempstr stringByAppendingString:strSignature];
+            
+             [aDict setObject:tempstr forKey:@"answer"];
+            
+        }
+        else
+        {
+            [button setTitle:[arrOfBtnTitleString objectAtIndex:button.tag] forState:UIControlStateNormal];
+            [aDict setObject:@"" forKey:@"answer"];
+        }
+    }];
+    [_signatureView showPopOverWithSender:button];
+    
+}
+
+
+
+
+-(NSAttributedString*)attributedText:(NSString*)str
+{
+    
+   
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [str dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+   
+    
+    
+    return  attributedString;
+    
+
+}
 
 @end

@@ -39,6 +39,9 @@
 @property (nonatomic, readwrite) CGFloat opacity;
 @property (nonatomic, strong) UIImage *lastSignatureImage;
 @property (nonatomic, strong) NSString *lastSavedName;
+@property(nonatomic,retain)NSMutableArray *arrTempSignatureImage;
+@property(nonatomic,retain)NSString *btntag;
+
 
 @property (nonatomic, copy) void (^Completion)();
 

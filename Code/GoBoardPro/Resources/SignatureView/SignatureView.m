@@ -38,13 +38,21 @@
 //        [btnClear setHidden:true];
 //        [btnSign setHidden:true];
 //    }
-    tempDrawImage.image = _lastSignatureImage;
+    
+    if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
+    {
+        
+        txtName.hidden=YES;
+    }
+    
     txtName.text = _lastSavedName;
     red = 0.0/255.0;
     green = 0.0/255.0;
     blue = 0.0/255.0;
     brush = 5.0;
     opacity = 1.0;
+    
+    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -83,30 +91,54 @@
 
 - (IBAction)ClearSignature
 {
-//    appDelegate.isSignPopupOpen = false;
+
     self.mainImage.image = nil;
     self.tempDrawImage.image = nil;
+    
+    if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
+    {
+        int indexNumber=[_btntag intValue];
+        [_arrTempSignatureImage replaceObjectAtIndex:indexNumber withObject:@""];
+        
+    }
 }
 
 - (IBAction)DoneSigning:(id)sender
 {
-    if ([[txtName trimText] isEqualToString:@""]) {
-        alert(@"", @"Please enter your name");
-        return;
+    if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
+    {
+        NSLog(@"No Action");
+    }
+    else
+    {
+        if ([[txtName trimText] isEqualToString:@""]) {
+            alert(@"", @"Please enter your name");
+           
+            return;
+        }
     }
     if (_Completion) {
         _Completion();
     }
     [popOver dismissPopoverAnimated:YES];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"DoneSigning" object:nil];
-}
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  
 }
 
+
 - (void)showPopOverWithSender:(UIButton*)sender {
+    
+    if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
+    {
+        txtName.hidden=YES;
+        
+        int indexNumber=[_btntag intValue];
+        
+        NSString *str=[NSString stringWithFormat:@"%@",[_arrTempSignatureImage objectAtIndex:indexNumber]];
+       
+       NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+       tempDrawImage.image =[UIImage imageWithData:plainData];
+    }
+
     popOver = nil;
     popOver = [[UIPopoverController alloc] initWithContentViewController:self];
     popOver.delegate = self;

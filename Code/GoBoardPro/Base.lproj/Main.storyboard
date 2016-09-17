@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="uAz-MZ-ZCG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="uAz-MZ-ZCG">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--Nav Controller-->
         <scene sceneID="FI3-Fg-VeQ">
@@ -608,12 +615,21 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="IgA-pI-bh4">
+                                                    <rect key="frame" x="32" y="25" width="660" height="53"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <state key="normal" title="Button" backgroundImage="report_filers_text_box.png">
+                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="btnCheckMark" destination="ud0-tM-SYU" id="Fdf-UH-Zab"/>
+                                            <outlet property="btnSignature" destination="IgA-pI-bh4" id="U9v-XQ-gZS"/>
                                             <outlet property="imvTypeIcon" destination="9hZ-z6-ZUP" id="b1F-Gn-IvA"/>
                                             <outlet property="lblDevider" destination="YdP-uW-KJl" id="6Fy-1X-OZv"/>
                                             <outlet property="lblForIsMandatory" destination="g9P-xB-qXp" id="EAd-bs-v18"/>
@@ -1939,7 +1955,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fJN-B1-2Yy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3877" y="2280"/>
+            <point key="canvasLocation" x="3777" y="2480"/>
         </scene>
         <!--Accident Report View Controller-->
         <scene sceneID="qLx-22-eO4">
@@ -6729,7 +6745,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KI3-Za-4GX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="689" y="2881"/>
+            <point key="canvasLocation" x="173" y="2849"/>
         </scene>
         <!--Forgot Password View Controller-->
         <scene sceneID="X1D-bN-8Hk">
@@ -7548,10 +7564,10 @@
         <image name="work_order_sel.png" width="66" height="65"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="k5d-Jg-3em"/>
         <segue reference="pPR-kw-p2J"/>
+        <segue reference="k5d-Jg-3em"/>
         <segue reference="vif-Tr-xCv"/>
-        <segue reference="iHR-tw-vQF"/>
+        <segue reference="v6e-GR-DHO"/>
         <segue reference="gt2-aG-td5"/>
     </inferredMetricsTieBreakers>
 </document>

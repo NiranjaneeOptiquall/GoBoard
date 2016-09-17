@@ -126,7 +126,9 @@
 
 - (IBAction)btnSignatureTapped:(UIButton*)sender {
     if (!_signatureView)
+        
         _signatureView = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isForm"];
     __weak SignatureView *weakSignature = _signatureView;
         [_signatureView setCompletion:^{
             if (weakSignature.tempDrawImage.image) {
