@@ -34,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-   _tblForm.contentInset=UIEdgeInsetsMake(0, 0, 80, 0);
+  _tblForm.contentInset=UIEdgeInsetsMake(0, 0, 70, 0);
     _lblTitle.text = [_objFormOrSurvey valueForKey:@"name"];
   
     
@@ -440,25 +440,50 @@ arrOfBtnTitleString=[NSMutableArray new];
        aCell.lblForIsMandatory.hidden=YES;
     }
     
-    CGSize maximumLabelSize;
-     CGSize expectedLabelSize;
+//    CGSize maximumLabelSize;
+//    CGSize expectedLabelSize;
     
     CGRect newFrame;
     
     if([[aDict valueForKey:@"responseType"]isEqualToString:@"content"])
     {
 
+       
+        NSString *span=@"<span style=\"color:white; font-size:17px\">";
+  
+        NSString *spanEnd=@"</span>";
         
-    aCell.lblQuestion.attributedText=[self attributedText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"question"]]];
+        NSString *strContent=[NSString stringWithFormat:@"%@",[aDict objectForKey:@"question"]];
         
+        //NSInteger temp=strContent.length;
+        
+       // NSString *strtemp=[self stringCleaner:[aDict objectForKey:@"question"]];
+        
+        // NSInteger temp1=strtemp.length;
+        
+        strContent=[span stringByAppendingString:strContent];
+        strContent=[strContent stringByAppendingString:spanEnd];
+        
+       // NSInteger temp2=strContent.length;
+        
+        aCell.lblQuestion.attributedText=[self attributedText:strContent];
+        
+       
         aCell.lblQuestion.numberOfLines=0;
-        maximumLabelSize=CGSizeMake(654, 1500);
-        expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
-        contentHight=expectedLabelSize.height;
         
+       CGSize maximumLabelSize=CGSizeMake(654, 1500);
+       
+        CGSize expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
+        
+         [aCell.lblQuestion sizeToFit];
+        
+       contentHight=aCell.lblQuestion.frame.size.height;
         newFrame = aCell.lblQuestion.frame;
         newFrame.size.height = expectedLabelSize.height;
-        aCell.lblQuestion.frame = newFrame;
+        
+        aCell.lblQuestion.frame = aCell.lblQuestion.frame;
+        
+        
 
     }
     else
@@ -466,11 +491,11 @@ arrOfBtnTitleString=[NSMutableArray new];
         [aCell.lblQuestion setText:[aDict objectForKey:@"question"]];
         
         aCell.lblQuestion.numberOfLines=2;
-        maximumLabelSize=CGSizeMake(654, 50);
-        expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
+        CGSize maximumLabelSize=CGSizeMake(654, 50);
+        CGSize expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
         newFrame = aCell.lblQuestion.frame;
         newFrame.size.height = expectedLabelSize.height;
-
+        aCell.lblQuestion.frame = newFrame;;
   }
     
     [aCell.btnCheckMark setHidden:YES];
@@ -654,13 +679,16 @@ arrOfBtnTitleString=[NSMutableArray new];
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"time"]) {
         
+        
          height +=75;
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"dropdown"]) {
       
+        
          height +=75;
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"date"]) {
+        
         
          height +=75;
     }
@@ -668,8 +696,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"content"]) {
         
         height=0;
-        height += contentHight+15;
-        
+        height += contentHight+20;
         
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
@@ -852,5 +879,47 @@ arrOfBtnTitleString=[NSMutableArray new];
     
 
 }
+
+//-(NSString *)convertHTML:(NSString *)html {
+//    
+//    NSScanner *myScanner;
+//    NSString *text = nil;
+//    myScanner = [NSScanner scannerWithString:html];
+//    
+//    while ([myScanner isAtEnd] == NO) {
+//        
+//        [myScanner scanUpToString:@"<" intoString:NULL] ;
+//        
+//        [myScanner scanUpToString:@">" intoString:&text] ;
+//        
+//        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@>", text] withString:@""];
+//    }
+//    html = [html stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//    
+//    return html;
+//}
+//- (NSString *)stringCleaner:(NSString *)yourString {
+//    
+//    NSScanner *theScanner;
+//    NSString *text = nil;
+//    
+//    theScanner = [NSScanner scannerWithString:yourString];
+//    
+//    while ([theScanner isAtEnd] == NO) {
+//        
+//        [theScanner scanUpToString:@"[" intoString:NULL] ;
+//        
+//        [theScanner scanUpToString:@"]" intoString:&text] ;
+//        
+//        
+//        yourString = [yourString stringByReplacingOccurrencesOfString:
+//                      [NSString stringWithFormat:@"%@]", text]
+//                                                           withString:@""];
+//        
+//    }
+//    return [self convertHTML:yourString];
+//    
+//}
+//
 
 @end
