@@ -423,7 +423,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
     
-    aCell.lblQuestion.backgroundColor=[UIColor clearColor];
+  aCell.lblQuestion.backgroundColor=[UIColor clearColor];
     [imageArray addObject:@"temp"];
     [arrOfBtnTitleString addObject:@""];
   
@@ -443,13 +443,21 @@ arrOfBtnTitleString=[NSMutableArray new];
     
     CGRect newFrame;
     
+    
+   /* If "responseType" is equal to "content" then expand lable and show htmlAttributes sting  */
+    
     if([[aDict valueForKey:@"responseType"]isEqualToString:@"content"])
     {
 
        
+        /* Append span for setting content text degault color white*/
+        
+        /* NSString *temp is holding blanck space for text Alignem */
+        
         NSString *span=@"<span style=\"color:white; font-size:17px\">";
   
-        NSString *spanEnd=@"</span>";
+         NSString *spanEnd=@"</span>";
+         NSString *temp=@".";
         
         NSString *strContent=[NSString stringWithFormat:@"%@",[aDict objectForKey:@"question"]];
         
@@ -458,7 +466,7 @@ arrOfBtnTitleString=[NSMutableArray new];
         strContent=[span stringByAppendingString:strContent];
         strContent=[strContent stringByAppendingString:spanEnd];
         
-      
+        strContent=[strContent stringByAppendingString:temp];
         
         aCell.lblQuestion.attributedText=[self attributedText:strContent];
         
@@ -470,12 +478,13 @@ arrOfBtnTitleString=[NSMutableArray new];
         CGSize expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
         
          [aCell.lblQuestion sizeToFit];
-        
+        //[aCell.lblQuestion sizeThatFits:expectedLabelSize];
         contentHight=aCell.lblQuestion.frame.size.height;
+        
         newFrame = aCell.lblQuestion.frame;
         newFrame.size.height = expectedLabelSize.height;
+        newFrame.size.width=expectedLabelSize.width;
         aCell.lblQuestion.frame = aCell.lblQuestion.frame;
-        //contentHight=aCell.lblQuestion.frame.size.height;
         
 
     }
@@ -807,6 +816,13 @@ arrOfBtnTitleString=[NSMutableArray new];
 }
 
 
+/*
+    Button Action Name:-(void)signatureAction:(UIButton*)button
+    Purpose: On click it will display a view where user can perform signature
+    Parameter: UIButton button
+    Return Type: NULL
+ */
+
 -(void)signatureAction:(UIButton*)button
 {
     NSMutableDictionary *aDict = [mutArrQuestions objectAtIndex:button.tag];
@@ -852,6 +868,13 @@ arrOfBtnTitleString=[NSMutableArray new];
 
 
 
+
+/*
+    Method name:-(NSAttributedString*)attributedText:(NSString*)str
+    Purpose: Read the HTML text and return plane text
+    Parameter: NSString str
+    Return type:NSAttributedString attributedString
+ */
 
 -(NSAttributedString*)attributedText:(NSString*)str
 {
