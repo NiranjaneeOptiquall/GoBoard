@@ -423,7 +423,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
     
-   
+    aCell.lblQuestion.backgroundColor=[UIColor clearColor];
     [imageArray addObject:@"temp"];
     [arrOfBtnTitleString addObject:@""];
   
@@ -439,9 +439,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     {
        aCell.lblForIsMandatory.hidden=YES;
     }
-    
-//    CGSize maximumLabelSize;
-//    CGSize expectedLabelSize;
+
     
     CGRect newFrame;
     
@@ -455,16 +453,12 @@ arrOfBtnTitleString=[NSMutableArray new];
         
         NSString *strContent=[NSString stringWithFormat:@"%@",[aDict objectForKey:@"question"]];
         
-        //NSInteger temp=strContent.length;
-        
-       // NSString *strtemp=[self stringCleaner:[aDict objectForKey:@"question"]];
-        
-        // NSInteger temp1=strtemp.length;
+      
         
         strContent=[span stringByAppendingString:strContent];
         strContent=[strContent stringByAppendingString:spanEnd];
         
-       // NSInteger temp2=strContent.length;
+      
         
         aCell.lblQuestion.attributedText=[self attributedText:strContent];
         
@@ -477,12 +471,11 @@ arrOfBtnTitleString=[NSMutableArray new];
         
          [aCell.lblQuestion sizeToFit];
         
-       contentHight=aCell.lblQuestion.frame.size.height;
+        contentHight=aCell.lblQuestion.frame.size.height;
         newFrame = aCell.lblQuestion.frame;
         newFrame.size.height = expectedLabelSize.height;
-        
         aCell.lblQuestion.frame = aCell.lblQuestion.frame;
-        
+        //contentHight=aCell.lblQuestion.frame.size.height;
         
 
     }
@@ -590,13 +583,11 @@ arrOfBtnTitleString=[NSMutableArray new];
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
         
-        [aCell.lblQuestion setHidden:YES];
+        [aCell.lblQuestion setHidden:NO];
         [aCell.btnSignature setHidden:NO];
         [aCell.btnSignature setTitle:[aDict objectForKey:@"question"] forState:UIControlStateNormal];
         
         [aCell.btnSignature addTarget:self action:@selector(signatureAction:) forControlEvents:UIControlEventTouchUpInside];
-        
-        
         
         [arrOfBtnTitleString replaceObjectAtIndex:indexPath.row withObject:[aDict objectForKey:@"question"]];
         
@@ -880,46 +871,5 @@ arrOfBtnTitleString=[NSMutableArray new];
 
 }
 
-//-(NSString *)convertHTML:(NSString *)html {
-//    
-//    NSScanner *myScanner;
-//    NSString *text = nil;
-//    myScanner = [NSScanner scannerWithString:html];
-//    
-//    while ([myScanner isAtEnd] == NO) {
-//        
-//        [myScanner scanUpToString:@"<" intoString:NULL] ;
-//        
-//        [myScanner scanUpToString:@">" intoString:&text] ;
-//        
-//        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@>", text] withString:@""];
-//    }
-//    html = [html stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    
-//    return html;
-//}
-//- (NSString *)stringCleaner:(NSString *)yourString {
-//    
-//    NSScanner *theScanner;
-//    NSString *text = nil;
-//    
-//    theScanner = [NSScanner scannerWithString:yourString];
-//    
-//    while ([theScanner isAtEnd] == NO) {
-//        
-//        [theScanner scanUpToString:@"[" intoString:NULL] ;
-//        
-//        [theScanner scanUpToString:@"]" intoString:&text] ;
-//        
-//        
-//        yourString = [yourString stringByReplacingOccurrencesOfString:
-//                      [NSString stringWithFormat:@"%@]", text]
-//                                                           withString:@""];
-//        
-//    }
-//    return [self convertHTML:yourString];
-//    
-//}
-//
 
 @end

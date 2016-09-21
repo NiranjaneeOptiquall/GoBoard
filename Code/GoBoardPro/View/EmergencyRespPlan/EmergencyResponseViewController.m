@@ -193,7 +193,9 @@
 {
     if ([webView isEqual:_viewWebDescription])
     {
-        CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        
+        CGFloat height= webView.scrollView.contentSize.height;
         
         CGRect frameWebView=_viewWebDescription.frame;
         
