@@ -2230,6 +2230,7 @@
 					3397CA9C19D02D7A00788153 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 8NQF7UHVNW;
+						ProvisioningStyle = Automatic;
 					};
 					3397CAB819D02D7A00788153 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -2767,7 +2768,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2784,7 +2785,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect2concepts.goboardprodev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ae5e919c-b8f7-4252-8725-4c8347ff8dc9";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -2794,7 +2795,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2811,7 +2812,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect2concepts.goboardprodev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ae5e919c-b8f7-4252-8725-4c8347ff8dc9";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
