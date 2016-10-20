@@ -124,7 +124,8 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K ==[cd] %@", @"userTypeId", strSurveyUserType];
     [request setPredicate:predicate];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
-    [request setSortDescriptors:@[sort]];
+    NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"surveyId" ascending:YES];
+    [request setSortDescriptors:@[sort,sort1]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {
         [_lblNoRecord setHidden:NO];
@@ -141,22 +142,27 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
     NSPredicate *predicate;
     
-//    predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
+    //predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
     
     if (_guestFormType == 3) {
         predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[cd] %@ AND typeId ==[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
     }
     else {
         predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strFormUserType,[NSString stringWithFormat:@"%d", 3]];
+        
     }
     [request setPredicate:predicate];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"formId" ascending:YES];
-    [request setSortDescriptors:@[sort]];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+    NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"formId" ascending:YES];
+    [request setSortDescriptors:@[sort,sort1]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     if ([mutArrFormList count] == 0) {
         [_lblNoRecord setHidden:NO];
          [_lblNoRecord setText:@"No form available."];
     }
+    
+    
+    
 }
 
 #pragma mark - IBActions
@@ -189,11 +195,15 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
-    
-  
+
+
     NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
     UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
     [aLbl setText:[obj valueForKey:@"Name"]];
+    
+    //NSString *temp = [NSString stringWithFormat:@"%@(%@)",[obj valueForKey:@"Name"],[obj valueForKey:@"sequence"]];
+    //aLbl.text = temp;
+    
     //UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
     //[aLblInstruction setText:[obj valueForKey:@"instructions"]];
     //[aLblInstruction sizeToFit];

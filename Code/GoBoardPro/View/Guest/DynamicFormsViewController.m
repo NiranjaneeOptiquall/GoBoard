@@ -43,7 +43,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     
   
     if ([[_objFormOrSurvey valueForKey:@"instructions"] isEqualToString:@""]) {
-        [_lblInstruction setText:@"No instructions available."];
+        [_lblInstruction setText:@""];
 
     }else{
          [_lblInstruction setText:[_objFormOrSurvey valueForKey:@"instructions"]];    }
@@ -145,13 +145,12 @@ arrOfBtnTitleString=[NSMutableArray new];
     
     for(int i=0;i<mutArrQuestions.count;i++)
     {
-        if([[[mutArrQuestions valueForKey:@"isMandatory"]objectAtIndex:i]boolValue])
-        {
-            [isManArray addObject:@"YES"];
-            
-            flag =YES;
+        if([[[mutArrQuestions valueForKey:@"isMandatory"]objectAtIndex:i]boolValue]){
+            if(![[[mutArrQuestions valueForKey:@"responseType"]objectAtIndex:i]isEqualToString:@"content"]){
+                [isManArray addObject:@"YES"];
+                flag =YES;
+            }
         }
-        
     }
     
     
@@ -423,7 +422,8 @@ arrOfBtnTitleString=[NSMutableArray new];
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
     
-  aCell.lblQuestion.backgroundColor=[UIColor clearColor];
+    aCell.lblQuestion.backgroundColor=[UIColor clearColor];
+    //aCell.contentView.backgroundColor=[UIColor whiteColor];
     [imageArray addObject:@"temp"];
     [arrOfBtnTitleString addObject:@""];
   
@@ -477,14 +477,14 @@ arrOfBtnTitleString=[NSMutableArray new];
        
         CGSize expectedLabelSize= [aCell.lblQuestion.text sizeWithFont:aCell.lblQuestion.font constrainedToSize:maximumLabelSize lineBreakMode:aCell.lblQuestion.lineBreakMode];
         
-         [aCell.lblQuestion sizeToFit];
-        //[aCell.lblQuestion sizeThatFits:expectedLabelSize];
+       [aCell.lblQuestion sizeToFit];
+       //[aCell.lblQuestion sizeThatFits:expectedLabelSize];
         contentHight=aCell.lblQuestion.frame.size.height;
         
         newFrame = aCell.lblQuestion.frame;
         newFrame.size.height = expectedLabelSize.height;
         newFrame.size.width=expectedLabelSize.width;
-        aCell.lblQuestion.frame = aCell.lblQuestion.frame;
+        aCell.lblQuestion.frame = CGRectMake(aCell.lblQuestion.frame.origin.x, aCell.lblQuestion.frame.origin.y, aCell.frame.size.width-(aCell.lblQuestion.frame.origin.x*2),aCell.lblQuestion.frame.size.height);
         
 
     }
@@ -696,7 +696,7 @@ arrOfBtnTitleString=[NSMutableArray new];
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"content"]) {
         
         height=0;
-        height += contentHight+20;
+        height += contentHight+10;
         
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
