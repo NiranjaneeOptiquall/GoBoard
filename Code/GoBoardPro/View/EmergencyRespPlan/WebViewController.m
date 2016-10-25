@@ -24,7 +24,7 @@
     [self setUpInitials:aStrClientId];
     
     if ([_strInstruction isEqualToString:@""]) {
-       [_lblInstruction setText:@"No instructions available."];
+       [_lblInstruction setText:@""];
     }else{
         [_lblInstruction setText:_strInstruction];
     }
