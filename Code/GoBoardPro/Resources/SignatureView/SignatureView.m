@@ -125,7 +125,7 @@
 }
 
 
-- (void)showPopOverWithSender:(UIButton*)sender {
+- (void)showPopOverWithSender:(UIButton*)sender base62String:(nullable NSString*)base63 {
     
     if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
     {
@@ -135,8 +135,22 @@
         
         NSString *str=[NSString stringWithFormat:@"%@",[_arrTempSignatureImage objectAtIndex:indexNumber]];
        
-       NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
-       tempDrawImage.image =[UIImage imageWithData:plainData];
+        if (![base63 isEqualToString:@""]) {
+            
+           
+            
+           NSString *str = [base63 stringByReplacingOccurrencesOfString:@"data:image/png;base64,"
+                                                 withString:@""];
+            NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            tempDrawImage.image =[UIImage imageWithData:plainData];
+  
+        }
+        else{
+             NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            tempDrawImage.image =[UIImage imageWithData:plainData];
+        }
+      
+       
     }
 
     popOver = nil;

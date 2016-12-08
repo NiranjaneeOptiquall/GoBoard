@@ -1,18 +1,16 @@
 //
-//  GuestHomeViewController.h
+//  GuestUserFormListViewController.h
 //  GoBoardPro
 //
-//  Created by ind558 on 23/09/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by Inversedime on 05/12/16.
+//  Copyright © 2016 IndiaNIC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "Constants.h"
 
-@interface GuestFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate> {
+@interface GuestUserFormListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate> {
     NSMutableArray *mutArrFormList;
-    NSInteger selectedIndex,selectedSection;
-    NSMutableArray  *arrayForBool;
+    NSInteger selectedIndex;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *imvIcon;
@@ -21,5 +19,6 @@
 @property (weak, nonatomic) IBOutlet UITableView *tblFormList;
 
 @property (assign, nonatomic) NSInteger guestFormType;
-- (IBAction)btnBackTapped:(id)sender;
+
+
 @end

@@ -49,4 +49,6 @@
 - (IBAction)DoneSigning:(id)sender;
 
 - (void)showPopOverWithSender:(UIButton*)sender;
+- (void)showPopOverWithSender:(UIButton*)sender base62String:(nullable NSString*)base63;
+
 @end

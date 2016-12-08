@@ -21,6 +21,10 @@
 @property (nonatomic, retain) NSString * userTypeId;
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSSet *questionList;
+@property (nonatomic, retain) NSString * categoryId;
+@property (nonatomic, retain) NSString * categoryName;
+@property (nonatomic, retain) NSString * inProgressCount;
+@property (nonatomic, retain) NSString * isAllowInProgress;
 @end
 
 @interface SurveyList (CoreDataGeneratedAccessors)

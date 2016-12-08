@@ -21,7 +21,10 @@
 @property (weak, nonatomic) IBOutlet UITextView *txvView;
 @property (weak, nonatomic) IBOutlet UILabel *lblForIsMandatory;
 @property (strong, nonatomic) IBOutlet UIButton *btnSignature;
+@property (weak, nonatomic) IBOutlet UIView *largeTxtBgView;
+@property (weak, nonatomic) IBOutlet UIImageView *largeTxtImageView;
+@property (weak, nonatomic) IBOutlet UITextView *largeTxtView;
 
-
+@property (strong, nonatomic) IBOutlet UIButton *btnUploadFile;
 
 @end

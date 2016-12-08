@@ -20,4 +20,8 @@
 @dynamic name;
 @dynamic questionList;
 @dynamic sequence;
+@dynamic categoryId;
+@dynamic categoryName;
+@dynamic inProgressCount;
+@dynamic isAllowInProgress;
 @end

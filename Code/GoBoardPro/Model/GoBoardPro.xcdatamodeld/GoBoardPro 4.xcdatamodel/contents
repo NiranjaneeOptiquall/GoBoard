@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="15G31" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -59,42 +59,42 @@
         <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField2" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField2Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField3" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="refusedCareStatement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfCareStatement" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="showAffiliation" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showBloodbornePathogens" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showCommunicationAndNotification" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showConditions" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showDateOfBirth" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showGender" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showGuestId" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showMinor" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField1" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField2" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showParticipantSignature" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showRefusedSelfCareText" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showSelfCareText" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showAffiliation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showBloodbornePathogens" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showCommunicationAndNotification" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showConditions" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showDateOfBirth" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGender" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuestId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showMinor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField1" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField2" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showParticipantSignature" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showRefusedSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="abdomenInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AbdomenInjuryList" inverseName="accidentInfo" inverseEntity="AbdomenInjuryList" syncable="YES"/>
         <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="accidentInfo" inverseEntity="ActionTakenList" syncable="YES"/>
         <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="accidentInfo" inverseEntity="ActivityList" syncable="YES"/>
@@ -123,7 +123,7 @@
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAdminstrationSelected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAllSupervisorSelected" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isNotification1Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification2Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification3Selected" optional="YES" attributeType="String" syncable="YES"/>
@@ -170,7 +170,7 @@
     </entity>
     <entity name="ClientPositions" representedClassName="ClientPositions" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="positionId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="positionId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <entity name="ConditionList" representedClassName="ConditionList" syncable="YES">
         <attribute name="conditionId" optional="YES" attributeType="String" syncable="YES"/>
@@ -180,10 +180,10 @@
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="conditionList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="DailyLog" representedClassName="DailyLog" syncable="YES">
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="includeInEndOfDayReport" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="shouldSync" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Emergency" representedClassName="Emergency" syncable="YES">
@@ -263,12 +263,22 @@
         <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="erpTitle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERPSubcategory" inverseName="erpTasks" inverseEntity="ERPSubcategory" syncable="YES"/>
     </entity>
+    <entity name="FormCategory" syncable="YES">
+        <attribute name="catId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="catName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCatHaveItem" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="formsCat" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FormsList" syncable="YES"/>
+    </entity>
     <entity name="FormsList" representedClassName="FormsList" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="formId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="formList" inverseEntity="SurveyQuestions" syncable="YES"/>
@@ -294,36 +304,36 @@
         <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField1Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField2" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField2Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField2Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField3" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField3Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField3Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField4" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="notificationField4Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="notificationField4Color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="personInvolved3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reportType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="showAffiliation" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showConditions" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showDateOfBirth" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showGender" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showGuestId" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showMinor" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField1" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField2" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="showAffiliation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showConditions" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showDateOfBirth" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGender" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuestId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showMinor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField1" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField2" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="incidentType" inverseEntity="ActionTakenList" syncable="YES"/>
         <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="incidentType" inverseEntity="ActivityList" syncable="YES"/>
         <relationship name="conditionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConditionList" inverseName="incidentType" inverseEntity="ConditionList" syncable="YES"/>
@@ -421,8 +431,8 @@
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="followUpCallType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="incidentDesc" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="incidentType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="incidentType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isNotification1Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification2Selected" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNotification3Selected" optional="YES" attributeType="String" syncable="YES"/>
@@ -491,21 +501,27 @@
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubmitCountUser" inverseName="countLocation" inverseEntity="SubmitCountUser" syncable="YES"/>
     </entity>
     <entity name="SurveyList" representedClassName="SurveyList" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="surveyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="survey" inverseEntity="SurveyQuestions" syncable="YES"/>
     </entity>
     <entity name="SurveyQuestions" representedClassName="SurveyQuestions" syncable="YES">
+        <attribute name="existingResponse" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="existingResponseBool" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mandatory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="questionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="formList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FormsList" inverseName="questionList" inverseEntity="FormsList" syncable="YES"/>
         <relationship name="responseList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyResponseTypeValues" inverseName="question" inverseEntity="SurveyResponseTypeValues" syncable="YES"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyList" inverseName="questionList" inverseEntity="SurveyList" syncable="YES"/>
@@ -519,19 +535,19 @@
     <entity name="TaskList" representedClassName="TaskList" syncable="YES">
         <attribute name="comment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="expirationTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="isCommentAreaSupervisor" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isCommentBuildingSupervisor" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isCommentGoBoardGroup" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isCommentTask" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isCommentWorkOrder" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isCompleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="expirationTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCommentAreaSupervisor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCommentBuildingSupervisor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCommentGoBoardGroup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCommentTask" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCommentWorkOrder" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="response" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="taskDateTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="taskDateTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="taskId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="responseTypeValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskResponseTypeValues" inverseName="task" inverseEntity="TaskResponseTypeValues" syncable="YES"/>
     </entity>
@@ -542,27 +558,27 @@
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskList" inverseName="responseTypeValues" inverseEntity="TaskList" syncable="YES"/>
     </entity>
     <entity name="TeamLog" representedClassName="TeamLog" syncable="YES">
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="includeInEndOfDayReport" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="includeInEndOfDayReport" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="positionId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="shouldSync" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="teamSubLog" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TeamSubLog" inverseName="teamLog" inverseEntity="TeamSubLog" syncable="YES"/>
     </entity>
     <entity name="TeamLogTrace" representedClassName="TeamLogTrace" syncable="YES">
         <attribute name="byuserId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="TeamSubLog" representedClassName="TeamSubLog" syncable="YES">
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="shouldSync" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="teamLog" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TeamLog" inverseName="teamSubLog" inverseEntity="TeamLog" syncable="YES"/>
@@ -590,7 +606,7 @@
         <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UtilizationCount" inverseName="sublocations" inverseEntity="UtilizationCount" syncable="YES"/>
         <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="UtilizationCount" inverseName="location" inverseEntity="UtilizationCount" syncable="YES"/>
     </entity>
@@ -627,7 +643,8 @@
         <element name="ERPHistoryTask" positionX="-37" positionY="-358" width="128" height="88"/>
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
-        <element name="FormsList" positionX="-551" positionY="680" width="128" height="163"/>
+        <element name="FormCategory" positionX="-801" positionY="-756" width="128" height="103"/>
+        <element name="FormsList" positionX="-551" positionY="680" width="128" height="223"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
@@ -644,10 +661,10 @@
         <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="118"/>
-        <element name="SubmittedTask" positionX="-657" positionY="-988" width="128" height="193"/>
+        <element name="SubmittedTask" positionX="-801" positionY="-1129" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
-        <element name="SurveyList" positionX="-738" positionY="657" width="128" height="163"/>
-        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="165"/>
+        <element name="SurveyList" positionX="-738" positionY="657" width="128" height="225"/>
+        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="195"/>
         <element name="SurveyResponseTypeValues" positionX="-675" positionY="1103" width="128" height="103"/>
         <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-517" width="128" height="103"/>

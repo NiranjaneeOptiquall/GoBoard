@@ -1,4 +1,4 @@
- //
+  //
 //  WebSerivceCall.m
 //  GoBoardPro
 //
@@ -45,6 +45,8 @@
 
 #import "ClientPositions.h"
 #import "NSDictionary+NullReplacement.h"
+#import "formCategory.h"
+#import "GuestFormViewController.h"
 
 @implementation WebSerivceCall
 
@@ -958,6 +960,10 @@
         survey.typeId = [[aDict objectForKey:@"SurveyTypeId"] stringValue];
         survey.userTypeId = [[aDict objectForKey:@"SurveyUserTypeId"] stringValue];
         survey.sequence=[aDict objectForKey:@"Sequence"];
+        survey.categoryId=[[aDict objectForKey:@"CategoryId"]stringValue];
+        survey.categoryName=[aDict objectForKey:@"CategoryName"];
+        survey.inProgressCount = [NSString stringWithFormat:@"%@",[aDict valueForKey:@"InProgressCount"]];
+        survey.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsAllowInProgress"]];
         NSMutableSet *aSetQuestions = [NSMutableSet set];
         if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
             for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
@@ -1006,10 +1012,12 @@
     }
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@", FORM_SETUP, aStrClientId, strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllForms];
+        
         [self insertForms:[response objectForKey:@"Forms"]];
         isWSComplete = YES;
         if (complition)
             complition();
+       
     } failure:^(NSError *error, NSDictionary *response) {
         isWSComplete = YES;
         if (complition)
@@ -1036,55 +1044,70 @@
 
 - (void)insertForms:(NSArray*)array {
     for (NSDictionary *aDict in array) {
-        FormsList *form = [NSEntityDescription insertNewObjectForEntityForName:@"FormsList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        form.formId = [[aDict objectForKey:@"Id"] stringValue];
-        if (![[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
-            form.instructions = [aDict objectForKey:@"Instructions"];
-        }
-        else {
-            form.instructions = @"";
-        }
-        if (![[aDict objectForKey:@"Link"] isKindOfClass:[NSNull class]]) {
-            form.link = [aDict objectForKey:@"Link"];
-        }
-        else {
-            form.link = @"";
-        }
-        form.name = [aDict objectForKey:@"Name"];
-        form.typeId = [[aDict objectForKey:@"FormTypeId"] stringValue];
-        form.userTypeId = [[aDict objectForKey:@"FormUserTypeId"] stringValue];
-        form.sequence=[aDict objectForKey:@"Sequence"] ;
-        NSMutableSet *aSetQuestions = [NSMutableSet set];
-        if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
-            for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
-                SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                
-                
-                aQuestion.mandatory=[[dictQuest objectForKey:@"IsMandatory"] stringValue];
-                aQuestion.questionId = [[dictQuest objectForKey:@"Id"] stringValue];
-                aQuestion.question = [dictQuest objectForKey:@"Question"];
-                aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
-                aQuestion.sequence = [dictQuest objectForKey:@"Sequence"];
-                NSMutableSet *responseTypeSet = [NSMutableSet set];
-                if (![[dictQuest objectForKey:@"Responses"] isKindOfClass:[NSNull class]]) {
-                    for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"Responses"]) {
-                        SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-                        responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
-                        responseType.name = [dictResponseType objectForKey:@"Name"];
-                        responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
-                        responseType.question = aQuestion;
-                        [responseTypeSet addObject:responseType];
-                    }
-                }
-                aQuestion.responseList = responseTypeSet;
-                aQuestion.formList = form;
-                [aSetQuestions addObject:aQuestion];
+
+            FormsList *form = [NSEntityDescription insertNewObjectForEntityForName:@"FormsList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            form.formId = [[aDict objectForKey:@"Id"] stringValue];
+            if (![[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
+                form.instructions = [aDict objectForKey:@"Instructions"];
             }
+            else {
+                form.instructions = @"";
+            }
+            if (![[aDict objectForKey:@"Link"] isKindOfClass:[NSNull class]]) {
+                form.link = [aDict objectForKey:@"Link"];
+            }
+            else {
+                form.link = @"";
+            }
+            form.name = [aDict objectForKey:@"Name"];
+            form.typeId = [[aDict objectForKey:@"FormTypeId"] stringValue];
+            form.userTypeId = [[aDict objectForKey:@"FormUserTypeId"] stringValue];
+            form.sequence=[aDict objectForKey:@"Sequence"] ;
+            form.categoryId=[[aDict objectForKey:@"CategoryId"]stringValue];
+            form.categoryName=[aDict objectForKey:@"CategoryName"];
+            form.inProgressCount = [NSString stringWithFormat:@"%@",[aDict valueForKey:@"InProgressCount"]];
+            form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsAllowInProgress"]];
+        
+            
+            NSMutableSet *aSetQuestions = [NSMutableSet set];
+            if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+                for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
+                    SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    aQuestion.mandatory=[[dictQuest objectForKey:@"IsMandatory"] stringValue];
+                    aQuestion.questionId = [[dictQuest objectForKey:@"Id"] stringValue];
+                    aQuestion.question = [dictQuest objectForKey:@"Question"];
+                    aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
+                    aQuestion.sequence = [dictQuest objectForKey:@"Sequence"];
+                    if (![[dictQuest objectForKey:@"ExistingResponse"] isKindOfClass:[NSNull class]])
+                    {
+                         aQuestion.existingResponse = [dictQuest objectForKey:@"ExistingResponse"];
+                    }
+                   
+                    aQuestion.existingResponseBool = [[dictQuest objectForKey:@"ExistingResponseBool"]stringValue];
+                    
+                    NSMutableSet *responseTypeSet = [NSMutableSet set];
+                    if (![[dictQuest objectForKey:@"Responses"] isKindOfClass:[NSNull class]]) {
+                        for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"Responses"]) {
+                            SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                            responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
+                            responseType.name = [dictResponseType objectForKey:@"Name"];
+                            responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
+                            responseType.question = aQuestion;
+                            [responseTypeSet addObject:responseType];
+                        }
+                    }
+                    aQuestion.responseList = responseTypeSet;
+                    aQuestion.formList = form;
+                    [aSetQuestions addObject:aQuestion];
+                }
+            }
+            form.questionList = aSetQuestions;
+            [gblAppDelegate.managedObjectContext insertObject:form];
+        
+        [gblAppDelegate.managedObjectContext save:nil];
         }
-        form.questionList = aSetQuestions;
-        [gblAppDelegate.managedObjectContext insertObject:form];
-    }
-    [gblAppDelegate.managedObjectContext save:nil];
+        
+      
 }
 
 
@@ -1112,7 +1135,6 @@
 }
 
 #pragma mark - Team Log
-
 
 - (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;

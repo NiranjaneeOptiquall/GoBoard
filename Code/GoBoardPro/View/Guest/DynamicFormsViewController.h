@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "ALAssetsLibrary+CustomPhotoAlbum.h"
+#import "AccidentReportViewController.h"
+#import "FormsHistory.h"
 
 
 
@@ -16,16 +19,20 @@
     NSMutableArray *mutArrQuestions;
     NSInteger currentIndex;
     BOOL isUpdate;
-    
+    UIPopoverController *popOver;
+
     
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblForm;
 @property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
-
+@property (weak, nonatomic) AccidentReportViewController *parentVC;
+@property (strong, nonatomic) UIImage *imgBodilyFluid;
+@property(nonatomic,retain)NSMutableArray *tempArray;
 
 @property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
-
+@property (strong, nonatomic) IBOutlet UIButton *btnSubmitLater;
+@property(nonatomic,retain)FormsHistory *forms;
 
 @property (assign, nonatomic) BOOL isSurvey;
 

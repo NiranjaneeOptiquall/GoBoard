@@ -22,6 +22,8 @@
 @dynamic responseList;
 @dynamic survey;
 @dynamic formList;
+@dynamic existingResponse;
+@dynamic existingResponseBool;
 
 
 @end

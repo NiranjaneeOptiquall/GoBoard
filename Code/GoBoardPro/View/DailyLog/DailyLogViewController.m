@@ -87,7 +87,9 @@
     }
     else
     {
-        [self addDailyLog];
+        if ([self.txvDailyLog.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0) {
+                [self addDailyLog];
+        }
     }
    
 }
@@ -115,8 +117,7 @@
     [_lblNoRecords setHidden:YES];
     
     [_tblDailyLog reloadData];
-    
-    
+    [self callWebserviceToAddDailyLogWithDailyLogObject:aLog];
     _txvDailyLog.text = @"";
 }
 
@@ -465,6 +466,42 @@
      }
  }
 
+-(void)callWebserviceToAddDailyLogWithDailyLogObject:(DailyLog *)aObj
+{
+    NSString *aParamDate = [gblAppDelegate getUTCDate:aObj.date];
+    NSString *aStrName = [[User currentUser]username];
+    NSDictionary *aDictParams = @{@"Id":@"0",
+                                  @"FacilityId":@"267",
+                                  @"PositionId":@"",
+                                  @"IsTeamLog":[NSNumber numberWithBool:NO],
+                                  @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
+                                  @"Date":aParamDate,
+                                  @"UserId":aObj.userId,
+                                  @"DailyLogDetails":@[
+                                          @{@"Id":@"0",
+                                            @"Date":aParamDate,
+                                            @"Description":aObj.desc,
+                                            @"IncludeInEndOfDayReport":[NSNumber numberWithBool:NO],
+                                            @"UserId":[[User currentUser]userId],
+                                            @"UserName":aStrName
+                                            }
+                                          ]
+                                  };
+    [gblAppDelegate callWebService:TEAM_LOG parameters:aDictParams httpMethod:@"POST" complition:^(NSDictionary *response) {
+        alert(@"", @"Daily Log is submitted successfully")
+        if ([response[@"Success"]boolValue]) {
+            
+        }
+        
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+        alert(@"", MSG_ADDED_TO_SYNC);
+        aObj.shouldSync = [NSNumber numberWithBool:YES];
+        [gblAppDelegate.managedObjectContext save:nil];
+    }];
+
+    
+}
 #pragma mark - Webservice Call
 
 -(void)callWebserviceToAddTeamLogWithTeamLogObject:(TeamLog *)aObj

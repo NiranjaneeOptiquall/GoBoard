@@ -17,6 +17,9 @@
 @property (nonatomic, retain) NSString * question;
 @property (nonatomic, retain) NSString * questionId;
 @property (nonatomic, retain) NSString * responseType;
+@property (nonatomic, retain) NSString * existingResponse;
+@property (nonatomic, retain) NSString * existingResponseBool;
+
 
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSSet *responseList;
