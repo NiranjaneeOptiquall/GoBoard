@@ -61,6 +61,8 @@
 #pragma mark - IBActions
 
 - (IBAction)btnSubmitTapped:(id)sender {
+   // [[NSUserDefaults standardUserDefaults] setObject:_txtFacility.text forKey:@"facilityId"];
+    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"facilityId"]);
     if ([_txtFacility isTextFieldBlank] || [[[User currentUser] mutArrSelectedLocations] count] == 0 || [[[User currentUser] mutArrSelectedPositions] count] == 0) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -174,6 +176,8 @@
     NSFetchRequest *requestLoc = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
     
     NSPredicate *predicateLoc = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
+    [[NSUserDefaults standardUserDefaults] setObject:selectedFacility.value forKey:@"facilityId"];
+    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"facilityId"]);
     [requestLoc setPredicate:predicateLoc];
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     [requestLoc setSortDescriptors:@[sortByName]];
