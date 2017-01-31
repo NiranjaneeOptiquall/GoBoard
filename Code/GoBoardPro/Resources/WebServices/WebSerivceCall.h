@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "Constants.h"
 
-@interface WebSerivceCall : NSObject {
-
+@interface WebSerivceCall : NSObject<UINavigationControllerDelegate>
+{
+    BOOL isErrorOccurred;
 }
 
 #pragma mark - Instantiate Object
@@ -32,6 +33,10 @@
 - (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 - (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 - (void)callServiceForSurvey:(BOOL)waitUntilDone withSurveyId:(NSString*)surveyId complition:(void(^)(void))complition;
+
+- (void)callServiceForSurveyInOffline:(BOOL)waitUntilDone withSurveyId:(NSString*)surveyId withSurveyInstructions:(NSString*)SurveyInstructions withSurveyIsAllowInProgress:(NSString*)SurveyIsAllowInProgress withSurveyName:(NSString*)SurveyName complition:(void(^)(void))complition;
+
+- (void)callServiceForFormInOffline:(BOOL)waitUntilDone withFormId:(NSString*)FormId withFormInstructions:(NSString*)FormInstructions withFormIsAllowInProgress:(NSString*)FormIsAllowInProgress withFormName:(NSString*)FormName complition:(void(^)(void))complition;
 
 - (void)callServiceForMemos:(BOOL)waitUntilDone complition:(void (^)(void))completion ;
 - (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition;

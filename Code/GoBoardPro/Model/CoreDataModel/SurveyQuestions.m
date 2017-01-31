@@ -22,8 +22,11 @@
 @dynamic responseList;
 @dynamic survey;
 @dynamic formList;
+@dynamic formInProgressList;
+@dynamic surveyInProgressList;
 @dynamic existingResponse;
 @dynamic existingResponseBool;
-
+@dynamic existingResponseIds;
+@dynamic detailImageVideoText;
 
 @end

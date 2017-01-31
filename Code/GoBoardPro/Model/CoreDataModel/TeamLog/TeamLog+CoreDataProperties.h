@@ -18,12 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSDate *date;
 @property (nullable, nonatomic, retain) NSString *desc;
 @property (nullable, nonatomic, retain) NSString *facilityId;
-@property (nullable, nonatomic, retain) NSNumber *includeInEndOfDayReport;
+@property (nullable, nonatomic, retain) NSString *includeInEndOfDayReport;
 @property (nullable, nonatomic, retain) NSString *positionId;
 @property (nullable, nonatomic, retain) NSNumber *shouldSync;
 @property (nullable, nonatomic, retain) NSNumber *teamLogId;
 @property (nullable, nonatomic, retain) NSString *userId;
 @property (nullable, nonatomic, retain) NSString *username;
+@property (nullable, nonatomic, retain) NSString *isTeamLog;
+@property (nullable, nonatomic, retain) NSString *headerId;
 @property (nullable, nonatomic, retain) NSSet<TeamSubLog *> *teamSubLog;
 
 @end

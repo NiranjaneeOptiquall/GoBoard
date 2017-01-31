@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imvGuestIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *lblVersionNumber;
 @property (strong, nonatomic) IBOutlet UILabel *lblBuildVersionNumber;
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnSignInTapped;
+
 
 //********** User Sign In View **********//
 

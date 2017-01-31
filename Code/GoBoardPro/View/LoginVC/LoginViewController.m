@@ -76,6 +76,8 @@
         [_imvUserIndicator setHidden:YES];
         [_vwUserSignIn setHidden:YES];
         [_vwGuestSignIn setHidden:NO];
+        
+        [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isGuest"];
     }
 }
 
@@ -87,10 +89,13 @@
         [_imvGuestIndicator setHidden:YES];
         [_vwGuestSignIn setHidden:YES];
         [_vwUserSignIn setHidden:NO];
+        
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isGuest"];
     }
 }
 
 - (IBAction)btnSignInTapped:(id)sender {
+    _btnSignInTapped.userInteractionEnabled=NO;
     if ([_txtUserId isTextFieldBlank]) {
         alert(@"Login", @"Please enter a Username");
         return;
@@ -105,7 +110,8 @@
     }
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
-        
+        _btnSignInTapped.userInteractionEnabled=YES;
+
         User *currentUser = [User currentUser];
         currentUser.firstName = nil;
         currentUser.lastName = nil;
@@ -145,7 +151,35 @@
             currentUser.phone = [response objectForKey:@"Phone"];
         }
         currentUser.email = [response objectForKey:@"Email"];
+        
         currentUser.clientName = [response objectForKey:@"ClientName"];
+        
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeClient"] isEqualToString:[response objectForKey:@"ClientName"]]) {
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataSurveyDone"] isEqualToString:@"YES"]){
+                
+                [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientSurvey"];
+
+            }
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataFormDone"] isEqualToString:@"YES"]){
+                
+                [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientForm"];
+
+            }
+
+
+        }
+        else{
+            [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataSurveyDone"];
+            [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataFormDone"];
+
+                  [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientForm"];
+                  [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientSurvey"];
+          
+        }
+        [[NSUserDefaults standardUserDefaults]setValue:[response objectForKey:@"IsAdmin"] forKey:@"IsAdmin"];
+
+        [[NSUserDefaults standardUserDefaults]setValue:currentUser.clientName forKey:@"oldeClient"];
+        
         currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
         currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
         currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
@@ -176,6 +210,8 @@
     } failure:^(NSError *error, NSDictionary *response) {
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         alert(@"", [response objectForKeyedSubscript:@"ErrorMessage"]);
+        _btnSignInTapped.userInteractionEnabled=YES;
+
     }];
 }
 
@@ -199,12 +235,28 @@
 - (IBAction)btnSignUpTapped:(id)sender {
 }
 - (IBAction)btnTakeASurveyTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSurvey"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isForm"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isSuggestion"];
+
 }
 
 - (IBAction)btnMakeASuggestionTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isSurvey"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isForm"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSuggestion"];
+
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromSuveyViewC"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgress"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromSugestionViewC"];
+    
 }
 
 - (IBAction)btnCompleteAFormTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isSurvey"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isForm"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"no" forKey:@"isSuggestion"];
+
 }
 
 - (IBAction)unwindBackToLoginScreen:(UIStoryboardSegue*)segue {

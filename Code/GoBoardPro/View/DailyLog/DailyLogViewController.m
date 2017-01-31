@@ -1,4 +1,4 @@
-//
+ //
 //  DailyLogViewController.m
 //  GoBoardPro
 //
@@ -13,9 +13,16 @@
 #import "UserHomeViewController.h"
 #import "TeamLogTrace.h"
 #import "ClientPositions.h"
+#import "WebSerivceCall.h"
+#import "Reachability.h"
+
 #define kTextLimit 1000
 
 @interface DailyLogViewController ()
+{
+    WebSerivceCall * webCall;
+    
+}
 
 @end
 
@@ -23,18 +30,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self doInitialSettings];
+    self.btnToggleTeam.selected = NO;
+    [self.viewSelectPos setAlpha:0.0];
+ 
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     
+    [self.view addGestureRecognizer:tap];
 }
 
 - (void)didReceiveMemoryWarning {
+    
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 -(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+{    [super viewWillAppear:animated];
+    [gblAppDelegate showActivityIndicator];
+    [[WebSerivceCall webServiceObject] callServiceForTeamLog:YES complition:^{
+        [self doInitialSettings];
+        [self.tblDailyLog reloadData];
+      
+        
+    }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewTextDidChangeNotification:) name:UITextViewTextDidChangeNotification object:self.txvDailyLog];
 }
 
@@ -43,7 +61,10 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidChangeNotification object:nil];
 }
-
+-(void)dismissKeyboard
+{
+    [_txvDailyLog resignFirstResponder];
+}
 /*
 #pragma mark - Navigation
 
@@ -93,19 +114,86 @@
     }
    
 }
+- (void)insertDailyLog {
+    
+    TeamLog *aTeamLogObj = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        aTeamLogObj.facilityId = [[[User currentUser]selectedFacility] value];
+        aTeamLogObj.positionId = @"0";
+        aTeamLogObj.teamLogId =@0;
+        aTeamLogObj.userId = [[User currentUser] userId];
+        aTeamLogObj.isTeamLog = @"0";
+        aTeamLogObj.desc =  _txvDailyLog.text;
+        aTeamLogObj.username =[[User currentUser]username];
+        aTeamLogObj.headerId = @"";
+        aTeamLogObj.includeInEndOfDayReport = @"false";
+        aTeamLogObj.date =[NSDate date];
+    if ([self isNetworkReachable]) {
+        aTeamLogObj.shouldSync = [NSNumber numberWithBool:NO];
+
+    }
+    else{
+        aTeamLogObj.shouldSync = [NSNumber numberWithBool:YES];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    
+    
+    
+    
+}
+
+-(void)insertTeamLog{
+    TeamLog *aTeamLogObj = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    aTeamLogObj.facilityId = [[[User currentUser]selectedFacility] value];
+    aTeamLogObj.positionId = [[self getPoistion:self.txtPosition.text]stringValue];
+    aTeamLogObj.teamLogId =@0;
+    aTeamLogObj.userId = [[User currentUser] userId];
+    aTeamLogObj.isTeamLog = @"1";
+    aTeamLogObj.desc =  _txvDailyLog.text;
+    aTeamLogObj.username =[[User currentUser]username];
+
+    aTeamLogObj.headerId = @"";
+    aTeamLogObj.includeInEndOfDayReport = @"false";
+    aTeamLogObj.date =[NSDate date];
+   // aTeamLogObj.shouldSync = [NSNumber numberWithInt:0];
+    if ([self isNetworkReachable]) {
+        aTeamLogObj.shouldSync = [NSNumber numberWithBool:0];
+        
+    }
+    else{
+        aTeamLogObj.shouldSync = [NSNumber numberWithBool:YES];
+    }
+
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 
 -(void)addDailyLog
 {
+    [self insertDailyLog];
     DailyLog *aLog = [NSEntityDescription insertNewObjectForEntityForName:@"DailyLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     aLog.desc = _txvDailyLog.text;
     aLog.userId = [[User currentUser] userId];
-  
-    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     aLog.date =[NSDate date];
     aLog.includeInEndOfDayReport = @"false";
     aLog.shouldSync = [NSNumber numberWithBool:NO];
-    [gblAppDelegate.managedObjectContext insertObject:aLog];
-    [gblAppDelegate.managedObjectContext save:nil];
+   // [gblAppDelegate.managedObjectContext insertObject:aLog];
+    //[gblAppDelegate.managedObjectContext save:nil];
+
+    if ([self isNetworkReachable]) {
+        
+    }
+    else{
+        aLog.shouldSync=[NSNumber numberWithBool:YES];
+    }
     [mutArrDailyList addObject:aLog];
     
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
@@ -116,34 +204,33 @@
     
     [_lblNoRecords setHidden:YES];
     
-    [_tblDailyLog reloadData];
+   
     [self callWebserviceToAddDailyLogWithDailyLogObject:aLog];
     _txvDailyLog.text = @"";
+    [_lblLogPlaceholder setHidden:NO];
+    self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
+   [_tblDailyLog reloadData];
+   
+
 }
+
 
 -(void)addTeamLog
 {
+  [self insertTeamLog];
+    
     TeamLog *aLog = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     aLog.desc = _txvDailyLog.text;
     aLog.userId = [[User currentUser] userId];
-   
-    //[aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     aLog.date = [NSDate date];
-    aLog.includeInEndOfDayReport = @(0);
+    aLog.includeInEndOfDayReport = @"0";
     aLog.shouldSync = [NSNumber numberWithBool:NO];
     aLog.username = [[User currentUser]username];
-    
-    
-    
- //   NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"name MATCHES[cd] %@", self.txtPosition.text];
- //   aLog.positionId = [[[[User currentUser]mutArrSelectedPositions] filteredArrayUsingPredicate:aPredicate][0]valueForKey:@"value"];
-    
-    aLog.positionId = [[self getPoistion:self.txtPosition.text]stringValue];
+   aLog.positionId = [[self getPoistion:self.txtPosition.text]stringValue];
     aLog.facilityId = [[[User currentUser]selectedFacility] value];
-
-    
-    [gblAppDelegate.managedObjectContext insertObject:aLog];
-    [gblAppDelegate.managedObjectContext save:nil];
+    aLog.isTeamLog=@"1";
+//    [gblAppDelegate.managedObjectContext insertObject:aLog];
+//    [gblAppDelegate.managedObjectContext save:nil];
     [mutArrDailyList addObject:aLog];
     
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
@@ -151,16 +238,16 @@
     [mutArrDailyList removeAllObjects];
     [mutArrDailyList addObjectsFromArray:aMutArrTemp];
     aMutArrTemp = nil;
-    
     [_lblNoRecords setHidden:YES];
     
-    [_tblDailyLog reloadData];
-    
     [self callWebserviceToAddTeamLogWithTeamLogObject:aLog];
-    
     self.txtPosition.text = @"";
-
     _txvDailyLog.text = @"";
+    [_lblLogPlaceholder setHidden:NO];
+    self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
+    [_tblDailyLog reloadData];
+
+    
 }
 
 -(NSNumber *)getPoistion:(NSString *)aStrPosition
@@ -236,8 +323,8 @@
     if (gblAppDelegate.teamLogCountAfterLogin>0 || self.boolISWSCallNeeded) {
         [gblAppDelegate showActivityIndicator];
         [[WebSerivceCall webServiceObject] callServiceForTeamLog:YES complition:^{
-            
-            [self fetchDailyLog];
+    
+           // [self fetchDailyLog];
             [self fetchTeamLog];
             [self.tblDailyLog reloadData];
             gblAppDelegate.teamLogCountAfterLogin = 0;
@@ -257,7 +344,7 @@
     }
     else
     {
-        [self fetchDailyLog];
+        //[self fetchDailyLog];
         [self fetchTeamLog];
     }
     
@@ -266,12 +353,12 @@
 
 -(void)textViewTextDidChangeNotification:(NSNotification *)aNotif
 {
-    self.lblCharacterCount.text = [NSString stringWithFormat:@"%u",kTextLimit - [[self.txvDailyLog text] length]];
+    self.lblCharacterCount.text = [NSString stringWithFormat:@"%lu",kTextLimit - [[self.txvDailyLog text] length]];
 }
 
 - (void)fetchDailyLog {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"DailyLog"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId MATCHES[cd] %@", [[User currentUser] userId]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId MATCHES[cd] %@ AND includeInEndOfDayReport==%@", [[User currentUser] userId],@"false"];
     [request setPredicate:predicate];
     mutArrDailyList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     
@@ -286,11 +373,15 @@
 }
 
 - (void)fetchTeamLog {
+    mutArrDailyList = [NSMutableArray new];
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId MATCHES[cd] %@", [[User currentUser] userId]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId MATCHES[cd] %@ AND includeInEndOfDayReport==%@", [[User currentUser] userId],@"false"];
+    // NSPredicate *predicate = [NSPredicate predicateWithFormat:@"includeInEndOfDayReport==%@",@"false"];
     [request setPredicate:predicate];
     NSArray *aArray  =[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    
+   
     [mutArrDailyList addObjectsFromArray:aArray];
     
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
@@ -303,8 +394,8 @@
     if ([mutArrDailyList count] == 0) {
         [_lblNoRecords setHidden:NO];
     }
+        [gblAppDelegate hideActivityIndicator];
 }
-
 
 
 #pragma mark - UITableView DataSource
@@ -315,14 +406,15 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self fetchTeamLog];
+    
     UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     [aCell setBackgroundColor:[UIColor clearColor]];
     UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
     UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
     UIImageView *aImgView = (UIImageView*)[aCell.contentView viewWithTag:5];
     [aImgView setHidden:YES];
-    
-    
+
     if ([mutArrDailyList[indexPath.row]isKindOfClass:[DailyLog class]]) {
         DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
         NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
@@ -358,12 +450,13 @@
     }
     else
     {
+       
         TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
+
         NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
         [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
         [aFormatter setDateFormat:@"hh:mm a"];
-        
-        
+
         [aLblTime setText:[aFormatter stringFromDate:log.date]];
         [aLblLog setText:log.desc];
         
@@ -389,7 +482,12 @@
         frame.size.height = aHeight + 40;
         bgView.frame = frame;
         
-        aImgView.hidden = NO;
+        if ([log.positionId isEqualToString:@"0"]) {
+            aImgView.hidden = YES;
+        }else{
+            aImgView.hidden = NO;
+        }
+    
     }
     
 
@@ -398,7 +496,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
+    TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
     NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
     CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
     
@@ -468,19 +566,22 @@
 
 -(void)callWebserviceToAddDailyLogWithDailyLogObject:(DailyLog *)aObj
 {
-    NSString *aParamDate = [gblAppDelegate getUTCDate:aObj.date];
+    TeamLog *aLog = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    aLog.facilityId = [[[User currentUser]selectedFacility] value];
+
+    NSString *aParamDate = [gblAppDelegate getUTCDate:[NSDate date]];
     NSString *aStrName = [[User currentUser]username];
     NSDictionary *aDictParams = @{@"Id":@"0",
-                                  @"FacilityId":@"267",
+                                  @"FacilityId":aLog.facilityId,
                                   @"PositionId":@"",
                                   @"IsTeamLog":[NSNumber numberWithBool:NO],
                                   @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
                                   @"Date":aParamDate,
-                                  @"UserId":aObj.userId,
+                                  @"UserId":[[User currentUser] userId],
                                   @"DailyLogDetails":@[
                                           @{@"Id":@"0",
-                                            @"Date":aParamDate,
-                                            @"Description":aObj.desc,
+                                        @"Date":aParamDate,
+                                            @"Description":_txvDailyLog.text,
                                             @"IncludeInEndOfDayReport":[NSNumber numberWithBool:NO],
                                             @"UserId":[[User currentUser]userId],
                                             @"UserName":aStrName
@@ -497,7 +598,7 @@
         
         alert(@"", MSG_ADDED_TO_SYNC);
         aObj.shouldSync = [NSNumber numberWithBool:YES];
-        [gblAppDelegate.managedObjectContext save:nil];
+        [gblAppDelegate.managedObjectContext save:nil];        
     }];
 
     
@@ -506,7 +607,7 @@
 
 -(void)callWebserviceToAddTeamLogWithTeamLogObject:(TeamLog *)aObj
 {
-    
+        TeamLog *aTeamLogObj = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     //"2016-02-11 06:45:45 PM";
     NSString *aParamDate = [gblAppDelegate getUTCDate:aObj.date];
    
@@ -562,8 +663,9 @@
     } failure:^(NSError *error, NSDictionary *response) {
         
         alert(@"", MSG_ADDED_TO_SYNC);
-        aObj.shouldSync = [NSNumber numberWithBool:YES];
-        [gblAppDelegate.managedObjectContext save:nil];
+//        aObj.shouldSync = [NSNumber numberWithBool:YES];
+//        [gblAppDelegate.managedObjectContext save:nil];
+        
     }];
 }
 

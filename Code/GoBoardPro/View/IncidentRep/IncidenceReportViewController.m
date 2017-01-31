@@ -93,6 +93,9 @@
         aDetail.incidentType = 3;
     }
 }
+- (IBAction)backClicked:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 
 @end

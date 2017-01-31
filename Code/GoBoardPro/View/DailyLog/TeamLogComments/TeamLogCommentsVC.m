@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "ClientPositions.h"
+#import "Reachability.h"
 
 #define kTextLimit 1000
 
@@ -27,8 +28,15 @@
     [super viewDidLoad];
     [self doInitialSettings];
     // Do any additional setup after loading the view.
-}
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
 
+}
+-(void)dismissKeyboard
+{
+    [self.view endEditing:YES];
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -133,7 +141,7 @@
             [self addTeamLog];
         }
         else
-            alert(@"", @"Please sync team log first to add comments");
+            alert(@"", @"Before adding comment please sync the Team Log from Home Screen once you have an internet connection.");
         
     }
     else
@@ -250,9 +258,22 @@
     [self.view addSubview:containerView];
 
 }
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 
 -(void)addTeamLog
 {
+    if ([self isNetworkReachable]) {
+   
+    
     TeamSubLog *aLog = [NSEntityDescription insertNewObjectForEntityForName:@"TeamSubLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
     aLog.desc = textView.text;
     aLog.userId = [[User currentUser] userId];
@@ -279,6 +300,10 @@
     self.lblNoRecords.hidden = YES;
     
     [self callWebserviceToAddTeamLogWithTeamLogObject:aLog];
+    }
+    else{
+        alert(@"",MSG_NO_INTERNET);
+    }
 }
 
 

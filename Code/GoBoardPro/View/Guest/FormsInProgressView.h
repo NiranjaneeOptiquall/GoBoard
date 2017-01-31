@@ -11,6 +11,8 @@
 #import "FormsList.h"
 #import "SurveyQuestions.h"
 #import "SurveyResponseTypeValues.h"
+#import "Reachability.h"
+
 @protocol FormsInProgressDelegate
 -(void)inProgressForm:(NSMutableArray*)arr;
 @end

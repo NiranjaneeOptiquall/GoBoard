@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSString *includeInEndOfDayReport;
 @property (nullable, nonatomic, retain) NSNumber *shouldSync;
 @property (nullable, nonatomic, retain) NSString *userId;
+@property (nullable, nonatomic, retain) NSString *isTeamLog;
 
 @end
 

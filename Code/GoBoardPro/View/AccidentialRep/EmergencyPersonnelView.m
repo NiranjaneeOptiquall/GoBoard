@@ -117,7 +117,7 @@
         [self setKeepViewInFrame:textField];
         DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
         [datePopOver setDelegate:self];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtTimeOfArrival]) {
@@ -131,7 +131,7 @@
             [aFormatter setDateFormat:@"dd/MM/yyyy hh:mm a"];
             [datePopOver.datePicker setMinimumDate:[aFormatter dateFromString:[NSString stringWithFormat:@"%@ %@", aStr, _txtTime911Called.text]]];
         }
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtTimeOfDeparture]) {
@@ -142,7 +142,7 @@
         NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
         [aFormatter setDateFormat:@"dd/MM/yyyy hh:mm a"];
         [datePopOver.datePicker setMinimumDate:[aFormatter dateFromString:[NSString stringWithFormat:@"%@ %@", aStr, _txtTimeOfArrival.text]]];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_PAST_ONLY option:DATE_SELECTION_TIME_ONLY updateField:textField];
+        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_NONE option:DATE_SELECTION_TIME_ONLY updateField:textField];
         allowEditing = NO;
     }
     return allowEditing;

@@ -17,6 +17,12 @@
 @dynamic responseId;
 @dynamic questionText;
 @dynamic formOrSurvey;
+@dynamic detailImageVideoText;
+@dynamic existingResponseBool;
+@dynamic isMandatory;
+@dynamic responseType;
+@dynamic responseList;
+@dynamic sequence;
 
 
 @end

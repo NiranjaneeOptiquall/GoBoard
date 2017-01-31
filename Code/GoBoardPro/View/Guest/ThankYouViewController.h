@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSString *strBackTitle;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblMessage;
-
+@property(nonatomic,strong) NSString * thankyouText;
 @property (weak, nonatomic) IBOutlet UIButton *btnBack;
 - (IBAction)btnBackTapped:(id)sender;
 @end

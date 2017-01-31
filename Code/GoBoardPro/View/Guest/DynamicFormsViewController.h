@@ -20,7 +20,7 @@
     NSInteger currentIndex;
     BOOL isUpdate;
     UIPopoverController *popOver;
-
+    UIActivityIndicatorView *indicatorView;
     
 }
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;

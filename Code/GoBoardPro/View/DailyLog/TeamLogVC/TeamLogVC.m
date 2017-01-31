@@ -21,21 +21,33 @@
 #define kIndex @"Index"
 
 @interface TeamLogVC ()
-
+{
+    WebSerivceCall * webCall;
+}
 @end
 
 @implementation TeamLogVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self doInitialSettings];
-    // Do any additional setup after loading the view.
+   // webCall=[[WebSerivceCall alloc]init];
+   // [webCall callServiceForTeamLog:YES complition:nil];
+//    [self doInitialSettings];
+  _mutArrTeamLog=[NSMutableArray new];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.tblViewteamLog reloadData];
+   // [self.tblViewteamLog reloadData];
+    [gblAppDelegate showActivityIndicator];
+    [[WebSerivceCall webServiceObject] callServiceForTeamLog:YES complition:^{
+        [self doInitialSettings];
+        [self.tblViewteamLog reloadData];
+        [gblAppDelegate hideActivityIndicator];
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -157,11 +169,21 @@
 -(void)doInitialSettings
 {
     self.mutArrTeamLog = [NSMutableArray array];
+
     [self fetchTeamLog];
 }
 
 - (void)fetchTeamLog {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+    
+ //   NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isTeamLog==%@) AND (shouldSync==%@)",@1,@0];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(isTeamLog==%@)",@1];
+
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"positionId CONTAINS %@ AND positionId != nil",@1];    aObj.shouldSync = [NSNumber numberWithBool:YES];
+
+    [request setPredicate:predicate];
+    
     self.mutArrTeamLog = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
     NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[self.mutArrTeamLog sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
@@ -169,6 +191,7 @@
     [self.mutArrTeamLog addObjectsFromArray:aMutArrTemp];
     
     NSMutableArray *aMutArrRemove = [NSMutableArray array];
+    NSLog(@"%@",self.mutArrTeamLog);
     for (TeamLog *aTeamLog in self.mutArrTeamLog) {
         NSString *aCurrentUser = [[User currentUser]userId];
         if (![aTeamLog.userId isEqualToString:aCurrentUser] && aTeamLog.shouldSync.integerValue==1) {
@@ -191,6 +214,7 @@
 
 - (IBAction)toggleDailyLogBtnAction:(id)sender {
     
+
     NSMutableArray *aMutArrVC = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
     
     for (UIViewController *aVCObj in self.navigationController.viewControllers) {

@@ -11,7 +11,7 @@
 
 @interface GuestFormViewController : UIViewController<UITableViewDataSource, UITableViewDelegate> {
     NSMutableArray *mutArrFormList;
-    NSInteger selectedIndex,selectedSection;
+    NSInteger selectedIndex,selectedSection,sectionForheader;
     NSMutableArray  *arrayForBool;
 }
 

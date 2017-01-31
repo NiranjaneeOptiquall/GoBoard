@@ -55,7 +55,6 @@
     }
     else if ([keyPath isEqualToString:@"careProvided"]) {
         CGRect frame = CGRectZero;
-
         float nextY = 0.0;
         
         [_vwBodilyFluid setIsRefusedCareSelected:NO];
@@ -98,8 +97,8 @@
         frame.origin.y = nextY;
         _vwBodilyFluid.vwBloodbornePathogens.frame = frame;
         
-        
         frame = _vwBodilyFluid.vwStaffMember.frame;
+        
         if (_parentVC.reportSetupInfo.showBloodbornePathogens.boolValue) {
             frame.origin.y = CGRectGetMaxY(_vwBodilyFluid.vwBloodbornePathogens.frame);
         }else{

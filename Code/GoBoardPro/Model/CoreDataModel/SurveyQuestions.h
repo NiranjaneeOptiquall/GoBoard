@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class FormsList, SurveyList, SurveyResponseTypeValues;
+@class FormsList, SurveyList, SurveyResponseTypeValues,FormsInProgress,SurveyInProgress;
 
 @interface SurveyQuestions : NSManagedObject
 
@@ -19,12 +19,16 @@
 @property (nonatomic, retain) NSString * responseType;
 @property (nonatomic, retain) NSString * existingResponse;
 @property (nonatomic, retain) NSString * existingResponseBool;
-
-
+@property (nonatomic, retain) NSString * existingResponseIds;
+@property (nonatomic, retain) NSString * detailImageVideoText;
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) NSSet *responseList;
 @property (nonatomic, retain) SurveyList *survey;
+@property (nonatomic, retain) SurveyInProgress *surveyInProgressList;
+
 @property (nonatomic, retain) FormsList *formList;
+@property (nonatomic, retain) FormsInProgress *formInProgressList;
+
 @end
 
 @interface SurveyQuestions (CoreDataGeneratedAccessors)

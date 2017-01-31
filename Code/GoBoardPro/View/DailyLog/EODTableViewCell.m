@@ -1,14 +1,14 @@
 //
-//  GuestFormCell.m
+//  EODTableViewCell.m
 //  GoBoardPro
 //
-//  Created by Inversedime on 29/11/16.
+//  Created by Optiquall Solutions on 29/12/16.
 //  Copyright © 2016 IndiaNIC. All rights reserved.
 //
 
-#import "GuestFormCell.h"
+#import "EODTableViewCell.h"
 
-@implementation GuestFormCell
+@implementation EODTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

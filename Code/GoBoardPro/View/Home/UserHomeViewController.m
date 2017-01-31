@@ -29,11 +29,15 @@
 #import "TeamLog.h"
 #import "TeamSubLog.h"
 #import "TeamLogTrace.h"
+#import "LoginViewController.h"
 
 #import "DailyLogViewController.h"
 
 @interface UserHomeViewController ()
-
+{
+    NSDictionary *dictReq;
+    
+}
 @end
 
 @implementation UserHomeViewController
@@ -66,6 +70,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [_lblWelcomeUser setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+    
     intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted = 0", [[User currentUser] userId]];
@@ -124,6 +131,8 @@
         DailyLogViewController *aVCObj= (DailyLogViewController *)segue.destinationViewController;
         aVCObj.boolISWSCallNeeded = self.boolUpdateTeamLog;
     }
+   
+   
     
 //
 }
@@ -141,9 +150,30 @@
         [self performSync];
     }
 }
-
-- (IBAction)unwindBackToHomeScreen:(UIStoryboardSegue*)segue {
+- (IBAction)signOutClicked:(id)sender {
+    NSLog(@"%@ %@",[[NSUserDefaults standardUserDefaults]valueForKey:@"syncCount"],[[NSUserDefaults standardUserDefaults]valueForKey:@"signOutMsg"]);
     
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"signOutMsg"]isEqualToString:@"YES"] || [[[NSUserDefaults standardUserDefaults]valueForKey:@"syncCount"] intValue] >0) {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"signOutMsg"];
+        UIAlertView * alertMsg=[[UIAlertView alloc]initWithTitle:@"" message:@"You have an incomplete Form/Survey. Are you sure you want to Sign Out?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [alertMsg show];
+    }
+    else{
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        [self.navigationController pushViewController:loginVC animated:NO];    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        //Code for OK button
+    }
+    if (buttonIndex == 1)
+    {
+        //Code for download button
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        [self.navigationController pushViewController:loginVC animated:NO];    }
 }
 
 #pragma mark - UICollectionView Datasource
@@ -258,6 +288,7 @@
         [_lblPendingCount setHidden:NO];
     }
     [_lblPendingCount setText:[NSString stringWithFormat:@"%ld", (long)syncCount]];
+    [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%ld", (long)syncCount] forKey:@"syncCount"];
 }
 
 - (void)performSync {
@@ -277,6 +308,7 @@
         isSyncError = [self syncSurveysAndForms];
     if (!isSyncError)
         isSyncError = [self syncTeamLog];
+
     if (!isSyncError) {
         alert(@"", @"All data is synchronized with the server.");
     }
@@ -460,31 +492,7 @@
         }
         
         NSMutableArray *mutArrEmergency = [NSMutableArray array];
-//        for (EmergencyPersonnel *obj in [aReport.emergencyPersonnels allObjects]) {
-//            id time911Called, timeArrival, timeDeparture;
-//            if ([obj.time911Called isEqualToString:@""]) {
-//                time911Called = [NSNull null];
-//            }
-//            else {
-//                time911Called = obj.time911Called;
-//            }
-//            
-//            if ([obj.time911Arrival isEqualToString:@""]) {
-//                timeArrival = [NSNull null];
-//            }
-//            else {
-//                timeArrival = obj.time911Arrival;
-//            }
-//            
-//            if ([obj.time911Departure isEqualToString:@""]) {
-//                timeDeparture = [NSNull null];
-//            }
-//            else {
-//                timeDeparture = obj.time911Departure;
-//            }
-//            NSDictionary *aDict = @{@"FirstName":obj.firstName, @"MiddleInitial":obj.middileInitial, @"LastName":obj.lastName, @"Phone":obj.phone, @"AdditionalInformation":obj.additionalInformation, @"CaseNumber":obj.caseNumber, @"BadgeNumber":obj.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
-//            [mutArrEmergency addObject:aDict];
-//        }
+
         
         NSMutableArray *mutArrWitness = [NSMutableArray array];
         for (Witness *obj in [aReport.witnesses allObjects]) {
@@ -612,7 +620,6 @@
 - (BOOL)syncSurveysAndForms {
     
 
-    
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId];
     [request setPredicate:predicate];
@@ -629,7 +636,13 @@
             [dict setObject:obj.questionId forKey:@"QuestionId"];
             [dict setObject:obj.questionText forKey:@"QuestionText"];
             [dict setObject:obj.responseText forKey:@"ResponseText"];
-            
+            if ([obj.detailImageVideoText isEqualToString:@"(null)"]) {
+                
+            }
+            else{
+                [dict setObject:obj.detailImageVideoText forKey:@"UploadFileResponseData"];
+
+            }
             //chetan kasundra
             // put the nil condition particulary for textbox,date,time,checkbox,numeric field in survey and form screen because all this field not set the ResponseID when user submit the form in offline mode.Before application is crash after putting this conditon crash was solve.
             if (obj.responseId == nil)
@@ -642,16 +655,28 @@
             }
             [mutArrReq addObject:dict];
         }
-        NSString *strIDKeyName, *strWebServiceName = @"";
+        NSString *strIDKeyName, *strIsInProgress,*strWebServiceName = @"";
         if ([record.type isEqualToString:@"2"]) {
             strIDKeyName = @"FormId";
             strWebServiceName = FORM_HISTORY_POST;
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"SyncDoneForms"];
+
         }
         else {
             strIDKeyName = @"SurveyId";
             strWebServiceName = SURVEY_HISTORY_POST;
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"SyncDoneSurveys"];
+
         }
-        NSDictionary *dictReq = @{@"UserId":record.userId, strIDKeyName:record.typeId, @"Details":mutArrReq, @"ClientId":record.clientId};
+        strIsInProgress=record.isInProgressId;
+        if ([strIsInProgress isEqualToString:@"1"]) {
+        dictReq =  @{@"UserId":record.userId, strIDKeyName:record.typeId, @"Details":mutArrReq, @"ClientId":record.clientId,@"IsInProgress":@1,@"CurrentHistoryHeaderId":record.headerId};
+        }
+        else{
+           dictReq =  @{@"UserId":record.userId, strIDKeyName:record.typeId, @"Details":mutArrReq, @"ClientId":record.clientId,@"IsInProgress":@0,@"CurrentHistoryHeaderId":record.headerId};
+        }
+
+        
         [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
             [gblAppDelegate.managedObjectContext deleteObject:record];
             isSingleDataSaved = YES;
@@ -670,12 +695,99 @@
     return isErrorOccurred;
 }
 
+-(BOOL)syncDailyLog{
+    
 
+  
+
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
+    NSPredicate *predicateOne = [NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND shouldSync == 1",[[User currentUser]userId]];
+    
+    [request setPredicate:predicateOne];
+    NSArray *aArrTeamLogOne = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    
+//    NSPredicate *predicateTwo = [NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND ANY teamSubLog.shouldSync == 1",[[User currentUser]userId]];
+//    [request setPredicate:predicateTwo];
+//    NSArray *aArrTeamLogTwo = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    
+    __block BOOL isSingleDataSaved = NO;
+    
+    for (TeamLog *aTeamLogObj in aArrTeamLogOne) {
+        
+        isSingleDataSaved = NO;
+        NSString *aParamDate = [gblAppDelegate getUTCDate:aTeamLogObj.date];
+      
+        NSDictionary *aDictParams = @{@"Id":@"0",
+                                      @"FacilityId":aTeamLogObj.facilityId,
+                                      @"PositionId":@"",
+                                      @"IsTeamLog":[NSNumber numberWithBool:NO],
+                                      @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
+                                      @"Date":aParamDate,
+                                      @"UserId":[[User currentUser] userId],
+                                      @"DailyLogDetails":@[
+                                              @{@"Id":@"0",
+                                                @"Date":aParamDate,
+                                                @"Description":aTeamLogObj.desc,
+                                                @"IncludeInEndOfDayReport":[NSNumber numberWithBool:NO],
+                                                @"UserId":[[User currentUser]userId],
+                                                @"UserName":aTeamLogObj.username
+                                                }
+                                              ]
+                                      };
+        [gblAppDelegate callWebService:TEAM_LOG parameters:aDictParams httpMethod:@"POST" complition:^(NSDictionary *response) {
+            if ([response[@"Success"]boolValue]) {
+                aTeamLogObj.shouldSync = [NSNumber numberWithBool:NO];
+                aTeamLogObj.teamLogId = response[@"Id"];
+                
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLogTrace"];
+                [request setPredicate:[NSPredicate predicateWithFormat:@"userId==[cd]%@",[[User currentUser]userId]]];
+                NSArray *aArrLogs = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+                TeamLogTrace *aTeamLogTraceObj;
+                if (aArrLogs.count>0) {
+                    aTeamLogTraceObj = aArrLogs[0];
+                    
+                }
+                else
+                    aTeamLogTraceObj = (TeamLogTrace *)[NSEntityDescription
+                                                        insertNewObjectForEntityForName:@"TeamLogTrace" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                
+                aTeamLogTraceObj.userId= aTeamLogObj.userId;
+                aTeamLogTraceObj.byuserId = aTeamLogObj.userId;
+                aTeamLogTraceObj.date = aTeamLogObj.date;
+                aTeamLogTraceObj.teamLogId  = aTeamLogObj.teamLogId;
+                [gblAppDelegate.managedObjectContext save:nil];
+
+            }
+             isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+            
+        }];
+        
+        
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+            
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    
+    
+    return isErrorOccurred;
+
+    
+}
 - (BOOL)syncTeamLog
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
     NSPredicate *predicateOne = [NSPredicate predicateWithFormat:@"userId ==[cd] %@ AND shouldSync == 1",[[User currentUser]userId]];
-
+    
+    
     [request setPredicate:predicateOne];
     NSArray *aArrTeamLogOne = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     
@@ -695,7 +807,13 @@
       
         aMutDicParam[@"FacilityId"] = aTeamLogObj.facilityId;
         aMutDicParam[@"PositionId"] = aTeamLogObj.positionId;
-        aMutDicParam[@"IsTeamLog"] = [NSNumber numberWithBool:YES];
+        if ([aTeamLogObj.isTeamLog isEqualToString:@"1"]) {
+              aMutDicParam[@"IsTeamLog"] = [NSNumber numberWithBool:YES];
+        }
+        else{
+              aMutDicParam[@"IsTeamLog"] = [NSNumber numberWithBool:NO];
+        }
+      
         aMutDicParam[@"IsAlwaysVisible"] = [NSNumber numberWithBool:NO];
         aMutDicParam[@"Date"] = aParamDate;
         aMutDicParam[@"UserId"] = aTeamLogObj.userId;
@@ -708,11 +826,19 @@
                                       @"UserName":aTeamLogObj.username
 
                                       }];
+        NSNumber * isteamLog;
+        
+        if ([aTeamLogObj.isTeamLog isEqualToString:@"1"]) {
+         isteamLog=[NSNumber numberWithBool:YES];
+        }
+        else{
+            isteamLog=[NSNumber numberWithBool:NO];
+        }
         
         NSDictionary *aDictParams = @{@"Id":@"0",
                                       @"FacilityId":aTeamLogObj.facilityId,
                                       @"PositionId":aTeamLogObj.positionId,
-                                      @"IsTeamLog":[NSNumber numberWithBool:YES],
+                                      @"IsTeamLog":isteamLog,
                                       @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
                                       @"Date":aParamDate,
                                       @"UserId":aTeamLogObj.userId,
@@ -825,6 +951,7 @@
         if (self.allowMemoWSCall) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self callWebserviceToUpdateMemo];
+                [self callWebserviceToUpdateTeamLog];
                 
             });
         }
@@ -838,44 +965,19 @@
 {
     [[WebSerivceCall webServiceObject]callServiceForTeamLogInBackground:NO complition:^(NSDictionary *aDict){
         
-        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
-        
-        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"teamLogId" ascending:NO]];
-        
-        NSArray *aArrayTeamLogs  =[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
-        NSNumber *aMaxID;
-        if (aArrayTeamLogs.count>0) {
-            aMaxID  = [aArrayTeamLogs[0] valueForKeyPath:@"teamLogId"];
-        }
-        else
-            aMaxID = [NSNumber numberWithInt:0];
-     
-        NSArray *aArray = aDict[@"DailyLogs"];
-        
-        NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"IsTeamLog==%@",[NSNumber numberWithBool:YES]];
-        NSArray *aFilteredArray = [aArray filteredArrayUsingPredicate:aPredicate];
-        
-        
-        NSInteger count = [[aFilteredArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Id > %i",aMaxID.integerValue]] count];
-       
-        self.intUnreadLogCount = 0;
-        self.intUnreadLogCount += gblAppDelegate.teamLogCountAfterLogin+count;
-
-        if ((aArray.count<aArrayTeamLogs.count)||self.intUnreadLogCount>0) {
+        NSLog(@"%@",aDict);
+        self.intUnreadLogCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+        if (self.intUnreadLogCount>0) {
             self.boolUpdateTeamLog  = YES;
         }
         [self.cvMenuGrid reloadData];
         
         NSLog(@"Team Log Updated");
         
-        if (self.allowMemoWSCall) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self callWebserviceToUpdateTeamLog];
-                
-            });
-        }
+        
     }];
 }
+
 
 
 @end

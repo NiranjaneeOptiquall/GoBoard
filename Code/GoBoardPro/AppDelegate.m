@@ -1,4 +1,5 @@
-//
+
+
 //  AppDelegate.m
 //  GoBoardPro
 //
@@ -131,7 +132,7 @@
         // Replace this with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+        //abort();
     }
     
     return _persistentStoreCoordinator;
@@ -198,7 +199,7 @@
         NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
             
             if (error) {
-               
+                NSLog(@"%@",error);
                 failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
                 
             } else {
@@ -214,6 +215,8 @@
                 else {
                     alert(@"", [aDict objectForKey:@"ErrorMessage"]);
                     failure (nil, aDict);
+                    NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
+
                 }
                 
             }
@@ -224,7 +227,7 @@
     }
     else {
         failure(nil, @{@"ErrorMessage":MSG_NO_INTERNET});
-        
+        return;
     }
 }
 
@@ -309,17 +312,21 @@
             
             if (error) {
                 [self hideActivityIndicator];
+
                 failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
                 
             } else {
                 
-                [self hideActivityIndicator];
                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
                 if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
+                 //   [self hideActivityIndicator];
+
                 }
                 else {
                     failure (nil, aDict);
+                    [self hideActivityIndicator];
+
                 }
                 
             }

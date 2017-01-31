@@ -500,7 +500,8 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UtilizationCountTableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     aCell.tag=indexPath.section;
-    
+
+ 
     if (indexPath.section == 0 || indexPath.section % 2 == 0) {
         [aCell setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
@@ -509,7 +510,6 @@
     }
     
     UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
-   
 //    if ([location.sublocations allObjects] > 0) {
 //    }
 //    
@@ -517,15 +517,15 @@
 //    NSMutableArray *aArrTemp =  [NSMutableArray arrayWithArray:[[location.sublocations allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
     
     UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:indexPath.row];//[aArrTemp objectAtIndex:indexPath.row];
-    
     [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
     int aCurrent = [subLocation.lastCount intValue];
-    
+
     if (subLocation.lastCountDateTime.length == 0) {
         aCell.lblLastUpdate.text = @"";
-    }
+          }
     else {
         aCell.lblLastUpdate.text = [NSString stringWithFormat:@"- %@",[self getLastUpdate:subLocation.lastCountDateTime]];
+
     }
     int percent = 100 * [location.lastCount floatValue] / [location.capacity floatValue];
     if (percent > 80) {
@@ -548,16 +548,21 @@
     [aCell.btnCountRemainSame addTarget:self action:@selector(btnCountRemainSameTapped:) forControlEvents:UIControlEventTouchUpInside];
     [aCell.btnCountRemainSame.titleLabel setNumberOfLines:2];
     [aCell.btnCountRemainSame.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    if (aCurrent == 0) {
+    if (aCurrent == 0)
         [aCell.btnDecreaseCount setHidden:YES];
-    }
-    else {
+ 
+    else
         [aCell.btnDecreaseCount setHidden:NO];
-    }
-    if (indexPath.row == [location.sublocations count] - 1)
+
+   
+
+    if (indexPath.row == [location.sublocations count] - 1){
         [aCell.lblDevider setHidden:NO];
-    else [aCell.lblDevider setHidden:YES];
+    }
     
+    else {
+        [aCell.lblDevider setHidden:YES];
+    }
     if (location.isCountRemainSame || subLocation.isCountRemainSame) {
         [aCell.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
     }
@@ -568,6 +573,8 @@
     CGRect frame = [aCell.lblDevider frame];
     frame.origin.y = aCell.frame.size.height - frame.size.height;
     [aCell.lblDevider setFrame:frame];
+
+
     return aCell;
 }
 

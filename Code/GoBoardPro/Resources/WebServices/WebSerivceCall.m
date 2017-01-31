@@ -14,7 +14,7 @@
 #import "ERPCategory.h"
 #import "ERPSubcategory.h"
 #import "ERPTask.h"
-
+#import "SubmitFormAndSurvey.h"
 #import "IncidentReportInfo.h"
 #import "NatureList.h"
 #import "EquipmentList.h"
@@ -22,7 +22,7 @@
 #import "ConditionList.h"
 #import "ActionTakenList.h"
 #import "ActivityList.h"
-
+#import "QuestionDetails.h"
 #import "AccidentReportInfo.h"
 #import "AbdomenInjuryList.h"
 #import "HeadInjuryList.h"
@@ -33,8 +33,13 @@
 #import "GeneralInjuryType.h"
 #import "LegInjuryList.h"
 #import "LeftLegInjuryList.h"
+#import "Reachability.h"
 
 #import "SurveyList.h"
+#import "SurveyInProgress.h"
+#import "FormsInProgress.h"
+#import "OfflineResponseTypeValues.h"
+
 #import "SurveyQuestions.h"
 #import "SurveyResponseTypeValues.h"
 #import "FormsList.h"
@@ -45,7 +50,9 @@
 
 #import "ClientPositions.h"
 #import "NSDictionary+NullReplacement.h"
+#import "formCategory.h"
 #import "GuestFormViewController.h"
+#import "UserHomeViewController.h"
 
 @implementation WebSerivceCall
 
@@ -63,6 +70,8 @@
 
 - (void)getAllData
 {
+    //[[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"loadingForFirstTime"];
+
     [self callServiceForHomeSetup:YES complition:nil];
     [self callServiceForEmergencyResponsePlan:YES complition:nil];
     [self callServiceForTaskList:YES complition:nil];
@@ -70,11 +79,26 @@
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
     [self callServiceForMemos:YES complition:nil];
-    [self callServiceForForms:YES complition:nil];
+       [self callServiceForAllClienntPositions:YES complition:nil];
+    
+    //**** initialy call for  forms/survey data is cansled because of heavy data take long  time and this webservice call is made on clicke event of form/survey page call****//
+   //   [self callServiceForForms:YES complition:nil];
+    //   [self callServiceForSurvey:YES complition:nil];
+    
     //[self callServiceForSop:YES complition:nil];
-    [self callServiceForSurvey:YES complition:nil];
-    [self callServiceForTeamLog:YES complition:nil];
-    [self callServiceForAllClienntPositions:YES complition:nil];
+    
+    //**** initialy call for  Log data is cansled because of count display is depend on this service call*****//
+   // [self callServiceForTeamLog:YES complition:nil];
+    
+ 
+    //******delete all forms/surveys while client user is changed*****//
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSameClientForm"] isEqualToString:@"NO"]) {
+        [self deleteAllForms];
+    }
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSameClientSurvey"] isEqualToString:@"NO"]) {
+        [self deleteAllSurveys];
+    }
    
 }
 
@@ -153,7 +177,489 @@
     }
     
 }
+- (void)callServiceForFormInOffline:(BOOL)waitUntilDone withFormId:(NSString*)FormId withFormInstructions:(NSString*)FormInstructions withFormIsAllowInProgress:(NSString*)FormIsAllowInProgress withFormName:(NSString*)FormName complition:(void(^)(void))complition{
+  
+    
+    __block BOOL isWSComplete = NO;
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    NSMutableDictionary * dataDic=[[NSMutableDictionary alloc]init];
+    [dataDic setValue:FormId forKey:@"formId"];
+    [dataDic setValue:FormInstructions forKey:@"Instructions"];
+    [dataDic setValue:FormIsAllowInProgress forKey:@"SurveyIsAllowInProgress"];
+    [dataDic setValue:FormName forKey:@"FormName"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [dataDic setValue:strUserId forKey:@"userId"];
 
+    NSMutableArray *questionArr2 = [[NSMutableArray    alloc]init];
+    int j = 0;
+    for (SubmitFormAndSurvey *record in aryOfflineData) {
+        
+        isSingleDataSaved = NO;
+        NSMutableDictionary *questionArr = [[NSMutableDictionary    alloc]init];
+        
+        NSMutableArray *questionArrReq = [[NSMutableArray    alloc]init];
+        
+        if ([record.isInProgressId isEqualToString:@"1"] && [record.typeId isEqualToString:FormId] && [record.userId isEqualToString:strUserId])
+            
+        {
+            
+            int i = 0;
+            for (QuestionDetails *obj in record.questionList.allObjects) {
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                if (obj.questionId!=nil) {
+                    [dict setObject:obj.questionId forKey:@"Id"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"Id"];
+                }
+                
+                if (obj.questionText!=nil) {
+                    [dict setObject:obj.questionText forKey:@"QuestionText"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"QuestionText"];
+                }
+                if (obj.responseText!=nil) {
+                    [dict setObject:obj.responseText forKey:@"ExistingResponse"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ExistingResponse"];
+                }
+                if (obj.questionId!=nil) {
+                    [dict setObject:obj.questionId forKey:@"QuestionId"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"QuestionId"];
+                }
+                if (obj.existingResponseBool!=nil) {
+                    [dict setObject:obj.existingResponseBool forKey:@"ExistingResponseBool"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ExistingResponseBool"];
+                }
+                if (obj.responseId!=nil) {
+                    [dict setObject:obj.responseId forKey:@"ResponseId"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ResponseId"];
+                }
+                if (obj.isMandatory!=nil) {
+                    [dict setObject:obj.isMandatory forKey:@"IsMandatory"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"IsMandatory"];
+                }  if (obj.responseType!=nil) {
+                    [dict setObject:obj.responseType forKey:@"ResponseType"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ResponseType"];
+                }
+                if (obj.detailImageVideoText!=nil) {
+                    [dict setObject:obj.detailImageVideoText forKey:@"detailImageVideoText"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"detailImageVideoText"];
+                }
+                if (obj.sequence!=nil) {
+                    [dict setObject:obj.sequence forKey:@"sequence"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"sequence"];
+                }
+                if (![obj.responseList isKindOfClass:[NSNull class]]) {
+                    NSMutableArray * tempArray=[NSMutableArray new];
+                    int i=0;
+                    for (OfflineResponseTypeValues*dictResponseType in obj.responseList) {
+                        NSMutableDictionary * tempDic=[NSMutableDictionary new];
+                        
+                        [tempDic setObject:dictResponseType.name forKey:@"name"];
+                        [tempDic setObject:dictResponseType.value forKey:@"value"];
+                        if (dictResponseType.sequence  != nil) {
+                            [tempDic setObject:dictResponseType.sequence forKey:@"sequence"];
+                            
+                        }
+                        [tempArray insertObject:tempDic atIndex:i];
+                        i=i+1;
+                        
+                    }
+                    [dict setObject:tempArray forKey:@"Responses"];
+                    
+                }
+                else{
+                    [dict setObject:@"" forKey:@"Responses"];
+                }
+                
+                [questionArrReq insertObject:dict atIndex:i];
+                i=i+1;
+            }
+            [questionArr setValue:questionArrReq forKey:@"Questions"];
+            [questionArr setValue:record.isInProgressId forKey:@"FormsInProgress"];
+            [questionArr setValue:record.headerId forKey:@"Id"];
+            [questionArr setValue:record.date forKey:@"Date"];
+            
+            
+            [questionArr2 insertObject:questionArr atIndex:j];
+            
+            j=j+1;
+            
+        }
+        
+    }
+    [dataDic setValue:questionArr2 forKey:@"FormHistory"];
+      
+    
+    [self deleteAllFormsInProgress];
+    
+    [self insertFormHistoryInOffLine:dataDic];
+    
+    isWSComplete = YES;
+    if (complition)
+        complition();
+    
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+
+- (void)callServiceForSurveyInOffline:(BOOL)waitUntilDone withSurveyId:(NSString*)surveyId withSurveyInstructions:(NSString*)SurveyInstructions withSurveyIsAllowInProgress:(NSString*)SurveyIsAllowInProgress withSurveyName:(NSString*)SurveyName complition:(void(^)(void))complition{
+    
+    __block BOOL isWSComplete = NO;
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    NSMutableDictionary * dataDic=[[NSMutableDictionary alloc]init];
+    [dataDic setValue:surveyId forKey:@"SurveyId"];
+    [dataDic setValue:SurveyInstructions forKey:@"SurveyInstructions"];
+    [dataDic setValue:SurveyIsAllowInProgress forKey:@"SurveyIsAllowInProgress"];
+    [dataDic setValue:SurveyName forKey:@"SurveyName"];
+    
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [dataDic setValue:strUserId forKey:@"userId"];
+
+    NSMutableArray *questionArr2 = [[NSMutableArray    alloc]init];
+    int j = 0;
+    for (SubmitFormAndSurvey *record in aryOfflineData) {
+        
+        isSingleDataSaved = NO;
+        NSMutableDictionary *questionArr = [[NSMutableDictionary    alloc]init];
+        
+        NSMutableArray *questionArrReq = [[NSMutableArray    alloc]init];
+        
+        if ([record.isInProgressId isEqualToString:@"1"] && [record.typeId isEqualToString:surveyId] && [record.userId isEqualToString:strUserId])
+            
+        {
+            
+            int i = 0;
+            for (QuestionDetails *obj in record.questionList.allObjects) {
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                if (obj.questionId!=nil) {
+                    [dict setObject:obj.questionId forKey:@"Id"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"Id"];
+                }
+                
+                if (obj.questionText!=nil) {
+                    [dict setObject:obj.questionText forKey:@"QuestionText"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"QuestionText"];
+                }
+                if (obj.responseText!=nil) {
+                    [dict setObject:obj.responseText forKey:@"ExistingResponse"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ExistingResponse"];
+                }
+                if (obj.questionId!=nil) {
+                    [dict setObject:obj.questionId forKey:@"QuestionId"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"QuestionId"];
+                }
+                if (obj.existingResponseBool!=nil) {
+                    [dict setObject:obj.existingResponseBool forKey:@"ExistingResponseBool"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ExistingResponseBool"];
+                }
+                if (obj.responseId!=nil) {
+                    [dict setObject:obj.responseId forKey:@"ResponseId"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ResponseId"];
+                }
+                if (obj.isMandatory!=nil) {
+                    [dict setObject:obj.isMandatory forKey:@"IsMandatory"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"IsMandatory"];
+                }  if (obj.responseType!=nil) {
+                    [dict setObject:obj.responseType forKey:@"ResponseType"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"ResponseType"];
+                }
+                if (obj.sequence!=nil) {
+                    [dict setObject:obj.sequence forKey:@"sequence"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"sequence"];
+                }
+
+                
+                
+                if (![obj.responseList isKindOfClass:[NSNull class]]) {
+                    NSMutableArray * tempArray=[NSMutableArray new];
+                    int i=0;
+                    for (OfflineResponseTypeValues*dictResponseType in obj.responseList) {
+                        NSMutableDictionary * tempDic=[NSMutableDictionary new];
+
+                        [tempDic setObject:dictResponseType.name forKey:@"name"];
+                        [tempDic setObject:dictResponseType.value forKey:@"value"];
+                        if (dictResponseType.sequence  != nil) {
+                            [tempDic setObject:dictResponseType.sequence forKey:@"sequence"];
+
+                        }
+                        [tempArray insertObject:tempDic atIndex:i];
+                        i=i+1;
+
+                    }
+                    [dict setObject:tempArray forKey:@"Responses"];
+
+                }
+                else{
+                   [dict setObject:@"" forKey:@"Responses"];
+                }
+                
+                if (obj.detailImageVideoText!=nil) {
+                    [dict setObject:obj.detailImageVideoText forKey:@"detailImageVideoText"];
+                }
+                else{
+                    [dict setObject:@"" forKey:@"detailImageVideoText"];
+                }
+                
+                
+                [questionArrReq insertObject:dict atIndex:i];
+                i=i+1;
+            }
+            
+            [questionArr setValue:questionArrReq forKey:@"Questions"];
+            [questionArr setValue:record.isInProgressId forKey:@"IsInProgress"];
+            [questionArr setValue:record.headerId forKey:@"Id"];
+            [questionArr setValue:record.date forKey:@"Date"];
+            
+            
+            [questionArr2 insertObject:questionArr atIndex:j];
+            
+            j=j+1;
+            
+        }
+        
+    }
+    [dataDic setValue:questionArr2 forKey:@"SurveyHistory"];
+    
+    
+    [self deleteAllSurveysInProgress];
+    
+    [self insertSurveyHistoryInOffLine:dataDic];
+    
+    isWSComplete = YES;
+    if (complition)
+        complition();
+    
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+- (void)insertFormHistoryInOffLine:(NSDictionary*)Dict{
+    
+    NSMutableArray *arrSurveyHistory = [NSMutableArray new];
+    [arrSurveyHistory addObjectsFromArray:[Dict valueForKey:@"FormHistory"]];
+    for (NSDictionary *aDict in arrSurveyHistory) {
+        
+        FormsInProgress *form = [NSEntityDescription insertNewObjectForEntityForName:@"FormsInProgress" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+           form.userId=[Dict objectForKey:@"userId"];
+        form.formId = [Dict objectForKey:@"formId"];
+        if (![[Dict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
+            form.instructions = [Dict objectForKey:@"Instructions"];
+        }
+        else {
+            form.instructions = @"";
+        }
+        if (![[Dict objectForKey:@"Link"] isKindOfClass:[NSNull class]]) {
+            form.link = [Dict objectForKey:@"Link"];
+        }
+        else {
+            form.link = @"";
+        }
+        form.name = [Dict objectForKey:@"FormName"];
+        form.typeId = [[Dict objectForKey:@"FormTypeId"] stringValue];
+        form.userTypeId = [[Dict objectForKey:@"FormUserTypeId"] stringValue];
+        form.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
+        form.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
+        
+        if (![[Dict objectForKey:@"FormCategoryName"] isKindOfClass:[NSNull class]])
+        {
+            form.categoryName=[Dict objectForKey:@"FormCategoryName"];
+        }
+        form.date=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Date"]];
+        form.inProgressFormId=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Id"]];
+        
+        form.isAllowInProgress =[NSString stringWithFormat:@"%@", [Dict valueForKey:@"SurveyIsAllowInProgress"]];
+        
+        NSMutableSet *aSetQuestions = [NSMutableSet set];
+        if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+            for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
+                SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                aQuestion.mandatory=[dictQuest objectForKey:@"IsMandatory"] ;
+                aQuestion.questionId = [dictQuest objectForKey:@"QuestionId"];
+                aQuestion.question = [dictQuest objectForKey:@"QuestionText"];
+                aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
+                NSNumber * sequ=[NSNumber numberWithInt:[[dictQuest objectForKey:@"sequence"] intValue]];
+                aQuestion.sequence = sequ;
+                if (![[dictQuest objectForKey:@"ExistingResponse"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.existingResponse = [dictQuest objectForKey:@"ExistingResponse"];
+                }
+                if (![[dictQuest objectForKey:@"ExistingResponseIds"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.existingResponseIds = [dictQuest objectForKey:@"ExistingResponseIds"];
+                }
+                if (![[dictQuest objectForKey:@"detailImageVideoText"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.detailImageVideoText = [dictQuest objectForKey:@"detailImageVideoText"];
+                }
+                aQuestion.existingResponseBool = [dictQuest objectForKey:@"ExistingResponseBool"];
+                
+                NSMutableSet *responseTypeSet = [NSMutableSet set];
+                if (![[dictQuest objectForKey:@"Responses"] isKindOfClass:[NSNull class]]) {
+                    for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"Responses"]) {
+                        SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                        responseType.value = [NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"value"]];
+                        responseType.name = [NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"name"]];
+                        responseType.sequence =[NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"sequence"]]  ;
+                        responseType.question = aQuestion;
+                        [responseTypeSet addObject:responseType];
+                    }
+                }
+                
+                aQuestion.responseList = responseTypeSet;
+                aQuestion.formInProgressList = form;
+                [aSetQuestions addObject:aQuestion];
+            }
+        }
+        form.questionList = aSetQuestions;
+        [gblAppDelegate.managedObjectContext insertObject:form];
+        [gblAppDelegate.managedObjectContext save:nil];
+    }
+    
+}
+- (void)insertSurveyHistoryInOffLine:(NSDictionary*)Dict {
+    
+    NSMutableArray *arrSurveyHistory = [NSMutableArray new];
+    [arrSurveyHistory addObjectsFromArray:[Dict valueForKey:@"SurveyHistory"]];
+    for (NSDictionary *aDict in arrSurveyHistory) {
+        
+        SurveyInProgress *survey = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyInProgress" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        survey.userId=[Dict objectForKey:@"userId"];
+        survey.surveyId = [Dict objectForKey:@"SurveyId"];
+        if (![[Dict objectForKey:@"SurveyInstructions"] isKindOfClass:[NSNull class]]) {
+            survey.instructions = [Dict objectForKey:@"SurveyInstructions"];
+        }
+        else {
+            survey.instructions = @"";
+        }
+        if (![[Dict objectForKey:@"Link"] isKindOfClass:[NSNull class]]) {
+            survey.link = [Dict objectForKey:@"Link"];
+        }
+        else {
+            survey.link = @"";
+        }
+        survey.name = [Dict objectForKey:@"SurveyName"];
+        survey.typeId = [[Dict objectForKey:@"SurveyTypeId"] stringValue];
+        survey.userTypeId = [[Dict objectForKey:@"SurveyUserTypeId"] stringValue];
+        survey.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
+        survey.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
+        
+        if (![[Dict objectForKey:@"SurveyCategoryName"] isKindOfClass:[NSNull class]])
+        {
+            survey.categoryName=[Dict objectForKey:@"SurveyCategoryName"];
+        }
+        survey.date=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Date"]];
+        survey.inProgressFormId=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Id"]];
+        
+        survey.isAllowInProgress =[NSString stringWithFormat:@"%@", [Dict valueForKey:@"SurveyIsAllowInProgress"]];
+        
+        NSMutableSet *aSetQuestions = [NSMutableSet set];
+        if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
+            for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
+                SurveyQuestions *aQuestion = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestions" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                aQuestion.mandatory=[dictQuest objectForKey:@"IsMandatory"] ;
+                aQuestion.questionId = [dictQuest objectForKey:@"QuestionId"];
+                aQuestion.question = [dictQuest objectForKey:@"QuestionText"];
+                aQuestion.responseType = [dictQuest objectForKey:@"ResponseType"];
+                NSNumber * sequ=[NSNumber numberWithInt:[[dictQuest objectForKey:@"sequence"] intValue]];
+                aQuestion.sequence = sequ;
+                if (![[dictQuest objectForKey:@"ExistingResponse"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.existingResponse = [dictQuest objectForKey:@"ExistingResponse"];
+                }
+                if (![[dictQuest objectForKey:@"ExistingResponseIds"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.existingResponseIds = [dictQuest objectForKey:@"ExistingResponseIds"];
+                }
+                if (![[dictQuest objectForKey:@"detailImageVideoText"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.detailImageVideoText = [dictQuest objectForKey:@"detailImageVideoText"];
+                }
+                aQuestion.existingResponseBool = [dictQuest objectForKey:@"ExistingResponseBool"];
+                
+                NSMutableSet *responseTypeSet = [NSMutableSet set];
+             
+                    if (![[dictQuest objectForKey:@"Responses"] isKindOfClass:[NSNull class]]) {
+                        for (NSDictionary*dictResponseType in [dictQuest objectForKey:@"Responses"]) {
+                            SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                            responseType.value = [NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"value"]];
+                            responseType.name = [NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"name"]];
+                            responseType.sequence =[NSString stringWithFormat:@"%@",[dictResponseType objectForKey:@"sequence"]]  ;
+                            responseType.question = aQuestion;
+                            [responseTypeSet addObject:responseType];
+                        }
+                    }
+
+                aQuestion.responseList = responseTypeSet;
+                aQuestion.surveyInProgressList = survey;
+                [aSetQuestions addObject:aQuestion];
+            }
+        }
+        survey.questionList = aSetQuestions;
+        [gblAppDelegate.managedObjectContext insertObject:survey];
+        [gblAppDelegate.managedObjectContext save:nil];
+    }
+    
+}
 -(void)callServiceForSurvey:(BOOL)waitUntilDone withSurveyId:(NSString *)surveyId complition:(void (^)(void))complition
 {
     __block BOOL isWSComplete = NO;
@@ -163,9 +669,9 @@
         strUserId = [[User currentUser] userId];
     }
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&surveyId=%@", SURVEY_SETUP, aStrClientId, strUserId,surveyId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
-        [self deleteAllSurveys];
+        [self deleteAllSurveysInProgress];
         [self insertSurveyHistory:response];
-        
+
         NSLog(@"%@",response);
         isWSComplete = YES;
         if (complition)
@@ -186,13 +692,13 @@
 - (void)insertSurveyHistory:(NSDictionary*)Dict {
     
     NSMutableArray *arrSurveyHistory = [NSMutableArray new];
-    [arrSurveyHistory addObjectsFromArray:[Dict valueForKey:@"SurveyHistries"]];
+    [arrSurveyHistory addObjectsFromArray:[Dict valueForKey:@"SurveyHistory"]];
     for (NSDictionary *aDict in arrSurveyHistory) {
         
-        SurveyList *survey = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
-        survey.surveyId = [[Dict objectForKey:@"Id"] stringValue];
-        if (![[aDict objectForKey:@"Instructions"] isKindOfClass:[NSNull class]]) {
-            survey.instructions = [aDict objectForKey:@"Instructions"];
+        SurveyInProgress *survey = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyInProgress" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        survey.surveyId = [[Dict objectForKey:@"SurveyId"] stringValue];
+        if (![[Dict objectForKey:@"SurveyInstructions"] isKindOfClass:[NSNull class]]) {
+            survey.instructions = [Dict objectForKey:@"SurveyInstructions"];
         }
         else {
             survey.instructions = @"";
@@ -207,7 +713,7 @@
         survey.typeId = [[Dict objectForKey:@"SurveyTypeId"] stringValue];
         survey.userTypeId = [[Dict objectForKey:@"SurveyUserTypeId"] stringValue];
         survey.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
-        survey.categorySequence=[[Dict objectForKey:@"CategorySequence"]stringValue];
+        survey.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
 
         if (![[Dict objectForKey:@"SurveyCategoryName"] isKindOfClass:[NSNull class]])
         {
@@ -231,6 +737,10 @@
                 {
                     aQuestion.existingResponse = [dictQuest objectForKey:@"ExistingResponse"];
                 }
+                if (![[dictQuest objectForKey:@"ExistingResponseIds"] isKindOfClass:[NSNull class]])
+                {
+                    aQuestion.existingResponseIds = [dictQuest objectForKey:@"ExistingResponseIds"];
+                }
                 aQuestion.existingResponseBool = [[dictQuest objectForKey:@"ExistingResponseBool"]stringValue];
                 
                 NSMutableSet *responseTypeSet = [NSMutableSet set];
@@ -239,15 +749,13 @@
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];
-                        //
                         responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
                         responseType.question = aQuestion;
-                        //responseType.mandatory=aQuestion;
                         [responseTypeSet addObject:responseType];
                     }
                 }
                 aQuestion.responseList = responseTypeSet;
-                aQuestion.survey = survey;
+                aQuestion.surveyInProgressList = survey;
                 [aSetQuestions addObject:aQuestion];
             }
         }
@@ -316,7 +824,6 @@
         ERPCategory *aCategory = [NSEntityDescription insertNewObjectForEntityForName:@"ERPCategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         aCategory.title = [aDict objectForKey:@"Title"];
         aCategory.categoryId = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
-         // aCategory.categorySequence = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Sequence"] integerValue]];
         NSMutableSet *subcategories = [NSMutableSet set];
         for (NSDictionary *aDictSubCate in [aDict objectForKey:@"Subcategories"]) {
             ERPSubcategory *aSubCate = [NSEntityDescription insertNewObjectForEntityForName:@"ERPSubcategory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -349,21 +856,7 @@
 
 - (BOOL)callServiceForUtilizationCount:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
-//    NSString *strPositionIds = [[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"] componentsJoinedByString:@","];
-//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@&positionIds=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value], strPositionIds] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
-//        [self deleteAllCountLocation];
-//        [self insertAllCountLocation:[response objectForKey:@"Locations"]];
-//        isWSComplete = YES;
-//        if (completion) {
-//            completion();
-//        }
-//    } failure:^(NSError *error, NSDictionary *response) {
-//        isWSComplete = YES;
-//        if (completion) {
-//            completion();
-//        }
-//    }];
-    
+
                 //PositionID Removed
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         [self deleteAllCountLocation];
@@ -1009,6 +1502,8 @@
 
 - (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
+    if ([self isNetworkReachable]) {
+
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
     NSString *strUserId = @"";
     NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
@@ -1016,9 +1511,19 @@
     if ([User checkUserExist]) {
         strUserId = [[User currentUser] userId];
     }
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@", SURVEY_SETUP, aStrClientId, strUserId,strFacilityId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+        NSString * isAdmin;
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
+            isAdmin= @"False";
+        }
+        else{
+            isAdmin= @"True";
+        }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
         [self deleteAllSurveys];
         [self insertSurvey:[response objectForKey:@"Surveys"]];
+        [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSameClientSurvey"];
+        [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isFirstTimeDataSurveyDone"];
+
         isWSComplete = YES;
         if (complition)
             complition();
@@ -1026,6 +1531,9 @@
         isWSComplete = YES;
         if (complition)
             complition();
+        isWSComplete = YES;
+
+    
         NSLog(@"%@", response);
     }];
     if (waitUntilDone) {
@@ -1033,6 +1541,38 @@
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
         }
     }
+}
+    else {
+        
+            
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSameClientSurvey"] isEqualToString:@"NO"]) {
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Problem in loading survey. Please try again" preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [self cancelLoading];
+            }]];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                [ [[UIApplication sharedApplication] keyWindow]. rootViewController presentViewController:alertController animated:YES completion:nil];
+            });
+        }
+        else{
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:@"To see updated data please check your internet connection." preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+             
+                isWSComplete = NO;
+                if (complition)
+                    complition();
+            }]];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                [ [[UIApplication sharedApplication] keyWindow]. rootViewController presentViewController:alertController animated:YES completion:nil];
+            });
+            
+        }
+  
+    }
+    
+
 }
 
 
@@ -1045,7 +1585,24 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
 }
-
+- (void)deleteAllFormsInProgress {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsInProgress"];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+- (void)deleteAllSurveysInProgress {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyInProgress"];
+    [request setIncludesPropertyValues:NO];
+    NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    for (NSManagedObject *rec in aryRecords) {
+        [gblAppDelegate.managedObjectContext deleteObject:rec];
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+}
 - (void)insertSurvey:(NSArray*)array {
     for (NSDictionary *aDict in array) {
         SurveyList *survey = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -1088,7 +1645,6 @@
                         SurveyResponseTypeValues *responseType = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseTypeValues" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                         responseType.value = [[dictResponseType objectForKey:@"Id"] stringValue];
                         responseType.name = [dictResponseType objectForKey:@"Name"];
-                        //
                         responseType.sequence = [[dictResponseType objectForKey:@"Sequence"] stringValue];
                         responseType.question = aQuestion;
                         //responseType.mandatory=aQuestion;
@@ -1107,39 +1663,109 @@
 }
 
 
+#pragma mark Reachability
+
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 
 #pragma mark - Forms
 
 - (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
-    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    NSString *strUserId = @"";
-    NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
-    if ([User checkUserExist]) {
-        strUserId = [[User currentUser] userId];
-    }
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
-        [self deleteAllForms];
+
+    if ([self isNetworkReachable]) {
         
-        [self insertForms:[response objectForKey:@"Forms"]];
-        isWSComplete = YES;
-        if (complition)
-            complition();
-       
-    } failure:^(NSError *error, NSDictionary *response) {
-        isWSComplete = YES;
-        if (complition)
-            complition();
-        NSLog(@"%@", response);
-    }];
-    if (waitUntilDone) {
-        while (!isWSComplete) {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+        NSString *strUserId = @"";
+        NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
         }
+        NSString * isAdmin;
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
+            isAdmin= @"False";
+        }
+        else{
+             isAdmin= @"True";
+        }
+        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+            
+            [self deleteAllForms];
+            
+            [self insertForms:[response objectForKey:@"Forms"]];
+            [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSameClientForm"];
+            [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isFirstTimeDataFormDone"];
+
+            isWSComplete = YES;
+            if (complition)
+                complition();
+            
+        } failure:^(NSError *error, NSDictionary *response) {
+            
+            
+            isWSComplete = YES;
+            if (complition)
+                complition();
+         
+            
+            NSLog(@"%@", response);
+        }];
+        if (waitUntilDone) {
+            while (!isWSComplete) {
+                [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+            }
+        }
+
+        
+        
     }
+    else {
+            
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSameClientForm"] isEqualToString:@"NO"]) {
+
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Problem in loading forms. Please try again" preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [self cancelLoading];
+            }]];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                [ [[UIApplication sharedApplication] keyWindow]. rootViewController presentViewController:alertController animated:YES completion:nil];
+            });
+        }
+        else{
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:@"To see updated data please check your internet connection." preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                isWSComplete = YES;
+                if (complition)
+                    complition();
+                
+            }]];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                [ [[UIApplication sharedApplication] keyWindow]. rootViewController presentViewController:alertController animated:YES completion:nil];
+            });
+            
+        }
+
+    }
+
+
+  }
+
+-(void)cancelLoading{
+
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"goBackToHome" object:nil];
+
+
 }
-
-
 - (void)deleteAllForms {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
     [request setIncludesPropertyValues:NO];
@@ -1170,6 +1796,7 @@
             form.name = [aDict objectForKey:@"Name"];
             form.typeId = [[aDict objectForKey:@"FormTypeId"] stringValue];
             form.userTypeId = [[aDict objectForKey:@"FormUserTypeId"] stringValue];
+        NSLog(@"form.typeId = %@ form.userTypeId = %@",form.typeId,form.userTypeId);
             form.sequence=[aDict objectForKey:@"Sequence"] ;
             form.categoryId=[[aDict objectForKey:@"CategoryId"]stringValue];
             form.categoryName=[aDict objectForKey:@"CategoryName"];
@@ -1247,19 +1874,17 @@
 
 - (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
-    
     NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
-  //  NSString *aStrPositionID = [self getPositionsID];
     NSString *aStrUserID = [[User currentUser]userId];
-    
-    NSString *aStrURL = [NSString stringWithFormat:@"%@?userId=%@&facilityId=%@&positionIds=&isTeamLog=True",DAILY_LOG,aStrUserID,aStrFacilityID];
-    
+    NSString *aStrURL;
+
+        aStrURL = [NSString stringWithFormat:@"%@?userId=%@&facilityId=%@&positionIds=&isTeamLog=False",DAILY_LOG,aStrUserID,aStrFacilityID];
+   
     [gblAppDelegate callAsynchronousWebService:aStrURL parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
-        [self deleteAllTeamLogs];
         
-        NSPredicate *aPredicate = [NSPredicate predicateWithFormat:@"IsTeamLog==%@",[NSNumber numberWithBool:YES]];
-        NSArray *aFilteredArray = [response[@"DailyLogs"] filteredArrayUsingPredicate:aPredicate];
-        [self insertTeamLog:aFilteredArray];
+               [self deleteAllTeamLogs];
+        [self insertTeamLog:response[@"DailyLogs"]];
+
         [self updateLogCountInDashboard];
         isWSComplete = YES;
         if (complition)
@@ -1269,25 +1894,31 @@
         if (complition)
             complition();
     }];
-    if (waitUntilDone) {
-        while (!isWSComplete) {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-        }
-    }
+
 }
 
 - (void)callServiceForTeamLogInBackground:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition {
     __block BOOL isWSComplete = NO;
     
+    NSMutableArray *arrOfPosition = [NSMutableArray new];
+    
     NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
- //   NSString *aStrPositionID = [self getPositionsID];
+    
     NSString *aStrUserID = [[User currentUser]userId];
     
-    NSString *aStrURL = [NSString stringWithFormat:@"%@?userId=%@&facilityId=%@&positionIds=&isTeamLog=True",DAILY_LOG,aStrUserID,aStrFacilityID];
+    NSMutableArray *arr=  [[User currentUser]mutArrSelectedPositions];
     
-    [gblAppDelegate callAsynchronousWebService:aStrURL parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
-       
-     
+    for (UserPosition *p in arr) {
+        
+        [arrOfPosition addObject:p.value];
+    }
+    NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
+    
+    NSString *strUrl =[NSString stringWithFormat:@"DailyLog/GetLogsCount?userId=%@&facilityId=%@&positionIds=%@",aStrUserID,aStrFacilityID,aPositionId];
+    
+    [gblAppDelegate callAsynchronousWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        
+        
         isWSComplete = YES;
         if (complition)
             complition(response);
@@ -1319,6 +1950,7 @@
         return @"";
     
 }
+
 - (void)deleteAllTeamLogs {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"TeamLog"];
     [request setPredicate:[NSPredicate predicateWithFormat:@"(shouldSync != 1 OR (ANY teamSubLog.shouldSync != 1))"]];
@@ -1390,33 +2022,43 @@
         TeamLog *aTeamLogObj = [NSEntityDescription insertNewObjectForEntityForName:@"TeamLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
         aTeamLogObj.facilityId = [aDict[@"FacilityId"] stringValue];
         aTeamLogObj.positionId = [aDict[@"PositionId"] stringValue];
+        
+        
         aTeamLogObj.teamLogId =aDict[@"Id"];
-       
+        
         aTeamLogObj.userId = [aDict[@"UserId"] stringValue];
+        aTeamLogObj.isTeamLog = [aDict[@"IsTeamLog"] stringValue];
         NSArray *aArrDailLog =aDict[@"DailyLogDetails"];
+        
         NSMutableDictionary *aMutDictLogDetails =aArrDailLog[0];
         
         aMutDictLogDetails = [aMutDictLogDetails dictionaryByReplacingNullsWithBlanks];
         aTeamLogObj.desc = aMutDictLogDetails[@"Description"];
         aTeamLogObj.username = aMutDictLogDetails[@"UserName"];
+        aTeamLogObj.headerId = [NSString stringWithFormat:@"%@",aMutDictLogDetails[@"Id"]];
+        if (![aMutDictLogDetails[@"IncludeInEndOfDayReport"]boolValue]) {
+            aTeamLogObj.includeInEndOfDayReport = @"false";
+        }else{
+            aTeamLogObj.includeInEndOfDayReport = @"true";
+        }
         
         aTeamLogObj.date =[gblAppDelegate getLocalDate:aMutDictLogDetails[@"Date"]];
         aTeamLogObj.shouldSync = [NSNumber numberWithInt:0];
         NSArray *aArrDailLogDetails =aDict[@"DailyLogTeamDetails"];
-
+        
         for (NSDictionary *aSubDict in aArrDailLogDetails) {
             
             NSMutableDictionary *aMutDictFiltered = [aSubDict dictionaryByReplacingNullsWithBlanks];
-
+            
             TeamSubLog *aTeamSubLogObj = (TeamSubLog *)[NSEntityDescription insertNewObjectForEntityForName:@"TeamSubLog" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             
             aTeamSubLogObj.desc = aMutDictFiltered[@"Description"];
-           
+            
             aTeamSubLogObj.date =[gblAppDelegate getLocalDate:aSubDict[@"Date"]];
             aTeamSubLogObj.userId = [aMutDictFiltered[@"UserId"]stringValue];
             aTeamSubLogObj.username =aMutDictFiltered[@"UserName"];
             aTeamSubLogObj.shouldSync = [NSNumber numberWithInt:0];
-
+            
             [aTeamLogObj addTeamSubLogObject:aTeamSubLogObj];
             
         }
@@ -1424,7 +2066,6 @@
     
     [gblAppDelegate.managedObjectContext save:nil];
 }
-
 #pragma mark - Client Positions
 
 - (void)callServiceForAllClienntPositions:(BOOL)waitUntilDone complition:(void(^)(void))complition {

@@ -14,6 +14,8 @@
 @interface ERPCategory : NSManagedObject
 
 @property (nonatomic, retain) NSString * categoryId;
+@property (nonatomic, retain) NSString * categorySequence;
+
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSSet *erpTitles;
 @property (nonatomic, assign) BOOL isExpanded;

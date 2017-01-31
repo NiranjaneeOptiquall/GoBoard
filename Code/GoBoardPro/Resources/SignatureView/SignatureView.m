@@ -112,7 +112,11 @@
     else
     {
         if ([[txtName trimText] isEqualToString:@""]) {
-            alert(@"", @"Please enter your name");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView * alert=[[UIAlertView alloc]initWithTitle:@"" message:@"Please enter your name" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            });
+           
            
             return;
         }
@@ -124,7 +128,17 @@
   
 }
 
-
+-(void)showPopOverWithSender:(UIButton*)sender{
+    
+ 
+    popOver = nil;
+    popOver = [[UIPopoverController alloc] initWithContentViewController:self];
+    popOver.delegate = self;
+    [popOver setPopoverContentSize:CGSizeMake(630, 255)];
+    [popOver presentPopoverFromRect:sender.frame inView:[sender superview] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    
+}
 - (void)showPopOverWithSender:(UIButton*)sender base62String:(nullable NSString*)base63 {
     
     if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isForm"] isEqualToString:@"yes"])
@@ -137,13 +151,20 @@
        
         if (![base63 isEqualToString:@""]) {
             
-           
+            NSString *str =@"";
             
-           NSString *str = [base63 stringByReplacingOccurrencesOfString:@"data:image/png;base64,"
-                                                 withString:@""];
-            NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            tempDrawImage.image =[UIImage imageWithData:plainData];
-  
+            str = [base63 stringByReplacingOccurrencesOfString:@"data:image/png;base64,"
+                                                    withString:@""];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    tempDrawImage.image =[UIImage imageWithData:plainData];
+                    [tempDrawImage setNeedsDisplay];
+                    [tempDrawImage layoutIfNeeded];
+                });
+            });
         }
         else{
              NSData *plainData = [[NSData alloc]initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];

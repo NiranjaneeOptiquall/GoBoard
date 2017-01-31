@@ -9,13 +9,16 @@
 #import "WelcomeUserViewController.h"
 
 @interface WelcomeUserViewController ()
-
+{
+    int serviceCallCount;
+}
 @end
 
 @implementation WelcomeUserViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    serviceCallCount=2;
 //    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
     [_txtLocation setEnabled:NO];
     [_txtPosition setEnabled:NO];
@@ -125,11 +128,25 @@
             }
             
         } failure:^(NSError *error, NSDictionary *response) {
+            if (serviceCallCount == 0) {
+                NSLog(@"%d",serviceCallCount);
+            }else{
+                serviceCallCount=serviceCallCount-1;
+                     [self getUserFacilities];
+            }
+       
             
         }];
     }
     else {
-        [self fetchFacilities];
+        
+        if (serviceCallCount == 0) {
+            NSLog(@"%d",serviceCallCount);
+
+        }else{
+            serviceCallCount=serviceCallCount-1;
+            [self getUserFacilities];
+        }
     }
 }
 

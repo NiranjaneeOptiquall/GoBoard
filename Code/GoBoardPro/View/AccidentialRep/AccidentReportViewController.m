@@ -351,14 +351,14 @@
             
             CGRect frame = vwBodilyFluid.vwBloodbornePathogens.frame;
             
-            frame.origin.y = CGRectGetMaxY(vwBodilyFluid.vwParticipantSignature.frame);
-            
+            frame.origin.y = CGRectGetMaxY(vwBodilyFluid.vwEmergencyPersonnel.frame);
+           
             vwBodilyFluid.vwBloodbornePathogens.frame = frame;
             
         }else{
             CGRect frame = vwBodilyFluid.vwBloodbornePathogens.frame;
             
-            frame.origin.y = CGRectGetMinY(vwBodilyFluid.vwParticipantSignature.frame);
+            frame.origin.y = CGRectGetMinY(vwBodilyFluid.vwEmergencyPersonnel.frame);
             
             vwBodilyFluid.vwBloodbornePathogens.frame = frame;
             

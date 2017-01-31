@@ -11,5 +11,7 @@
 @interface TableViewHeader : UIView
 @property (strong, nonatomic) IBOutlet UIButton *buttonAction;
 @property (strong, nonatomic) IBOutlet UILabel *lblCategory;
+@property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet UIImageView *minusImageView;
 
 @end

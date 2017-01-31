@@ -14,13 +14,19 @@
     [super viewDidLoad];
     _lblMessage.text = _strMsg;
     [_btnBack setTitle:_strBackTitle forState:UIControlStateNormal];
+    
 }
 
 - (IBAction)btnBackTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"offlineInProgress"];
+    
     for (id vc in self.navigationController.viewControllers) {
         if ([vc isKindOfClass:[NSClassFromString(@"GuestFormViewController") class]]) {
             [self.navigationController popToViewController:vc animated:YES];
         }
+        else if ([vc isKindOfClass:[NSClassFromString(@"GuestUserFormListViewController") class]])
+            [self.navigationController popToViewController:vc animated:YES];
+
     }
 }
 @end

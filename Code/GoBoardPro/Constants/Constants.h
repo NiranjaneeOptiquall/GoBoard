@@ -53,6 +53,7 @@ typedef enum : NSUInteger {
 // http://goboardapi.azurewebsites.net/api/
 #define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
+//#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.139/GoBoard.Web.Api/"
 
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
@@ -85,9 +86,11 @@ typedef enum : NSUInteger {
 #define HOME_SCREEN_MODULES         @"HomeScreenModules"
 #define APPVERSION                  @"AppVersion"
 #define CLIENT_POSITIONS             @"UserFacility/GetFacilitesByUser"
+#define FORM_DELETE             @"FormSetup"
+#define DAILY_LOG_TEAM               @"DailyLogTeam"
+#define EOD_SUBMIT              @"SubmitLogForEOD"
 
-
-#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET",CLIENT_POSITIONS:@"GET"}
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", EOD_SUBMIT:@"POST",ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET",CLIENT_POSITIONS:@"GET",FORM_DELETE:@"PUT"}
 
 
 
@@ -115,5 +118,5 @@ typedef enum : NSUInteger {
 #ifdef DEBUG_LOG
 #define NSLog(...) NSLog(__VA_ARGS__)
 #else
-#define NSLog(...)
+//#define NSLog(...)
 #endif

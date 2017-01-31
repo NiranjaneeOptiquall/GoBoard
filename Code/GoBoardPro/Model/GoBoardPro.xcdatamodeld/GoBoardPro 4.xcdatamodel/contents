@@ -183,6 +183,7 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="includeInEndOfDayReport" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isTeamLog" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -269,11 +270,32 @@
         <attribute name="isCatHaveItem" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="formsCat" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="FormsList" syncable="YES"/>
     </entity>
+    <entity name="FormsInProgress" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categorySequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="formId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressFormId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="questionList" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="SurveyQuestions" inverseName="formInProgressList" inverseEntity="SurveyQuestions" syncable="YES"/>
+    </entity>
     <entity name="FormsList" representedClassName="FormsList" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categorySequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="formId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressFormId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
@@ -376,6 +398,12 @@
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IncidentReportInfo" inverseName="natureList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
+    <entity name="OfflineResponseTypeValues" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="question" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="QuestionDetails" inverseName="responseList" inverseEntity="QuestionDetails" syncable="YES"/>
+    </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="actionTakenId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="activityTypeId" optional="YES" attributeType="String" syncable="YES"/>
@@ -409,11 +437,18 @@
         <relationship name="report" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Report" inverseName="persons" inverseEntity="Report" syncable="YES"/>
     </entity>
     <entity name="QuestionDetails" representedClassName="QuestionDetails" syncable="YES">
+        <attribute name="detailImageVideoText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="existingResponseBool" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isMandatory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="questionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="questionText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="responses" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="formOrSurvey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubmitFormAndSurvey" inverseName="questionList" inverseEntity="SubmitFormAndSurvey" syncable="YES"/>
+        <relationship name="responseList" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="OfflineResponseTypeValues" inverseName="question" inverseEntity="OfflineResponseTypeValues" syncable="YES"/>
     </entity>
     <entity name="Report" representedClassName="Report" syncable="YES">
         <attribute name="actionId" optional="YES" attributeType="String" syncable="YES"/>
@@ -472,6 +507,10 @@
     </entity>
     <entity name="SubmitFormAndSurvey" representedClassName="SubmitFormAndSurvey" syncable="YES">
         <attribute name="clientId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="headerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isInProgressId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offlineFormId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
@@ -500,10 +539,31 @@
         <relationship name="sublocations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmitUtilizationCount" inverseName="location" inverseEntity="SubmitUtilizationCount" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubmitCountUser" inverseName="countLocation" inverseEntity="SubmitCountUser" syncable="YES"/>
     </entity>
+    <entity name="SurveyInProgress" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categorySequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressFormId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="surveyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="questionList" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="SurveyQuestions" inverseName="surveyInProgressList" inverseEntity="SurveyQuestions" syncable="YES"/>
+    </entity>
     <entity name="SurveyList" representedClassName="SurveyList" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categorySequence" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="inProgressFormId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAllowInProgress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
@@ -515,16 +575,20 @@
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="survey" inverseEntity="SurveyQuestions" syncable="YES"/>
     </entity>
     <entity name="SurveyQuestions" representedClassName="SurveyQuestions" syncable="YES">
+        <attribute name="detailImageVideoText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="existingResponse" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="existingResponseBool" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="existingResponseIds" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mandatory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="questionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="formInProgressList" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="FormsInProgress" inverseName="questionList" inverseEntity="FormsInProgress" syncable="YES"/>
         <relationship name="formList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FormsList" inverseName="questionList" inverseEntity="FormsList" syncable="YES"/>
         <relationship name="responseList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyResponseTypeValues" inverseName="question" inverseEntity="SurveyResponseTypeValues" syncable="YES"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyList" inverseName="questionList" inverseEntity="SurveyList" syncable="YES"/>
+        <relationship name="surveyInProgressList" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SurveyInProgress" inverseName="questionList" inverseEntity="SurveyInProgress" syncable="YES"/>
     </entity>
     <entity name="SurveyResponseTypeValues" representedClassName="SurveyResponseTypeValues" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -561,7 +625,9 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facilityId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="includeInEndOfDayReport" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="headerId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="includeInEndOfDayReport" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isTeamLog" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="positionId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -633,9 +699,9 @@
         <element name="CareProvidedType" positionX="-578" positionY="353" width="128" height="178"/>
         <element name="ClientPositions" positionX="-639" positionY="-846" width="128" height="75"/>
         <element name="ConditionList" positionX="-639" positionY="32" width="128" height="118"/>
-        <element name="DailyLog" positionX="-299" positionY="-549" width="128" height="118"/>
+        <element name="DailyLog" positionX="-299" positionY="-549" width="128" height="135"/>
         <element name="Emergency" positionX="675" positionY="774" width="128" height="208"/>
-        <element name="EmergencyPersonnel" positionX="565" positionY="-306" width="182" height="223"/>
+        <element name="EmergencyPersonnel" positionX="565" positionY="-279" width="182" height="223"/>
         <element name="EmergencyPersonnelIncident" positionX="810" positionY="-765" width="171" height="210"/>
         <element name="EquipmentList" positionX="-612" positionY="212" width="128" height="118"/>
         <element name="ERPCategory" positionX="-34" positionY="-972" width="128" height="88"/>
@@ -644,7 +710,8 @@
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
         <element name="FormCategory" positionX="-801" positionY="-756" width="128" height="103"/>
-        <element name="FormsList" positionX="-551" positionY="680" width="128" height="223"/>
+        <element name="FormsInProgress" positionX="-713" positionY="936" width="128" height="285"/>
+        <element name="FormsList" positionX="-513" positionY="675" width="144" height="253"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
         <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
@@ -653,22 +720,24 @@
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="103"/>
+        <element name="OfflineResponseTypeValues" positionX="-702" positionY="-981" width="128" height="105"/>
         <element name="Person" positionX="520" positionY="-738" width="182" height="493"/>
-        <element name="QuestionDetails" positionX="124" positionY="1097" width="128" height="118"/>
+        <element name="QuestionDetails" positionX="124" positionY="1097" width="128" height="225"/>
         <element name="Report" positionX="342" positionY="-684" width="128" height="495"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="RightArmInjuryList" positionX="106" positionY="860" width="128" height="103"/>
         <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
-        <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="118"/>
+        <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="180"/>
         <element name="SubmittedTask" positionX="-801" positionY="-1129" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
-        <element name="SurveyList" positionX="-738" positionY="657" width="128" height="225"/>
-        <element name="SurveyQuestions" positionX="-657" positionY="938" width="128" height="195"/>
-        <element name="SurveyResponseTypeValues" positionX="-675" positionY="1103" width="128" height="103"/>
+        <element name="SurveyInProgress" positionX="-900" positionY="812" width="128" height="285"/>
+        <element name="SurveyList" positionX="-738" positionY="657" width="128" height="270"/>
+        <element name="SurveyQuestions" positionX="-542" positionY="1019" width="128" height="255"/>
+        <element name="SurveyResponseTypeValues" positionX="-873" positionY="1130" width="128" height="103"/>
         <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-517" width="128" height="103"/>
-        <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="193"/>
+        <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="225"/>
         <element name="TeamLogTrace" positionX="-315" positionY="-630" width="128" height="105"/>
         <element name="TeamSubLog" positionX="-632" positionY="-387" width="128" height="133"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>

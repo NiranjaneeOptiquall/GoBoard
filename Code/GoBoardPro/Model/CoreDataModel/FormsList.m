@@ -24,4 +24,5 @@
 @dynamic categoryName;
 @dynamic inProgressCount;
 @dynamic isAllowInProgress;
+@dynamic date;
 @end

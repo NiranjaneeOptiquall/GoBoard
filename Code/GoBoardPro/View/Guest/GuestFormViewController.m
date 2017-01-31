@@ -14,56 +14,121 @@
 #import "FormsInProgressView.h"
 #import "GuestFormCell.h"
 #import "FormsList.h"
+#import "FormsInProgress.h"
+#import "SubmitFormAndSurvey.h"
 #import "SurveyQuestions.h"
 #import "SurveyResponseTypeValues.h"
 #import "WebSerivceCall.h"
+#import "UserHomeViewController.h"
 
 @interface GuestFormViewController ()
 {
-    NSMutableArray *arrForCat;
+    NSMutableArray *arrForCat,* imageArray;
     NSMutableDictionary *catDictData;
     NSMutableArray *arrForAllData;
     NSString *buttonIndex;
     WebSerivceCall *webcall;
-    NSMutableArray *formArray,*tempCatArray,*tempCatName,*data,*tempData;
+    NSMutableArray *formArray,*tempCatArray,*tempCatName,*tempCatSequence,*data,*tempData;
     NSInteger atSection;
     NSString *txtPath;
     UIActivityIndicatorView *indicatorView;
     UIView *viewActivity;
-
+    NSString  *flagWaitUntilDataFetch,*flagForImage;
 }
 @property (nonatomic, assign) BOOL shouldHideActivityIndicator;
-
-//@property (strong, nonatomic)NSMutableDictionary *tempData;
 @end
 
 @implementation GuestFormViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    flagForImage=nil;
+
     _shouldHideActivityIndicator = YES;
 
+   [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(navigateToHome:) name:@"goBackToHome" object:nil];
     
-}
--(void)viewWillAppear:(BOOL)animated
-{
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isSurvey"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgressSubmit"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromSuveyViewC"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgress"];
+
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    [self setUpInitials:aStrClientId];
+  
     data=[[NSMutableArray alloc]init];
     tempData=[[NSMutableArray alloc]init];
     arrayForBool=[[NSMutableArray alloc]init];
-    // Do any additional setup after loading the view.
     arrForCat = [NSMutableArray new];
     arrForAllData = [NSMutableArray new];
     formArray =[NSMutableArray new];
-    [self showActivityIndicator];
+
+    [self setUpInitialsReload:aStrClientId];
+    
+}
+-(void)navigateToHome:(NSNotification*)notification{
+    
+    UserHomeViewController  *userView  =  [self.storyboard instantiateViewControllerWithIdentifier:@"UserHome"];
+
+    [self.navigationController pushViewController:userView animated:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgressSubmit"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromSuveyViewC"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgress"];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBack"] isEqualToString:@"no"]) {
+        
+        [_tblFormList reloadData];
+    }
+//********* user is back from submitting or save in progress the form/survey should increment/decrement count of in progress*********//
+    
     if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBack"]isEqualToString:@"yes"])
     {
         [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isBack"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isBackDone"];
+        flagForImage=@"YES";
 
-        [webcall callServiceForForms:YES complition:nil];
-    //    [_tblFormList reloadData];
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+     
+        data=[[NSMutableArray alloc]init];
+        tempData=[[NSMutableArray alloc]init];
+        arrayForBool=[[NSMutableArray alloc]init];
+        arrForCat = [NSMutableArray new];
+        arrForAllData = [NSMutableArray new];
+        formArray =[NSMutableArray new];
+   [self setUpInitialsReload:aStrClientId];
+        
     }
+    else{
+                [self.tblFormList reloadData];
+    }
+ 
+    
+}
+-(void)viewDidAppear:(BOOL)animated{
+  
+
+}
+
+-(BOOL)waitUntilDataFetch{
+    
+    
+    if ([flagWaitUntilDataFetch isEqualToString:@"NO"]) {
+        
+    }
+    
+    flagWaitUntilDataFetch=@"YES";
+
+
+    if (arrayForBool.count==0) {
+          return NO;
+    }
+    else{
+          return YES;
+    }
+  
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -147,13 +212,11 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-
-  //  NSLog(@"%ld",sender.tag);
-    if ([segue.identifier isEqualToString:@"ShowDynamicForm"]) {
+        if ([segue.identifier isEqualToString:@"ShowDynamicForm"]) {
         DynamicFormsViewController *aDynamicView = (DynamicFormsViewController*)segue.destinationViewController;
 
                NSMutableArray *aMutbArray  = [[data valueForKey:@"categoryFormList"]objectAtIndex:selectedSection];
+        
         
 
         aDynamicView.objFormOrSurvey = [aMutbArray objectAtIndex:selectedIndex];
@@ -166,21 +229,13 @@
         }
     }
 
-//   else if ([self shouldPerformSegueWithIdentifier:@"GoToLink" sender:sender]) {
-//            WebViewController *webVC = (WebViewController*)segue.destinationViewController;
-//           webVC.strRequestURL = [sender valueForKey:@"link"];
-//           webVC.strInstruction = [sender valueForKey:@"instructions"];
-//           webVC.guestFormType = self.guestFormType;
-//        }
-//        
-//    }
     
 }
 
 
 #pragma mark - Methods
 
-- (void)setUpInitials:(NSString*)aStrClientId {
+- (void)setUpInitialsReload:(NSString*)aStrClientId {
     if (_guestFormType == 1) {
         // Configure for Take a Survey screen
         [_imvIcon setImage:[UIImage imageNamed:@"take_a_survey.png"]];
@@ -192,9 +247,11 @@
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"Guest Forms"];
         [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+            
             [self fetchFormList];
-            [_tblFormList reloadData];
-        }];
+            [self.tblFormList reloadData];
+
+       }];
     }
     else if (_guestFormType == 3) {
         // Configure for Make a Suggestion screen
@@ -202,7 +259,8 @@
         [_lblFormTitle setText:@"Guest Suggestion"];
         [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
             [self fetchFormList];
-            [_tblFormList reloadData];
+            [self.tblFormList reloadData];
+
         }];
     }
     else if (_guestFormType == 4) {
@@ -211,24 +269,74 @@
         [_lblFormTitle setText:@"User Form List"];
         [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
             [self fetchFormList];
-            [_tblFormList reloadData];
-        }];
+            [self.tblFormList reloadData];
+
+       }];
     }
     else if (_guestFormType == 5) {
         // Configure for User Survey
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Surveys"];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
+        }
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSurvey"];
         [self callService];
     }
+    
+    
+}
+- (void)setUpInitials:(NSString*)aStrClientId {
+    if (_guestFormType == 1) {
+        // Configure for Take a Survey screen
+        [_imvIcon setImage:[UIImage imageNamed:@"take_a_survey.png"]];
+        [_lblFormTitle setText:@"Guest Survey"];
+        [self callServiceReload];
+    }
+    else if (_guestFormType == 2) {
+        // Configure for Complete Form screen
+        [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblFormTitle setText:@"Guest Forms"];
+        [self fetchFormList];
+    
+    }
+    else if (_guestFormType == 3) {
+        // Configure for Make a Suggestion screen
+        [_imvIcon setImage:[UIImage imageNamed:@"make_a_suggestion.png"]];
+        [_lblFormTitle setText:@"Guest Suggestion"];
+        [self fetchFormList];
+       
+    }
+    else if (_guestFormType == 4) {
+        [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblFormTitle setText:@"User Form List"];
+        [self fetchFormList];
+     
+    }
+    else if (_guestFormType == 5) {
+        // Configure for User Survey
+        [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
+        [_lblFormTitle setText:@"User Surveys"];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
+        }
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSurvey"];
+        [self callServiceReload];
+    }
+    
+    
 }
 
 - (void)callService {
     [[WebSerivceCall webServiceObject] callServiceForSurvey:NO complition:^{
         [self fetchSurveyList];
-        [_tblFormList reloadData];
+        [self.tblFormList reloadData];
     }];
 }
+- (void)callServiceReload {
+        [self fetchSurveyList];
 
+}
 - (void)fetchSurveyList {
     //surveyUserTypeId are 1 = Guest 2 = User
     NSString *strSurveyUserType = @"1";
@@ -237,12 +345,19 @@
     }
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K ==[cd] %@", @"userTypeId", strSurveyUserType];
+
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+
+
     [request setPredicate:predicate];
+    
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
     NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"surveyId" ascending:YES];
+    
     [request setSortDescriptors:@[sort,sort1]];
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+    
+    //********* to get data in category wise dictionary format*********//
     
     for (int i=0; i<[mutArrFormList count]; i++) {
         [arrayForBool addObject:[NSNumber numberWithBool:NO]];
@@ -256,17 +371,20 @@
         
         NSMutableArray *allCatArray =[NSMutableArray new];
         NSMutableArray *allCatName =[NSMutableArray new];
-        
+        NSMutableArray *allCatSequence =[NSMutableArray new];
+
         for (int i=0; i<[mutArrFormList count]; i++)
         {
             
             [allCatArray addObject:[[mutArrFormList valueForKey:@"categoryId"]objectAtIndex:i]];
             [allCatName addObject:[[mutArrFormList valueForKey:@"categoryName"]objectAtIndex:i]];
-            
+            [allCatSequence addObject:[[mutArrFormList valueForKey:@"categorySequence"]objectAtIndex:i]];
+
         }
         tempCatArray = [NSMutableArray new];
         tempCatName = [NSMutableArray new];
-        
+        tempCatSequence = [NSMutableArray new];
+
         for (int i=0; i<allCatArray.count; i++) {
             
             if(![tempCatArray containsObject:[allCatArray objectAtIndex:i]])
@@ -274,7 +392,8 @@
                 
                 [tempCatArray addObject:[allCatArray objectAtIndex:i]];
                 [tempCatName addObject:[allCatName objectAtIndex:i]];
-                
+                [tempCatSequence addObject:[allCatSequence objectAtIndex:i]];
+
             }
         }
         
@@ -291,10 +410,9 @@
             arrForAllData=[NSMutableArray new];
             [catDictData setObject:[tempCatArray objectAtIndex:i] forKey:@"categoryId"];
             [catDictData setObject:[tempCatName objectAtIndex:i] forKey:@"categoryName"];
-            
+            [catDictData setObject:[tempCatSequence objectAtIndex:i] forKey:@"categorySequence"];
             
             for (int j=0; j<allCatArray.count; j++) {
-                
                 
                 if ([[allCatArray objectAtIndex:j] isEqualToString:[tempCatArray objectAtIndex:i]]) {
                     
@@ -314,11 +432,53 @@
             count2 = count2 +1;
         }
         
-        
+        NSSortDescriptor *sortByCatSequence = [NSSortDescriptor sortDescriptorWithKey:@"categorySequence" ascending:YES];
+        NSArray * sortedData=[NSArray arrayWithObject:sortByCatSequence];
+        [data sortUsingDescriptors:sortedData];
+        [self hideActivityIndicator];
         
     }
     
     [self hideActivityIndicator];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackDone"]isEqualToString:@"yes"]) {
+        //*********category persistancy*********//
+        [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isBackDone"];
+        
+        UIButton * btnForSectionSelected=[[UIButton alloc]init];
+        
+        NSData *indexData = [[NSUserDefaults standardUserDefaults] objectForKey:@"sectionSelected"];
+        
+        NSString * str=[NSKeyedUnarchiver unarchiveObjectWithData:indexData];
+        
+        btnForSectionSelected.tag=[str integerValue];
+        
+        [self btnClick:btnForSectionSelected];//category persistancy methode
+        
+    }
+  
+        if (imageArray.count == 0) {
+            //********* Plus minus sign on category section*********//
+            imageArray = [NSMutableArray new];
+            for (int l = 0; l<[[data valueForKey:@"categoryName"] count]; l++) {
+                
+                [imageArray setObject:@"YES" atIndexedSubscript:l];
+            }
+            
+        }
+    
+  
+      if (data.count == 0) {
+          //********* if data is empty call the methode again*********//
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+        data=[[NSMutableArray alloc]init];
+        tempData=[[NSMutableArray alloc]init];
+        arrayForBool=[[NSMutableArray alloc]init];
+        arrForCat = [NSMutableArray new];
+        arrForAllData = [NSMutableArray new];
+        formArray =[NSMutableArray new];
+        [self setUpInitialsReload:aStrClientId];
+    }
+    [_tblFormList reloadData];
 
 }
 
@@ -330,8 +490,6 @@
     }
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
     NSPredicate *predicate;
-    
-    //predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"userTypeId", strFormUserType];
     
     if (_guestFormType == 3) {
         predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[cd] %@ AND typeId ==[cd] %@", strFormUserType, [NSString stringWithFormat:@"%ld", (long)_guestFormType]];
@@ -347,6 +505,7 @@
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     
  
+    //********* to get data in category wise dictionary format*********//
     
     
     for (int i=0; i<[mutArrFormList count]; i++){
@@ -360,16 +519,20 @@
         
         NSMutableArray *allCatArray =[NSMutableArray new];
         NSMutableArray *allCatName =[NSMutableArray new];
-        
+        NSMutableArray *allCatSeqence =[NSMutableArray new];
+
         for (int i=0; i<[mutArrFormList count]; i++)
         {
          
             [allCatArray addObject:[[mutArrFormList valueForKey:@"categoryId"]objectAtIndex:i]];
             [allCatName addObject:[[mutArrFormList valueForKey:@"categoryName"]objectAtIndex:i]];
-            
+            [allCatSeqence addObject:[[mutArrFormList valueForKey:@"categorySequence"]objectAtIndex:i]];
+
         }
         tempCatArray = [NSMutableArray new];
         tempCatName = [NSMutableArray new];
+        tempCatSequence = [NSMutableArray new];
+
         
         for (int i=0; i<allCatArray.count; i++) {
             
@@ -378,6 +541,8 @@
                 
                 [tempCatArray addObject:[allCatArray objectAtIndex:i]];
                 [tempCatName addObject:[allCatName objectAtIndex:i]];
+                [tempCatSequence addObject:[allCatSeqence objectAtIndex:i]];
+
                 
             }
         }
@@ -395,35 +560,75 @@
             arrForAllData=[NSMutableArray new];
             [catDictData setObject:[tempCatArray objectAtIndex:i] forKey:@"categoryId"];
             [catDictData setObject:[tempCatName objectAtIndex:i] forKey:@"categoryName"];
-            
+            [catDictData setObject:[tempCatSequence objectAtIndex:i] forKey:@"categorySequence"];
+
             
             for (int j=0; j<allCatArray.count; j++) {
                 
-                
                 if ([[allCatArray objectAtIndex:j] isEqualToString:[tempCatArray objectAtIndex:i]]) {
-                    
-                    
-                    
-                    
+
                     [arrForAllData insertObject:[mutArrFormList objectAtIndex:j] atIndex:count];
                     count = count +1;
-                    
                 }
-                
             }
             [catDictData setValue:arrForAllData forKey:@"categoryFormList"];
-            
             
             [data insertObject:catDictData atIndex:count2];
             count2 = count2 +1;
         }
 
-
-
     }
     
+    NSSortDescriptor *sortByCatSequence = [NSSortDescriptor sortDescriptorWithKey:@"categorySequence" ascending:YES];
+    NSArray * sortedData=[NSArray arrayWithObject:sortByCatSequence];
+    [data sortUsingDescriptors:sortedData];
     [self hideActivityIndicator];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackDone"]isEqualToString:@"yes"]) {
+        //*********category persistancy*********//
+        
+        [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isBackDone"];
+        
+        UIButton * btnForSectionSelected=[[UIButton alloc]init];
+        
+        NSData *indexData = [[NSUserDefaults standardUserDefaults] objectForKey:@"sectionSelected"];
+        
+        NSString * str=[NSKeyedUnarchiver unarchiveObjectWithData:indexData];
+        
+        btnForSectionSelected.tag=[str integerValue];
+        
+        [self btnClick:btnForSectionSelected]; //category persistancy methode
+        
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBack"]isEqualToString:@"yes"]) {
+        
+    }
 
+    if (imageArray.count==0) {
+        // *********Plus minus sign on category section*********//
+
+        imageArray=[NSMutableArray new];
+    for (int l = 0; l<[[data valueForKey:@"categoryName"] count]; l++) {
+        
+        [imageArray setObject:@"YES" atIndexedSubscript:l];
+    }
+    }
+    
+    if (data.count == 0) {
+            //********* if data is empty call the methode again*********//
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+        
+        data=[[NSMutableArray alloc]init];
+        tempData=[[NSMutableArray alloc]init];
+        arrayForBool=[[NSMutableArray alloc]init];
+        arrForCat = [NSMutableArray new];
+        arrForAllData = [NSMutableArray new];
+        formArray =[NSMutableArray new];
+        [self setUpInitialsReload:aStrClientId];
+    }
+    
+    [_tblFormList reloadData];
+    
 }
 
 #pragma mark - IBActions
@@ -444,25 +649,28 @@
 -(void)viewDidLayoutSubviews{
     /*
      Funaction viewDidLayoutSubviews
-     Purpose :reload table with piced up string from dropdown
+     Purpose :reload table with count of in progress forms/surveys
      Parameter :
      Return : nsuserdefault
      */
+    
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"removeInProgress"] isEqualToString:@"YES"]) {
-        data=[NSMutableArray new];
         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"removeInProgress"];
-       // [data addObjectsFromArray:tempData];
         [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isBack"];
 
 
         [self viewWillAppear:YES];
+    }
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineInProgress"] isEqualToString:@"YES"]) {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineInProgress"];
+
+        [_tblFormList reloadData];
     }
     
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-
 
     return [data count];
 }
@@ -475,7 +683,7 @@
 }
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    GuestFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    GuestFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
 
 
     if(!aCell)
@@ -491,6 +699,7 @@
         aCell.backgroundColor=[UIColor clearColor];
         
         aCell.textLabel.text=@"";
+        aCell.hidden=YES;
     }
     /********** If the section supposed to be Opened *******************/
     else
@@ -504,42 +713,87 @@
                 aCell.imageView.image=[UIImage imageNamed:@"point.png"];
                 aCell.selectionStyle=UITableViewCellSelectionStyleNone ;
         
-     
-        
+        NSString * strId=nil;
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+            [aCell.btnFormInProgressTitle setTitle:@"Survey in progress" forState:UIControlStateNormal];
+            [aCell.btnFormInOfflineTitle setTitle:@"Survey Offline" forState:UIControlStateNormal];
+            strId=[[obj valueForKey:@"surveyId"]objectAtIndex:indexPath.row];
+        }
+        else{
+            [aCell.btnFormInProgressTitle setTitle:@"Form in progress" forState:UIControlStateNormal];
+            [aCell.btnFormInOfflineTitle setTitle:@"Form offline" forState:UIControlStateNormal];
+            strId=[[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
+
+        }
         [aCell.btnFormInProgress addTarget:self action:@selector(formsInProgressList:) forControlEvents:UIControlEventTouchUpInside];
-       
-        
+       [aCell.btnFormInOffline addTarget:self action:@selector(formsInProgressListInOffline:) forControlEvents:UIControlEventTouchUpInside];
         aCell.lblFormsCount.layer.cornerRadius = aCell.lblFormsCount.frame.size.height/2;
         aCell.lblFormsCount.layer.masksToBounds = YES;
+        aCell.lblFormInOfflineCount.layer.cornerRadius = aCell.lblFormsCount.frame.size.height/2;
+        aCell.lblFormInOfflineCount.layer.masksToBounds = YES;
+
         
         if ([[[obj valueForKey:@"inProgressCount"]objectAtIndex:indexPath.row]integerValue]>0) {
-            
+          
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"signOutMsg"];
+
             aCell.lblFormsCount.hidden = NO;
             aCell.btnFormInProgress.hidden = NO;
-            
+            aCell.btnFormInProgressTitle.hidden = NO;
+
             [aCell.lblFormsCount setText:[NSString stringWithFormat:@"%@",[[obj valueForKey:@"inProgressCount"]objectAtIndex:indexPath.row]]];
             
         }
+        else{
+            aCell.lblFormsCount.hidden = YES;
+            aCell.btnFormInProgress.hidden = YES;
+            aCell.btnFormInProgressTitle.hidden = YES;
+            
+
+        }
+        [aCell.lblFormInOfflineCount setHidden:YES];
+        [aCell.btnFormInOffline setHidden:YES];
+        [aCell.btnFormInOfflineTitle setHidden:YES];
+
+//******** If the offline forms/surveys are saved in sync, get count of synced forms/survey **********//
+
+            NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+            
+            NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+            int countInProgress=0;
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+            
+            for (SubmitFormAndSurvey *record in aryOfflineData) {
                 
+                if ([strId isEqualToString:record.typeId] && [record.isInProgressId isEqualToString:@"1"] && [strUserId isEqualToString:record.userId]) {
+                 
+                           countInProgress=countInProgress+1;
+                        aCell.lblFormInOfflineCount.text=[NSString stringWithFormat:@"%d",countInProgress];
+                        [aCell.lblFormInOfflineCount setHidden:NO];
+                         [aCell.btnFormInOffline setHidden:NO];
+                         [aCell.btnFormInOfflineTitle setHidden:NO];
+                }
+
+                
+            }
    
+        
+
     }
 
-   //NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
-//   UILabel *aLblInstruction = (UILabel *) [aCell.contentView viewWithTag:6];
-//    [aLblInstruction setText:[obj valueForKey:@"instructions"]];
-//    [aLblInstruction sizeToFit];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
     frame.size.height = 3;
     [aView setFrame:frame];
-   aCell.btnFormInProgress.tag = indexPath.row;
-    NSLog(@"%ld",(long)aCell.btnFormInProgress.tag);
-    
+   aCell.btnFormInProgress.tag = indexPath.section * 1000 + indexPath.row;
+    aCell.btnFormInOffline.tag = indexPath.section * 1000 + indexPath.row;
+ 
     return aCell;
 }
-
-
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -557,23 +811,37 @@
     else {
         [aHeaderView setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
-    //NSManagedObject *obj = [mutArrFormList objectAtIndex:section];
     aHeaderView.lblCategory.text = [[data valueForKey:@"categoryName"] objectAtIndex:section];
     UITableViewHeaderFooterView *myHeader = [[UITableViewHeaderFooterView alloc] init];
     myHeader.frame=aHeaderView.frame;
     [myHeader addSubview:aHeaderView];
     [aHeaderView.buttonAction setTag:section];
+    [aHeaderView.buttonAction setSelected:YES];
+[aHeaderView.imgView setImage:[UIImage imageNamed:@"add_icon.png"]];
+
+ 
+    
+
    [aHeaderView.buttonAction addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if ([[imageArray objectAtIndex:section] isEqualToString:@"YES"]) {
+        [aHeaderView.imgView setImage:[UIImage imageNamed:@"expand_icon@2x.png"]];
+        
+    }
+    else{
+        [aHeaderView.imgView setImage:[UIImage imageNamed:@"decrease_icon@2x.png"]];
+        
+    }
     return myHeader;
     
 
-    
+   
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[arrayForBool objectAtIndex:indexPath.section] boolValue]) {
-        return 40;
+        return 100;
     }
     return 0;
     
@@ -582,18 +850,13 @@
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    typeId 1 = Link: sends user to the provided URL and open it in native browser
-//    typeId 2 = Form: displays form within the app
-//    typeId 2 = Make A Suggestion: displays form within the app
+
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isFormHistory"];
     NSLog(@"%@",[mutArrFormList objectAtIndex:indexPath.row]);
-    
-    NSManagedObject *obj = [mutArrFormList objectAtIndex:indexPath.row];
+    NSMutableArray * dataArray=[[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+    NSManagedObject *obj =[dataArray objectAtIndex:indexPath.row];
     if ([[obj valueForKey:@"typeId"] integerValue] == 1) {
-//        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[obj valueForKey:@"link"]]]) {
-//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[obj valueForKey:@"link"]]];
-//        }
-        //[self performSegueWithIdentifier:@"GoToLink" sender:obj];
+ 
         [self initWithIdentifier:@"GoToLink" sender:obj];
     }
     else {
@@ -601,23 +864,47 @@
         selectedSection = indexPath.section;
         [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
     }
+
+    
+    NSData *Data = [NSKeyedArchiver archivedDataWithRootObject:[NSString stringWithFormat:@"%ld",(long)indexPath.section]];
+    [[NSUserDefaults standardUserDefaults] setObject:Data forKey:@"sectionSelected"];
+    
+    
+    
+  
 }
 
 - (void)btnClick:(UIButton *)gestureRecognizer{
+    //********* category click expand the section or close the section*********//
+//*********category persistancy comming back from detail(dynamic) form/survey view*********//
     
+    sectionForheader=gestureRecognizer.tag;
+    if ([flagForImage isEqualToString:@"YES"]) {
+        flagForImage=@"NO";
+        for (int i = 0; i<imageArray.count; i++) {
+            if (i == gestureRecognizer.tag) {
+                
+            }
+            else{
+               
+                    [imageArray replaceObjectAtIndex:i withObject:@"YES"];
+            }
+        }
+        
+    }
+    else{
+
+                if ([[imageArray objectAtIndex:gestureRecognizer.tag] isEqualToString:@"YES"]) {
+                    [imageArray replaceObjectAtIndex:gestureRecognizer.tag withObject:@"NO"];
+                }
+                else{
+                    [imageArray replaceObjectAtIndex:gestureRecognizer.tag withObject:@"YES"];
+                    
+                }
+       
+    }
+   
     
-    if([gestureRecognizer isSelected]==NO)
-    {
-        
-        [gestureRecognizer setImage:[UIImage imageNamed:@"decrease_icon@2x.png"] forState:UIControlStateNormal];
-        [gestureRecognizer setSelected:YES];
-    }
-    else
-    {
-        [gestureRecognizer setImage:[UIImage imageNamed:@"add_icon.png"] forState:UIControlStateNormal];
-        [gestureRecognizer setSelected:NO];
-        
-    }
     atSection = gestureRecognizer.tag;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:gestureRecognizer.tag];
     if (indexPath.row == 0) {
@@ -626,52 +913,181 @@
             if (indexPath.section==i) {
                 [arrayForBool replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:!collapsed]];
             }
+          
         }
         [_tblFormList reloadSections:[NSIndexSet indexSetWithIndex:gestureRecognizer.tag] withRowAnimation:UITableViewRowAnimationFade];
         
-        
-//        CGRect sectionRect = [_tblFormList rectForSection:indexPath.section];
-//        //sectionRect.size.height = _expandableTableView.frame.size.height;
-//        [_tblFormList scrollRectToVisible:sectionRect animated:YES];
-//        
+      
+
         
     }
+  
     
 }
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
+
+//********** forms/survey  in progress button clicke action (offline)**********//
+
+-(void)formsInProgressListInOffline:(UIButton*)button
+{
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"OfflineForListTitle"];
+   [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgressInOffline"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgressSubmit"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"offlineToOnline"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"saveToInProgressoffline"];
+
+    NSInteger section,row;
+    section = button.tag / 1000;
+    row = button.tag % 1000;
+    NSData *Data = [NSKeyedArchiver archivedDataWithRootObject:[NSString stringWithFormat:@"%ld",(long)section]];
+    [[NSUserDefaults standardUserDefaults] setObject:Data forKey:@"sectionSelected"];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+        
+        FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
+        NSLog(@"%ld  %ld",section,row);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+        NSString *surveyId = [[obj valueForKey:@"surveyId"]objectAtIndex:indexPath.row];
+        NSString *SurveyInstructions = [[obj valueForKey:@"instructions"]objectAtIndex:indexPath.row];
+        NSString *SurveyIsAllowInProgress = [[obj valueForKey:@"isAllowInProgress"]objectAtIndex:indexPath.row];
+        NSString *SurveyName = [[obj valueForKey:@"name"]objectAtIndex:indexPath.row];
+        
+        [[NSUserDefaults standardUserDefaults]setObject:surveyId forKey:@"surveyIdForDelete"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromSuveyViewC"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromSugestionViewC"];
+        
+        
+        [[WebSerivceCall webServiceObject]callServiceForSurveyInOffline:YES withSurveyId:surveyId withSurveyInstructions:SurveyInstructions withSurveyIsAllowInProgress:SurveyIsAllowInProgress withSurveyName:SurveyName complition:^{
+            
+            [self.view addSubview:formView];
+            
+        }];
+    }else{
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",(long)button.tag] forKey:@"indexForFormSelected"];
+        
+        FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
+        
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+        NSString *FormId = [[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
+        NSString *FormInstructions = [[obj valueForKey:@"instructions"]objectAtIndex:indexPath.row];
+        NSString *FormIsAllowInProgress = [[obj valueForKey:@"isAllowInProgress"]objectAtIndex:indexPath.row];
+        NSString *FormName = [[obj valueForKey:@"name"]objectAtIndex:indexPath.row];
+        
+        [[NSUserDefaults standardUserDefaults]setObject:FormId forKey:@"surveyIdForDelete"];
+        
+        [[WebSerivceCall webServiceObject]callServiceForFormInOffline:YES withFormId:FormId withFormInstructions:FormInstructions withFormIsAllowInProgress:FormIsAllowInProgress withFormName:FormName complition:^{
+            
+            [self.view addSubview:formView];
+            
+        }];
+        
+        
+        
+    }
+
+}
+
+//********** forms/survey  in progress button clicke action (online)**********//
 
 -(void)formsInProgressList:(UIButton*)button{
     
-    [self callServiceForForms:YES buttonIndex:button.tag complition:nil];
+
     
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgressInOffline"];
+    NSInteger section,row;
+    section = button.tag / 1000;
+    row = button.tag % 1000;
     
+    NSData *Data = [NSKeyedArchiver archivedDataWithRootObject:[NSString stringWithFormat:@"%ld",(long)section]];
+    [[NSUserDefaults standardUserDefaults] setObject:Data forKey:@"sectionSelected"];
     
+    if ([self isNetworkReachable]) {
+        
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgressSubmit"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
+        
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+
+            FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+            NSString *surveyId = [[obj valueForKey:@"surveyId"]objectAtIndex:indexPath.row];
+            [[NSUserDefaults standardUserDefaults]setObject:surveyId forKey:@"surveyIdForDelete"];
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromSuveyViewC"];
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromSugestionViewC"];
+
+
+            [[WebSerivceCall webServiceObject]callServiceForSurvey:YES withSurveyId:surveyId complition:^{
+                
+                [self.view addSubview:formView];
+            }];
+            
+            
+            
+            
+        }else{
+            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
+            [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+
+[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",indexPath.row] forKey:@"indexForFormSelected"];
+            
+            NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+            NSString *formId = [[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
+            
+            
+            [self callServiceForForms:YES buttonIndex:[formId integerValue] complition:nil];
+            
+        }
+        
+
+        
+        
+    }
+    else {
+                UIAlertView * alert=[[UIAlertView alloc]initWithTitle:@"" message:MSG_NO_INTERNET delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+        
+    }
+
+   
+
 }
+
 
 - (void)callServiceForForms:(BOOL)waitUntilDone buttonIndex:(NSInteger)button complition:(void(^)(void))complition {
     
 
     FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
     
-    
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:atSection];
-    NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
-    if([[NSUserDefaults standardUserDefaults]valueForKey:@"formId"]!=nil)
-    {
-        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"formId"];
-    }
-   [[NSUserDefaults standardUserDefaults]setValue:[[obj valueForKey:@"formId"]objectAtIndex:button]forKey:@"formId"];
-    
-    //[[NSUserDefaults standardUserDefaults]setValue:@"557" forKey:@"formId"];
-//    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"formId"]);
+   [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%ld",(long)button] forKey:@"formId"];
+        NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"formId"]);
     __block BOOL isWSComplete = NO;
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
     NSString *strUserId = @"";
     if ([User checkUserExist]) {
         strUserId = [[User currentUser] userId];
     }
-   [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&formId=%@", FORM_SETUP, aStrClientId, strUserId,[[obj valueForKey:@"formId"]objectAtIndex:button]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
-        [self deleteAllForms];
+   [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&formId=%@", FORM_SETUP, aStrClientId, strUserId,[NSString stringWithFormat:@"%ld",(long)button]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+       [self deleteAllForms];
         [self insertForms:response];
         [self.view addSubview:formView];
         isWSComplete = YES;
@@ -690,7 +1106,7 @@
     }
 }
 - (void)deleteAllForms {
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsInProgress"];
     [request setIncludesPropertyValues:NO];
     NSArray *aryRecords = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     for (NSManagedObject *rec in aryRecords) {
@@ -725,11 +1141,10 @@
 }
 - (void)insertForms:(NSDictionary*)Dict {
     NSMutableArray *arrFormHistory = [NSMutableArray new];
-    [arrFormHistory addObjectsFromArray:[Dict valueForKey:@"FormHistries"]];
-   //for (int i=0; i<arrFormHistory.count; i++) {
+    [arrFormHistory addObjectsFromArray:[Dict valueForKey:@"FormHistory"]];
         for (NSDictionary *aDict in arrFormHistory) {
             
-            FormsList *form = [NSEntityDescription insertNewObjectForEntityForName:@"FormsList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            FormsInProgress *form = [NSEntityDescription insertNewObjectForEntityForName:@"FormsInProgress" inManagedObjectContext:gblAppDelegate.managedObjectContext];
             
             form.formId = [[NSUserDefaults standardUserDefaults]valueForKey:@"formId"];
             if (![[Dict objectForKey:@"FormInstructions"] isKindOfClass:[NSNull class]]) {
@@ -747,15 +1162,18 @@
             form.name = [Dict objectForKey:@"FormName"];
             form.typeId = [[Dict objectForKey:@"FormTypeId"] stringValue];
             form.userTypeId = [[Dict objectForKey:@"FormUserTypeId"] stringValue];
-             //form.sequence=[aDict objectForKey:@"Sequence"] ;
+            
             form.categoryId=[[Dict objectForKey:@"FormCategoryId"]stringValue];
-            form.isAllowInProgress =[[Dict valueForKey:@"FormIsAllowInProgress"]stringValue];
+         
             if (![[Dict objectForKey:@"FormCategoryName"] isKindOfClass:[NSNull class]])
             {
                 form.categoryName=[Dict objectForKey:@"FormCategoryName"];
             }
-            //form.inProgressCount = [NSString stringWithFormat:@"%@",[aDict valueForKey:@"InProgressCount"]];
-            form.isAllowInProgress =[NSString stringWithFormat:@"%@", [[Dict valueForKey:@"FormHistries"]valueForKey:@"IsInProgress"]];
+            
+            form.date=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Date"]];
+            form.inProgressFormId=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Id"]];
+
+            form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsInProgress"]];
              NSMutableSet *aSetQuestions = [NSMutableSet set];
             if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
                 for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
@@ -768,6 +1186,10 @@
                     if (![[dictQuest objectForKey:@"ExistingResponse"] isKindOfClass:[NSNull class]])
                     {
                         aQuestion.existingResponse = [dictQuest objectForKey:@"ExistingResponse"];
+                    }
+                    if (![[dictQuest objectForKey:@"ExistingResponseIds"] isKindOfClass:[NSNull class]])
+                    {
+                        aQuestion.existingResponseIds = [dictQuest objectForKey:@"ExistingResponseIds"];
                     }
                     aQuestion.existingResponseBool = [[dictQuest objectForKey:@"ExistingResponseBool"]stringValue];
                     NSMutableSet *responseTypeSet = [NSMutableSet set];
@@ -782,7 +1204,7 @@
                         }
                     }
                     aQuestion.responseList = responseTypeSet;
-                    aQuestion.formList = form;
+                    aQuestion.formInProgressList = form;
                     [aSetQuestions addObject:aQuestion];
                 }
             }
@@ -790,8 +1212,7 @@
             [gblAppDelegate.managedObjectContext insertObject:form];
             [gblAppDelegate.managedObjectContext save:nil];
         }
-    
-   //}
+
     
     
 }

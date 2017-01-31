@@ -26,5 +26,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *largeTxtView;
 
 @property (strong, nonatomic) IBOutlet UIButton *btnUploadFile;
+@property (weak, nonatomic) IBOutlet UILabel *lblUploadFile;
 
 @end

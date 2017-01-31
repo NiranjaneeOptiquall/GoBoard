@@ -16,5 +16,8 @@
 @dynamic type;
 @dynamic typeId;
 @dynamic questionList;
-
+@dynamic headerId;
+@dynamic isInProgressId;
+@dynamic date;
+@dynamic offlineFormId;
 @end
