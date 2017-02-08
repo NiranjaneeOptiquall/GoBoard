@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "GuestFormViewController.h"
 #import "DailyLog.h"
+#import "Reachability.h"
 #import <Raygun4iOS/Raygun.h>
 @interface LoginViewController ()
 
@@ -20,6 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _lblGuestFormCount.hidden=YES;
+    _lblGuestSurveyCount.hidden=YES;
+    _lblGuestSugessionCount.hidden=YES;
+
     _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
@@ -82,6 +88,42 @@
 }
 
 - (IBAction)btnUserSignInTapped:(UIButton*)sender {
+//    [self callServiceForGomePageInProgressCount:YES complition:^(NSDictionary * aDict){
+//        
+//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
+//            _lblGuestSurveyCount.hidden=NO;
+//            _lblGuestSurveyCount.text=[aDict valueForKey:@""];
+//        }
+//        else
+//        {
+//            _lblGuestSurveyCount.hidden=YES;
+//
+//        }
+//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
+//            _lblGuestFormCount.hidden=NO;
+//            _lblGuestFormCount.text=[aDict valueForKey:@""];
+//
+//
+//        }
+//        else
+//        {
+//            _lblGuestFormCount.hidden=YES;
+//            
+//        }
+//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
+//            _lblGuestSugessionCount.hidden=NO;
+//            _lblGuestSugessionCount.text=[aDict valueForKey:@""];
+//
+//
+//        }
+//        else
+//        {
+//            _lblGuestSugessionCount.hidden=YES;
+//            
+//        }
+//        
+//    }];
+    
     if (![sender isSelected]) {
         [sender setSelected:YES];
         [_btnGuestSignIn setSelected:NO];
@@ -93,7 +135,73 @@
         [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isGuest"];
     }
 }
+#pragma mark Reachability
 
+- (BOOL)isNetworkReachable {
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];//[Reachability reachabilityWithHostName:@"http://www.google.com"];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if (remoteHostStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)callServiceForGomePageInProgressCount:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition {
+    __block BOOL isWSComplete = NO;
+    
+    if ([self isNetworkReachable]) {
+        
+        
+        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+        NSString *strUserId = @"";
+        NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        NSString * isAdmin;
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
+            isAdmin= @"False";
+        }
+        else{
+            isAdmin= @"True";
+        }
+        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+            
+            
+            
+            
+            
+            
+            isWSComplete = YES;
+            if (complition)
+                complition(response);
+            
+        } failure:^(NSError *error, NSDictionary *response) {
+
+            isWSComplete = YES;
+            if (complition)
+                complition(response);
+     
+        }];
+        if (waitUntilDone) {
+            while (!isWSComplete) {
+                [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+            }
+        }
+        
+        
+        
+    }
+    else {
+        
+        
+        
+    }
+    
+    
+}
 - (IBAction)btnSignInTapped:(id)sender {
     _btnSignInTapped.userInteractionEnabled=NO;
     if ([_txtUserId isTextFieldBlank]) {

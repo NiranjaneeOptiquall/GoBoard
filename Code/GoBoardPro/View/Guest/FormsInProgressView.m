@@ -418,7 +418,8 @@ NSFetchRequest *request=request = [[NSFetchRequest alloc] initWithEntityName:@"S
             }];
         }
         else{
-            [self callServiceForForms:YES buttonIndex:[[[NSUserDefaults standardUserDefaults] valueForKey:@"indexForFormSelected"] integerValue] complition:nil];
+            NSLog(@"%ld",button);
+            [self callServiceForForms:YES buttonIndex:button complition:nil];
               [self fetchData];
         }
     }

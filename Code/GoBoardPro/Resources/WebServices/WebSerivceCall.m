@@ -1,4 +1,5 @@
-  //
+
+//
 //  WebSerivceCall.m
 //  GoBoardPro
 //
@@ -76,11 +77,14 @@
     [self callServiceForEmergencyResponsePlan:YES complition:nil];
     [self callServiceForTaskList:YES complition:nil];
     [self callServiceForUtilizationCount:YES complition:nil];
+    
+   // [self callServiceForDashboardCount:YES complition:nil];
+
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
     [self callServiceForMemos:YES complition:nil];
        [self callServiceForAllClienntPositions:YES complition:nil];
-    
+
     //**** initialy call for  forms/survey data is cansled because of heavy data take long  time and this webservice call is made on clicke event of form/survey page call****//
    //   [self callServiceForForms:YES complition:nil];
     //   [self callServiceForSurvey:YES complition:nil];
@@ -192,6 +196,7 @@
     [dataDic setValue:FormInstructions forKey:@"Instructions"];
     [dataDic setValue:FormIsAllowInProgress forKey:@"SurveyIsAllowInProgress"];
     [dataDic setValue:FormName forKey:@"FormName"];
+
     NSString *strUserId = @"";
     if ([User checkUserExist]) {
         strUserId = [[User currentUser] userId];
@@ -201,7 +206,8 @@
     NSMutableArray *questionArr2 = [[NSMutableArray    alloc]init];
     int j = 0;
     for (SubmitFormAndSurvey *record in aryOfflineData) {
-        
+        [dataDic setValue:record.categoryId forKey:@"CategoryId"];
+
         isSingleDataSaved = NO;
         NSMutableDictionary *questionArr = [[NSMutableDictionary    alloc]init];
         
@@ -357,7 +363,8 @@
     NSMutableArray *questionArr2 = [[NSMutableArray    alloc]init];
     int j = 0;
     for (SubmitFormAndSurvey *record in aryOfflineData) {
-        
+        [dataDic setValue:record.categoryId forKey:@"CategoryId"];
+
         isSingleDataSaved = NO;
         NSMutableDictionary *questionArr = [[NSMutableDictionary    alloc]init];
         
@@ -517,7 +524,7 @@
         form.name = [Dict objectForKey:@"FormName"];
         form.typeId = [[Dict objectForKey:@"FormTypeId"] stringValue];
         form.userTypeId = [[Dict objectForKey:@"FormUserTypeId"] stringValue];
-        form.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
+        form.categoryId=[NSString stringWithFormat:@"%@",[Dict objectForKey:@"CategoryId"]];
         form.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
         
         if (![[Dict objectForKey:@"FormCategoryName"] isKindOfClass:[NSNull class]])
@@ -600,8 +607,10 @@
         survey.name = [Dict objectForKey:@"SurveyName"];
         survey.typeId = [[Dict objectForKey:@"SurveyTypeId"] stringValue];
         survey.userTypeId = [[Dict objectForKey:@"SurveyUserTypeId"] stringValue];
-        survey.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
+        survey.categoryId=[NSString stringWithFormat:@"%@",[Dict objectForKey:@"CategoryId"]];
         survey.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
+        
+        
         
         if (![[Dict objectForKey:@"SurveyCategoryName"] isKindOfClass:[NSNull class]])
         {
@@ -712,7 +721,7 @@
         survey.name = [Dict objectForKey:@"SurveyName"];
         survey.typeId = [[Dict objectForKey:@"SurveyTypeId"] stringValue];
         survey.userTypeId = [[Dict objectForKey:@"SurveyUserTypeId"] stringValue];
-        survey.categoryId=[[Dict objectForKey:@"CategoryId"]stringValue];
+        survey.categoryId=[[Dict objectForKey:@"SurveyCategoryId"]stringValue];
         survey.categorySequence=[[Dict objectForKey:@"categorySequence"]stringValue];
 
         if (![[Dict objectForKey:@"SurveyCategoryName"] isKindOfClass:[NSNull class]])
@@ -993,6 +1002,9 @@
         aList.taskId = [[aDict objectForKey:@"Id"] stringValue];
         aList.sequence = [aDict objectForKey:@"Sequence"];
         aList.location = [aDict objectForKey:@"Location"];
+        aList.taskType = [aDict objectForKey:@"TaskType"];
+
+        
 //#warning edited by Imaginovation
         aList.comment = [aDict objectForKey:@"Comment"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1676,6 +1688,82 @@
     return YES;
 }
 
+#pragma mark - Dashboard Count
+
+-(void)callServiceForDashboardCount:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSMutableArray *arrOfPosition = [NSMutableArray new];
+    
+   // NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
+    
+   // NSString *aStrUserID = [[User currentUser]userId];
+    
+    NSMutableArray *arr=  [[User currentUser]mutArrSelectedPositions];
+    
+  //  NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    
+    NSString * isAdmin;
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
+        isAdmin= @"False";
+    }
+    else{
+        isAdmin= @"True";
+    }
+    
+    for (UserPosition *p in arr) {
+        
+        [arrOfPosition addObject:p.value];
+    }
+    NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
+    //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
+    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&isAdmin=%@",[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,isAdmin];
+
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ACCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
+//        [self deleteAllAccidentReports];
+//        [self insertAccidentReportSettings:[response objectForKey:@"AccidentReportSetup"]];
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//    } failure:^(NSError *error, NSDictionary *response) {
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//    }];
+//    if (waitUntilDone) {
+//        while (!isWSComplete) {
+//            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+//        }
+//    }
+
+    [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+
+        
+        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"FormToalCount"];
+        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"SurveyToalCount"];
+        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"TeamLogToalCount"];
+        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TaskCount"]integerValue] forKey:@"TaskToalCount"];
+        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"MemoCount"]integerValue] forKey:@"MemoToalCount"];
+
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+        
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+
+
+}
+
 #pragma mark - Forms
 
 - (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition {
@@ -1710,14 +1798,14 @@
                 complition();
             
         } failure:^(NSError *error, NSDictionary *response) {
-            
-            
+//            NSLog(@"%@",error);
+//            NSLog(@"%@",response);
             isWSComplete = YES;
             if (complition)
                 complition();
          
             
-            NSLog(@"%@", response);
+//            NSLog(@"%@", response);
         }];
         if (waitUntilDone) {
             while (!isWSComplete) {
@@ -1796,7 +1884,7 @@
             form.name = [aDict objectForKey:@"Name"];
             form.typeId = [[aDict objectForKey:@"FormTypeId"] stringValue];
             form.userTypeId = [[aDict objectForKey:@"FormUserTypeId"] stringValue];
-        NSLog(@"form.typeId = %@ form.userTypeId = %@",form.typeId,form.userTypeId);
+    //    NSLog(@"form.typeId = %@ form.userTypeId = %@",form.typeId,form.userTypeId);
             form.sequence=[aDict objectForKey:@"Sequence"] ;
             form.categoryId=[[aDict objectForKey:@"CategoryId"]stringValue];
             form.categoryName=[aDict objectForKey:@"CategoryName"];

@@ -51,6 +51,9 @@
 - (IBAction)btnTakeASurveyTapped:(id)sender;
 - (IBAction)btnMakeASuggestionTapped:(id)sender;
 - (IBAction)btnCompleteAFormTapped:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *lblGuestSurveyCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblGuestSugessionCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblGuestFormCount;
 
 - (IBAction)unwindBackToLoginScreen:(UIStoryboardSegue*)segue;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="15G31" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="15G1108" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -506,6 +506,7 @@
         <relationship name="submittedTask" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubmittedTask" inverseName="user" inverseEntity="SubmittedTask" syncable="YES"/>
     </entity>
     <entity name="SubmitFormAndSurvey" representedClassName="SubmitFormAndSurvey" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="clientId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="headerId" optional="YES" attributeType="String" syncable="YES"/>
@@ -613,6 +614,7 @@
         <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="taskDateTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="taskId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskType" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="responseTypeValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskResponseTypeValues" inverseName="task" inverseEntity="TaskResponseTypeValues" syncable="YES"/>
     </entity>
     <entity name="TaskResponseTypeValues" representedClassName="TaskResponseTypeValues" syncable="YES">
@@ -728,14 +730,14 @@
         <element name="RightArmInjuryList" positionX="106" positionY="860" width="128" height="103"/>
         <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
-        <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="180"/>
+        <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="195"/>
         <element name="SubmittedTask" positionX="-801" positionY="-1129" width="128" height="193"/>
         <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
         <element name="SurveyInProgress" positionX="-900" positionY="812" width="128" height="285"/>
         <element name="SurveyList" positionX="-738" positionY="657" width="128" height="270"/>
         <element name="SurveyQuestions" positionX="-542" positionY="1019" width="128" height="255"/>
         <element name="SurveyResponseTypeValues" positionX="-873" positionY="1130" width="128" height="103"/>
-        <element name="TaskList" positionX="135" positionY="-972" width="128" height="298"/>
+        <element name="TaskList" positionX="135" positionY="-972" width="128" height="315"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-517" width="128" height="103"/>
         <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="225"/>
         <element name="TeamLogTrace" positionX="-315" positionY="-630" width="128" height="105"/>

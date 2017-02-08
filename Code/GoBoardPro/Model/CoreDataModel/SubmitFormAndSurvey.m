@@ -20,4 +20,5 @@
 @dynamic isInProgressId;
 @dynamic date;
 @dynamic offlineFormId;
+@dynamic categoryId;
 @end

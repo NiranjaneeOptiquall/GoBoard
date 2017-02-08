@@ -30,6 +30,8 @@
 @property (nonatomic, retain) NSString * taskId;
 @property (nonatomic, retain) NSDate * expirationTime;
 @property (nonatomic, retain) NSSet *responseTypeValues;
+@property (nonatomic, retain) NSString * taskType;
+
 @end
 
 @interface TaskList (CoreDataGeneratedAccessors)

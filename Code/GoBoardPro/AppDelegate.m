@@ -42,7 +42,7 @@
     
     CGRect aRect = [[UIScreen mainScreen]bounds];
     NSString *aStrRect = NSStringFromCGRect(aRect);
-    NSLog(@"Frame:%@", aStrRect);
+   // NSLog(@"Frame:%@", aStrRect);
     
     _shouldHideActivityIndicator = YES;
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"SettingsIsProduction"]) {
@@ -209,15 +209,15 @@
           //      NSData *d = [request HTTPBody];
             //    NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
               //  NSLog(@"%@", aStr);
-                if ([[aDict objectForKey:@"Success"] boolValue]) {
+               // if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
-                }
-                else {
-                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
-                    failure (nil, aDict);
-                    NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
-
-                }
+//                }
+//                else {
+//                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
+//                    failure (nil, aDict);
+//                    NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
+//
+//                }
                 
             }
              [self hideActivityIndicator];
@@ -261,6 +261,7 @@
         NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
             
             if (error) {
+                NSLog(@"%@",error);
                 [self hideActivityIndicator];
                 failure (error, @{@"ErrorMessage":MSG_SERVICE_FAIL});
                 
@@ -272,6 +273,7 @@
                     completion(aDict);
                 }
                 else {
+                      NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
                     failure (nil, aDict);
                 }
                 

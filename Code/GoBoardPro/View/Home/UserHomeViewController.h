@@ -17,7 +17,12 @@
 }
 //Team Log
 @property (nonatomic,assign)NSInteger intUnreadLogCount;
+@property (nonatomic,assign)NSInteger intFormInProgressCount;
+@property (nonatomic,assign)NSInteger intSurveyInProgressCount;
+
 @property (nonatomic,assign)BOOL boolUpdateTeamLog;
+@property (nonatomic,assign)BOOL boolUpdateFormInProgress;
+@property (nonatomic,assign)BOOL boolUpdateSurveyInProgress;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;

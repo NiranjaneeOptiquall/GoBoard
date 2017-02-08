@@ -34,6 +34,8 @@
     UIActivityIndicatorView *indicatorView;
     UIView *viewActivity;
     NSString  *flagWaitUntilDataFetch,*flagForImage;
+    NSMutableDictionary * countArrOffline;
+
 }
 @property (nonatomic, assign) BOOL shouldHideActivityIndicator;
 @end
@@ -42,6 +44,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     flagForImage=nil;
 
     _shouldHideActivityIndicator = YES;
@@ -52,6 +55,7 @@
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgressSubmit"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromSuveyViewC"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgress"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Forms/Surveys"];
 
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
   
@@ -79,7 +83,7 @@
     [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromSuveyViewC"];
     [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgress"];
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBack"] isEqualToString:@"no"]) {
-        
+
         [_tblFormList reloadData];
     }
 //********* user is back from submitting or save in progress the form/survey should increment/decrement count of in progress*********//
@@ -102,6 +106,15 @@
         
     }
     else{
+
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"survey"]) {
+
+            [self fetchSurveyList];
+        }
+        else if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"form"]){
+            [self fetchFormList];
+            
+        }
                 [self.tblFormList reloadData];
     }
  
@@ -338,6 +351,7 @@
 
 }
 - (void)fetchSurveyList {
+    [[NSUserDefaults standardUserDefaults]setValue:@"survey" forKey:@"Forms/Surveys"];
     //surveyUserTypeId are 1 = Guest 2 = User
     NSString *strSurveyUserType = @"1";
     if ([User checkUserExist]) {
@@ -439,6 +453,32 @@
         
     }
     
+    NSFetchRequest *requestOffline = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:requestOffline error:nil];
+    countArrOffline=[[NSMutableDictionary alloc]init];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    
+    for (int temp = 0 ; temp<tempCatArray.count; temp++) {
+        int countInProgressOffline=0;
+        for (SubmitFormAndSurvey *record in aryOfflineData) {
+           
+           
+           if ([[tempCatArray objectAtIndex:temp] isEqualToString:record.categoryId] && [strUserId isEqualToString:record.userId] && [record.type isEqualToString:@"1"] && [record.isInProgressId isEqualToString:@"1"]) {
+         
+                countInProgressOffline=countInProgressOffline+1;
+            }
+            
+        }
+        
+        [countArrOffline setValue:[NSString stringWithFormat:@"%d",countInProgressOffline] forKey:[tempCatArray objectAtIndex:temp]];
+    }
+    
+
+    
     [self hideActivityIndicator];
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackDone"]isEqualToString:@"yes"]) {
         //*********category persistancy*********//
@@ -483,6 +523,8 @@
 }
 
 - (void)fetchFormList {
+    [[NSUserDefaults standardUserDefaults]setValue:@"form" forKey:@"Forms/Surveys"];
+
     //surveyUserTypeId are 1 = Guest 2 = User
     NSString *strFormUserType = @"1";
     if ([User checkUserExist]) {
@@ -529,8 +571,9 @@
             [allCatSeqence addObject:[[mutArrFormList valueForKey:@"categorySequence"]objectAtIndex:i]];
 
         }
-        tempCatArray = [NSMutableArray new];
-        tempCatName = [NSMutableArray new];
+       
+       tempCatArray = [NSMutableArray new];
+         tempCatName = [NSMutableArray new];
         tempCatSequence = [NSMutableArray new];
 
         
@@ -582,6 +625,36 @@
     NSSortDescriptor *sortByCatSequence = [NSSortDescriptor sortDescriptorWithKey:@"categorySequence" ascending:YES];
     NSArray * sortedData=[NSArray arrayWithObject:sortByCatSequence];
     [data sortUsingDescriptors:sortedData];
+    
+    
+    
+    
+    NSFetchRequest *requestOffline = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
+    
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:requestOffline error:nil];
+    countArrOffline=[[NSMutableDictionary alloc]init];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    
+    for (int temp = 0 ; temp<tempCatArray.count; temp++) {
+        int countInProgressOffline=0;
+        for (SubmitFormAndSurvey *record in aryOfflineData) {
+            
+           if ([[tempCatArray objectAtIndex:temp] isEqualToString:record.categoryId] && [strUserId isEqualToString:record.userId] && ![record.type isEqualToString:@"1"] && [record.isInProgressId isEqualToString:@"1"] ) {
+        
+                countInProgressOffline=countInProgressOffline+1;
+            }
+            
+        }
+        
+        [countArrOffline setValue:[NSString stringWithFormat:@"%d",countInProgressOffline] forKey:[tempCatArray objectAtIndex:temp]];
+    }
+    
+
+    
+    
     [self hideActivityIndicator];
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackDone"]isEqualToString:@"yes"]) {
         //*********category persistancy*********//
@@ -663,6 +736,14 @@
     }
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineInProgress"] isEqualToString:@"YES"]) {
         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineInProgress"];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"survey"]) {
+            
+            [self fetchSurveyList];
+        }
+        else if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"form"]){
+            [self fetchFormList];
+            
+        }
 
         [_tblFormList reloadData];
     }
@@ -805,6 +886,63 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     TableViewHeader *aHeaderView = (TableViewHeader *)[[[NSBundle mainBundle] loadNibNamed:@"TableViewHeader" owner:self options:nil] lastObject];
+    aHeaderView.lblInProgressCount.layer.cornerRadius=aHeaderView.lblInProgressCount.frame.size.width/2;
+    aHeaderView.lblInProgressCount.layer.masksToBounds = YES;
+    aHeaderView.lblOfflineInProgressCount.layer.cornerRadius=aHeaderView.lblInProgressCount.frame.size.width/2;
+    aHeaderView.lblOfflineInProgressCount.layer.masksToBounds = YES;
+    
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"survey"]) {
+        [aHeaderView.btnInProgressCount setTitle:@"Survey in progress" forState:UIControlStateNormal];
+        [aHeaderView.btnOfflineCount setTitle:@"Survey in offline" forState:UIControlStateNormal];
+    }
+    else if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Forms/Surveys"] isEqualToString:@"form"]){
+        
+    [aHeaderView.btnInProgressCount setTitle:@"Forms in progress" forState:UIControlStateNormal];
+    [aHeaderView.btnOfflineCount setTitle:@"Forms in offline" forState:UIControlStateNormal];
+      
+
+    }
+    
+    
+    
+    int inProgressCount=0;
+    NSMutableArray * tempArray=[[NSMutableArray alloc]init];
+    [tempArray addObjectsFromArray:[[data valueForKey:@"categoryFormList"]objectAtIndex:section]];
+    NSLog(@"%@",tempArray);
+    
+    for (int i = 0; i<tempArray.count; i++) {
+        int tempCount=[[[tempArray valueForKey:@"inProgressCount"] objectAtIndex:i] intValue];
+        inProgressCount=inProgressCount+tempCount;
+    }
+    if (inProgressCount > 0) {
+        aHeaderView.lblInProgressCount.hidden=NO;
+        aHeaderView.btnInProgressCount.hidden=NO;
+        
+        aHeaderView.lblInProgressCount.text=[NSString stringWithFormat:@"%d",inProgressCount];
+    }
+    else{
+        aHeaderView.lblInProgressCount.hidden=YES;
+        aHeaderView.btnInProgressCount.hidden=YES;
+        
+    }
+    
+    // for (int temp = 0; temp<tempCatArray.count; temp++) {
+    if ([[countArrOffline objectForKey:[[data valueForKey:@"categoryId"] objectAtIndex:section]] integerValue] != 0 ) {
+        
+        aHeaderView.lblOfflineInProgressCount.text=[NSString stringWithFormat:@"%@",[countArrOffline objectForKey:[[data valueForKey:@"categoryId"] objectAtIndex:section]]];
+        aHeaderView.lblOfflineInProgressCount.hidden=NO;
+        aHeaderView.btnOfflineCount.hidden=NO;
+        
+    }
+    else{
+        aHeaderView.lblOfflineInProgressCount.hidden=YES;
+        aHeaderView.btnOfflineCount.hidden=YES;
+        
+    }
+    
+    
+    //}
     if (section == 0 || section % 2 == 0) {
         [aHeaderView setBackgroundColor:[UIColor colorWithRed:228.0/255.0 green:228.0/255.0 blue:228.0/255.0 alpha:1.0]];
     }
@@ -812,17 +950,18 @@
         [aHeaderView setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
     aHeaderView.lblCategory.text = [[data valueForKey:@"categoryName"] objectAtIndex:section];
+    //  NSLog(@"%@",[[data valueForKey:@"categoryId"] objectAtIndex:section]);
     UITableViewHeaderFooterView *myHeader = [[UITableViewHeaderFooterView alloc] init];
     myHeader.frame=aHeaderView.frame;
     [myHeader addSubview:aHeaderView];
     [aHeaderView.buttonAction setTag:section];
     [aHeaderView.buttonAction setSelected:YES];
-[aHeaderView.imgView setImage:[UIImage imageNamed:@"add_icon.png"]];
-
- 
+    [aHeaderView.imgView setImage:[UIImage imageNamed:@"add_icon.png"]];
     
-
-   [aHeaderView.buttonAction addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
+    [aHeaderView.buttonAction addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     if ([[imageArray objectAtIndex:section] isEqualToString:@"YES"]) {
         [aHeaderView.imgView setImage:[UIImage imageNamed:@"expand_icon@2x.png"]];
@@ -834,8 +973,8 @@
     }
     return myHeader;
     
-
-   
+    
+    
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -979,7 +1118,7 @@
         [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
         
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",(long)button.tag] forKey:@"indexForFormSelected"];
-        
+          NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"indexForFormSelected"] integerValue]);
         FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
         
         
@@ -1047,8 +1186,10 @@
             [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
             [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
-
+ NSLog(@"%ld",indexPath);
 [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",indexPath.row] forKey:@"indexForFormSelected"];
+            
+              NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"indexForFormSelected"] integerValue]);
             
             NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
             NSString *formId = [[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];

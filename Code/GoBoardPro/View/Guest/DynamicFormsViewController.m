@@ -279,6 +279,8 @@ totalSizeOFUploadedVideo=0;
     if ([segue.identifier isEqualToString:@"ThankYouScreen"]) {
         ThankYouViewController *thanksVC = (ThankYouViewController*)segue.destinationViewController;
         if (_isSurvey) {
+            [[NSUserDefaults standardUserDefaults]setValue:@"survey" forKey:@"Forms/Surveys"];
+
             if ([thankYouFlag isEqualToString:@"submitLater"]) {
                 thanksVC.strMsg = @"Thank you. Your Survey has been saved to submit later.";
                 thanksVC.strBackTitle = @"Back to Survey";
@@ -286,6 +288,20 @@ totalSizeOFUploadedVideo=0;
                 thanksVC.strMsg = @"Your Survey has been submitted.";
                 thanksVC.strBackTitle = @"Back to Survey";
             }
+        }
+        else if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"fromSuveyViewC" ] isEqualToString:@"YES"]) {
+            
+            [[NSUserDefaults standardUserDefaults]setValue:@"survey" forKey:@"Forms/Surveys"];
+            
+            if ([thankYouFlag isEqualToString:@"submitLater"]) {
+                thanksVC.strMsg = @"Thank you. Your Survey has been saved to submit later.";
+                thanksVC.strBackTitle = @"Back to Survey";
+            }else{
+                thanksVC.strMsg = @"Your Survey has been submitted.";
+                thanksVC.strBackTitle = @"Back to Survey";
+            }
+            
+            
         }
         else if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"fromSugestionViewC"] isEqualToString:@"YES"]){
             if ([thankYouFlag isEqualToString:@"submitLater"]) {
@@ -297,6 +313,8 @@ totalSizeOFUploadedVideo=0;
             }
         }
         else {
+            [[NSUserDefaults standardUserDefaults]setValue:@"form" forKey:@"Forms/Surveys"];
+
             if ([thankYouFlag isEqualToString:@"submitLater"]) {
                 thanksVC.strMsg = @"Thank you. Your Form has been saved to submit later.";
                 thanksVC.strBackTitle = @"Back to Forms";
@@ -734,8 +752,40 @@ totalSizeOFUploadedVideo=0;
         else{
             aStrInProgressFormId =@"0";
         }
-        strisInProgress=@"0";
-          NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@0,@"CurrentHistoryHeaderId":aStrInProgressFormId};
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"largeFileSiz"] isEqualToString:@"YES"]) {
+            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"largeFileSiz"];
+            
+            UIAlertController * alertForData=[UIAlertController alertControllerWithTitle:@"" message:@"Wow, this is a big file! Thanks for your patience." preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction * alertction=[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                strisInProgress=@"0";
+                NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@0,@"CurrentHistoryHeaderId":aStrInProgressFormId};
+                [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+                    
+                    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineToOnline"] isEqualToString:@"YES"]) {
+                        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineToOnline"];
+                        [self deleteSelectedFromSync:@"" DateAndTime:[[NSUserDefaults standardUserDefaults] valueForKey:@"lockalDate"]];
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"lockalDate"];
+                    }
+                    
+                    thankYouFlag=@"submit";
+                    [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+                } failure:^(NSError *error, NSDictionary *response) {
+                    NSLog(@"%@",aStrInProgressFormId);
+                    thankYouFlag=@"submit";
+                    [self saveDataToLocal:dictReq];
+                    
+                }];
+                
+
+            }];
+            [alertForData addAction:alertction];
+            [self presentViewController:alertForData animated:YES completion:nil];
+        }
+        else{
+           
+            strisInProgress=@"0";
+            NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@0,@"CurrentHistoryHeaderId":aStrInProgressFormId};
             [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
                 
                 if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineToOnline"] isEqualToString:@"YES"]) {
@@ -743,16 +793,18 @@ totalSizeOFUploadedVideo=0;
                     [self deleteSelectedFromSync:@"" DateAndTime:[[NSUserDefaults standardUserDefaults] valueForKey:@"lockalDate"]];
                     [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"lockalDate"];
                 }
-
-           thankYouFlag=@"submit";
-            [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+                
+                thankYouFlag=@"submit";
+                [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
             } failure:^(NSError *error, NSDictionary *response) {
                 NSLog(@"%@",aStrInProgressFormId);
-               thankYouFlag=@"submit";
-            [self saveDataToLocal:dictReq];
-
+                thankYouFlag=@"submit";
+                [self saveDataToLocal:dictReq];
+                
             }];
-            }
+
+        }
+    }
   
     else
     {
@@ -1125,23 +1177,57 @@ totalSizeOFUploadedVideo=0;
             else{
                 aStrInProgressFormId =@"0";
             }
-            
-            strisInProgress=@"1";
-            NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@1,@"CurrentHistoryHeaderId":aStrInProgressFormId};
-            [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
-                if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineToOnline"] isEqualToString:@"YES"]) {
-                    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineToOnline"];
-                    [self deleteSelectedFromSync:@"" DateAndTime:[[NSUserDefaults standardUserDefaults] valueForKey:@"lockalDate"]];
-                       [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"lockalDate"];
-                }
-                thankYouFlag=@"submitLater";
-                [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
-            } failure:^(NSError *error, NSDictionary *response) {
-                 thankYouFlag=@"submitLater";
-               [self saveDataToLocal:dictReq];
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"largeFileSiz"] isEqualToString:@"YES"]) {
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"largeFileSiz"];
+                UIAlertController * alertForData=[UIAlertController alertControllerWithTitle:@"" message:@"Wow, this is a big file! Thanks for your patience." preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction * alertction=[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    
+                    
+                    strisInProgress=@"1";
+                    NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@1,@"CurrentHistoryHeaderId":aStrInProgressFormId};
+                    [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+                        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineToOnline"] isEqualToString:@"YES"]) {
+                            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineToOnline"];
+                            [self deleteSelectedFromSync:@"" DateAndTime:[[NSUserDefaults standardUserDefaults] valueForKey:@"lockalDate"]];
+                            [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"lockalDate"];
+                        }
+                        thankYouFlag=@"submitLater";
+                        [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+                    } failure:^(NSError *error, NSDictionary *response) {
+                        thankYouFlag=@"submitLater";
+                        [self saveDataToLocal:dictReq];
+                        
+                    }];
 
-            }];
-        }
+                    
+                    
+                }];
+                [alertForData addAction:alertction];
+                [self presentViewController:alertForData animated:YES completion:nil];
+            }
+            else{
+                
+                strisInProgress=@"1";
+                NSDictionary *dictReq = @{@"UserId":strUserId, strIDKeyName:strIdValue, @"Details":mutArrReq, @"ClientId":aStrClientId,@"IsInProgress":@1,@"CurrentHistoryHeaderId":aStrInProgressFormId};
+                [gblAppDelegate callWebService:strWebServiceName parameters:dictReq httpMethod:[SERVICE_HTTP_METHOD objectForKey:strWebServiceName] complition:^(NSDictionary *response) {
+                    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"offlineToOnline"] isEqualToString:@"YES"]) {
+                        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"offlineToOnline"];
+                        [self deleteSelectedFromSync:@"" DateAndTime:[[NSUserDefaults standardUserDefaults] valueForKey:@"lockalDate"]];
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"lockalDate"];
+                    }
+                    thankYouFlag=@"submitLater";
+                    [self performSegueWithIdentifier:@"ThankYouScreen" sender:nil];
+                } failure:^(NSError *error, NSDictionary *response) {
+                    thankYouFlag=@"submitLater";
+                    [self saveDataToLocal:dictReq];
+                    
+                }];
+
+            }
+            
+         
+                    }
         else
         {
             if (!_isSurvey) {
@@ -1231,7 +1317,8 @@ totalSizeOFUploadedVideo=0;
         objRecord.type =@"2";
         objRecord.typeId =[_objFormOrSurvey valueForKey:@"formId"];
     }
-    
+    objRecord.categoryId = [_objFormOrSurvey valueForKey:@"categoryId"];
+
     objRecord.userId = [aDict objectForKey:@"UserId"];
     objRecord.clientId = [aDict objectForKey:@"ClientId"];
     objRecord.headerId = aStrInProgressFormId;
@@ -2095,11 +2182,17 @@ totalSizeOFUploadedVideo=0;
             NSInteger  tempVideoSize=[[NSString stringWithFormat:@"%llu",[properties fileSize]] integerValue];
             totalSizeOFUploadedVideo = totalSizeOFUploadedVideo + tempVideoSize;
             NSLog(@">> %ld >> %ld",(long)tempVideoSize,(long)totalSizeOFUploadedVideo);
-       
-            if (totalSizeOFUploadedVideo > 75000000) {
+            if (totalSizeOFUploadedVideo > [validationSize integerValue]) {
+                [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"largeFileSiz"];
+            }
+            else{
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"largeFileSiz"];
+
+            }
+            if (totalSizeOFUploadedVideo > 70000000) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    alert(@"WARNING", @"You can not upload total size of file(files) more than 75MB.")
+                    alert(@"WARNING", @"You can not upload total size of file(files) more than 70MB.")
                     
                 });
 

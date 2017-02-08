@@ -13,5 +13,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblCategory;
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UIImageView *minusImageView;
+@property (weak, nonatomic) IBOutlet UILabel *lblInProgressCount;
+@property (weak, nonatomic) IBOutlet UILabel *lblOfflineInProgressCount;
+@property (weak, nonatomic) IBOutlet UIButton *btnInProgressCount;
+@property (weak, nonatomic) IBOutlet UIButton *btnOfflineCount;
 
 @end

@@ -86,13 +86,14 @@
     
     [_cvMenuGrid reloadData];
     [self getSyncCount];
-    [self callWebserviceToUpdateTeamLog];
+ //   [self callWebserviceToUpdateTeamLog];
 
     
 //#warning Remove this in Live
     
     self.allowMemoWSCall = YES;
-    [self callWebserviceToUpdateMemo];
+//  [self callWebserviceToUpdateMemo];
+   [self callWebserviceToUpdateCountOnDashboard];
 
 }
 
@@ -210,7 +211,45 @@
             else if ([aDict[@"SystemModule"] integerValue] == 14 && self.intUnreadLogCount > 0) {
                 count = self.intUnreadLogCount;
             }
-           
+            else if ([aDict[@"SystemModule"] integerValue] == 2 && self.intFormInProgressCount > 0) {
+                count = self.intFormInProgressCount;
+            }
+            else if ([aDict[@"SystemModule"] integerValue] == 12 && self.intSurveyInProgressCount > 0) {
+                count = self.intSurveyInProgressCount;
+            }
+            else if ([aDict[@"SystemModule"] integerValue] == 0){
+                
+                NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
+                NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
+                NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
+                [allTask setSortDescriptors:@[descriptor, sortBySequence]];
+                NSArray * mutArrTaskList=[[NSArray alloc]init];
+                mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
+                
+                NSDate* sourceDate = [NSDate date];
+                
+                NSTimeZone* sourceTimeZone =  [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+                NSTimeZone* destinationTimeZone =  [NSTimeZone systemTimeZone];
+                
+                NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+                NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+                NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
+                
+                NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+                
+             //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+                
+                NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
+                NSArray * mutArrTaskUptoNx2Hrs=[[NSArray alloc]init];
+                mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+                
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
+                
+                NSArray * mutArrFilteredTaskList=[[NSArray alloc]init];
+                mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskUptoNx2Hrs filteredArrayUsingPredicate:predicate]];
+                count = mutArrFilteredTaskList.count;
+            }
+            
             if (count > 0) {
                 aLblBadge.text = [NSString stringWithFormat:@"%ld", (long)count];
                 [aLblBadge.layer setCornerRadius:5.0];
@@ -937,7 +976,58 @@
     
     return isErrorOccurred;
 }
+#pragma - mark UpdateMemo
 
+-(void)callWebserviceToUpdateCountOnDashboard
+{
+
+    
+    [[WebSerivceCall webServiceObject]callServiceForDashboardCount:NO  complition:^(NSDictionary *aDict){
+//           intUnreadMemoCount=[[[aDict valueForKey:@"DashboardCount"] valueForKey:@"MemoCount"]integerValue];
+//        self.intUnreadLogCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue];
+//        self.intFormInProgressCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue];
+//        self.intSurveyInProgressCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue];
+    
+    
+    intUnreadMemoCount=[[[NSUserDefaults standardUserDefaults] valueForKey:@"MemoToalCount"]integerValue];
+    self.intUnreadLogCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue];
+    self.intFormInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"FormToalCount"]integerValue];
+    self.intSurveyInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"SurveyToalCount"]integerValue];
+    
+        if (self.intUnreadLogCount>0) {
+            self.boolUpdateTeamLog  = YES;
+        }
+        if (self.intFormInProgressCount>0) {
+            self.boolUpdateFormInProgress  = YES;
+        }
+        if (self.intSurveyInProgressCount>0) {
+            self.boolUpdateSurveyInProgress  = YES;
+        }
+
+        if (self.allowMemoWSCall) {
+            
+            [self.cvMenuGrid reloadData];
+
+        }
+        
+        
+      
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (self.allowMemoWSCall) {
+//                    [[WebSerivceCall webServiceObject]callServiceForDashboardCount:NO  complition:^(NSDictionary *aDict){
+//                    }];
+                [self callWebserviceToUpdateCountOnDashboard];
+                 }
+            });
+    
+    }];
+    
+    
+    
+    
+    
+  
+}
 
 #pragma - mark UpdateMemo
 
@@ -945,16 +1035,16 @@
 {
     [[WebSerivceCall webServiceObject]callServiceForMemos:NO complition:^{
         
-        intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
-        [self.cvMenuGrid reloadData];
-        NSLog(@"MemoUpdated");
-        if (self.allowMemoWSCall) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self callWebserviceToUpdateMemo];
-                [self callWebserviceToUpdateTeamLog];
-                
-            });
-        }
+//        intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
+//        [self.cvMenuGrid reloadData];
+//     //   NSLog(@"MemoUpdated");
+//        if (self.allowMemoWSCall) {
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [self callWebserviceToUpdateMemo];
+//                [self callWebserviceToUpdateTeamLog];
+//                
+//            });
+//        }
         
     }];
     
@@ -965,14 +1055,23 @@
 {
     [[WebSerivceCall webServiceObject]callServiceForTeamLogInBackground:NO complition:^(NSDictionary *aDict){
         
-        NSLog(@"%@",aDict);
+    //    NSLog(@"%@",aDict);
         self.intUnreadLogCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+        self.intFormInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+        self.intSurveyInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+
         if (self.intUnreadLogCount>0) {
             self.boolUpdateTeamLog  = YES;
         }
+        if (self.intFormInProgressCount>0) {
+            self.boolUpdateFormInProgress  = YES;
+        }
+        if (self.intSurveyInProgressCount>0) {
+            self.boolUpdateSurveyInProgress  = YES;
+        }
         [self.cvMenuGrid reloadData];
         
-        NSLog(@"Team Log Updated");
+     //   NSLog(@"Team Log Updated");
         
         
     }];

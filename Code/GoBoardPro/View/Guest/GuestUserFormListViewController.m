@@ -290,6 +290,7 @@
     
     if ([self isNetworkReachable]) {
         [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%ld",(long)button.tag] forKey:@"indexForFormSelected"];
+          NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"indexForFormSelected"] integerValue]);
         [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgressSubmit"];
         
         if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {

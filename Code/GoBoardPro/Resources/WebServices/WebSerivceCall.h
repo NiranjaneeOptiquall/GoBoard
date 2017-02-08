@@ -39,6 +39,7 @@
 - (void)callServiceForFormInOffline:(BOOL)waitUntilDone withFormId:(NSString*)FormId withFormInstructions:(NSString*)FormInstructions withFormIsAllowInProgress:(NSString*)FormIsAllowInProgress withFormName:(NSString*)FormName complition:(void(^)(void))complition;
 
 - (void)callServiceForMemos:(BOOL)waitUntilDone complition:(void (^)(void))completion ;
+- (void)callServiceForDashboardCount:(BOOL)waitUntilDone complition:(void(^)(NSDictionary *))completion;
 - (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition;
 - (void)callServiceForTeamLogInBackground:(BOOL)waitUntilDone complition:(void(^)(NSDictionary *))complition;
 @end

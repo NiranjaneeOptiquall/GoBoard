@@ -27,5 +27,7 @@
 @property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
 @property (strong, nonatomic) IBOutlet UIWebView *viewWebDescription;
 @property (strong, nonatomic) IBOutlet UITextView *txtDescription;
+@property (weak, nonatomic) IBOutlet UITextField *txtSearchTag;
+@property (weak, nonatomic) IBOutlet UIButton *btnSearchTag;
 
 @end

@@ -381,6 +381,8 @@
 		84F0D1F51E40A8D000D334FB /* work_order_sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F0D1581E40A8D000D334FB /* work_order_sel@2x.png */; };
 		A9D1E5B21AF1E9EE00028FC1 /* Raygun4iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D1E5B11AF1E9EE00028FC1 /* Raygun4iOS.framework */; };
 		A9F8B7291A8A09A80007D041 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F8B7281A8A09A80007D041 /* AssetsLibrary.framework */; };
+		DDE48BE31E434DF300550D51 /* oneTimeTask20X20.png in Resources */ = {isa = PBXBuildFile; fileRef = DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */; };
+		DDECB50B1E41EA3000290E67 /* search_20x20.png in Resources */ = {isa = PBXBuildFile; fileRef = DDECB50A1E41EA3000290E67 /* search_20x20.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -740,7 +742,7 @@
 		84F0CEFF1E40A8B000D334FB /* GuestFormCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuestFormCell.h; sourceTree = "<group>"; };
 		84F0CF001E40A8B000D334FB /* GuestFormCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuestFormCell.m; sourceTree = "<group>"; };
 		84F0CF011E40A8B000D334FB /* GuestFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuestFormViewController.h; sourceTree = "<group>"; };
-		84F0CF021E40A8B000D334FB /* GuestFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuestFormViewController.m; sourceTree = "<group>"; };
+		84F0CF021E40A8B000D334FB /* GuestFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.objc; path = GuestFormViewController.m; sourceTree = "<group>"; };
 		84F0CF031E40A8B000D334FB /* GuestUserFormListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuestUserFormListViewController.h; sourceTree = "<group>"; };
 		84F0CF041E40A8B000D334FB /* GuestUserFormListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuestUserFormListViewController.m; sourceTree = "<group>"; };
 		84F0CF051E40A8B000D334FB /* TableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeader.h; sourceTree = "<group>"; };
@@ -956,6 +958,8 @@
 		84F0D1581E40A8D000D334FB /* work_order_sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "work_order_sel@2x.png"; sourceTree = "<group>"; };
 		A9D1E5B11AF1E9EE00028FC1 /* Raygun4iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Raygun4iOS.framework; sourceTree = "<group>"; };
 		A9F8B7281A8A09A80007D041 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = oneTimeTask20X20.png; sourceTree = "<group>"; };
+		DDECB50A1E41EA3000290E67 /* search_20x20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_20x20.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1857,6 +1861,8 @@
 		84F0D0BA1E40A8CF00D334FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */,
+				DDECB50A1E41EA3000290E67 /* search_20x20.png */,
 				84F0D0BB1E40A8CF00D334FB /* accident_report@2x.png */,
 				84F0D0BC1E40A8CF00D334FB /* activity_text_box@2x.png */,
 				84F0D0BD1E40A8CF00D334FB /* add_icon@2x.png */,
@@ -2076,7 +2082,7 @@
 				TargetAttributes = {
 					3397CA9C19D02D7A00788153 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 9LTX58J5T8;
+						DevelopmentTeam = 8NQF7UHVNW;
 						ProvisioningStyle = Automatic;
 					};
 					3397CAB819D02D7A00788153 = {
@@ -2121,6 +2127,7 @@
 				84F0D1901E40A8D000D334FB /* figure_leftLeg.png in Resources */,
 				84F0D0B21E40A8B000D334FB /* DropDownField.xib in Resources */,
 				84F0CF4A1E40A8B000D334FB /* LaunchScreen.xib in Resources */,
+				DDE48BE31E434DF300550D51 /* oneTimeTask20X20.png in Resources */,
 				84F0D0A21E40A8B000D334FB /* IncidentActionTaken.xib in Resources */,
 				84F0D1731E40A8D000D334FB /* close_btn@2x.png in Resources */,
 				84F0D1AC1E40A8D000D334FB /* keyboard_icon_large@2x.png in Resources */,
@@ -2206,6 +2213,7 @@
 				84F0D06E1E40A8B000D334FB /* BodilyFluidView.xib in Resources */,
 				84F0D18C1E40A8D000D334FB /* faded_n@2x.png in Resources */,
 				84F0D1DB1E40A8D000D334FB /* take_a_survey@2x.png in Resources */,
+				DDECB50B1E41EA3000290E67 /* search_20x20.png in Resources */,
 				84F0D0751E40A8B000D334FB /* FinalSection.xib in Resources */,
 				84F0D0981E40A8B000D334FB /* FormsInProgressView.xib in Resources */,
 				84F0D06B1E40A8B000D334FB /* AccidentFirstSection.xib in Resources */,
@@ -2641,7 +2649,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 9LTX58J5T8;
+				DEVELOPMENT_TEAM = 8NQF7UHVNW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2669,7 +2677,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 9LTX58J5T8;
+				DEVELOPMENT_TEAM = 8NQF7UHVNW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

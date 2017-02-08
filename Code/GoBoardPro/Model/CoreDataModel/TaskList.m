@@ -29,5 +29,5 @@
 @dynamic taskId;
 @dynamic expirationTime;
 @dynamic responseTypeValues;
-
+@dynamic taskType;
 @end

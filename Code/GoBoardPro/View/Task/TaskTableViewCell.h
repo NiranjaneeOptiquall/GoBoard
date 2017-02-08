@@ -19,5 +19,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblFarenhite;
 @property (weak, nonatomic) IBOutlet UIView *vwDrpDown;
 @property (weak, nonatomic) IBOutlet UITextField *txtDropDown;
+@property (weak, nonatomic) IBOutlet UIImageView *imageOneTimeTask;
 
 @end

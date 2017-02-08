@@ -93,7 +93,7 @@
         
         NSDate* dateSource = [[NSDate alloc] initWithTimeInterval:interval sinceDate:dateSourceTemp];
         
-        NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+     //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
         NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime >= %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
         
@@ -117,7 +117,7 @@
         
         NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
         
-        NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+     //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
         NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
         
@@ -466,7 +466,7 @@
     
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
     
-    NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+  //  NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
     
     NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
    
@@ -504,6 +504,7 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
+    [aCell.imageOneTimeTask setHidden:YES];
     [aCell.txtTemp setHidden:YES];
     [aCell.btnNo setHidden:YES];
     [aCell.btnYes setHidden:YES];
@@ -651,8 +652,12 @@
             
             aCell.txtDropDown.userInteractionEnabled = YES;
         }
-        
-        
+   
+//        NSLog(@"%@",currentDate);
+//        NSLog(@"%@",task.expirationTime);
+//        NSLog(@"%ld",(long)NSOrderedDescending);
+//        NSLog(@"%ld",(long)[currentDate compare:task.expirationTime/*sourceDate*/]);
+
         if ( [currentDate compare:task.expirationTime/*sourceDate*/] == NSOrderedDescending) {
             NSLog(@"Task Is Expire and is passed away.");
             
@@ -690,7 +695,11 @@
             NSLog(@"Task Is not Expire and will occur after words");
         }
     }
-    
+    if ([task.taskType isEqualToString:@"OneTime"]) {
+      
+        [aCell.imageOneTimeTask setHidden:NO];
+
+    }
     [aCell.lblFarenhite setTextColor:aCell.txtTemp.textColor];
     [aCell.lblFarenhite setHidden:aCell.txtTemp.isHidden];
     UIView *aView = [aCell.contentView viewWithTag:4];

@@ -10,7 +10,14 @@
 #import "SOPDetailViewController.h"
 #import "ERPHeaderView.h"
 
-@interface SOPViewController ()
+@interface SOPViewController ()<UITextFieldDelegate>
+{
+    NSString *searchTextString;
+    NSMutableArray *searchArray;
+    BOOL isFilter;
+    
+}
+
 
 @end
 
@@ -114,6 +121,12 @@ Put the webview in place  of textview for type 2( for html Description set in we
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    isFilter = NO;
+    _txtSearchTag.delegate=self;
+    _txtSearchTag.hidden=YES;
+    [self.txtSearchTag addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+ 
     if (!_dictSOPCategory)
     {
         [_btnSOPList setHidden:YES];
@@ -135,8 +148,17 @@ Put the webview in place  of textview for type 2( for html Description set in we
             _tblSOPList.frame = frame;
         }
         
-        frame = _viewWebDescription.frame;
+        
+        frame = _txtSearchTag.frame;
         frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_txtSearchTag setFrame:frame];
+        
+        frame = _btnSearchTag.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        [_btnSearchTag setFrame:frame];
+        
+        frame = _viewWebDescription.frame;
+        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) +40 ;
         [_viewWebDescription setFrame:frame];
         
         frame = _viewWeb.frame;
@@ -174,7 +196,8 @@ Put the webview in place  of textview for type 2( for html Description set in we
         }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1)
         {
             [_viewWeb setHidden:NO];
-            
+            [_txtSearchTag setHidden:YES];
+            [_btnSearchTag setHidden:YES];
             frame = _viewWeb.frame;
             frame.size.height = self.view.frame.size.height - _tblSOPList.frame.origin.y;
             [_viewWeb setFrame:frame];
@@ -185,8 +208,70 @@ Put the webview in place  of textview for type 2( for html Description set in we
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackToMainView"]isEqualToString:@"YES"]) {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isBackToMainView"];
 
+        isFilter=NO;
+        [self.tblSOPList reloadData];
+    }
+  
+}
+-(IBAction)btnSearchTagClicked:(id)sender {
+    
+    _txtSearchTag.hidden=NO;
+    
+}
+-(void)textFieldDidChange:(UITextField *)textField
+{
+    searchTextString=textField.text;
+    
+    [self updateSearchArray:searchTextString];
+}
+-(void)updateSearchArray:(NSString *)searchText
+{
+    if(searchText.length==0)
+    {
+        isFilter=NO;
+    }
+    else{
+        
+        isFilter=YES;
+        searchArray=[[NSMutableArray alloc]init];
+        for(int q=0;q<mutArrSOPList.count;q++){
+            
+            
+            
+            NSString *stringTitle=[[mutArrSOPList valueForKey:@"Title"] objectAtIndex:q];
+            NSString *stringTag=[[mutArrSOPList valueForKey:@"Tag"] objectAtIndex:q];
 
+            if ([stringTitle isKindOfClass:[NSNull class]]) {
+                stringTitle=@"";
+            }
+            if ([stringTag isKindOfClass:[NSNull class]]) {
+                stringTag=@"";
+            }
+           NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            NSRange stringRangeTag=[stringTag rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            if(stringRangeTitle.location !=NSNotFound || stringRangeTag.location !=NSNotFound){
+                
+                [searchArray addObject:[mutArrSOPList objectAtIndex:q]];
+            }
+        }
+        
+    }
+    if (searchArray.count == 0) {
+        _lblNoRecords.frame=CGRectMake(_lblNoRecords.frame.origin.x, _tblSOPList.frame.origin.y + 20, _lblNoRecords.frame.size.width, _lblNoRecords.frame.size.height);
+        [_lblNoRecords setHidden:NO];
+    }
+
+    [self.tblSOPList reloadData];
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    [_txtSearchTag resignFirstResponder];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -250,6 +335,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
 }
 
 - (IBAction)btnBackTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isBackToMainView"];
     [self.navigationController popViewControllerAnimated:YES];
     [_mutArrCategoryHierarchy removeLastObject];
 }
@@ -319,7 +405,13 @@ Put the webview in place  of textview for type 2( for html Description set in we
     if ([tableView isEqual:_tblSOPCategory]) {
         return [_mutArrCategoryHierarchy count];
     }
-    return [mutArrSOPList count];
+    else{
+        if(isFilter){
+            return [searchArray count];
+        }
+        return [mutArrSOPList count];
+    }
+
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -343,67 +435,120 @@ Put the webview in place  of textview for type 2( for html Description set in we
         else {
             [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
         }
-        NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
-        UIImageView *aImgView = (UIImageView *)[aCell.contentView viewWithTag:1];
-        UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
-        UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
         
-        NSString *aStrTitle = [NSString stringWithFormat:@"%@",[aDict objectForKey:@"Title"]];
-        [aLbl setText:aStrTitle];
-        [lblDisplaySequence setText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"DisplaySequence"]]];
-        
-         //LinkType = 0 Text ,LinkType = 1 Link, LinkType = 2 Photo, LinkType = 3 Video, LinkType = 4 PDF.
-        
-        if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 0) {
-            [aImgView setImage:[UIImage imageNamed:@"list_icon.png"]];
-        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 1){
-            [aImgView setImage:[UIImage imageNamed:@"erp_link_icon.png"]];
-        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 2){
-            [aImgView setImage:[UIImage imageNamed:@"erp_photo_icon.png"]];
-        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 3){
-            [aImgView setImage:[UIImage imageNamed:@"erp_video_icon.png"]];
-        }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 4){
-             [aImgView setImage:[UIImage imageNamed:@"erp_pdf_icon.png"]];
+        if (isFilter) {
+            
+            NSDictionary *aDict = [searchArray objectAtIndex:indexPath.row];
+            UIImageView *aImgView = (UIImageView *)[aCell.contentView viewWithTag:1];
+            UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
+            UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
+            
+            NSString *aStrTitle = [NSString stringWithFormat:@"%@",[aDict objectForKey:@"Title"]];
+            [aLbl setText:aStrTitle];
+            [lblDisplaySequence setText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"DisplaySequence"]]];
+            
+            //LinkType = 0 Text ,LinkType = 1 Link, LinkType = 2 Photo, LinkType = 3 Video, LinkType = 4 PDF.
+            
+            if ([[[searchArray objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 0) {
+                [aImgView setImage:[UIImage imageNamed:@"list_icon.png"]];
+            }else if ([[[searchArray objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 1){
+                [aImgView setImage:[UIImage imageNamed:@"erp_link_icon.png"]];
+            }else if ([[[searchArray objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 2){
+                [aImgView setImage:[UIImage imageNamed:@"erp_photo_icon.png"]];
+            }else if ([[[searchArray objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 3){
+                [aImgView setImage:[UIImage imageNamed:@"erp_video_icon.png"]];
+            }else if ([[[searchArray objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 4){
+                [aImgView setImage:[UIImage imageNamed:@"erp_pdf_icon.png"]];
+            }
+            
+            if (![aDict objectForKey:@"Children"]  || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]]) {
+                [aCell setAccessoryType:UITableViewCellAccessoryNone];
+            }
+            else {
+                [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            }
+            UIView *aView = [aCell.contentView viewWithTag:4];
+            CGRect frame = aView.frame;
+            frame.origin.y = aCell.frame.size.height - 3;
+            [aView setFrame:frame];
+            
         }
         
-        if (![aDict objectForKey:@"Children"]  || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]]) {
-            [aCell setAccessoryType:UITableViewCellAccessoryNone];
+        else{
+            NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
+            UIImageView *aImgView = (UIImageView *)[aCell.contentView viewWithTag:1];
+            UILabel *aLbl = (UILabel *)[aCell.contentView viewWithTag:2];
+            UILabel *lblDisplaySequence = (UILabel*)[aCell.contentView viewWithTag:6];
+            
+            NSString *aStrTitle = [NSString stringWithFormat:@"%@",[aDict objectForKey:@"Title"]];
+            [aLbl setText:aStrTitle];
+            [lblDisplaySequence setText:[NSString stringWithFormat:@"%@",[aDict objectForKey:@"DisplaySequence"]]];
+            
+            //LinkType = 0 Text ,LinkType = 1 Link, LinkType = 2 Photo, LinkType = 3 Video, LinkType = 4 PDF.
+            
+            if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 0) {
+                [aImgView setImage:[UIImage imageNamed:@"list_icon.png"]];
+            }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 1){
+                [aImgView setImage:[UIImage imageNamed:@"erp_link_icon.png"]];
+            }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 2){
+                [aImgView setImage:[UIImage imageNamed:@"erp_photo_icon.png"]];
+            }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 3){
+                [aImgView setImage:[UIImage imageNamed:@"erp_video_icon.png"]];
+            }else if ([[[mutArrSOPList objectAtIndex:indexPath.row] objectForKey:@"LinkType"] integerValue] == 4){
+                [aImgView setImage:[UIImage imageNamed:@"erp_pdf_icon.png"]];
+            }
+            
+            if (![aDict objectForKey:@"Children"]  || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]]) {
+                [aCell setAccessoryType:UITableViewCellAccessoryNone];
+            }
+            else {
+                [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            }
+            UIView *aView = [aCell.contentView viewWithTag:4];
+            CGRect frame = aView.frame;
+            frame.origin.y = aCell.frame.size.height - 3;
+            [aView setFrame:frame];
         }
-        else {
-            [aCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        }
-        UIView *aView = [aCell.contentView viewWithTag:4];
-        CGRect frame = aView.frame;
-        frame.origin.y = aCell.frame.size.height - 3;
-        [aView setFrame:frame];
+        
     }
     return aCell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
-    if (!_mutArrCategoryHierarchy) {
-        _mutArrCategoryHierarchy = [NSMutableArray array];
+    
+    _txtSearchTag.hidden=YES;
+     [_lblNoRecords setHidden:YES];
+    if (isFilter) {
+        isFilter = NO;
+        NSDictionary *aDict = [searchArray objectAtIndex:indexPath.row];
+        if (!_mutArrCategoryHierarchy) {
+            _mutArrCategoryHierarchy = [NSMutableArray array];
+        }
+        
+        
+        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+        sopView.dictSOPCategory = aDict;
+        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+        [sopView.mutArrCategoryHierarchy addObject:[NSDictionary dictionaryWithObjectsAndKeys:[aDict objectForKey:@"Title"],@"Title",[aDict objectForKey:@"DisplaySequence"],@"DisplaySequence", nil]];
+        [self.navigationController pushViewController:sopView animated:YES];
+        
     }
-//    if (![aDict objectForKey:@"Categories"] || [[aDict objectForKey:@"Categories"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Categories"] count] == 0 ) {
-//        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
-//    }
+    else{
+        NSDictionary *aDict = [mutArrSOPList objectAtIndex:indexPath.row];
+        if (!_mutArrCategoryHierarchy) {
+            _mutArrCategoryHierarchy = [NSMutableArray array];
+        }
+        
+        
+        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+        sopView.dictSOPCategory = aDict;
+        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
+        [sopView.mutArrCategoryHierarchy addObject:[NSDictionary dictionaryWithObjectsAndKeys:[aDict objectForKey:@"Title"],@"Title",[aDict objectForKey:@"DisplaySequence"],@"DisplaySequence", nil]];
+        [self.navigationController pushViewController:sopView animated:YES];
+        
+        
+        
+    }
     
-    SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
-    sopView.dictSOPCategory = aDict;
-    sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
-    [sopView.mutArrCategoryHierarchy addObject:[NSDictionary dictionaryWithObjectsAndKeys:[aDict objectForKey:@"Title"],@"Title",[aDict objectForKey:@"DisplaySequence"],@"DisplaySequence", nil]];
-    [self.navigationController pushViewController:sopView animated:YES];
-    
-//    if (![aDict objectForKey:@"Children"] || [[aDict objectForKey:@"Children"] isKindOfClass:[NSNull class]] || [[aDict objectForKey:@"Children"] count] == 0 ) {
-//        [self performSegueWithIdentifier:@"SOPDetail" sender:aDict];
-//    }
-//    else {
-//        SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
-//        sopView.dictSOPCategory = aDict;
-//        sopView.mutArrCategoryHierarchy = _mutArrCategoryHierarchy;
-//        [sopView.mutArrCategoryHierarchy addObject:[aDict objectForKey:@"Title"]];
-//        [self.navigationController pushViewController:sopView animated:YES];
-//    }
 }
 @end
