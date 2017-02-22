@@ -1720,22 +1720,7 @@
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
     NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&isAdmin=%@",[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,isAdmin];
 
-//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ACCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
-//        [self deleteAllAccidentReports];
-//        [self insertAccidentReportSettings:[response objectForKey:@"AccidentReportSetup"]];
-//        isWSComplete = YES;
-//        if (complition)
-//            complition();
-//    } failure:^(NSError *error, NSDictionary *response) {
-//        isWSComplete = YES;
-//        if (complition)
-//            complition();
-//    }];
-//    if (waitUntilDone) {
-//        while (!isWSComplete) {
-//            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-//        }
-//    }
+
 
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
 
@@ -1763,7 +1748,6 @@
 
 
 }
-
 #pragma mark - Forms
 
 - (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition {

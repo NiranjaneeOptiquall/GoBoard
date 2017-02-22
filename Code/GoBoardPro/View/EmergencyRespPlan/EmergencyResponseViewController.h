@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface EmergencyResponseViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,UIWebViewDelegate> {
-    NSMutableArray *mutArrEmergencies;
+    NSMutableArray *allSearchData,*allSopArrList,*mutArrEmergencies;
     NSIndexPath *selectedIndexPath;
 }
 
@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 @property (strong, nonatomic) IBOutlet UITableView *tblERPCategory;
 
+@property (weak, nonatomic) IBOutlet UIScrollView *mainScrollView;
 
 
 @property (strong, nonatomic) NSMutableArray *mutArrCategoryHierarchy;
@@ -33,5 +34,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *btnSearchTag;
 @property (weak, nonatomic) IBOutlet UITextField *txtSearchTag;
+@property (weak, nonatomic) IBOutlet UILabel *lblSearchNote;
 
 @end

@@ -1,5 +1,7 @@
 
 
+
+
 //  AppDelegate.m
 //  GoBoardPro
 //
@@ -206,18 +208,17 @@
                 
                 
                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
-          //      NSData *d = [request HTTPBody];
-            //    NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-              //  NSLog(@"%@", aStr);
-               // if ([[aDict objectForKey:@"Success"] boolValue]) {
+               NSData *d = [request HTTPBody];
+               NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", aStr);
+               if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
-//                }
-//                else {
-//                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
-//                    failure (nil, aDict);
-//                    NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
-//
-//                }
+               }
+               else {
+                   alert(@"", [aDict objectForKey:@"ErrorMessage"]);
+                   failure (nil, aDict);
+                   NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
+                }
                 
             }
              [self hideActivityIndicator];

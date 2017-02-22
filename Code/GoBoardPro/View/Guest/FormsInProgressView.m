@@ -240,6 +240,7 @@
 
 -(void)deleteClicked:(UIButton*)sender{
     //********** forms/survey  in progress delete**********//
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"guestUserBack"];
 
      NSManagedObject *obj = [arrOfForms objectAtIndex:sender.tag];
     
@@ -552,6 +553,7 @@ NSFetchRequest *request=request = [[NSFetchRequest alloc] initWithEntityName:@"S
     
 }
 - (IBAction)btnDissmissView:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"guestUserBack"];
     [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"OfflineForListTitle"];
 
     [self removeFromSuperview];

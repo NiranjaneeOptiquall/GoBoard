@@ -1445,7 +1445,9 @@ totalSizeOFUploadedVideo=0;
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     NSLog(@"cell:%@",aCell);
-    
+    if (!aCell) {
+        aCell=[[DynamicFormCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    }
     aCell.lblQuestion.backgroundColor=[UIColor clearColor];
     [imageArray addObject:@"temp"];
     [arrOfBtnTitleString addObject:@""];
@@ -1831,6 +1833,9 @@ totalSizeOFUploadedVideo=0;
             }
             else if ([[aDict objectForKey:@"existingResponse"] isEqualToString:@"true"]){
                 [aCell.btnCheckMark setSelected:YES];
+            }
+            else if ([[aDict objectForKey:@"answer"] isEqualToString:@""]){
+                [aCell.btnCheckMark setSelected:NO];
             }
         }
         

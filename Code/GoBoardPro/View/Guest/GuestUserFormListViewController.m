@@ -32,11 +32,14 @@
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromSugestionViewC"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgress"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isFormHistory"];
-    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-    [self setUpInitials:aStrClientId];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"guestUserBack"];
+
 }
 -(void)viewWillAppear:(BOOL)animated{
-    
+    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+
+    [self setUpInitials:aStrClientId];
+
 
 }
 -(void)viewDidLayoutSubviews{
@@ -46,6 +49,12 @@
      Parameter :
      Return : nsuserdefault
      */
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"guestUserBack"] isEqualToString:@"YES"]) {
+        
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"guestUserBack"];
+        [self viewWillAppear:NO];
+        
+    }
 
     
 }
@@ -195,6 +204,7 @@
 
 
 - (IBAction)btnBackTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"backFromGuestUserListView"];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

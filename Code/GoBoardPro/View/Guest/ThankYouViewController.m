@@ -19,7 +19,8 @@
 
 - (IBAction)btnBackTapped:(id)sender {
     [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"offlineInProgress"];
-    
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"guestUserBack"];
+
     for (id vc in self.navigationController.viewControllers) {
         if ([vc isKindOfClass:[NSClassFromString(@"GuestFormViewController") class]]) {
             [self.navigationController popToViewController:vc animated:YES];

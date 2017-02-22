@@ -15,6 +15,10 @@
     NSString *searchTextString;
     NSMutableArray *searchArray;
     BOOL isFilter;
+    CGPoint contentOffset;
+    bool isScroll;
+    NSString * scrollFlag;
+    NSInteger childSelectCount;
     
 }
 
@@ -118,51 +122,77 @@ changes by chetan kasundra
 Put the webview in place  of textview for type 2( for html Description set in webview)
 */
 
-- (void)viewDidLoad
-{
+
+
+//-(void)dismissKeyboard
+//{
+//    [_txtSearchTag resignFirstResponder];
+//}
+
+- (void)viewDidLoad{
     [super viewDidLoad];
-    
-    isFilter = NO;
+
+
+    scrollFlag=@"NO";
+    [_lblSearchNote setHidden:YES];
+
     _txtSearchTag.delegate=self;
-    _txtSearchTag.hidden=YES;
     [self.txtSearchTag addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
- 
-    if (!_dictSOPCategory)
-    {
+     if (!_dictSOPCategory){
+        allSearchData=[[NSMutableArray alloc]init];
+
         [_btnSOPList setHidden:YES];
         [_lblTitle setText:@"Standard Operating Procedures"];
         [_tblSOPCategory setHidden:YES];
+        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
         [self getSOPCategories];
+        
+        CGRect frame = _mainScrlView.frame;
+        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) + CGRectGetHeight(_txtSearchTag.frame)+20 ;
+        CGFloat newYPosition= CGRectGetMinY(_txtSearchTag.frame) +CGRectGetHeight(_txtSearchTag.frame)+20;
+        CGFloat height=newYPosition - _mainScrlView.frame.origin.y;
+        frame.size.height=frame.size.height - height;
+        [_mainScrlView setFrame:frame];
+
+        frame = _tblSOPList.frame;
+        frame.origin.y = 0;
+       // frame.size.height = self.view.frame.size.height - frame.origin.y;
+        _tblSOPList.frame = frame;
     }
-    else
-    {
+    else{
         [_lblTitle setHidden:YES];
         CGRect frame = _tblSOPCategory.frame;
         frame.size.height = _mutArrCategoryHierarchy.count * _tblSOPCategory.rowHeight;
         _tblSOPCategory.frame = frame;
         
-        if (CGRectGetMaxY(frame) > _tblSOPList.frame.origin.y) {
-            frame = _tblSOPList.frame;
-            frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblSOPList.frame = frame;
-        }
-        
-        
         frame = _txtSearchTag.frame;
-        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        frame.origin.y = CGRectGetMinY(_tblSOPCategory.frame) + CGRectGetHeight(_tblSOPCategory.frame) +40;
         [_txtSearchTag setFrame:frame];
         
         frame = _btnSearchTag.frame;
-        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        frame.origin.y = CGRectGetMinY(_tblSOPCategory.frame) + CGRectGetHeight(_tblSOPCategory.frame) + 40;
         [_btnSearchTag setFrame:frame];
+
+        frame = _lblSearchNote.frame;
+        frame.origin.y = CGRectGetMinY(_tblSOPCategory.frame) + CGRectGetHeight(_tblSOPCategory.frame) +55;
+        [_lblSearchNote setFrame:frame];
+
+        
+            frame = _mainScrlView.frame;
+            frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) + CGRectGetHeight(_txtSearchTag.frame) +20;
+            CGFloat newYPosition= CGRectGetMinY(_txtSearchTag.frame) +CGRectGetHeight(_txtSearchTag.frame)+20;
+            CGFloat height=newYPosition - _mainScrlView.frame.origin.y;
+            frame.size.height=frame.size.height - height;
+            [_mainScrlView setFrame:frame];
+            
         
         frame = _viewWebDescription.frame;
-        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) +40 ;
+        frame.origin.y = 0 ;
         [_viewWebDescription setFrame:frame];
         
         frame = _viewWeb.frame;
-        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
+        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) +_mainScrlView.frame.origin.y ;
         [_viewWeb setFrame:frame];
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
@@ -188,16 +218,12 @@ Put the webview in place  of textview for type 2( for html Description set in we
             NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
             [_viewWebDescription loadHTMLString:aStrDescription baseURL:nil];
 
-            frame = _tblSOPList.frame;
-            frame.origin.y = 765; //CGRectGetMaxY(_txtDescription.frame) + 15;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblSOPList.frame = frame;
+     
             
         }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1)
         {
             [_viewWeb setHidden:NO];
-            [_txtSearchTag setHidden:YES];
-            [_btnSearchTag setHidden:YES];
+
             frame = _viewWeb.frame;
             frame.size.height = self.view.frame.size.height - _tblSOPList.frame.origin.y;
             [_viewWeb setFrame:frame];
@@ -206,26 +232,82 @@ Put the webview in place  of textview for type 2( for html Description set in we
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
         }
     }
+       [_txtSearchTag setHidden:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackToMainView"]isEqualToString:@"YES"]) {
-        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isBackToMainView"];
+    
+ if (mutArrSOPList.count == 0) {
+        [_btnSearchTag setHidden:YES];
+       [_txtSearchTag setHidden:YES];
+ }
 
-        isFilter=NO;
-        [self.tblSOPList reloadData];
+    if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 2)
+    {
+        [_btnSearchTag setHidden:YES];
+   [_txtSearchTag setHidden:YES];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"] isEqualToString:@""]) {
+            [_lblSearchNote setHidden:YES];
+        }
+        else{
+            [_lblSearchNote setHidden:NO];
+
+             _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
+        }
     }
-  
+    else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1)
+    {
+        [_btnSearchTag setHidden:YES];
+   [_txtSearchTag setHidden:YES];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"] isEqualToString:@""]) {
+            [_lblSearchNote setHidden:YES];
+        }
+        else{
+            [_lblSearchNote setHidden:NO];
+            
+            _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
+        }
+    }
+    else{
+        
+        [_btnSearchTag setHidden:NO];
+        [_lblSearchNote setHidden:YES];
+
+        if(!_btnSearchTag.isSelected)
+        {
+           
+               _txtSearchTag.hidden=YES;
+        }
+        else{
+         _txtSearchTag.hidden=NO;
+        
+        }
+
+    }
+    
+    
+    
 }
 -(IBAction)btnSearchTagClicked:(id)sender {
     
-    _txtSearchTag.hidden=NO;
+    
+    if(!_btnSearchTag.isSelected)
+    {
+      _txtSearchTag.hidden=NO;
+        [_btnSearchTag setSelected:YES];
+    }
+    else{
+        _txtSearchTag.hidden=YES;
+        [_btnSearchTag setSelected:NO];
+    }
     
 }
+
+
 -(void)textFieldDidChange:(UITextField *)textField
 {
-    searchTextString=textField.text;
-    
+     searchTextString=textField.text;
+    [[NSUserDefaults standardUserDefaults]setValue:textField.text forKey:@"NOTE"];
     [self updateSearchArray:searchTextString];
 }
 -(void)updateSearchArray:(NSString *)searchText
@@ -233,17 +315,21 @@ Put the webview in place  of textview for type 2( for html Description set in we
     if(searchText.length==0)
     {
         isFilter=NO;
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"noteHidden"];
+
     }
     else{
         
         isFilter=YES;
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"noteHidden"];
+
         searchArray=[[NSMutableArray alloc]init];
-        for(int q=0;q<mutArrSOPList.count;q++){
+        for(int q=0;q<allSearchData.count;q++){
             
             
             
-            NSString *stringTitle=[[mutArrSOPList valueForKey:@"Title"] objectAtIndex:q];
-            NSString *stringTag=[[mutArrSOPList valueForKey:@"Tag"] objectAtIndex:q];
+            NSString *stringTitle=[[allSearchData valueForKey:@"Title"] objectAtIndex:q];
+            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
 
             if ([stringTitle isKindOfClass:[NSNull class]]) {
                 stringTitle=@"";
@@ -256,7 +342,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
             
             if(stringRangeTitle.location !=NSNotFound || stringRangeTag.location !=NSNotFound){
                 
-                [searchArray addObject:[mutArrSOPList objectAtIndex:q]];
+                [searchArray addObject:[allSearchData objectAtIndex:q]];
             }
         }
         
@@ -265,12 +351,19 @@ Put the webview in place  of textview for type 2( for html Description set in we
         _lblNoRecords.frame=CGRectMake(_lblNoRecords.frame.origin.x, _tblSOPList.frame.origin.y + 20, _lblNoRecords.frame.size.width, _lblNoRecords.frame.size.height);
         [_lblNoRecords setHidden:NO];
     }
+    else{
+        [_lblNoRecords setHidden:YES];
+        
+    }
 
     [self.tblSOPList reloadData];
 }
-
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     [_txtSearchTag resignFirstResponder];
+  //  isScroll = NO;
+    [self.mainScrlView setContentOffset:contentOffset animated:YES];
+    [textField endEditing:true];
+  //  return  true;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -294,15 +387,22 @@ Put the webview in place  of textview for type 2( for html Description set in we
         
         CGRect frameWebView=_viewWebDescription.frame;
         
-        if (_viewWebDescription.frame.origin.y + height >= 745)
+        if (_viewWebDescription.frame.origin.y + height >= 490)
         {
-            height= 745 - _viewWebDescription.frame.origin.y;
+            height= 490 - _viewWebDescription.frame.origin.y;
         }
         
         frameWebView.size.height=height;
         _viewWebDescription.frame= frameWebView;
     }
-    
+    CGRect frame = _tblSOPList.frame;
+    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
+       frame.size.height = self.view.frame.size.height - frame.origin.y;
+    if (frame.size.height > CGRectGetHeight(_mainScrlView.frame) - 500) {
+        frame.size.height = CGRectGetHeight(_mainScrlView.frame) - 500 -20 ;
+    }
+    _tblSOPList.frame = frame;
+
 }
 
 
@@ -331,11 +431,19 @@ Put the webview in place  of textview for type 2( for html Description set in we
 
 
 - (IBAction)unwindBackToSOPListScreen:(UIStoryboardSegue*)segue {
-    
+  [[NSUserDefaults standardUserDefaults]setInteger:0 forKey:@"childSelectCount"];
 }
 
 - (IBAction)btnBackTapped:(id)sender {
-    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isBackToMainView"];
+  
+    if ([[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCount"] == 0) {
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isBackToMainView"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+    }
+    else{
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isBackToMainView"];
+    }
     [self.navigationController popViewControllerAnimated:YES];
     [_mutArrCategoryHierarchy removeLastObject];
 }
@@ -354,6 +462,11 @@ Put the webview in place  of textview for type 2( for html Description set in we
 #pragma mark - Methods
 
 - (void)getSOPCategories {
+    
+
+   // allSopArrList=[[NSMutableArray alloc]init];
+
+
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
         _dictSOPCategory = response;
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
@@ -365,8 +478,21 @@ Put the webview in place  of textview for type 2( for html Description set in we
         
         mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
         
+      //  allSopArrList =[self allDAtaMethode:mutArrSOPList];
+     //   for (NSMutableDictionary * tempDic in mutArrSOPList) {
+            
+            [self allDAtaMethode:mutArrSOPList];
+        [[NSUserDefaults standardUserDefaults]setInteger:0 forKey:@"childSelectCount"] ;
+        //  }
         if ([mutArrSOPList count] == 0) {
             [_lblNoRecords setHidden:NO];
+            [_btnSearchTag setHidden:YES];
+            [_txtSearchTag setHidden:YES];
+
+        }
+        else{
+            [_btnSearchTag setHidden:NO];
+           [_txtSearchTag setHidden:YES];
         }
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
@@ -393,8 +519,26 @@ Put the webview in place  of textview for type 2( for html Description set in we
 //        [_tblSOPList reloadData];
 
     }];
+   
 }
 
+-(void) allDAtaMethode : (NSMutableArray *)arr {
+    
+    for (NSMutableDictionary * tempDic in arr) {
+        [allSearchData addObject:tempDic];
+        if ([[tempDic valueForKey:@"Children"] count] ==0) {
+            
+            [allSopArrList addObject:tempDic];
+            
+                }
+        else{
+            [self allDAtaMethode:[tempDic valueForKey:@"Children"]];
+        }
+    }
+    NSData * data=[NSKeyedArchiver archivedDataWithRootObject:allSearchData];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"allSearchData"];
+ 
+}
 #pragma mark - UITableView Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -409,6 +553,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
         if(isFilter){
             return [searchArray count];
         }
+     
         return [mutArrSOPList count];
     }
 
@@ -516,10 +661,13 @@ Put the webview in place  of textview for type 2( for html Description set in we
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    _txtSearchTag.hidden=YES;
+    childSelectCount=[[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCount"];
+    [[NSUserDefaults standardUserDefaults]setInteger:childSelectCount + 1 forKey:@"childSelectCount"];
+    [_btnSearchTag setHidden:YES];
+
      [_lblNoRecords setHidden:YES];
     if (isFilter) {
-        isFilter = NO;
+       // isFilter = NO;
         NSDictionary *aDict = [searchArray objectAtIndex:indexPath.row];
         if (!_mutArrCategoryHierarchy) {
             _mutArrCategoryHierarchy = [NSMutableArray array];

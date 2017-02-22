@@ -18,7 +18,10 @@
     NSString *searchTextString;
     NSMutableArray *searchArray;
     BOOL isFilter;
-    
+    CGPoint contentOffset;
+    bool isScroll;
+    NSString * scrollFlag;
+    NSInteger childSelectCount;
 }
 
 
@@ -113,57 +116,108 @@
     }
 }
 */
+/*
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if ([scrollFlag isEqualToString:@"NO"]) {
+        
+    }else{
+        contentOffset = self.mainScrollView.contentOffset;
+        CGPoint newOffset;
+        newOffset.x = contentOffset.x;
+        newOffset.y = contentOffset.y;
+        //check push return in keyboar
+        if(!isScroll){
+            //180 is height of keyboar
+            newOffset.y += 180;
+            isScroll=YES;
+        }
+        [self.mainScrollView setContentOffset:newOffset animated:YES];
+    }
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if ([scrollFlag isEqualToString:@"NO"]) {
+        
+    }else{
+        isScroll = NO;
+        [self.mainScrollView setContentOffset:contentOffset animated:YES];
+        [textField endEditing:true];
+        
+    }
+    return  true;
+}
+*/
+//-(void)dismissKeyboard
+//{
+//    [_txtSearchTag resignFirstResponder];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //[self getAllEmergencyList];
-    isFilter = NO;
+ 
+
+    scrollFlag=@"NO";
+    [_lblSearchNote setHidden:YES];
+
     _txtSearchTag.delegate=self;
-    _txtSearchTag.hidden=YES;
     [self.txtSearchTag addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     if (!_dictERPCategory) {
+        allSearchData=[[NSMutableArray alloc]init];
+
         [_btnERPList setHidden:YES];
         [_lblTitle setText:@"Emergency Reponse Plan"];
         [_tblERPCategory setHidden:YES];
+        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];;
+
         [self getAllEmergencyList];
+        
+        CGRect frame = _mainScrollView.frame;
+        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) + CGRectGetHeight(_txtSearchTag.frame)+20 ;
+        CGFloat newYPosition= CGRectGetMinY(_txtSearchTag.frame) +CGRectGetHeight(_txtSearchTag.frame)+20;
+        CGFloat height=newYPosition - _mainScrollView.frame.origin.y;
+        frame.size.height=frame.size.height - height;
+        [_mainScrollView setFrame:frame];
+        
+        frame = _tblEmergencyList.frame;
+        frame.origin.y = 0;
+        // frame.size.height = self.view.frame.size.height - frame.origin.y;
+        _tblEmergencyList.frame = frame;
+        
     }
     else {
         [_lblTitle setHidden:YES];
         CGRect frame = _tblERPCategory.frame;
-        _txtSearchTag.frame=CGRectMake(_txtSearchTag.frame.origin.x, frame.origin.y+frame.size.height+5, _txtSearchTag.frame.size.width, _txtSearchTag.frame.size.height);
-        _btnSearchTag.frame=CGRectMake(_btnSearchTag.frame.origin.x, frame.origin.y+frame.size.height+5, _btnSearchTag.frame.size.width, _btnSearchTag.frame.size.height);
         frame.size.height = _mutArrCategoryHierarchy.count * _tblEmergencyList.rowHeight;
         _tblERPCategory.frame = frame;
-        
-        if (CGRectGetMaxY(frame) > _tblERPCategory.frame.origin.y) {
-            _txtSearchTag.frame=CGRectMake(_txtSearchTag.frame.origin.x, _tblERPCategory.frame.origin.y+_tblERPCategory.frame.size.height+5, _txtSearchTag.frame.size.width, _txtSearchTag.frame.size.height);
-            _btnSearchTag.frame=CGRectMake(_btnSearchTag.frame.origin.x, frame.origin.y+frame.size.height+5, _btnSearchTag.frame.size.width, _btnSearchTag.frame.size.height);
-            frame = _tblEmergencyList.frame;
-            frame.origin.y = CGRectGetMaxY(_tblERPCategory.frame) + 5;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblEmergencyList.frame = frame;
-            
-            
-        }
-        
+
         frame = _txtSearchTag.frame;
-        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
-        frame.origin.y=frame.origin.y+35;
+        frame.origin.y = CGRectGetMinY(_tblERPCategory.frame) + CGRectGetHeight(_tblERPCategory.frame) +20;
         [_txtSearchTag setFrame:frame];
         
         frame = _btnSearchTag.frame;
-        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
-        frame.origin.y=frame.origin.y+35;
+        frame.origin.y = CGRectGetMinY(_tblERPCategory.frame) + CGRectGetHeight(_tblERPCategory.frame) + 20;
         [_btnSearchTag setFrame:frame];
         
+        frame = _lblSearchNote.frame;
+        frame.origin.y = CGRectGetMinY(_tblERPCategory.frame) + CGRectGetHeight(_tblERPCategory.frame) +35;
+        [_lblSearchNote setFrame:frame];
+        
+        
+        frame = _mainScrollView.frame;
+        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) + CGRectGetHeight(_txtSearchTag.frame) +20;
+        CGFloat newYPosition= CGRectGetMinY(_txtSearchTag.frame) +CGRectGetHeight(_txtSearchTag.frame)+20;
+        CGFloat height=newYPosition - _mainScrollView.frame.origin.y;
+        frame.size.height=frame.size.height - height;
+        [_mainScrollView setFrame:frame];
+        
+
         frame = _viewWebDescription.frame;
-        frame.origin.y = CGRectGetMinY(_txtSearchTag.frame) + 40 ;
-        frame.origin.y=frame.origin.y+35;
+        frame.origin.y = 0 ;
         [_viewWebDescription setFrame:frame];
         
         frame = _viewWeb.frame;
-        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) ;
-        
+        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) +_mainScrollView.frame.origin.y ;
         [_viewWeb setFrame:frame];
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
@@ -189,69 +243,134 @@
             NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Description"]];
             _viewWebDescription.delegate=self;
             [_viewWebDescription loadHTMLString:aStrDescription baseURL:nil];
+           
+//            frame = _tblEmergencyList.frame;
+//            frame.origin.y = 600;//CGRectGetMaxY(_txtDescription.frame) + 15;
+//            frame.size.height = self.view.frame.size.height - frame.origin.y - _mainScrollView.frame.origin.y;
+//            _tblEmergencyList.frame = frame;
             
-            frame = _tblEmergencyList.frame;
-            frame.origin.y = 765;//CGRectGetMaxY(_txtDescription.frame) + 15;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblEmergencyList.frame = frame;
-            
-        }else if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 1){
+        }
+        else if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 1){
             
             
             [_viewWeb setHidden:NO];
-            
+            [_txtSearchTag setHidden:YES];
+            [_btnSearchTag setHidden:YES];
             frame = _viewWeb.frame;
             frame.size.height = self.view.frame.size.height - _tblEmergencyList.frame.origin.y;
-            frame.origin.y=frame.origin.y+30;
+            frame.origin.y=frame.origin.y;
             [_viewWeb setFrame:frame];
             
             NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Link"]];
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
         }
     }
+    [_txtSearchTag setHidden:YES];
+
 }
 -(void)viewWillAppear:(BOOL)animated{
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isBackToMainView"]isEqualToString:@"YES"]) {
-        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isBackToMainView"];
-        
-        isFilter=NO;
-        [self.tblEmergencyList reloadData];
+    
+    if (mutArrEmergencies.count == 0) {
+        [_btnSearchTag setHidden:YES];
+        [_txtSearchTag setHidden:YES];
     }
+    
+    if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 2)
+    {
+        [_btnSearchTag setHidden:YES];
+        [_txtSearchTag setHidden:YES];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"] isEqualToString:@""]) {
+            [_lblSearchNote setHidden:YES];
+        }
+        else{
+            [_lblSearchNote setHidden:NO];
+            
+            _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
+        }
+    }
+    else if ([[_dictERPCategory objectForKey:@"Type"] integerValue] == 1)
+    {
+        [_btnSearchTag setHidden:YES];
+        [_txtSearchTag setHidden:YES];
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"] isEqualToString:@""]) {
+            [_lblSearchNote setHidden:YES];
+        }
+        else{
+            [_lblSearchNote setHidden:NO];
+            
+            _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
+        }
+    }
+    else{
+        
+        [_btnSearchTag setHidden:NO];
+        [_lblSearchNote setHidden:YES];
+
+        if(!_btnSearchTag.isSelected)
+        {
+            
+            _txtSearchTag.hidden=YES;
+        }
+        else{
+            _txtSearchTag.hidden=NO;
+            
+        }
+        
+    }
+    
+    
     
 }
 - (IBAction)btnSearchTagClicked:(id)sender {
     
-    _txtSearchTag.hidden=NO;
-
+    if(!_btnSearchTag.isSelected)
+    {
+        _txtSearchTag.hidden=NO;
+        [_btnSearchTag setSelected:YES];
+    }
+    else{
+        _txtSearchTag.hidden=YES;
+        [_btnSearchTag setSelected:NO];
+    }
 }
 -(void)textFieldDidChange:(UITextField *)textField
 {
     searchTextString=textField.text;
-    
+    [[NSUserDefaults standardUserDefaults]setValue:textField.text forKey:@"NOTE"];
+
     [self updateSearchArray:searchTextString];
 }
 -(void)updateSearchArray:(NSString *)searchText
 {
     if(searchText.length==0)
     {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"noteHidden"];
+
         isFilter=NO;
     }
     else{
-        
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"noteHidden"];
+
         isFilter=YES;
         searchArray=[[NSMutableArray alloc]init];
-        for(int q=0;q<mutArrEmergencies.count;q++){
+        for(int q=0;q<allSearchData.count;q++){
             
-            NSString *stringTitle=[[mutArrEmergencies valueForKey:@"Title"] objectAtIndex:q];
-            NSString *stringTag=[[mutArrEmergencies valueForKey:@"Tag"] objectAtIndex:q];
+            NSString *stringTitle=[[allSearchData valueForKey:@"Title"] objectAtIndex:q];
+            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
             
+            if ([stringTitle isKindOfClass:[NSNull class]]) {
+                stringTitle=@"";
+            }
+            if ([stringTag isKindOfClass:[NSNull class]]) {
+                stringTag=@"";
+            }
             
             NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
             NSRange stringRangeTag=[stringTag rangeOfString:searchText options:NSCaseInsensitiveSearch];
             
             if(stringRangeTitle.location !=NSNotFound || stringRangeTag.location !=NSNotFound){
                 
-                [searchArray addObject:[mutArrEmergencies objectAtIndex:q]];
+                [searchArray addObject:[allSearchData objectAtIndex:q]];
             }        }
         
     }
@@ -259,12 +378,21 @@
         _lblNoRecords.frame=CGRectMake(_lblNoRecords.frame.origin.x, _tblEmergencyList.frame.origin.y + 20, _lblNoRecords.frame.size.width, _lblNoRecords.frame.size.height);
            [_lblNoRecords setHidden:NO];
     }
+    else{
+        [_lblNoRecords setHidden:YES];
+
+    }
     
     [self.tblEmergencyList reloadData];
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     [_txtSearchTag resignFirstResponder];
+  //  isScroll = NO;
+    [self.mainScrollView setContentOffset:contentOffset animated:YES];
+    [textField endEditing:true];
+    //  return  true;
+
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -288,14 +416,21 @@
         
         CGRect frameWebView=_viewWebDescription.frame;
         
-        if (_viewWebDescription.frame.origin.y + height >= 745)
+        if (_viewWebDescription.frame.origin.y + height >= 490)
         {
-            height= 745 - _viewWebDescription.frame.origin.y;
+            height= 490 - _viewWebDescription.frame.origin.y;
         }
         
         frameWebView.size.height=height;
         _viewWebDescription.frame= frameWebView;
     }
+    CGRect frame = _tblEmergencyList.frame;
+    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
+    frame.size.height = self.view.frame.size.height - frame.origin.y;
+    if (frame.size.height > CGRectGetHeight(_mainScrollView.frame) - 500) {
+        frame.size.height = CGRectGetHeight(_mainScrollView.frame) - 500 -20 ;
+    }
+    _tblEmergencyList.frame = frame;
     
 }
 
@@ -323,17 +458,19 @@
 }
 
 - (IBAction)unwindBackToERPListScreen:(UIStoryboardSegue*)segue{
-    
+  
+    [[NSUserDefaults standardUserDefaults]setInteger:0 forKey:@"childSelectCount"];
+
 }
 
 #pragma mark - Methods
 
 - (void)getAllEmergencyList {
-//    [[WebSerivceCall webServiceObject] callServiceForEmergencyResponsePlan:NO complition:^{
-//        [self fetchOfflineERPData];
-//        [_tblEmergencyList reloadData];
-//    }];
 
+
+    // allSopArrList=[[NSMutableArray alloc]init];
+
+    
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
@@ -345,13 +482,45 @@
         
         mutArrEmergencies = [NSMutableArray arrayWithArray:[aMutArrEmergenciesList filteredArrayUsingPredicate:predicate]];
         
+        //  allSopArrList =[self allDAtaMethode:mutArrSOPList];
+        //   for (NSMutableDictionary * tempDic in mutArrSOPList) {
+        
+        [self allDAtaMethode:mutArrEmergencies];
+        
+        //  }
+
         if ([mutArrEmergencies count] == 0) {
             [_lblNoRecords setHidden:NO];
+        }
+        if (mutArrEmergencies.count == 0) {
+            [_btnSearchTag setHidden:YES];
+        }
+        else{
+            [_btnSearchTag setHidden:NO];
+            [_txtSearchTag setHidden:YES];
+
         }
         [_tblEmergencyList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
          [_lblNoRecords setHidden:NO];
     }];
+  
+}
+-(void) allDAtaMethode : (NSMutableArray *)arr {
+    
+    for (NSMutableDictionary * tempDic in arr) {
+        [allSearchData addObject:tempDic];
+        if ([[tempDic valueForKey:@"Children"] count] ==0) {
+            
+            [allSopArrList addObject:tempDic];
+            
+        }
+        else{
+            [self allDAtaMethode:[tempDic valueForKey:@"Children"]];
+        }
+    }
+    NSData * data=[NSKeyedArchiver archivedDataWithRootObject:allSearchData];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"allSearchData"];
     
 }
 
@@ -392,6 +561,7 @@
         if(isFilter){
             return [searchArray count];
         }
+      
         return [mutArrEmergencies count];
     }
     
@@ -563,9 +733,12 @@
     //    [self performSegueWithIdentifier:@"ERPDetails" sender:self];
     
  
-    _txtSearchTag.hidden=YES;
-    if (isFilter) {
-           isFilter = NO;
+    childSelectCount=[[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCountERP"];
+    [[NSUserDefaults standardUserDefaults]setInteger:childSelectCount + 1 forKey:@"childSelectCountERP"];
+    [_btnSearchTag setHidden:YES];
+    
+    [_lblNoRecords setHidden:YES];    if (isFilter) {
+       //    isFilter = NO;
         NSDictionary *aDict = [searchArray objectAtIndex:indexPath.row];
         if (!_mutArrCategoryHierarchy) {
             _mutArrCategoryHierarchy = [NSMutableArray array];
@@ -593,11 +766,19 @@
 }
 
 - (IBAction)btnBackTapped:(UIButton *)sender {
-    
-    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isBackToMainView"];
-
+   
+    if ([[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCountERP"] == 0) {
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isBackToMainView"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+        
+    }
+    else{
+        [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isBackToMainView"];
+    }
     [self.navigationController popViewControllerAnimated:YES];
     [_mutArrCategoryHierarchy removeLastObject];
+    
+    
 }
 
 - (IBAction)btnERPListTapped:(UIButton *)sender {

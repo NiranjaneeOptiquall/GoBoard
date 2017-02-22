@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "TPKeyboardAvoidingScrollView.h"
 
 @interface SOPViewController : UIViewController<UITableViewDelegate, UITableViewDataSource,UIWebViewDelegate> {
-    NSMutableArray *mutArrSOPList;
+    NSMutableArray *mutArrSOPList , * allSopArrList,*allSearchData, *tempArr;
     
 }
 @property (strong, nonatomic) NSMutableArray *mutArrCategoryHierarchy;
@@ -22,7 +23,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 - (IBAction)unwindBackToSOPListScreen:(UIStoryboardSegue*)segue;
 - (IBAction)btnBackTapped:(id)sender;
-- (IBAction)btnSOPListTapped:(id)sender;
+@property (weak, nonatomic) IBOutlet UIScrollView *mainScrlView;
+@property (weak, nonatomic) IBOutlet UILabel *lblSearchNote;
+
+@property (weak, nonatomic) IBOutlet UIView *scrollBGview;
 
 @property (strong, nonatomic) IBOutlet UIWebView *viewWeb;
 @property (strong, nonatomic) IBOutlet UIWebView *viewWebDescription;

@@ -218,7 +218,7 @@
                 count = self.intSurveyInProgressCount;
             }
             else if ([aDict[@"SystemModule"] integerValue] == 0){
-                
+               // count = self.intTaskCount;
                 NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
                 NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
                 NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
@@ -993,7 +993,8 @@
     self.intUnreadLogCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue];
     self.intFormInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"FormToalCount"]integerValue];
     self.intSurveyInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"SurveyToalCount"]integerValue];
-    
+        NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"TaskToalCount"]integerValue]);
+    self.intTaskCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TaskToalCount"]integerValue];
         if (self.intUnreadLogCount>0) {
             self.boolUpdateTeamLog  = YES;
         }
@@ -1059,7 +1060,6 @@
         self.intUnreadLogCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
         self.intFormInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
         self.intSurveyInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
-
         if (self.intUnreadLogCount>0) {
             self.boolUpdateTeamLog  = YES;
         }

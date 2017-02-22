@@ -26,6 +26,23 @@
     _lblGuestSurveyCount.hidden=YES;
     _lblGuestSugessionCount.hidden=YES;
 
+    _lblGuestFormCount.layer.cornerRadius=5.0;
+    _lblGuestFormCount.layer.borderWidth=1.0;
+    _lblGuestFormCount.layer.borderColor=[UIColor whiteColor].CGColor;
+    _lblGuestFormCount.layer.masksToBounds=YES;
+
+    _lblGuestSurveyCount.layer.cornerRadius=5.0;
+    _lblGuestSurveyCount.layer.borderWidth=1.0;
+    _lblGuestSurveyCount.layer.borderColor=[UIColor whiteColor].CGColor;
+    _lblGuestSurveyCount.layer.masksToBounds=YES;
+
+    _lblGuestSugessionCount.layer.cornerRadius=5.0;
+    _lblGuestSugessionCount.layer.borderWidth=1.0;
+    _lblGuestSugessionCount.layer.borderColor=[UIColor whiteColor].CGColor;
+    _lblGuestSugessionCount.layer.masksToBounds=YES;
+    
+     [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
+    
     _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
@@ -43,6 +60,14 @@
     gblAppDelegate.mutArrMemoList = nil;
     gblAppDelegate.mutArrHomeMenus = nil;
     [User destroyCurrentUser];
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"backFromGuestUserListView"] isEqualToString:@"YES"]) {
+         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
+    
+            [self btnGuestSignInTapped:_btnUserSignIn];
+       
+    }
+   
 }
 
 
@@ -75,6 +100,50 @@
 #pragma mark - IBActions & Selectors
 
 - (IBAction)btnGuestSignInTapped:(UIButton *)sender {
+    
+    [self callServiceForGuestUserDashboardCount:YES complition:^(NSDictionary * aDict){
+        if ([[aDict objectForKey:@"Success"] boolValue]) {
+            NSString * strFormCount=[NSString stringWithFormat:@"%@",[[aDict valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]];
+                NSString * strSurveyCount=[NSString stringWithFormat:@"%@",[[aDict valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]];
+                NSString * strSugessionCount=[NSString stringWithFormat:@"%@",[[aDict valueForKey:@"DashboardCount"] valueForKey:@"SuggestionInprogressCount"]];
+            if (![strSurveyCount isEqualToString:@"0"]) {
+                _lblGuestSurveyCount.hidden=NO;
+                _lblGuestSurveyCount.text=strSurveyCount;
+            }
+            else
+            {
+                _lblGuestSurveyCount.hidden=YES;
+                
+            }
+            if (![strFormCount isEqualToString:@"0"]) {
+                _lblGuestFormCount.hidden=NO;
+                _lblGuestFormCount.text=strFormCount;
+                
+                
+            }
+            else
+            {
+                _lblGuestFormCount.hidden=YES;
+                
+            }
+            if (![strSugessionCount isEqualToString:@"0"]) {
+                _lblGuestSugessionCount.hidden=NO;
+                _lblGuestSugessionCount.text=strSugessionCount;
+                
+                
+            }
+            else
+            {
+                _lblGuestSugessionCount.hidden=YES;
+                
+            }
+
+        }
+        
+    }];
+
+    
+    
     if (![sender isSelected]) {
         [sender setSelected:YES];
         [_btnUserSignIn setSelected:NO];
@@ -88,41 +157,10 @@
 }
 
 - (IBAction)btnUserSignInTapped:(UIButton*)sender {
-//    [self callServiceForGomePageInProgressCount:YES complition:^(NSDictionary * aDict){
-//        
-//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
-//            _lblGuestSurveyCount.hidden=NO;
-//            _lblGuestSurveyCount.text=[aDict valueForKey:@""];
-//        }
-//        else
-//        {
-//            _lblGuestSurveyCount.hidden=YES;
-//
-//        }
-//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
-//            _lblGuestFormCount.hidden=NO;
-//            _lblGuestFormCount.text=[aDict valueForKey:@""];
-//
-//
-//        }
-//        else
-//        {
-//            _lblGuestFormCount.hidden=YES;
-//            
-//        }
-//        if (![[aDict valueForKey:@""] isEqualToString:@"0"]) {
-//            _lblGuestSugessionCount.hidden=NO;
-//            _lblGuestSugessionCount.text=[aDict valueForKey:@""];
-//
-//
-//        }
-//        else
-//        {
-//            _lblGuestSugessionCount.hidden=YES;
-//            
-//        }
-//        
-//    }];
+    
+
+    
+    
     
     if (![sender isSelected]) {
         [sender setSelected:YES];
@@ -148,56 +186,60 @@
     return YES;
 }
 
-- (void)callServiceForGomePageInProgressCount:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition {
+#pragma mark - GuestUserDashboard Count
+
+-(void)callServiceForGuestUserDashboardCount:(BOOL)waitUntilDone complition:(void(^)(NSDictionary * aDict))complition
+{
     __block BOOL isWSComplete = NO;
     
-    if ([self isNetworkReachable]) {
-        
-        
-        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
-        NSString *strUserId = @"";
-        NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
-        if ([User checkUserExist]) {
-            strUserId = [[User currentUser] userId];
-        }
-        NSString * isAdmin;
-        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
-            isAdmin= @"False";
-        }
-        else{
-            isAdmin= @"True";
-        }
-        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
-            
-            
-            
-            
-            
-            
-            isWSComplete = YES;
-            if (complition)
-                complition(response);
-            
-        } failure:^(NSError *error, NSDictionary *response) {
-
-            isWSComplete = YES;
-            if (complition)
-                complition(response);
-     
-        }];
-        if (waitUntilDone) {
-            while (!isWSComplete) {
-                [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-            }
-        }
-        
-        
-        
+    NSMutableArray *arrOfPosition = [NSMutableArray new];
+    
+    // NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
+    
+    // NSString *aStrUserID = [[User currentUser]userId];
+    
+    NSMutableArray *arr=  [[User currentUser]mutArrSelectedPositions];
+    
+    //  NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+    
+    NSString * isAdmin;
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"IsAdmin"] integerValue] == 0) {
+        isAdmin= @"False";
     }
-    else {
+    else{
+        isAdmin= @"True";
+    }
+    
+    for (UserPosition *p in arr) {
+        
+        [arrOfPosition addObject:p.value];
+    }
+    //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
+    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
+    
+    
+    
+    [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         
         
+//        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"GuestFormToalCount"];
+//        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"GuestSurveyToalCount"];
+//        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"GuestSurveyToalCount"];
         
+        
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition(response);
+        
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
     }
     
     
