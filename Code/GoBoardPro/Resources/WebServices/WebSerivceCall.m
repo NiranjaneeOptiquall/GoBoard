@@ -1944,6 +1944,7 @@
     }
 }
 
+
 #pragma mark - Team Log
 
 - (void)callServiceForTeamLog:(BOOL)waitUntilDone complition:(void(^)(void))complition {

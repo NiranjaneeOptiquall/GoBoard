@@ -134,14 +134,14 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.textColor =[UIColor blackColor];
-   cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
     cell.backgroundColor=[UIColor whiteColor];
     
     UIImageView * imageView=[[UIImageView alloc]initWithFrame:CGRectMake(10,3,35,35) ];
     imageView.image=[UIImage imageNamed:@"list_icon.png"];
     [cell.contentView addSubview:imageView];
     
-    labelText = [[UILabel alloc]initWithFrame:CGRectMake(61,8,tableView.frame.size.width-120,20)];
+    labelText = [[UILabel alloc]initWithFrame:CGRectMake(61,8,tableView.frame.size.width-150,20)];
     labelText.font =[UIFont systemFontOfSize:20.0];
     labelText.text = [obj valueForKey:@"name"];
      [cell.contentView addSubview:labelText];
@@ -155,7 +155,7 @@
     labelline = [[UILabel alloc] initWithFrame:CGRectMake(0, labelTime.frame.origin.y+labelTime.frame.size.height+11, _tblFormsInProgress.frame.size.width,1)];
     labelline.backgroundColor = [UIColor darkGrayColor];
     [cell.contentView addSubview:labelline];
-    deleteButton=[[UIButton alloc]initWithFrame:CGRectMake(tableView.frame.size.width-110 , 8, 100, 30)];
+    deleteButton=[[UIButton alloc]initWithFrame:CGRectMake(tableView.frame.size.width-90 , 8, 80, 30)];
     [deleteButton setBackgroundImage:[UIImage imageNamed:@"update_profile_btn@2x.png"] forState:UIControlStateNormal];
     [deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
     [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

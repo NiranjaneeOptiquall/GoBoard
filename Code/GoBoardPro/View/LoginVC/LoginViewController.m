@@ -215,7 +215,7 @@
         [arrOfPosition addObject:p.value];
     }
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
+    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
     
     
     

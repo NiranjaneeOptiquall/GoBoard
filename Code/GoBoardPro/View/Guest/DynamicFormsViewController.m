@@ -1674,6 +1674,11 @@ totalSizeOFUploadedVideo=0;
         CGRect frame  = aCell.btnUploadFile.frame;
         frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
         aCell.btnUploadFile.frame=frame;
+        
+        CGRect frameLbl  = aCell.lblUploadFile.frame;
+        frameLbl.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 30;
+        aCell.lblUploadFile.frame=frameLbl;
+        
         [aCell.btnUploadFile setHidden:NO];
         [aCell.lblQuestion setHidden:NO];
         [aCell.lblUploadFile setHidden:YES];
@@ -1755,9 +1760,9 @@ totalSizeOFUploadedVideo=0;
             [aCell.txtField setKeyboardType:UIKeyboardTypeAlphabet];
         }
         else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
-            CGRect frame  = aCell.txtField.frame;
-            frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 5;
-            aCell.txtField.frame=frame;
+//            CGRect frame  = aCell.txtField.frame;
+//            frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 5;
+//            aCell.txtField.frame=frame;
             
             [aCell.imvTypeIcon setHidden:YES];
             [aCell.btnUploadFile setHidden:YES];

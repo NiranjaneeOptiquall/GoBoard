@@ -89,12 +89,12 @@
  //   [self callWebserviceToUpdateTeamLog];
 
     
-//#warning Remove this in Live
-    
+
+   [self callWebserviceForMissedTaskNotification];
+
     self.allowMemoWSCall = YES;
 //  [self callWebserviceToUpdateMemo];
    [self callWebserviceToUpdateCountOnDashboard];
-
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -1013,7 +1013,7 @@
         
         
       
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(120.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (self.allowMemoWSCall) {
 //                    [[WebSerivceCall webServiceObject]callServiceForDashboardCount:NO  complition:^(NSDictionary *aDict){
 //                    }];
@@ -1050,6 +1050,24 @@
     }];
     
 }
+
+
+-(void)callWebserviceForMissedTaskNotification
+{
+    //HomeScreenModules?userId=5797&clientId=148
+    
+    
+[gblAppDelegate callAsynchronousWebService:[NSString stringWithFormat:@"HomeScreenModules?userId=%@&clientId=%@",[[User currentUser]userId],[[User currentUser] clientId]] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response) {
+    
+} failure:^(NSError *error, NSDictionary *response) {
+    
+   // [self callWebserviceForMissedTaskNotification];
+    
+}];
+  
+
+}
+
 #pragma - mark UpdateMemo
 
 -(void)callWebserviceToUpdateTeamLog
