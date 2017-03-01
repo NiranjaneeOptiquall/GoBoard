@@ -116,43 +116,11 @@
     }
 }
 */
-/*
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if ([scrollFlag isEqualToString:@"NO"]) {
-        
-    }else{
-        contentOffset = self.mainScrollView.contentOffset;
-        CGPoint newOffset;
-        newOffset.x = contentOffset.x;
-        newOffset.y = contentOffset.y;
-        //check push return in keyboar
-        if(!isScroll){
-            //180 is height of keyboar
-            newOffset.y += 180;
-            isScroll=YES;
-        }
-        [self.mainScrollView setContentOffset:newOffset animated:YES];
-    }
-    
-}
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if ([scrollFlag isEqualToString:@"NO"]) {
-        
-    }else{
-        isScroll = NO;
-        [self.mainScrollView setContentOffset:contentOffset animated:YES];
-        [textField endEditing:true];
-        
-    }
-    return  true;
-}
-*/
-//-(void)dismissKeyboard
-//{
-//    [_txtSearchTag resignFirstResponder];
-//}
 
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [_txtSearchTag resignFirstResponder];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
  
@@ -265,7 +233,7 @@
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
         }
     }
-    [_txtSearchTag setHidden:YES];
+//    [_txtSearchTag setHidden:YES];
 
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -301,37 +269,37 @@
             _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
         }
     }
-    else{
-        
-        [_btnSearchTag setHidden:NO];
-        [_lblSearchNote setHidden:YES];
-
-        if(!_btnSearchTag.isSelected)
-        {
-            
-            _txtSearchTag.hidden=YES;
-        }
-        else{
-            _txtSearchTag.hidden=NO;
-            
-        }
-        
-    }
+//    else{
+//        
+//        [_btnSearchTag setHidden:NO];
+//        [_lblSearchNote setHidden:YES];
+//
+//        if(!_btnSearchTag.isSelected)
+//        {
+//            
+//            _txtSearchTag.hidden=YES;
+//        }
+//        else{
+//            _txtSearchTag.hidden=NO;
+//            
+//        }
+//        
+//    }
     
     
     
 }
 - (IBAction)btnSearchTagClicked:(id)sender {
     
-    if(!_btnSearchTag.isSelected)
-    {
-        _txtSearchTag.hidden=NO;
-        [_btnSearchTag setSelected:YES];
-    }
-    else{
-        _txtSearchTag.hidden=YES;
-        [_btnSearchTag setSelected:NO];
-    }
+//    if(!_btnSearchTag.isSelected)
+//    {
+//        _txtSearchTag.hidden=NO;
+//        [_btnSearchTag setSelected:YES];
+//    }
+//    else{
+//        _txtSearchTag.hidden=YES;
+//        [_btnSearchTag setSelected:NO];
+//    }
 }
 -(void)textFieldDidChange:(UITextField *)textField
 {
@@ -356,17 +324,27 @@
         for(int q=0;q<allSearchData.count;q++){
             
             NSString *stringTitle=[[allSearchData valueForKey:@"Title"] objectAtIndex:q];
-            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
             
             if ([stringTitle isKindOfClass:[NSNull class]]) {
                 stringTitle=@"";
             }
+            NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
             if ([stringTag isKindOfClass:[NSNull class]]) {
                 stringTag=@"";
             }
-            
-            NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            NSRange stringRangeTag=[stringTag rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            NSArray *tagItems = [stringTag componentsSeparatedByString:@","];
+            NSRange stringRangeTag = NSMakeRange(0,  stringTag.length);
+            stringRangeTag=[[tagItems objectAtIndex:0] rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            for (int i = 0; i<tagItems.count; i++) {
+                if (stringRangeTag.location !=NSNotFound) {
+                    break;
+                }
+                else{
+                    stringRangeTag=[[tagItems objectAtIndex:i] rangeOfString:searchText options:NSCaseInsensitiveSearch];
+                }
+            }
             
             if(stringRangeTitle.location !=NSNotFound || stringRangeTag.location !=NSNotFound){
                 
@@ -497,7 +475,7 @@
         }
         else{
             [_btnSearchTag setHidden:NO];
-            [_txtSearchTag setHidden:YES];
+            [_txtSearchTag setHidden:NO];
 
         }
         [_tblEmergencyList reloadData];
@@ -735,7 +713,7 @@
  
     childSelectCount=[[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCountERP"];
     [[NSUserDefaults standardUserDefaults]setInteger:childSelectCount + 1 forKey:@"childSelectCountERP"];
-    [_btnSearchTag setHidden:YES];
+ //   [_btnSearchTag setHidden:YES];
     
     [_lblNoRecords setHidden:YES];    if (isFilter) {
        //    isFilter = NO;

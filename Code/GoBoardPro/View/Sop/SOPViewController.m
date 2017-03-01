@@ -124,14 +124,12 @@ Put the webview in place  of textview for type 2( for html Description set in we
 
 
 
-//-(void)dismissKeyboard
-//{
-//    [_txtSearchTag resignFirstResponder];
-//}
 
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [_txtSearchTag resignFirstResponder];
+}
 - (void)viewDidLoad{
     [super viewDidLoad];
-
 
     scrollFlag=@"NO";
     [_lblSearchNote setHidden:YES];
@@ -232,7 +230,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
         }
     }
-       [_txtSearchTag setHidden:YES];
+     //  [_txtSearchTag setHidden:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -268,22 +266,22 @@ Put the webview in place  of textview for type 2( for html Description set in we
             _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
         }
     }
-    else{
-        
-        [_btnSearchTag setHidden:NO];
-        [_lblSearchNote setHidden:YES];
-
-        if(!_btnSearchTag.isSelected)
-        {
-           
-               _txtSearchTag.hidden=YES;
-        }
-        else{
-         _txtSearchTag.hidden=NO;
-        
-        }
-
-    }
+//    else{
+//        
+//        [_btnSearchTag setHidden:NO];
+//        [_lblSearchNote setHidden:YES];
+//
+//        if(!_btnSearchTag.isSelected)
+//        {
+//           
+//               _txtSearchTag.hidden=YES;
+//        }
+//        else{
+//         _txtSearchTag.hidden=NO;
+//        
+//        }
+//
+//    }
     
     
     
@@ -291,15 +289,15 @@ Put the webview in place  of textview for type 2( for html Description set in we
 -(IBAction)btnSearchTagClicked:(id)sender {
     
     
-    if(!_btnSearchTag.isSelected)
-    {
-      _txtSearchTag.hidden=NO;
-        [_btnSearchTag setSelected:YES];
-    }
-    else{
-        _txtSearchTag.hidden=YES;
-        [_btnSearchTag setSelected:NO];
-    }
+//    if(!_btnSearchTag.isSelected)
+//    {
+//      _txtSearchTag.hidden=NO;
+//        [_btnSearchTag setSelected:YES];
+//    }
+//    else{
+//        _txtSearchTag.hidden=YES;
+//        [_btnSearchTag setSelected:NO];
+//    }
     
 }
 
@@ -329,16 +327,27 @@ Put the webview in place  of textview for type 2( for html Description set in we
             
             
             NSString *stringTitle=[[allSearchData valueForKey:@"Title"] objectAtIndex:q];
-            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
 
             if ([stringTitle isKindOfClass:[NSNull class]]) {
                 stringTitle=@"";
             }
+                NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            
+            NSString *stringTag=[[allSearchData valueForKey:@"Tag"] objectAtIndex:q];
             if ([stringTag isKindOfClass:[NSNull class]]) {
                 stringTag=@"";
             }
-           NSRange stringRangeTitle=[stringTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            NSRange stringRangeTag=[stringTag rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            NSArray *tagItems = [stringTag componentsSeparatedByString:@","];
+            NSRange stringRangeTag = NSMakeRange(0,  stringTag.length);
+             stringRangeTag=[[tagItems objectAtIndex:0] rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            for (int i = 0; i<tagItems.count; i++) {
+                if (stringRangeTag.location !=NSNotFound) {
+                    break;
+                }
+                else{
+                    stringRangeTag=[[tagItems objectAtIndex:i] rangeOfString:searchText options:NSCaseInsensitiveSearch];
+                }
+            }
             
             if(stringRangeTitle.location !=NSNotFound || stringRangeTag.location !=NSNotFound){
                 
@@ -492,7 +501,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
         }
         else{
             [_btnSearchTag setHidden:NO];
-           [_txtSearchTag setHidden:YES];
+           [_txtSearchTag setHidden:NO];
         }
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
@@ -663,7 +672,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
     
     childSelectCount=[[NSUserDefaults standardUserDefaults]integerForKey:@"childSelectCount"];
     [[NSUserDefaults standardUserDefaults]setInteger:childSelectCount + 1 forKey:@"childSelectCount"];
-    [_btnSearchTag setHidden:YES];
+   // [_btnSearchTag setHidden:YES];
 
      [_lblNoRecords setHidden:YES];
     if (isFilter) {

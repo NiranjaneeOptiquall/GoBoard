@@ -383,7 +383,7 @@
 		A9F8B7291A8A09A80007D041 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F8B7281A8A09A80007D041 /* AssetsLibrary.framework */; };
 		DD3B0DAF1E543C330037EAAF /* back_Child.png in Resources */ = {isa = PBXBuildFile; fileRef = DD3B0DAE1E543C330037EAAF /* back_Child.png */; };
 		DDB2F7061E52E49E0029F5C9 /* search_20x20.png in Resources */ = {isa = PBXBuildFile; fileRef = DDB2F7051E52E49E0029F5C9 /* search_20x20.png */; };
-		DDE48BE31E434DF300550D51 /* oneTimeTask20X20.png in Resources */ = {isa = PBXBuildFile; fileRef = DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */; };
+		DDE31E0E1E6427CF009589BD /* oneTimeTask20X20.png in Resources */ = {isa = PBXBuildFile; fileRef = DDE31E0D1E6427CF009589BD /* oneTimeTask20X20.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -961,7 +961,7 @@
 		A9F8B7281A8A09A80007D041 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		DD3B0DAE1E543C330037EAAF /* back_Child.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_Child.png; sourceTree = "<group>"; };
 		DDB2F7051E52E49E0029F5C9 /* search_20x20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_20x20.png; sourceTree = "<group>"; };
-		DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = oneTimeTask20X20.png; sourceTree = "<group>"; };
+		DDE31E0D1E6427CF009589BD /* oneTimeTask20X20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = oneTimeTask20X20.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1863,8 +1863,8 @@
 		84F0D0BA1E40A8CF00D334FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DDE31E0D1E6427CF009589BD /* oneTimeTask20X20.png */,
 				DD3B0DAE1E543C330037EAAF /* back_Child.png */,
-				DDE48BE21E434DF300550D51 /* oneTimeTask20X20.png */,
 				DDB2F7051E52E49E0029F5C9 /* search_20x20.png */,
 				84F0D0BB1E40A8CF00D334FB /* accident_report@2x.png */,
 				84F0D0BC1E40A8CF00D334FB /* activity_text_box@2x.png */,
@@ -2130,7 +2130,6 @@
 				84F0D1901E40A8D000D334FB /* figure_leftLeg.png in Resources */,
 				84F0D0B21E40A8B000D334FB /* DropDownField.xib in Resources */,
 				84F0CF4A1E40A8B000D334FB /* LaunchScreen.xib in Resources */,
-				DDE48BE31E434DF300550D51 /* oneTimeTask20X20.png in Resources */,
 				84F0D0A21E40A8B000D334FB /* IncidentActionTaken.xib in Resources */,
 				84F0D1731E40A8D000D334FB /* close_btn@2x.png in Resources */,
 				84F0D1AC1E40A8D000D334FB /* keyboard_icon_large@2x.png in Resources */,
@@ -2235,6 +2234,7 @@
 				84F0D16E1E40A8D000D334FB /* checked_orange@2x.png in Resources */,
 				84F0D0421E40A8B000D334FB /* DatePopOverView.xib in Resources */,
 				84F0D18B1E40A8D000D334FB /* expand_icon_small@2x.png in Resources */,
+				DDE31E0E1E6427CF009589BD /* oneTimeTask20X20.png in Resources */,
 				84F0D1C71E40A8D000D334FB /* review_progress_btn@2x.png in Resources */,
 				84F0D1EE1E40A8D000D334FB /* unchecked_white_radiobutton@2x.png in Resources */,
 				84F0D1EA1E40A8D000D334FB /* unchecked_green@2x.png in Resources */,

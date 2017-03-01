@@ -1694,6 +1694,8 @@
 {
     __block BOOL isWSComplete = NO;
     
+        NSString *strLocationIds = [[[[User currentUser] mutArrSelectedLocations] valueForKey:@"value"] componentsJoinedByString:@","];
+    
     NSMutableArray *arrOfPosition = [NSMutableArray new];
     
    // NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
@@ -1718,7 +1720,7 @@
     }
     NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&isAdmin=%@",[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,isAdmin];
+    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
 
 
 

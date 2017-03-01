@@ -1617,9 +1617,16 @@ totalSizeOFUploadedVideo=0;
         
             index++;
         }
+        
+        CGRect frameCheck  = aCell.vwButtonList.frame;
+        frameCheck.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.vwButtonList.frame=frameCheck;
     }
    
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"textbox"]) {
+        CGRect frame  = aCell.vwTextBox.frame;
+        frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.vwTextBox.frame=frame;
         [aCell.vwTextBox setHidden:NO];
         [aCell.btnUploadFile setHidden:YES];
         [aCell.lblUploadFile setHidden:YES];
@@ -1638,7 +1645,9 @@ totalSizeOFUploadedVideo=0;
         }
     }
     else if ([[aDict objectForKey:@"responseType"]isEqualToString:@"longtext"])//for large text
-    {
+    {  CGRect frame  = aCell.largeTxtBgView.frame;
+        frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.largeTxtBgView.frame=frame;
         
         [aCell.vwTextBox setHidden:YES];
         [aCell.largeTxtBgView setHidden:NO];
@@ -1662,6 +1671,9 @@ totalSizeOFUploadedVideo=0;
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"uploadFile"]) //for upload file button
     {
+        CGRect frame  = aCell.btnUploadFile.frame;
+        frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.btnUploadFile.frame=frame;
         [aCell.btnUploadFile setHidden:NO];
         [aCell.lblQuestion setHidden:NO];
         [aCell.lblUploadFile setHidden:YES];
@@ -1687,6 +1699,9 @@ totalSizeOFUploadedVideo=0;
 
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
+        CGRect frame  = aCell.btnSignature.frame;
+        frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.btnSignature.frame=frame;
         
         [aCell.lblQuestion setHidden:NO];
         [aCell.btnSignature setHidden:NO];
@@ -1711,6 +1726,10 @@ totalSizeOFUploadedVideo=0;
         
     }
     else if (![[aDict valueForKey:@"responseType"] isEqualToString:@"checkbox"]) {
+        CGRect frame  = aCell.vwTextArea.frame;
+        frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 10;
+        aCell.vwTextArea.frame=frame;
+        
         [aCell.vwTextArea setHidden:NO];
         [aCell.txtField setDelegate:self];
         [aCell.btnUploadFile setHidden:YES];
@@ -1736,6 +1755,10 @@ totalSizeOFUploadedVideo=0;
             [aCell.txtField setKeyboardType:UIKeyboardTypeAlphabet];
         }
         else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"numeric"]) {
+            CGRect frame  = aCell.txtField.frame;
+            frame.origin.y=aCell.lblQuestion.frame.origin.y+aCell.lblQuestion.frame.size.height + 5;
+            aCell.txtField.frame=frame;
+            
             [aCell.imvTypeIcon setHidden:YES];
             [aCell.btnUploadFile setHidden:YES];
             [aCell.lblUploadFile setHidden:YES];
@@ -1757,6 +1780,7 @@ totalSizeOFUploadedVideo=0;
 
         }
         else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"time"]) {
+
             [aCell.imvTypeIcon setHidden:NO];
             [aCell.btnUploadFile setHidden:YES];
             [aCell.lblUploadFile setHidden:YES];
@@ -1776,6 +1800,7 @@ totalSizeOFUploadedVideo=0;
             
         }
         else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"dropdown"]) {
+
             [aCell.imvTypeIcon setHidden:NO];
             [aCell.btnUploadFile setHidden:YES];
             [aCell.lblUploadFile setHidden:YES];
@@ -1795,6 +1820,8 @@ totalSizeOFUploadedVideo=0;
          
                   }
         else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"date"]) {
+
+            
             [aCell.imvTypeIcon setHidden:NO];
             [aCell.btnUploadFile setHidden:YES];
             [aCell.lblUploadFile setHidden:YES];
@@ -1816,6 +1843,8 @@ totalSizeOFUploadedVideo=0;
         }
     }
     else {
+
+        
         [aCell.btnCheckMark setHidden:NO];
         [aCell.lblUploadFile setHidden:YES];
 
@@ -1907,11 +1936,11 @@ totalSizeOFUploadedVideo=0;
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"signature"]) {
         
-        height=65;
+        height +=65;
     }
     else if ([[aDict objectForKey:@"responseType"] isEqualToString:@"uploadFile"]) {
         
-        height=95;
+        height +=95;
     }
     return height;
 }
