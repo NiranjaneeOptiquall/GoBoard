@@ -218,36 +218,7 @@
                 count = self.intSurveyInProgressCount;
             }
             else if ([aDict[@"SystemModule"] integerValue] == 0){
-               // count = self.intTaskCount;
-                NSFetchRequest * allTask = [[NSFetchRequest alloc] initWithEntityName:@"TaskList"];
-                NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"taskDateTime" ascending:YES];
-                NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"sequence" ascending:YES];
-                [allTask setSortDescriptors:@[descriptor, sortBySequence]];
-                NSArray * mutArrTaskList=[[NSArray alloc]init];
-                mutArrTaskList = [gblAppDelegate.managedObjectContext executeFetchRequest:allTask error:nil];
-                
-                NSDate* sourceDate = [NSDate date];
-                
-                NSTimeZone* sourceTimeZone =  [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-                NSTimeZone* destinationTimeZone =  [NSTimeZone systemTimeZone];
-                
-                NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
-                NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
-                NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
-                
-                NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
-                
-             //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
-                
-                NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
-                NSArray * mutArrTaskUptoNx2Hrs=[[NSArray alloc]init];
-                mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
-                
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
-                
-                NSArray * mutArrFilteredTaskList=[[NSArray alloc]init];
-                mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskUptoNx2Hrs filteredArrayUsingPredicate:predicate]];
-                count = mutArrFilteredTaskList.count;
+               count = self.intTaskCount;
             }
             
             if (count > 0) {
