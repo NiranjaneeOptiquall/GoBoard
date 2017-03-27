@@ -955,13 +955,8 @@
 
     
     [[WebSerivceCall webServiceObject]callServiceForDashboardCount:NO  complition:^(NSDictionary *aDict){
-//           intUnreadMemoCount=[[[aDict valueForKey:@"DashboardCount"] valueForKey:@"MemoCount"]integerValue];
-//        self.intUnreadLogCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue];
-//        self.intFormInProgressCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue];
-//        self.intSurveyInProgressCount = [[[aDict valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue];
-    
-    
-    intUnreadMemoCount=[[[NSUserDefaults standardUserDefaults] valueForKey:@"MemoToalCount"]integerValue];
+
+  //  intUnreadMemoCount=[[[NSUserDefaults standardUserDefaults] valueForKey:@"MemoToalCount"]integerValue];
     self.intUnreadLogCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue];
     self.intFormInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"FormToalCount"]integerValue];
     self.intSurveyInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"SurveyToalCount"]integerValue];
@@ -1008,16 +1003,16 @@
 {
     [[WebSerivceCall webServiceObject]callServiceForMemos:NO complition:^{
         
-//        intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
-//        [self.cvMenuGrid reloadData];
-//     //   NSLog(@"MemoUpdated");
-//        if (self.allowMemoWSCall) {
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [self callWebserviceToUpdateMemo];
-//                [self callWebserviceToUpdateTeamLog];
-//                
-//            });
-//        }
+        intUnreadMemoCount = [[gblAppDelegate.mutArrMemoList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"IsRead == 0"]] count];
+        [self.cvMenuGrid reloadData];
+     //   NSLog(@"MemoUpdated");
+        if (self.allowMemoWSCall) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self callWebserviceToUpdateMemo];
+         //       [self callWebserviceToUpdateTeamLog];
+                
+            });
+        }
         
     }];
     
