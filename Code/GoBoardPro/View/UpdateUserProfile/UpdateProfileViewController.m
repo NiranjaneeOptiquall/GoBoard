@@ -86,6 +86,7 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
+      NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
     if ([_txtFitstName isTextFieldBlank] || [_txtLastName isTextFieldBlank] || [_txtEmail isTextFieldBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -95,6 +96,18 @@
         alert(@"", @"Please enter valid Email address");
         return;
     }
+    else if ([aStrRcvMSG isEqualToString:@"true"]){
+        if ([_txtMobile.text isEqualToString:@""]
+            ) {
+            alert(@"", @"Mobile number is required for receiving text messages");
+            return;
+        }
+        else if ([_txtMobile.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0 && ![_txtMobile.text isValidPhoneNumber]) {
+            alert(@"", @"Please enter valid Mobile Number");
+            return;
+        }
+    }
+
     else if ([_txtPhone.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0 &&![_txtPhone.text isValidPhoneNumber]) {
         alert(@"", @"Please enter valid Phone Number");
         return;

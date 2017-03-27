@@ -93,8 +93,9 @@
    [self callWebserviceForMissedTaskNotification];
 
     self.allowMemoWSCall = YES;
-//  [self callWebserviceToUpdateMemo];
+
    [self callWebserviceToUpdateCountOnDashboard];
+   [self callWebserviceToUpdateMemo];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

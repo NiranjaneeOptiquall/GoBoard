@@ -145,7 +145,8 @@
     [_tblAddedInjuryList reloadData];
     selectedBodyPart = 0;
     [_tblInjuredBodyPartList reloadData];
-    
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"injuryAdded"];
+
     _txtActionTaken.text = @"";
     _txtEnjuryType.text = @"";
     _txtOtherInjury.text = @"";

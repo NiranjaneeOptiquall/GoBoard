@@ -27,6 +27,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
+
     mutArrAccidentViews = [[NSMutableArray alloc] init];
     [_txtLocation setEnabled:NO];
     [self fetchAccidentReportSetupInfo];
@@ -627,7 +630,8 @@
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
-
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"injuryAdded"] isEqualToString:@"YES"]) {
+    
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txvDescription isTextViewBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -655,11 +659,25 @@
     } failure:^(NSError *error, NSDictionary *response) {
         [self saveAccidentReportToLocal:request completed:YES];
     }];
+    }
+    else{
+        alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.")
+        
+    }
 }
 
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender {
-    _isUpdate = YES;
-    [self addAccidentView];
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"injuryAdded"] isEqualToString:@"YES"]) {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
+        _isUpdate = YES;
+        [self addAccidentView];
+    }
+    else{
+        
+        alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.")
+        
+    }
+
 }
 
 - (IBAction)btnDeleteRecentlyaddedPersonInvolved:(UIButton *)sender {
