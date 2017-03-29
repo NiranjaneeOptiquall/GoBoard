@@ -25,9 +25,11 @@
     [self btnInjuryTypeGeneralTapped:_btnGeneralInjury];
     [_txtOtherInjury setHidden:YES];
     [_imvOtherInjuryBG setHidden:YES];
+    
     _mutArrInjuryList = [[NSMutableArray alloc] init];
-    [_lblNoInjuryAdded.layer setBorderColor:[UIColor whiteColor].CGColor];
+        [_lblNoInjuryAdded.layer setBorderColor:[UIColor whiteColor].CGColor];
     [_lblNoInjuryAdded.layer setBorderWidth:1.0f];
+    
 }
 
 - (IBAction)btnInjuryTypeGeneralTapped:(UIButton *)sender {
@@ -156,6 +158,10 @@
 
 
 - (IBAction)btnRemoveInjuryTapped:(id)sender {
+    if (_mutArrInjuryList.count <= 1) {
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
+
+    }
     
     UIButton *btnRemoveInjury = (UIButton *)sender;
     

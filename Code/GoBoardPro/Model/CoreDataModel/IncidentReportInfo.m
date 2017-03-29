@@ -24,6 +24,7 @@
 @dynamic affiliation5;
 @dynamic affiliation6;
 @dynamic instructions;
+@dynamic descriptionLbl;
 @dynamic notificationField1;
 @dynamic notificationField1Color;
 @dynamic notificationField2;

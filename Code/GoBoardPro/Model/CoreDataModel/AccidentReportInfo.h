@@ -33,6 +33,11 @@
 @property (nonatomic, retain) NSString * personInvolved3;
 @property (nonatomic, retain) NSString * refusedCareStatement;
 @property (nonatomic, retain) NSString * selfCareStatement;
+@property (nonatomic, retain) NSString * titleDescription;
+@property (nonatomic, retain) NSString * additionalInformationLabel;
+@property (nonatomic, retain) NSString * staffMembersWrittenAccountLabel;
+@property (nonatomic, retain) NSNumber * showAdditionalInformation;
+@property (nonatomic, retain) NSNumber * showStaffMembersWrittenAccount;
 @property (nonatomic, retain) NSNumber * showAffiliation;
 @property (nonatomic, retain) NSNumber * showBloodbornePathogens;
 @property (nonatomic, retain) NSNumber * showCommunicationAndNotification;

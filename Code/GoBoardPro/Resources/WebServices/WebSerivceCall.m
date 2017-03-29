@@ -83,7 +83,7 @@
     [self callServiceForIncidentReport:YES complition:nil];
     [self callServiceForAccidentReport:YES complition:nil];
     [self callServiceForMemos:YES complition:nil];
-       [self callServiceForAllClienntPositions:YES complition:nil];
+    [self callServiceForAllClienntPositions:YES complition:nil];
 
     //**** initialy call for  forms/survey data is cansled because of heavy data take long  time and this webservice call is made on clicke event of form/survey page call****//
    //   [self callServiceForForms:YES complition:nil];
@@ -1092,6 +1092,7 @@
         }
             
         
+        report.descriptionLbl = [aDict objectForKey:@"Description"];
         report.notificationField1 = [aDict objectForKey:@"NotificationField1"];
         report.notificationField2 = [aDict objectForKey:@"NotificationField2"];
         report.notificationField3 = [aDict objectForKey:@"NotificationField3"];
@@ -1286,6 +1287,12 @@
     report.affiliation5 = [aDict objectForKey:@"Affiliation5"];
     report.affiliation6 = [aDict objectForKey:@"Affiliation6"];
 
+    report.titleDescription = [aDict objectForKey:@"Description"];
+    report.additionalInformationLabel = [aDict objectForKey:@"AdditionalInformationLabel"];
+    report.staffMembersWrittenAccountLabel = [aDict objectForKey:@"StaffMembersWrittenAccountLabel"];
+    report.showAdditionalInformation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAdditionalInformation"] boolValue]];
+    report.showStaffMembersWrittenAccount = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowStaffMembersWrittenAccount"] boolValue]];
+    
     report.refusedCareStatement = [aDict objectForKey:@"RefusedCareStatement"];
     report.selfCareStatement = [aDict objectForKey:@"SelfCareStatement"];
     report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];

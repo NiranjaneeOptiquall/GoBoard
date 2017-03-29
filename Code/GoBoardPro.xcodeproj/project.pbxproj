@@ -2085,7 +2085,6 @@
 				TargetAttributes = {
 					3397CA9C19D02D7A00788153 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 9LTX58J5T8;
 						ProvisioningStyle = Automatic;
 					};
 					3397CAB819D02D7A00788153 = {
@@ -2653,7 +2652,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 9LTX58J5T8;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2681,7 +2680,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Connect2Concepts, LLC (8NQF7UHVNW)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 9LTX58J5T8;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

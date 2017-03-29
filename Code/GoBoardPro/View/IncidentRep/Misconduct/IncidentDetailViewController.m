@@ -325,6 +325,7 @@
 
 
 - (void)viewSetup {
+    _lblIncidentDesc.text = reportSetupInfo.descriptionLbl;
     
     NSString *aStrTitle1 = reportSetupInfo.notificationField1;
     if (reportSetupInfo.notificationField1Alert.boolValue) {

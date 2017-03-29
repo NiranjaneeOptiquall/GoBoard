@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
 @property (strong, nonatomic) UIImage *imgBodilyFluid;
 @property (assign, nonatomic) BOOL isCaptureCameraVisible;
+@property (assign, nonatomic) BOOL islblStaffMemberAccountVisible;
 
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;

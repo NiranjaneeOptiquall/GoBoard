@@ -51,6 +51,7 @@
         <relationship name="injuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="InjuryDetail" inverseName="accidentPerson" inverseEntity="InjuryDetail" syncable="YES"/>
     </entity>
     <entity name="AccidentReportInfo" representedClassName="AccidentReportInfo" syncable="YES">
+        <attribute name="additionalInformationLabel" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliation1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliation2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliation3" optional="YES" attributeType="String" syncable="YES"/>
@@ -75,6 +76,7 @@
         <attribute name="personInvolved3" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="refusedCareStatement" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfCareStatement" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="showAdditionalInformation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showAffiliation" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showBloodbornePathogens" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showCommunicationAndNotification" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -95,6 +97,9 @@
         <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showRefusedSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showStaffMembersWrittenAccount" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="staffMembersWrittenAccountLabel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="titleDescription" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="abdomenInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AbdomenInjuryList" inverseName="accidentInfo" inverseEntity="AbdomenInjuryList" syncable="YES"/>
         <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="accidentInfo" inverseEntity="ActionTakenList" syncable="YES"/>
         <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="accidentInfo" inverseEntity="ActivityList" syncable="YES"/>
@@ -324,6 +329,7 @@
         <attribute name="affiliation4" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliation5" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="affiliation6" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descriptionLbl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationField1Alert" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -693,7 +699,7 @@
     <elements>
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="103"/>
         <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="673"/>
-        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="915"/>
+        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="990"/>
         <element name="AccidentReportSubmit" positionX="954" positionY="-385" width="128" height="403"/>
         <element name="ActionTakenList" positionX="-495" positionY="-252" width="128" height="133"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="118"/>
@@ -716,7 +722,7 @@
         <element name="FormsList" positionX="-513" positionY="675" width="144" height="253"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
-        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="705"/>
+        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="720"/>
         <element name="InjuryDetail" positionX="495" positionY="635" width="128" height="165"/>
         <element name="LeftArmInjuryList" positionX="108" positionY="977" width="128" height="103"/>
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>

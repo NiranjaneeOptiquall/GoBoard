@@ -477,4 +477,16 @@
         self.frame = frame;
     }
 }
+- (void)setIslblStaffMemberAccountVisible:(BOOL)islblStaffMemberAccountVisible {
+    _islblStaffMemberAccountVisible = islblStaffMemberAccountVisible;
+    if (!_islblStaffMemberAccountVisible) {
+        CGRect frame = _vwBodilyFluid.vwStaffMember.frame;
+        frame.size = CGSizeZero;
+        _vwBodilyFluid.vwStaffMember.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwBodilyFluid.vwStaffMember.frame);
+        self.frame = frame;
+    }
+}
 @end

@@ -90,6 +90,7 @@
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZpC-Ox-QjV">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="77"/>
+                    <accessibility key="accessibilityConfiguration" hint="Double tap to expand category"/>
                     <inset key="imageEdgeInsets" minX="-274" minY="-1" maxX="16" maxY="-3"/>
                 </button>
             </subviews>

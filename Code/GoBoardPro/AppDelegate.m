@@ -177,12 +177,11 @@
       
         
         [self showActivityIndicator];
-
         
         NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
         aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
-        
+
         [request setHTTPMethod:httpMethod];
         if (params) {
             NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];

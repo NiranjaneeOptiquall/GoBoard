@@ -44,6 +44,7 @@
 @property (weak, nonatomic) IBOutlet UIView *vwManagementFollowUp;
 @property (weak, nonatomic) IBOutlet UILabel *lblReportFilerAccount;
 @property (weak, nonatomic) IBOutlet UITextView *txvReportFilerAccount;
+@property (weak, nonatomic) IBOutlet UIImageView *imgAdditionalInfo;
 
 @property (weak, nonatomic) IBOutlet UILabel *markerEmpFName;
 @property (weak, nonatomic) IBOutlet UILabel *markerEmpMI;
@@ -55,6 +56,7 @@
 @property (strong, nonatomic) NSMutableArray *mutArrWitnessViews;
 
 @property (assign, nonatomic) BOOL isCommunicationVisible;
+@property (assign, nonatomic) BOOL isAdditionalInfoVisible;
 @property (assign, nonatomic) BOOL isManagementFollowUpVisible;
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;

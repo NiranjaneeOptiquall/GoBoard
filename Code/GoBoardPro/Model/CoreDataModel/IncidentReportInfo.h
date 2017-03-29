@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString * affiliation5;
 @property (nonatomic, retain) NSString * affiliation6;
 @property (nonatomic, retain) NSString * instructions;
+@property (nonatomic, retain) NSString * descriptionLbl;
 @property (nonatomic, retain) NSString * notificationField1;
 @property (nonatomic, retain) NSString * notificationField1Color;
 @property (nonatomic, retain) NSString * notificationField2;

@@ -83,5 +83,9 @@
 @dynamic requiredFields;
 @dynamic rightArmInjuryList;
 @dynamic rightLegInjuryList;
-
+@dynamic titleDescription;
+@dynamic additionalInformationLabel;
+@dynamic staffMembersWrittenAccountLabel;
+@dynamic showAdditionalInformation;
+@dynamic showStaffMembersWrittenAccount;
 @end

@@ -408,7 +408,29 @@
     }
 }
 
-
+- (void)setIsAdditionalInfoVisible:(BOOL)isAdditionalInfoVisible {
+    _isAdditionalInfoVisible = isAdditionalInfoVisible;
+    if (!isAdditionalInfoVisible) {
+        [_txvAdditionalInformation setHidden:YES];
+        [_lblAdditionalInfo setHidden:YES];
+        [_imgAdditionalInfo setHidden:YES];
+        CGRect frame = _txvAdditionalInformation.frame;
+        frame.size = CGSizeZero;
+        _txvAdditionalInformation.frame = frame;
+        
+        frame = _vwSubmit.frame;
+        frame.origin.y = CGRectGetMaxY(_txvAdditionalInformation.frame);
+        _vwSubmit.frame = frame;
+        
+        frame = _vwFixedContent.frame;
+        frame.size.height = CGRectGetMaxY(_vwSubmit.frame);
+        _vwFixedContent.frame = frame;
+        
+        frame = self.frame;
+        frame.size.height = CGRectGetMaxY(_vwFixedContent.frame);
+        self.frame = frame;
+    }
+}
 - (void)setIsManagementFollowUpVisible:(BOOL)isManagementFollowUpVisible {
     _isManagementFollowUpVisible = isManagementFollowUpVisible;
     if (!_isManagementFollowUpVisible) {

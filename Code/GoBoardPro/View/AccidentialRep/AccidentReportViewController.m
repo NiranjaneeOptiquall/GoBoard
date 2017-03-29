@@ -630,7 +630,6 @@
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"injuryAdded"] isEqualToString:@"YES"]) {
     
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txvDescription isTextViewBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
@@ -649,6 +648,16 @@
     }
     
     NSMutableDictionary *request = [NSMutableDictionary dictionaryWithDictionary:[self createSubmitRequest]];
+        for (int i = 0; i<[[request valueForKey:@"PersonsInvolved"] count]; i++) {
+            if ([[[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] count] == 0 || [[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] == nil) {
+                
+                alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.");
+                return;
+              //  break;
+            }
+        }
+        
+        
     NSString *strCareId = [request objectForKey:@"CareProvidedById"];
     if ([strCareId intValue] < 0) {
         [request setObject:@"" forKey:@"CareProvidedById"];
@@ -659,14 +668,12 @@
     } failure:^(NSError *error, NSDictionary *response) {
         [self saveAccidentReportToLocal:request completed:YES];
     }];
-    }
-    else{
-        alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.")
-        
-    }
+
 }
 
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"newPersonAdded"];
+
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"injuryAdded"] isEqualToString:@"YES"]) {
         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
         _isUpdate = YES;
@@ -681,6 +688,8 @@
 }
 
 - (IBAction)btnDeleteRecentlyaddedPersonInvolved:(UIButton *)sender {
+    [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
+
     UIAlertView *aAlertDeletePerson = [[UIAlertView alloc]initWithTitle:[gblAppDelegate appName] message:@"Are you sure you want to delete most recently added Person Involved?" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Yes",@"No", nil];
     
     aAlertDeletePerson.tag = 5;
@@ -722,6 +731,9 @@
 - (void)viewSetup {
    
     NSString *aStrTitle1 = _reportSetupInfo.notificationField1;
+
+        _lblIncidentDesc.text = _reportSetupInfo.titleDescription;
+    
     if (_reportSetupInfo.notificationField1Alert.boolValue) {
         [_btn911Called setTitle:[aStrTitle1 stringByAppendingString:@"(A)"] forState:UIControlStateNormal];
     }else{
@@ -796,6 +808,8 @@
     AccidentFirstSection *accidentView = (AccidentFirstSection*)[[[NSBundle mainBundle] loadNibNamed:@"AccidentFirstSection" owner:self options:nil] firstObject];
     accidentView.parentVC = self;
     accidentView.isCaptureCameraVisible = [_reportSetupInfo.showPhotoIcon boolValue];
+    accidentView.islblStaffMemberAccountVisible = [_reportSetupInfo.showStaffMembersWrittenAccount boolValue];
+
     accidentView.vwPersonalInfo.isAffiliationVisible = [_reportSetupInfo.showAffiliation boolValue];
     accidentView.vwPersonalInfo.isMemberIdVisible = [_reportSetupInfo.showMemberIdAndDriverLicense boolValue];
     accidentView.vwPersonalInfo.isGuestIdVisible = [_reportSetupInfo.showGuestId boolValue];
@@ -826,6 +840,9 @@
     [accidentView.vwBodilyFluid setIsSelfCareStatementVisible:NO];
     [accidentView.vwBodilyFluid setIsParticipantSignatureVisible:[_reportSetupInfo.showParticipantSignature boolValue]];
     [accidentView.vwBodilyFluid.lblRefuseCareText setText:_reportSetupInfo.refusedCareStatement];
+    
+    [accidentView.vwBodilyFluid.lblStaffMemberAccount setText:_reportSetupInfo.staffMembersWrittenAccountLabel];
+
     [accidentView.vwBodilyFluid.lblSelfCareText setText:_reportSetupInfo.selfCareStatement];
     [accidentView.vwBodilyFluid setIsEmergencyPersonnelVisible:NO];
     [accidentView.vwBodilyFluid setIsEmergencyResponseSelected:NO];
@@ -880,6 +897,9 @@
     [_scrlMainView addSubview:finalSection];
     [finalSection addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
     finalSection.isCommunicationVisible = [_reportSetupInfo.showCommunicationAndNotification boolValue];
+      finalSection.isAdditionalInfoVisible = [_reportSetupInfo.showAdditionalInformation boolValue];
+    finalSection.isCommunicationVisible = [_reportSetupInfo.showCommunicationAndNotification boolValue];
+    [finalSection.lblAdditionalInfo setText:_reportSetupInfo.additionalInformationLabel];
     finalSection.isManagementFollowUpVisible = [_reportSetupInfo.showManagementFollowup boolValue];
     [finalSection.btnFinalSubmit addTarget:self action:@selector(btnFinalSubmitTapped:) forControlEvents:UIControlEventTouchUpInside];
     [finalSection PersonInvolved:_personInvolved];
