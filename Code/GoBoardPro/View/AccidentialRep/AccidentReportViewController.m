@@ -630,7 +630,54 @@
 }
 
 - (void)btnFinalSubmitTapped:(id)sender {
-    
+    UIAlertController * alertAddInjury = [[UIAlertController alloc]init];
+    for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
+        if ([vw isKindOfClass:[AccidentFirstSection class]]) {
+            
+            if (![vw.vwBodyPartInjury.txtActionTaken.text isEqualToString:@""] || ![vw.vwBodyPartInjury.txtEnjuryType.text isEqualToString:@""]) {
+                NSLog(@"%@",vw.vwBodyPartInjury.txtActionTaken.text);
+                //@"Do you want to add changes to injury list? If yes please click Add Injury to add the injury to the report."
+                
+                alertAddInjury=[UIAlertController alertControllerWithTitle:@"" message:@"Do you want to add changes to injury list? If yes please click Add Injury to add the injury to the report."preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* yesButton = [UIAlertAction
+                                            actionWithTitle:@"Yes"
+                                            style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                return;
+                                            }];
+                UIAlertAction* noButton = [UIAlertAction
+                                           actionWithTitle:@"No"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action)
+                                           {
+                                               vw.vwBodyPartInjury.txtActionTaken.text = @"";
+                                               vw.vwBodyPartInjury.txtEnjuryType.text = @"";
+                                                [self finalSubmit];
+                                            }];
+                
+                [alertAddInjury addAction:yesButton];
+                [alertAddInjury addAction:noButton];
+                
+                [self presentViewController:alertAddInjury animated:YES completion:nil];
+      
+            }
+        }
+    }
+    if (alertAddInjury.isViewLoaded) {
+        NSLog(@"alert");
+        if (alertAddInjury.isBeingDismissed) {
+            [self finalSubmit];
+        }
+    }
+    else{
+        [self finalSubmit];
+    }
+   
+    }
+
+-(void)finalSubmit{
     if ([_txtDateOfIncident isTextFieldBlank] || [_txtTimeOfIncident isTextFieldBlank] || [_txtFacility isTextFieldBlank] || [_txtLocation isTextFieldBlank] || [_txvDescription isTextViewBlank]) {
         alert(@"", MSG_REQUIRED_FIELDS);
         return;
@@ -648,16 +695,16 @@
     }
     
     NSMutableDictionary *request = [NSMutableDictionary dictionaryWithDictionary:[self createSubmitRequest]];
-        for (int i = 0; i<[[request valueForKey:@"PersonsInvolved"] count]; i++) {
-            if ([[[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] count] == 0 || [[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] == nil) {
-                
-                alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.");
-                return;
-              //  break;
-            }
+    for (int i = 0; i<[[request valueForKey:@"PersonsInvolved"] count]; i++) {
+        if ([[[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] count] == 0 || [[[request valueForKey:@"PersonsInvolved"] valueForKey:@"Injuries"]objectAtIndex:i] == nil) {
+            
+            alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.");
+            return;
+            //  break;
         }
-        
-        
+    }
+    
+    
     NSString *strCareId = [request objectForKey:@"CareProvidedById"];
     if ([strCareId intValue] < 0) {
         [request setObject:@"" forKey:@"CareProvidedById"];
@@ -668,12 +715,65 @@
     } failure:^(NSError *error, NSDictionary *response) {
         [self saveAccidentReportToLocal:request completed:YES];
     }];
+    
 
 }
 
 - (IBAction)btnAddMoreBodilyFluidTapped:(id)sender {
-    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"newPersonAdded"];
+    UIAlertController * alertAddInjury = [[UIAlertController alloc] init];
+    
+    for (AccidentFirstSection *vw in _vwFirstSection.subviews) {
+        if ([vw isKindOfClass:[AccidentFirstSection class]]) {
+        
+            if (![vw.vwBodyPartInjury.txtActionTaken.text isEqualToString:@""] || ![vw.vwBodyPartInjury.txtEnjuryType.text isEqualToString:@""]) {
+                NSLog(@"%@",vw.vwBodyPartInjury.txtActionTaken.text);
+                //@"Do you want to add changes to injury list? If yes please click Add Injury to add the injury to the report."
+          
+              alertAddInjury=[UIAlertController
+                                           
+                                           alertControllerWithTitle:@"" message:@"Do you want to add changes to injury list? If yes please click Add Injury to add the injury to the report."preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* yesButton = [UIAlertAction
+                                            actionWithTitle:@"Yes"
+                                            style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * action)
+                                            {
+                                                return;
+                                            }];
+                UIAlertAction* noButton = [UIAlertAction
+                                           actionWithTitle:@"No"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action)
+                                           {
+                                               vw.vwBodyPartInjury.txtActionTaken.text = @"";
+                                               vw.vwBodyPartInjury.txtEnjuryType.text = @"";
+                                              
+                                               [self addNewPerson];
+                                               
+                                           }];
+                
+                [alertAddInjury addAction:yesButton];
+                [alertAddInjury addAction:noButton];
+                
+                [self presentViewController:alertAddInjury animated:YES completion:nil];
+                
+            }
+        }
+    }
+    
+    if (alertAddInjury.isViewLoaded) {
+        NSLog(@"alert");
+        if (alertAddInjury.isBeingDismissed) {
+            [self addNewPerson];
+        }
+    }
+    else{
+        [self addNewPerson];
+    }
 
+
+}
+-(void)addNewPerson{
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"injuryAdded"] isEqualToString:@"YES"]) {
         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
         _isUpdate = YES;
@@ -684,9 +784,7 @@
         alert([gblAppDelegate appName], @"Please click Add Injury to add the injury to the report.")
         
     }
-
 }
-
 - (IBAction)btnDeleteRecentlyaddedPersonInvolved:(UIButton *)sender {
     [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"injuryAdded"];
 
@@ -1251,6 +1349,13 @@
             }
         }
     }
+//    else if (alertView.tag == 6){
+//        if (buttonIndex == 0) {
+//            
+//            
+//        }
+    
+//    }
     else if (buttonIndex == 0) {
         [self removeObservers];
         [self.navigationController popViewControllerAnimated:YES];

@@ -23,6 +23,8 @@
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
 }
+
+
 @property (weak, nonatomic) IBOutlet UIScrollView *scrlMainView;
 @property (weak, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) IBOutlet UITextField *txtDateOfIncident;
