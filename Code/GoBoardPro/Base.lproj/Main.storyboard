@@ -1409,7 +1409,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="708" height="58"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2520742F-D370-4D8B-A9C4-A96680858F01" id="qJQ-sU-euC">
+                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EE46F7B1-4414-4DFE-90E2-71C529E76F76" id="qJQ-sU-euC">
                                                                     <rect key="frame" x="10" y="7" width="44" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 </imageView>
@@ -2312,7 +2312,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="DD.MM.YYYY" minimumFontSize="17" id="9aO-n5-vNK">
                                                 <rect key="frame" x="61" y="55" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open date picker"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -2331,7 +2330,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="HH:MM AM" minimumFontSize="17" id="YaW-xB-0fc">
                                                 <rect key="frame" x="405" y="55" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open time picker"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -2357,7 +2355,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Facility where incident occured" minimumFontSize="17" id="rdf-uh-dHY">
                                                 <rect key="frame" x="61" y="139" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open facility dropdown"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -2376,7 +2373,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Location of incident" minimumFontSize="17" id="Arg-u8-qhu">
                                                 <rect key="frame" x="405" y="139" width="297" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open location of incident dropdown"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -4771,6 +4767,9 @@
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_box_email.png" id="TQC-eN-HEo">
                                                 <rect key="frame" x="55" y="180" width="315" height="63"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="YES"/>
+                                                </accessibility>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Choose Position" minimumFontSize="17" id="fhQ-4l-fEc">
                                                 <rect key="frame" x="65" y="184" width="300" height="50"/>
@@ -6318,7 +6317,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Facility where incident occured" minimumFontSize="17" id="gMj-Rw-588">
                                                 <rect key="frame" x="65" y="155" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open facility dropdown"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -6337,7 +6335,7 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Location of incident" minimumFontSize="17" id="HWe-sH-Ziy">
                                                 <rect key="frame" x="409" y="155" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open location of incident dropdown "/>
+                                                <accessibility key="accessibilityConfiguration" hint=" "/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -6356,7 +6354,6 @@
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="HH:MM AM" minimumFontSize="17" id="E7h-2l-uX8">
                                                 <rect key="frame" x="409" y="71" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Double tap to open timepicker "/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -7983,7 +7980,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="2520742F-D370-4D8B-A9C4-A96680858F01" width="43" height="43">
+        <image name="Defalut.png" width="768" height="1024"/>
+        <image name="EE46F7B1-4414-4DFE-90E2-71C529E76F76" width="43" height="43">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -8157,7 +8155,6 @@ AKsArQCyALUAtwC5ALsAvQDCANkA2wDdJmMmaCZzJnwmjyaTJp4mpyasJrQmtya8JssmzybWJt4m6ybw
 JvIm9Cb5JwEnBCcJJxEnFCcmJyknLgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAACcwA
 </mutableData>
         </image>
-        <image name="Defalut.png" width="768" height="1024"/>
         <image name="accident_report.png" width="125" height="100"/>
         <image name="add_icon.png" width="65" height="65"/>
         <image name="area_supervisor.png" width="66" height="65"/>
@@ -8263,10 +8260,10 @@ JvIm9Cb5JwEnBCcJJxEnFCcmJyknLgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAACcwA
     <inferredMetricsTieBreakers>
         <segue reference="nXf-Vb-N5P"/>
         <segue reference="QGh-qe-Zhv"/>
-        <segue reference="oSw-4K-gRo"/>
         <segue reference="k5d-Jg-3em"/>
+        <segue reference="oSw-4K-gRo"/>
         <segue reference="vif-Tr-xCv"/>
+        <segue reference="v6e-GR-DHO"/>
         <segue reference="Ch6-nF-a6J"/>
-        <segue reference="hDb-ef-3Vz"/>
     </inferredMetricsTieBreakers>
 </document>
