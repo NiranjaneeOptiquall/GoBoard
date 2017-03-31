@@ -127,9 +127,6 @@
                                                                 </label>
                                                             </subviews>
                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <accessibility key="accessibilityConfiguration">
-                                                                <bool key="isElement" value="YES"/>
-                                                            </accessibility>
                                                             <constraints>
                                                                 <constraint firstItem="KnW-rZ-Bm5" firstAttribute="leading" secondItem="ZER-iG-C2I" secondAttribute="trailing" constant="10" id="2jQ-Bb-ulI"/>
                                                                 <constraint firstAttribute="trailing" secondItem="2H4-I2-AhU" secondAttribute="trailing" constant="10" id="3eE-hE-Ch7"/>
@@ -158,9 +155,6 @@
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <accessibility key="accessibilityConfiguration">
-                                                    <bool key="isElement" value="YES"/>
-                                                </accessibility>
                                                 <connections>
                                                     <outlet property="btnViewComments" destination="AEY-gm-LsO" id="3y5-FQ-ek8"/>
                                                     <outlet property="cnstLblDescriptionTop" destination="XNR-za-KSt" id="yP5-bn-ru8"/>
@@ -387,6 +381,9 @@
                                                                                 </label>
                                                                             </subviews>
                                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <accessibility key="accessibilityConfiguration">
+                                                                                <bool key="isElement" value="YES"/>
+                                                                            </accessibility>
                                                                             <constraints>
                                                                                 <constraint firstItem="dCv-n6-kSK" firstAttribute="leading" secondItem="JR6-bq-jne" secondAttribute="leading" constant="10" id="3WR-Yq-BVY"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="dCv-n6-kSK" secondAttribute="trailing" constant="10" id="5Pc-sY-IRq"/>
@@ -408,6 +405,9 @@
                                                                     </constraints>
                                                                 </tableViewCellContentView>
                                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <accessibility key="accessibilityConfiguration">
+                                                                    <bool key="isElement" value="YES"/>
+                                                                </accessibility>
                                                                 <connections>
                                                                     <outlet property="lblDate" destination="sUe-MQ-gTb" id="kfJ-eK-Eme"/>
                                                                     <outlet property="lblDescription" destination="dCv-n6-kSK" id="Gr9-fu-21N"/>
@@ -558,7 +558,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IkK-nx-Dyp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1135" y="402"/>
+            <point key="canvasLocation" x="1255" y="326"/>
         </scene>
     </scenes>
     <resources>
