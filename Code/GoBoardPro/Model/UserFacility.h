@@ -9,20 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class UserLocation, UserPosition;
+@class UserLocation, UserPosition,UserLocation1;
 
 @interface UserFacility : NSManagedObject
 
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSSet *locations;
+@property (nonatomic, retain) NSSet *locations1;
 @property (nonatomic, retain) NSSet *positions;
 @end
 
 @interface UserFacility (CoreDataGeneratedAccessors)
 
-- (void)addLocationsObject:(UserLocation *)value;
-- (void)removeLocationsObject:(UserLocation *)value;
+- (void)addLocationsObject:(UserLocation1 *)value;
+- (void)removeLocationsObject:(UserLocation1 *)value;
 - (void)addLocations:(NSSet *)values;
 - (void)removeLocations:(NSSet *)values;
 

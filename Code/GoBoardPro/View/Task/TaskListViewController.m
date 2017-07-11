@@ -219,7 +219,27 @@
 }
 
 - (IBAction)btnToggleTaskAndCountTapped:(id)sender {
-    [self submitTask:YES];
+    NSMutableArray * moduleArr = [NSMutableArray new];
+    for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
+        if ([tempDic[@"SystemModule"] integerValue] == 1) {
+            [moduleArr addObject:tempDic];
+        }
+    }
+
+   __weak NSDictionary *aDict =  [moduleArr objectAtIndex:0];
+ 
+    NSLog(@"%@",aDict);
+    if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue])
+    {
+        [self submitTask:YES];
+
+    }
+
+    else{
+         alert(@"", @"We’re sorry.  You do not have permission to access this area.  Please see your system administrator.");
+    }
+
+//    [self submitTask:YES];
 }
 
 //chetan kasundra changes starts
@@ -683,10 +703,17 @@
                 [aCell.vwDrpDown setHidden:NO];
                 aCell.txtDropDown.userInteractionEnabled = NO;
             }
+            
+            
             NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:aStrTaskName];
+            [attributeString addAttribute:NSBaselineOffsetAttributeName value:@0 range:NSMakeRange(0, [attributeString length])];
+
             [attributeString addAttribute:NSStrikethroughStyleAttributeName
                                     value:@2
                                     range:NSMakeRange(0, [attributeString length])];
+            
+            
+            
             [aCell.lblTask setAttributedText:attributeString];
             [aCell.lblTask setTextColor:[UIColor redColor]];
             [aCell.btnKeyboardIcon setHidden:YES];

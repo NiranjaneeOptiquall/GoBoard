@@ -1,9 +1,9 @@
 //
-//  UserPosition.h
+//  UserLocation1.h
 //  GoBoardPro
 //
-//  Created by ind558 on 13/11/14.
-//  Copyright (c) 2014 IndiaNIC. All rights reserved.
+//  Created by Optiquall Solutions on 09/06/17.
+//  Copyright © 2017 IndiaNIC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,7 +11,8 @@
 
 @class UserFacility;
 
-@interface UserPosition : NSManagedObject
+
+@interface UserLocation1 : NSManagedObject
 
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSString * name;

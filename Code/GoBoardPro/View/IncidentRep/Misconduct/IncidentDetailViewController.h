@@ -13,6 +13,7 @@
 #import "IncidentReportInfo.h"
 #import "UserLocation.h"
 #import "UserFacility.h"
+#import "UserLocation1.h"
 
 @interface IncidentDetailViewController : UIViewController<DropDownValueDelegate, UITextViewDelegate> {
     NSInteger totalPersonCount, totalWitnessCount;

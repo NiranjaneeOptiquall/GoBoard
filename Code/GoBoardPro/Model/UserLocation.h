@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class UserFacility;
+@class UserPosition;
 
 @interface UserLocation : NSManagedObject
 
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) UserFacility *facility;
+@property (nonatomic, retain) UserPosition *position;
 
 @end

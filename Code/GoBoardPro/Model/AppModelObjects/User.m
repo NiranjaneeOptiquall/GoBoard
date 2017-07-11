@@ -17,7 +17,7 @@ static User *user = nil;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-         
+            
             if (!user) {
                 user = [[User alloc] init];
                 user.mutArrSelectedLocations = [[NSMutableArray alloc] init];
@@ -25,9 +25,9 @@ static User *user = nil;
             }
             
         });
-
         
-       
+        
+        
     }
     return user;
 }
@@ -35,7 +35,7 @@ static User *user = nil;
 
 + (void)destroyCurrentUser {
     
-  
+    
     user.firstName = nil;
     user.lastName = nil;
     user.middleInitials = nil;
@@ -48,6 +48,7 @@ static User *user = nil;
     user.termsAndConditions = nil;
     user.selectedFacility = nil;
     user.username = nil;
+    user.AutomaticLogoutTime = nil;
     
     user.username=@"";
     user.firstName = @"";
@@ -60,6 +61,7 @@ static User *user = nil;
     user.clientId = @"";
     user.clientName = @"";
     user.termsAndConditions = @"";
+    user.AutomaticLogoutTime = @"";
 }
 
 + (BOOL)checkUserExist {

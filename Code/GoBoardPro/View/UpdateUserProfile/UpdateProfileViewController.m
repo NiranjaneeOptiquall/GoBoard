@@ -36,6 +36,18 @@
 
         //[_vwWeb loadHTMLString:aStr1 baseURL:nil];
     }
+   else if (![[[User currentUser] userStatus] isEqualToString:@"Active"]){
+       [[User currentUser] setIsAcceptedTermsAndConditions:false];
+
+    NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"html"];
+        
+        NSURL *aUrl = [NSURL fileURLWithPath:aStrPathOfAcceptibleUsePolicy];
+        
+NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
+        
+[_vwWeb loadRequest:request];
+        
+    }
     else {
         [_vwTerms setHidden:YES];
         CGRect frame = _btnSubmit.frame;
@@ -116,7 +128,7 @@
         alert(@"", @"Please enter valid Mobile Number");
         return;
     }
-//    else if ([_txtPassword isTextFieldBlank]) {
+ //   else if ([_txtPassword isTextFieldBlank]) {
 //        alert(@"", MSG_REQUIRED_FIELDS);
 //        return;
 //    }
@@ -203,14 +215,15 @@
         
         NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
         id aTerms;
-        if ([[User currentUser] isAcceptedTermsAndConditions]) {
+    //    if ([[User currentUser] isAcceptedTermsAndConditions]) {
             aTerms = [NSNull null];
-        }
-        else {
+   //     }
+    //    else {
             aTerms = (_btnAgreeTerms.isSelected) ? @"true" : @"false";
-        }
+  //      }
         NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG, @"AcceptedTermsAndConditions":aTerms};
         [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
+        
             [self updateUser];
             [[[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:MSG_PROFILE_UPDATE_SUCCESS delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         } failure:^(NSError *error, NSDictionary *response) {
@@ -226,6 +239,7 @@
     [[User currentUser] setEmail:_txtEmail.text];
     [[User currentUser] setPhone:_txtPhone.text];
     [[User currentUser] setMobile:_txtMobile.text];
+    [[User currentUser] setUserStatus:@"Active"];
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
         [[User currentUser] setIsAcceptedTermsAndConditions:_btnAgreeTerms.isSelected];
     }

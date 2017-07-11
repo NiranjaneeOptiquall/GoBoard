@@ -36,7 +36,7 @@
 @interface UserHomeViewController ()
 {
     NSDictionary *dictReq;
-    
+    NSMutableArray *moduleArr;
 }
 @end
 
@@ -49,6 +49,14 @@
         [_btnTools setHidden:YES];
         [_btnSurvey setCenter:CGPointMake(self.view.center.x, _btnSurvey.center.y)];
     }
+    
+    moduleArr = [NSMutableArray new];
+    for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
+        if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+            [moduleArr addObject:tempDic];
+        }
+    }
+    NSLog(@"%@",moduleArr);
     [_lblWelcomeUser setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
     
     [_lblPendingCount.layer setCornerRadius:5.0];
@@ -161,10 +169,31 @@
         [alertMsg show];
     }
     else{
-        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-        [self.navigationController pushViewController:loginVC animated:NO];    }
-}
+        [self webserviceCallForUserLogOff];
 
+        LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+       [self.navigationController pushViewController:loginVC animated:NO];
+    }
+}
+-(void)webserviceCallForUserLogOff{
+    
+//    NSDictionary *aDict = @{@"userId":[[User currentUser] userId], @"logoutType": @1};
+//
+//    [gblAppDelegate callWebService:USER_SERVICE parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+//      //  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//      //  [alert show];
+//    } failure:^(NSError *error, NSDictionary *response) {
+////[self saveIncidentToOffline:aDict completed:YES];
+//    }];
+
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@",USER_LOGIN,[[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+        
+    }failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
+    
+    
+}
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0)
@@ -173,6 +202,7 @@
     }
     if (buttonIndex == 1)
     {
+        [self webserviceCallForUserLogOff];
         //Code for download button
         LoginViewController *loginVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
         [self.navigationController pushViewController:loginVC animated:NO];    }
@@ -181,7 +211,8 @@
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [gblAppDelegate.mutArrHomeMenus count];
+//    return [gblAppDelegate.mutArrHomeMenus count];
+    return [moduleArr count];
 }
 
 
@@ -193,8 +224,10 @@
     aImvIcon.image = nil;
     [aLblBadge setHidden:YES];
     aLblMenu.text = @"";
-    __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
-    if ([aDict[@"IsActive"] boolValue]) {
+//    __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
+     __weak NSDictionary *aDict = [moduleArr objectAtIndex:indexPath.item];
+    NSLog(@"%@",aDict);
+ //   if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue]) {
         if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
             aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld.png", (long)[aDict[@"SystemModule"] integerValue]]];
             aLblMenu.text = aDict[@"Name"];
@@ -231,7 +264,7 @@
                 [aLblBadge setHidden:NO];
             }
         }
-    }
+   // }
     [aCell setBackgroundColor:[UIColor clearColor]];
     return aCell;
 }
@@ -254,13 +287,21 @@
 //    EOD = 13
 //    Log = 14
 //    Memos = 15
+
+   
     NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
-    __weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
-    if ([aDict[@"IsActive"] boolValue]) {
+//__weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
+    __weak NSDictionary *aDict =  [moduleArr objectAtIndex:indexPath.item];
+
+    if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue])
+    {
         if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
             [self performSegueWithIdentifier:segues[[aDict[@"SystemModule"] integerValue]] sender:nil];
         }
     }
+//    else{
+//         alert(@"", @"We’re sorry.  You do not have permission to access this area.  Please see your system administrator.");
+//    }
 }
 
 

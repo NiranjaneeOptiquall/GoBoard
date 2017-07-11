@@ -7,7 +7,7 @@
 //
 
 #import "UserFacility.h"
-#import "UserLocation.h"
+#import "UserLocation1.h"
 #import "UserPosition.h"
 
 
@@ -15,7 +15,7 @@
 
 @dynamic value;
 @dynamic name;
-@dynamic locations;
+@dynamic locations1;
 @dynamic positions;
 
 @end

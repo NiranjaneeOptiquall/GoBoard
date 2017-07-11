@@ -55,7 +55,7 @@
         
     }];
 
-    
+    //Sorry, we do not recognize this as a valid username. Please contact your onsite administrator to receive your username.
 }
 
 #pragma mark - UITextFieldDelegate

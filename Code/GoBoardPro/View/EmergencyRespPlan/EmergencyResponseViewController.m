@@ -156,7 +156,7 @@
     else {
         [_lblTitle setHidden:YES];
         CGRect frame = _tblERPCategory.frame;
-        frame.size.height = _mutArrCategoryHierarchy.count * _tblEmergencyList.rowHeight;
+        frame.size.height = _mutArrCategoryHierarchy.count * _tblERPCategory.rowHeight;
         _tblERPCategory.frame = frame;
 
         frame = _txtSearchTag.frame;
@@ -185,7 +185,7 @@
         [_viewWebDescription setFrame:frame];
         
         frame = _viewWeb.frame;
-        frame.origin.y = CGRectGetMinY(_tblEmergencyList.frame) +_mainScrollView.frame.origin.y ;
+        frame.origin.y = _mainScrollView.frame.origin.y ;
         [_viewWeb setFrame:frame];
         
         NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
@@ -225,12 +225,22 @@
             [_txtSearchTag setHidden:YES];
             [_btnSearchTag setHidden:YES];
             frame = _viewWeb.frame;
-            frame.size.height = self.view.frame.size.height - _tblEmergencyList.frame.origin.y;
-            frame.origin.y=frame.origin.y;
+           frame.size.height = self.view.frame.size.height - _tblEmergencyList.frame.origin.y;
+          //  frame.size.height = _mainScrollView.frame.size.height;
+
+            frame.origin.y=frame.origin.y - 50;
             [_viewWeb setFrame:frame];
             
             NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictERPCategory objectForKey:@"Link"]];
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
+            
+            CGFloat height= _viewWeb.scrollView.contentSize.height;
+            if (height > 870) {
+                frame = _viewWeb.frame;
+                   frame.origin.y = _mainScrollView.frame.origin.y;
+                frame.size.height = 870;
+                [_viewWeb setFrame:frame];
+            }
         }
     }
 //    [_txtSearchTag setHidden:YES];
@@ -386,32 +396,72 @@
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
+ 
+        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        if(isFilter){
+
+            if (searchArray.count < 4) {
+                
+                //58
+                [self webviewHeight:58*(int)[searchArray count] view:webView];
+
+            }
+            else{
+                [self webviewHeight:58*4 view:webView];
+
+            }
+        }
+        else{
+            
+            if (mutArrEmergencies.count < 4) {
+                [self webviewHeight:58*(int)[mutArrEmergencies count] view:webView];
+            }
+            else{
+                [self webviewHeight:58*4 view:webView];
+
+            }
+        }
+  
+    
+}
+-(void)webviewHeight:(int)heightView view:(UIWebView *)webView
+{
+    
     if ([webView isEqual:_viewWebDescription])
     {
-        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
         
-        CGFloat height= webView.scrollView.contentSize.height;
+        CGFloat height= webView.scrollView.contentSize.height - heightView;
         
         CGRect frameWebView=_viewWebDescription.frame;
-        
-        if (_viewWebDescription.frame.origin.y + height >= 490)
-        {
-            height= 490 - _viewWebDescription.frame.origin.y;
+        if (heightView !=0) {
+            if (heightView < 232) {
+                
+                height=_mainScrollView.frame.size.height - heightView-30;
+            }
+           else if (_viewWebDescription.frame.origin.y + height >= 600)
+            {
+                height= 600 - _viewWebDescription.frame.origin.y;
+            }
+   
         }
-        
+        else if (_viewWebDescription.frame.origin.y + height >= 830){
+             height= 830 - _viewWebDescription.frame.origin.y;
+        }
+        else{
+            height = _mainScrollView.frame.size.height;
+
+        }
         frameWebView.size.height=height;
         _viewWebDescription.frame= frameWebView;
     }
     CGRect frame = _tblEmergencyList.frame;
-    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
-    frame.size.height = self.view.frame.size.height - frame.origin.y;
-    if (frame.size.height > CGRectGetHeight(_mainScrollView.frame) - 500) {
-        frame.size.height = CGRectGetHeight(_mainScrollView.frame) - 500 -20 ;
+    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 20; //CGRectGetMaxY(_txtDescription.frame) + 15;
+    frame.size.height = heightView;
+    if (frame.size.height > CGRectGetHeight(_mainScrollView.frame) - 620) {
+            frame.size.height = CGRectGetHeight(_mainScrollView.frame) - 620 -20 ;
     }
     _tblEmergencyList.frame = frame;
-    
 }
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation

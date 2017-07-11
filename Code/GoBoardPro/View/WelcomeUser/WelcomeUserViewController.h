@@ -11,12 +11,16 @@
 #import "UserLocation.h"
 #import "UserPosition.h"
 #import "UserFacility.h"
+#import "UserLocation1.h"
 
 @interface WelcomeUserViewController : UIViewController<UITextFieldDelegate, DropDownValueDelegate, UITableViewDataSource, UITableViewDelegate> {
-    NSArray *aryFacilities, *aryLocation, *aryPositions;
+    NSArray *aryFacilities, *aryPositions;
+    NSMutableArray *aryLocation,*aryPositionId;
+    NSString * flag;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
     UserPosition *selectedPosition;
+    UserLocation1 *selectedLocation1;
 }
 @property (weak, nonatomic) IBOutlet UITextField *txtFacility;
 @property (weak, nonatomic) IBOutlet UITextField *txtLocation;
@@ -27,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIView *vwFacility;
 @property (weak, nonatomic) IBOutlet UILabel *lblAcceptTerms;
 @property (strong, nonatomic) IBOutlet UILabel *lblVersion;
+@property (retain,nonatomic) NSTimer* idleTimer;
 
 - (IBAction)btnSubmitTapped:(id)sender;
 - (IBAction)btnUpdateProfileTapped:(id)sender;

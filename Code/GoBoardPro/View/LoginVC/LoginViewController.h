@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblVersionNumber;
 @property (strong, nonatomic) IBOutlet UILabel *lblBuildVersionNumber;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnSignInTapped;
+@property(nonatomic,retain)NSString *isTimeExpire;
 
 
 //********** User Sign In View **********//

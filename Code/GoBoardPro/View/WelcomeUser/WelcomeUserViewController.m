@@ -7,10 +7,14 @@
 //
 
 #import "WelcomeUserViewController.h"
+#import "MyApplication.h"
+#import "LoginViewController.h"
 
 @interface WelcomeUserViewController ()
 {
     int serviceCallCount;
+    MyApplication *app;
+    BOOL islogedout;
 }
 @end
 
@@ -18,8 +22,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    flag = @"FirstTime";
+    aryLocation  = [[NSMutableArray alloc]init];
+    aryPositionId = [[NSMutableArray alloc]init];
     serviceCallCount=2;
 //    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+    islogedout = false;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DataUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resetTimeInterval:)
+                                                 name:@"updateAtFacility"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUpdatedData:)
+                                                 name:@"DataUpdated"
+                                               object:nil];
     [_txtLocation setEnabled:NO];
     [_txtPosition setEnabled:NO];
     [self getUserFacilities];
@@ -27,11 +45,27 @@
 
     // Do any additional setup after loading the view.
 }
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DataUpdated" object:nil];
+}
+-(void)handleUpdatedData:(NSNotification *)notification {
+    
+    [self automaticLogout];
+    
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self resetTimer];
+   
+    NSLog(@"%d",[[User currentUser] isAcceptedTermsAndConditions]);
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
+        [_lblAcceptTerms setHidden:NO];
+        [_vwFacility setHidden:YES];
+    }
+    else if (![[[User currentUser] userStatus] isEqualToString:@"Active"]){
         [_lblAcceptTerms setHidden:NO];
         [_vwFacility setHidden:YES];
     }
@@ -41,7 +75,55 @@
     }
     [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
 }
+-(void)resetTimeInterval:(NSNotification *)notification {
+    
+    [self resetTimer];
+}
+-(void)resetTimer{
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"istouch"]isEqualToString:@"no"] || [[[NSUserDefaults standardUserDefaults]valueForKey:@"istouch"]isEqualToString:@"yes"]) {
+        if (self.idleTimer) {
+            [self.idleTimer invalidate];
+        }
+        NSTimeInterval timeInterval = [[[User currentUser]AutomaticLogoutTime] doubleValue]*60;
+        //NSTimeInterval timeInterval = 30;
+        if (timeInterval > 0) {
+            self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] ;
+        }
+    }
+}
+- (void)idleTimerExceeded {
+    [self webserviceCallForUserLogOff];
 
+    [self automaticLogout];
+}
+-(void)automaticLogout{
+    
+    if (!islogedout) {
+        UIAlertController * alert=   [UIAlertController
+                                      alertControllerWithTitle:@"Alert"
+                                      message:@"You have been logged out due to inactivity. Please login again."
+                                      preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 [alert dismissViewControllerAnimated:YES completion:nil];
+                                 [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+                                 LoginViewController *loginView = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"reload"
+                                                                                     object:self];
+                                 islogedout = true;
+                                 [self.navigationController pushViewController:loginView animated:NO];
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -51,15 +133,28 @@
     return UIStatusBarStyleLightContent;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)btnBack:(UIButton *)sender {
+    [self webserviceCallForUserLogOff];
 }
-*/
+-(void)webserviceCallForUserLogOff{
+    
+    //    NSDictionary *aDict = @{@"userId":[[User currentUser] userId], @"logoutType": @1};
+    //
+    //    [gblAppDelegate callWebService:USER_SERVICE parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
+    //      //  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    //      //  [alert show];
+    //    } failure:^(NSError *error, NSDictionary *response) {
+    ////[self saveIncidentToOffline:aDict completed:YES];
+    //    }];
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@",USER_LOGIN,[[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+        
+    }failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
+    
+    
+}
 
 #pragma mark - IBActions
 
@@ -74,12 +169,27 @@
     [gblAppDelegate showActivityIndicator];
     gblAppDelegate.shouldHideActivityIndicator = NO;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    UIButton * btnSubmit = [[UIButton alloc]init];
+    btnSubmit.selected = NO;
     [[WebSerivceCall webServiceObject] getAllData];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    gblAppDelegate.shouldHideActivityIndicator = YES;
-    [gblAppDelegate hideActivityIndicator];
-    
-    [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];
+
+    NSMutableArray*moduleArr = [NSMutableArray new];
+    for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
+        if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+            [moduleArr addObject:tempDic];
+        }
+    }
+    NSLog(@"%@",moduleArr);
+    if (moduleArr.count == 0) {
+   
+    alert(@"", @"We’re sorry. You do not have permission to access this area. Please see your system administrator.");
+      
+          }
+    else{
+        [self performSegueWithIdentifier:@"welcomeToUserHome" sender:nil];
+   }
+
+ 
 }
 
 - (IBAction)btnUpdateProfileTapped:(id)sender {
@@ -94,30 +204,46 @@
         
             NSArray *aryFacility = [response objectForKey:@"Facilities"];
 
+            
             for (NSDictionary *aDict in aryFacility) {
                 UserFacility *facility = [NSEntityDescription insertNewObjectForEntityForName:@"UserFacility" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                 facility.name = [aDict objectForKey:@"Name"];
                 facility.value = [NSString stringWithFormat:@"%ld", (long)[[aDict objectForKey:@"Id"] integerValue]];
+                
+                
                 NSMutableSet *locations = [NSMutableSet set];
                 for (NSDictionary *aDictLoc in [aDict objectForKey:@"Locations"]) {
-                    UserLocation *location = [NSEntityDescription insertNewObjectForEntityForName:@"UserLocation" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    UserLocation1 *location = [NSEntityDescription insertNewObjectForEntityForName:@"UserLocation1" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                     location.name = [aDictLoc objectForKey:@"Name"];
                     location.value = [NSString stringWithFormat:@"%ld", (long)[[aDictLoc objectForKey:@"Id"] integerValue]];
                     location.facility = facility;
                     [locations addObject:location];
                 }
-                facility.locations = locations;
+                facility.locations1 = locations;
+                
                 
                 NSMutableSet *positions = [NSMutableSet set];
                 for (NSDictionary *aDictPos in [aDict objectForKey:@"Positions"]) {
                     UserPosition *position = [NSEntityDescription insertNewObjectForEntityForName:@"UserPosition" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                     position.name = [aDictPos objectForKey:@"Name"];
                     position.value = [NSString stringWithFormat:@"%ld", (long)[[aDictPos objectForKey:@"Id"] integerValue]];
+                    NSLog(@"%@",position.value);
+                NSMutableSet *locations = [NSMutableSet set];
+             
+                    for (NSDictionary *aDictLoc in [aDictPos objectForKey:@"Locations"]) {
+                    UserLocation *location = [NSEntityDescription insertNewObjectForEntityForName:@"UserLocation" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    location.name = [aDictLoc objectForKey:@"Name"];
+                    location.value = [NSString stringWithFormat:@"%ld", (long)[[aDictLoc objectForKey:@"Id"] integerValue]];
+                    location.position = position;
+                    [locations addObject:location];
+                }
+                    position.locations = locations;
                     position.facility = facility;
                     [positions addObject:position];
                 }
                 facility.positions = positions;
                 [gblAppDelegate.managedObjectContext insertObject:facility];
+                
             }
             NSError *error = nil;
             if (![gblAppDelegate.managedObjectContext save:&error]) {
@@ -190,18 +316,23 @@
 }
 
 - (void)fetchPositionAndLocation {
-    NSFetchRequest *requestLoc = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+//    NSFetchRequest *requestLoc = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+//    
+//    NSPredicate *predicateLoc = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
+//    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"facilityId"]);
+//    [requestLoc setPredicate:predicateLoc];
+//    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+//    [requestLoc setSortDescriptors:@[sortByName]];
+//    [requestLoc setPropertiesToFetch:@[@"name", @"value"]];
+//    aryLocation = [gblAppDelegate.managedObjectContext executeFetchRequest:requestLoc error:nil];
+//    requestLoc = nil;
     
-    NSPredicate *predicateLoc = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
+    aryLocation  = [[NSMutableArray alloc]init];
     [[NSUserDefaults standardUserDefaults] setObject:selectedFacility.value forKey:@"facilityId"];
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"facilityId"]);
-    [requestLoc setPredicate:predicateLoc];
-    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-    [requestLoc setSortDescriptors:@[sortByName]];
-    [requestLoc setPropertiesToFetch:@[@"name", @"value"]];
-    aryLocation = [gblAppDelegate.managedObjectContext executeFetchRequest:requestLoc error:nil];
-    requestLoc = nil;
+
     
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+
     NSFetchRequest *requestPos = [[NSFetchRequest alloc] initWithEntityName:@"UserPosition"];
     NSPredicate *predicatePos = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"facility.value", selectedFacility.value];
     [requestPos setPredicate:predicatePos];
@@ -265,6 +396,7 @@
         }
     }
     else {
+        
         obj = [aryPositions objectAtIndex:indexPath.row];
         if ([[[User currentUser] mutArrSelectedPositions] containsObject:obj]) {
             [[[User currentUser] mutArrSelectedPositions] removeObject:obj];
@@ -272,8 +404,71 @@
         else {
             [[[User currentUser] mutArrSelectedPositions] addObject:obj];
         }
+        
+    
+        
+        NSManagedObject *obj = nil;
+        obj = [aryPositions objectAtIndex:indexPath.row];
+        if ([aryPositionId containsObject:[obj valueForKey:@"value"]]) {
+            [aryPositionId removeObject:[obj valueForKey:@"value"]];
+
+        }
+        else{
+            [aryPositionId addObject:[obj valueForKey:@"value"]];
+
+        }
+        [self getLocationUnderPosition:aryPositionId];
+//
+//        
+//        NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+//        
+//        NSFetchRequest *requestPos = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+//        NSPredicate *predicatePos = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"position.value", [obj valueForKey:@"value"]];
+//        [requestPos setPredicate:predicatePos];
+//        [requestPos setSortDescriptors:@[sortByName]];
+//        [requestPos setPropertiesToFetch:@[@"name", @"value"]];
+//        NSArray * tempArr = [NSArray new];
+//        tempArr = [gblAppDelegate.managedObjectContext executeFetchRequest:requestPos error:nil];
+//        
+//        for (id entity in tempArr){
+//            BOOL hasDuplicate = [[aryLocation filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@", [entity valueForKey:@"name"]]] count] > 0;
+//            if (!hasDuplicate){
+//                [aryLocation addObject:entity];
+//            }
+//        }
+//        NSLog(@"%@",aryLocation);
+//    [_tblLocation reloadData];
     }
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+-(void)getLocationUnderPosition:(NSMutableArray*)aryPositionId{
+//    NSManagedObject *obj = nil;
+//    obj = [aryPositions objectAtIndex:indexPath.row];
+    aryLocation  = [[NSMutableArray alloc]init];
+
+    NSArray * tempArr = [NSArray new];
+
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    
+    NSFetchRequest *requestPos = [[NSFetchRequest alloc] initWithEntityName:@"UserLocation"];
+    for (id positionId in aryPositionId) {
+        NSPredicate *predicatePos = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"position.value", positionId];
+        [requestPos setPredicate:predicatePos];
+        [requestPos setSortDescriptors:@[sortByName]];
+        [requestPos setPropertiesToFetch:@[@"name", @"value"]];
+        tempArr = [gblAppDelegate.managedObjectContext executeFetchRequest:requestPos error:nil];
+        for (id entity in tempArr){
+            BOOL hasDuplicate = [[aryLocation filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@", [entity valueForKey:@"name"]]] count] > 0;
+            if (!hasDuplicate){
+                [aryLocation addObject:entity];
+            }
+        }
+
+    }
+[aryLocation sortUsingDescriptors:[NSArray arrayWithObject:sortByName]];
+        NSLog(@"%@",aryLocation);
+    [_tblLocation reloadData];
+
 }
 
 #pragma mark - UITextField Delegate
@@ -292,8 +487,6 @@
     }
     return NO;
 }
-
-
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     [sender setText:[value valueForKey:@"name"]];
     if ([sender isEqual:_txtFacility]) {

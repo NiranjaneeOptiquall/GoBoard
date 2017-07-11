@@ -14,18 +14,22 @@
 #import "Reachability.h"
 #import "Crittercism.h"
 #import <Raygun4iOS/Raygun.h>
+#import "MyApplication.h"
 
 
 
-@interface AppDelegate () 
+@interface AppDelegate ()
+
 
 @end
 
 @implementation AppDelegate
 
+    UIStoryboard* _initalStoryboard;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
     gblAppDelegate = self;
     NSLog(@"%@", [self applicationDocumentsDirectory]);
    // NSURL *path=[self applicationDocumentsDirectory];
@@ -41,6 +45,7 @@
     //    //sync Breadcrumb Mode
     [Crittercism setAsyncBreadcrumbMode:YES]; */
     
+    _initalStoryboard = self.window.rootViewController.storyboard;
     
     CGRect aRect = [[UIScreen mainScreen]bounds];
     NSString *aStrRect = NSStringFromCGRect(aRect);
@@ -74,6 +79,26 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    /*NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    __block UIBackgroundTaskIdentifier identifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        if (identifier != UIBackgroundTaskInvalid) {
+            [[UIApplication sharedApplication] endBackgroundTask:identifier];
+            identifier = UIBackgroundTaskInvalid;
+        }
+    }];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (int i=0; i < 20; i++) {
+            NSLog(@"%d", i);
+            sleep(1);
+        }
+        if (identifier != UIBackgroundTaskInvalid) {
+            [[UIApplication sharedApplication] endBackgroundTask:identifier];
+            identifier = UIBackgroundTaskInvalid;
+        }
+    });*/
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -87,9 +112,38 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
+   // NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self webserviceCallForUserLogOff];
+
+   [self saveContext];
+   
 }
 
+-(void)webserviceCallForUserLogOff{
+    
+//    NSDictionary *aDict = @{@"userId":[[User currentUser] userId]};
+//    
+//    [gblAppDelegate callWebService:USER_LOGIN parameters:aDict httpMethod:@"GET" complition:^(NSDictionary *response) {
+//        //  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Incident Report has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        //  [alert show];
+//    } failure:^(NSError *error, NSDictionary *response) {
+//        //[self saveIncidentToOffline:aDict completed:YES];
+//    }];
+    
+ //   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+     
+  //      NSString * strUrl = [NSString stringWithFormat:@"%@?userId=%@",USER_LOGIN,[[User currentUser] userId]];
+  //      NSDictionary * response =
+ //   });
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@",USER_LOGIN,[[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+        
+        NSLog(@"%@",response);
+    }failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
+    
+}
 #pragma mark - Core Data stack
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -179,6 +233,8 @@
         [self showActivityIndicator];
         
         NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
+        NSLog(@"%@",aUrl);
+
         aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
 
@@ -216,7 +272,7 @@
                else {
                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
                    failure (nil, aDict);
-                   NSLog(@"%@",[aDict objectForKey:@"ErrorMessage"]);
+                   NSLog(@"%@",aDict);
                 }
                 
             }
@@ -372,9 +428,14 @@
 }
 
 - (void)showActivityIndicator {
+    
+    
     if (_shouldHideActivityIndicator) {
         [self showActivityIndicatorWithMessage:nil];
     }
+   // MyApplication *myApp;
+    //myApp.isActive = @"yes";
+    //[myApp resetIdleTimer];
 }
 
 
@@ -507,7 +568,16 @@
 - (NSString *)trimText {
     return [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-
+- (void)resetWindowToInitialView
+{
+    for (UIView* view in self.window.subviews)
+    {
+        [view removeFromSuperview];
+    }
+    
+    UIViewController* initialScene = [_initalStoryboard instantiateInitialViewController];
+    self.window.rootViewController = initialScene;
+}
 
 @end
 

@@ -50,6 +50,9 @@ typedef NS_ENUM (NSInteger, ActivityIndicatorPosition) {
 - (void)callAsynchronousWebService:(NSString*)url parameters:(NSDictionary*)params httpMethod:(NSString*)httpMethod complition:(void (^)(NSDictionary *response))completion failure:(void (^)(NSError *error, NSDictionary *response))failure;
 -(NSString *)getUTCDate:(NSDate *)aDate;
 -(NSDate *)getLocalDate:(NSString *)aStrDate;
+- (void)resetWindowToInitialView;
+
+
 @end
 
 

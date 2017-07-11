@@ -11,6 +11,7 @@
 #import "DailyLog.h"
 #import "Reachability.h"
 #import <Raygun4iOS/Raygun.h>
+#import "MyApplication.h"
 @interface LoginViewController ()
 
 @end
@@ -21,6 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"istouch"];
     
     _lblGuestFormCount.hidden=YES;
     _lblGuestSurveyCount.hidden=YES;
@@ -55,6 +58,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+     [_btnUserSignIn sendActionsForControlEvents: UIControlEventTouchUpInside];
+    
+//    if ([_isTimeExpire isEqualToString:@"yes"]) {
+//        UIApplication *myapp=[UIApplication sharedApplication];
+//        AppDelegate *mydelegatefile=(AppDelegate *)myapp.delegate;
+      //[mydelegatefile resetWindowToInitialView];
+//    }
+    
+    //[self.txtUserId becomeFirstResponder];
+    
     _txtUserId.text = @"";
     _txtPassword.text = @"";
     gblAppDelegate.mutArrMemoList = nil;
@@ -63,14 +77,12 @@
     
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"backFromGuestUserListView"] isEqualToString:@"YES"]) {
          [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
-    
-            [self btnGuestSignInTapped:_btnUserSignIn];
+     //   [_btnGuestSignIn setSelected:NO];
+        [self btnGuestSignInTapped:_btnGuestSignIn];
        
     }
    
 }
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -245,6 +257,8 @@
     
 }
 - (IBAction)btnSignInTapped:(id)sender {
+    
+    NSDate *methodStart = [NSDate date];
     _btnSignInTapped.userInteractionEnabled=NO;
     if ([_txtUserId isTextFieldBlank]) {
         alert(@"Login", @"Please enter a Username");
@@ -258,113 +272,173 @@
         alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
         return;
     }
+ //   NSString * pwString = _txtPassword.text;
+ //   pwString = [pwString stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
+   // pwString = [pwString stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+    //NSLog(@"%@",pwString);
+    
+    NSDictionary * aDic = @{@"UserCredentials" :
+                                                        @{
+                                                            @"Username":_txtUserId.trimText,
+                                                            @"Password":_txtPassword.text
+                                                            }
+                                            };
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+     // [gblAppDelegate callWebService:[NSString stringWithFormat:@"TestUser/AuthenticateUser"] parameters:aDic httpMethod:@"POST" complition:^(NSDictionary *response) {
+        NSLog(@"%@",response);
         _btnSignInTapped.userInteractionEnabled=YES;
-
-        User *currentUser = [User currentUser];
-        currentUser.firstName = nil;
-        currentUser.lastName = nil;
-        currentUser.middleInitials = nil;
-        currentUser.email = nil;
-        currentUser.phone = nil;
-        currentUser.mobile = nil;
-        currentUser.userId = nil;
-        currentUser.clientId = nil;
-        currentUser.clientName = nil;
-        currentUser.termsAndConditions = nil;
-        currentUser.selectedFacility = nil;
-        currentUser.username = nil;
         
-        currentUser.username = self.txtUserId.text;
-       
-        currentUser.firstName = [response objectForKey:@"FirstName"];
-        if ([[response objectForKey:@"MiddleInitial"] isKindOfClass:[NSNull class]]) {
-            currentUser.middleInitials = @"";
-        }
-        else {
-            currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
-        }
-        currentUser.termsAndConditions = [response objectForKey:@"TermsAndConditions"];
-        currentUser.isAcceptedTermsAndConditions = [[response objectForKey:@"AcceptedTermsAndConditions"] boolValue];
-        currentUser.lastName = [response objectForKey:@"LastName"];
-        if ([[response objectForKey:@"Mobile"] isKindOfClass:[NSNull class]]) {
-            currentUser.mobile = @"";
-        }
-        else {
-            currentUser.mobile = [response objectForKey:@"Mobile"];
-        }
-        if ([[response objectForKey:@"Phone"] isKindOfClass:[NSNull class]]) {
-            currentUser.phone = @"";
-        }
-        else {
-            currentUser.phone = [response objectForKey:@"Phone"];
-        }
-        currentUser.email = [response objectForKey:@"Email"];
-        
-        currentUser.clientName = [response objectForKey:@"ClientName"];
-        
-        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeClient"] isEqualToString:[response objectForKey:@"ClientName"]]) {
-            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataSurveyDone"] isEqualToString:@"YES"]){
+        if ([[response objectForKey:@"UserStatus"] isEqualToString:@"Invited"] || [[response objectForKey:@"UserStatus"] isEqualToString:@"Active"]){
+            
+            
+            User *currentUser = [User currentUser];
+            currentUser.firstName = nil;
+            currentUser.lastName = nil;
+            currentUser.middleInitials = nil;
+            currentUser.email = nil;
+            currentUser.phone = nil;
+            currentUser.mobile = nil;
+            currentUser.userId = nil;
+            currentUser.clientId = nil;
+            currentUser.clientName = nil;
+            currentUser.termsAndConditions = nil;
+            currentUser.selectedFacility = nil;
+            currentUser.username = nil;
+            currentUser.AutomaticLogoutTime = nil;
+            currentUser.userStatus = nil;
+            currentUser.username = self.txtUserId.text;
+            
+            currentUser.AutomaticLogoutTime = [NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]];
+            
+            NSLog(@"Automatic Logout Time======%@",[NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]]);
+            currentUser.firstName = [response objectForKey:@"FirstName"];
+            if ([[response objectForKey:@"MiddleInitial"] isKindOfClass:[NSNull class]]) {
+                currentUser.middleInitials = @"";
+            }
+            else {
+                currentUser.middleInitials = [response objectForKey:@"MiddleInitial"];
+            }
+            currentUser.termsAndConditions = [response objectForKey:@"TermsAndConditions"];
+            currentUser.isAcceptedTermsAndConditions = [[response objectForKey:@"AcceptedTermsAndConditions"] boolValue];
+            currentUser.userStatus = [response objectForKey:@"UserStatus"];
+            currentUser.lastName = [response objectForKey:@"LastName"];
+            if ([[response objectForKey:@"Mobile"] isKindOfClass:[NSNull class]]) {
+                currentUser.mobile = @"";
+            }
+            else {
+                currentUser.mobile = [response objectForKey:@"Mobile"];
+            }
+            if ([[response objectForKey:@"Phone"] isKindOfClass:[NSNull class]]) {
+                currentUser.phone = @"";
+            }
+            else {
+                currentUser.phone = [response objectForKey:@"Phone"];
+            }
+            currentUser.email = [response objectForKey:@"Email"];
+            
+            currentUser.clientName = [response objectForKey:@"ClientName"];
+            
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeClient"] isEqualToString:[response objectForKey:@"ClientName"]]) {
+                if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataSurveyDone"] isEqualToString:@"YES"]){
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientSurvey"];
+                    
+                }
+                if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataFormDone"] isEqualToString:@"YES"]){
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientForm"];
+                    
+                }
                 
-                [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientSurvey"];
-
-            }
-            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataFormDone"] isEqualToString:@"YES"]){
                 
-                [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientForm"];
-
             }
-
-
-        }
-        else{
-            [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataSurveyDone"];
-            [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataFormDone"];
-
-                  [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientForm"];
-                  [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientSurvey"];
-          
-        }
-        [[NSUserDefaults standardUserDefaults]setValue:[response objectForKey:@"IsAdmin"] forKey:@"IsAdmin"];
-
-        [[NSUserDefaults standardUserDefaults]setValue:currentUser.clientName forKey:@"oldeClient"];
-        
-        currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
-        currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
-        currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
-        NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-        if (prevUserId) {
-            if (![prevUserId isEqualToString:currentUser.userId]) {
-                [self deleteAllDailyLogData];
+            else{
+                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataSurveyDone"];
+                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataFormDone"];
+                
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientForm"];
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientSurvey"];
+                
             }
+            [[NSUserDefaults standardUserDefaults]setValue:[response objectForKey:@"IsAdmin"] forKey:@"IsAdmin"];
+            
+            [[NSUserDefaults standardUserDefaults]setValue:currentUser.clientName forKey:@"oldeClient"];
+            
+            currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
+            currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
+            currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
+            NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+            if (prevUserId) {
+                if (![prevUserId isEqualToString:currentUser.userId]) {
+                    [self deleteAllDailyLogData];
+                }
+            }
+            
+            [[Raygun sharedReporter] identify:[NSString stringWithFormat:@"%@ %@",[User currentUser].firstName , [User currentUser].lastName]];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
+            [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
+            [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            
+            _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+            
+            /*====== Checking method complition execution time taken======= */
+            NSDate *methodFinish = [NSDate date];
+            NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+            NSLog(@"Sucess executionTime = %f", executionTime);
+            /*==================End Time checking ============= */
+            
+            //            if (currentUser.isAdmin) {
+            //                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
+            //            }
+            //            else {
+            MyApplication *myApp;
+            [myApp resetIdleTimer];
+            [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
+            
+            
+            //            }
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+  
+        
+             }
+        else {
+            alert(@"", @"Your account is not yet activated, please contact System Administrator");
+             [self webserviceCallForUserLogOff];
         }
+     }failure:^(NSError *error, NSDictionary *response) {
 
-        [[Raygun sharedReporter] identify:[NSString stringWithFormat:@"%@ %@",[User currentUser].firstName , [User currentUser].lastName]];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
-        [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
-        [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        
-        _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+        NSDate *methodFinish = [NSDate date];
+        NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+        NSLog(@"failure executionTime = %f", executionTime);
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+         if ([[response objectForKeyedSubscript:@"ErrorMessage"] isEqualToString:@""]) {
+             alert(@"", @"Your account is not yet activated, please contact System Administrator");
+         }else{
+                  alert(@"", [response objectForKeyedSubscript:@"ErrorMessage"]);
 
-//            if (currentUser.isAdmin) {
-//                [self performSegueWithIdentifier:@"loginToHome" sender:nil];
-//            }
-//            else {
-                [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
-//            }
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    } failure:^(NSError *error, NSDictionary *response) {
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        alert(@"", [response objectForKeyedSubscript:@"ErrorMessage"]);
+         }
+
         _btnSignInTapped.userInteractionEnabled=YES;
+         [self webserviceCallForUserLogOff];
 
     }];
+   
 }
+-(void)webserviceCallForUserLogOff{
+    
 
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@",USER_LOGIN,[[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+        
+        NSLog(@"%@",response);
+    }failure:^(NSError *error, NSDictionary *response) {
+        
+    }];
+    
+}
 - (void)deleteAllDailyLogData {
     NSFetchRequest * allRecords = [[NSFetchRequest alloc] init];
     [allRecords setEntity:[NSEntityDescription entityForName:@"DailyLog" inManagedObjectContext:gblAppDelegate.managedObjectContext]];

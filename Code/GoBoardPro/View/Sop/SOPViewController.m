@@ -228,6 +228,13 @@ Put the webview in place  of textview for type 2( for html Description set in we
             
             NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Link"]];
             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
+            CGFloat height= _viewWeb.scrollView.contentSize.height;
+            if (height > 870) {
+                frame = _viewWeb.frame;
+                frame.size.height = 870;
+                [_viewWeb setFrame:frame];
+            }
+
         }
     }
      //  [_txtSearchTag setHidden:YES];
@@ -386,32 +393,101 @@ Put the webview in place  of textview for type 2( for html Description set in we
 
 #pragma mark UIWebViewDelgate
 
+//-(void)webViewDidFinishLoad:(UIWebView *)webView
+//{
+//    if ([webView isEqual:_viewWebDescription])
+//    {
+//        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+        
+//        CGFloat height= webView.scrollView.contentSize.height;
+        
+//        CGRect frameWebView=_viewWebDescription.frame;
+        
+//        if (_viewWebDescription.frame.origin.y + height >= 490)
+//        {
+//            height= 490 - _viewWebDescription.frame.origin.y;
+//        }
+        
+//        frameWebView.size.height=height;
+//        _viewWebDescription.frame= frameWebView;
+//    }
+//    CGRect frame = _tblSOPList.frame;
+//    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
+//       frame.size.height = self.view.frame.size.height - frame.origin.y;
+//    if (frame.size.height > CGRectGetHeight(_mainScrlView.frame) - 500) {
+//        frame.size.height = CGRectGetHeight(_mainScrlView.frame) - 500 -20 ;
+//    }
+//    _tblSOPList.frame = frame;
+
+//}
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
+    
+    //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
+    if(isFilter){
+        
+        if (searchArray.count < 4) {
+            
+            //58
+            [self webviewHeight:58*(int)[searchArray count] view:webView];
+            
+        }
+        else{
+            [self webviewHeight:58*4 view:webView];
+            
+        }
+    }
+    else{
+        
+        if (mutArrSOPList.count < 4) {
+            [self webviewHeight:58*(int)[mutArrSOPList count] view:webView];
+        }
+        else{
+            [self webviewHeight:58*4 view:webView];
+            
+        }
+    }
+    
+    
+}
+
+-(void)webviewHeight:(int)heightView view:(UIWebView *)webView
+{
+    
     if ([webView isEqual:_viewWebDescription])
     {
-        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
         
-        CGFloat height= webView.scrollView.contentSize.height;
+        CGFloat height= webView.scrollView.contentSize.height - heightView;
         
         CGRect frameWebView=_viewWebDescription.frame;
-        
-        if (_viewWebDescription.frame.origin.y + height >= 490)
-        {
-            height= 490 - _viewWebDescription.frame.origin.y;
+        if (heightView !=0) {
+            if (heightView < 232) {
+                
+                height=_mainScrlView.frame.size.height - heightView-30;
+            }
+            else if (_viewWebDescription.frame.origin.y + height >= 600)
+            {
+                height= 600 - _viewWebDescription.frame.origin.y;
+            }
+            
         }
-        
+        else if (_viewWebDescription.frame.origin.y + height >= 830){
+            height= 830 - _viewWebDescription.frame.origin.y;
+        }
+        else{
+            height = _mainScrlView.frame.size.height;
+            
+        }
         frameWebView.size.height=height;
         _viewWebDescription.frame= frameWebView;
     }
     CGRect frame = _tblSOPList.frame;
-    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
-       frame.size.height = self.view.frame.size.height - frame.origin.y;
-    if (frame.size.height > CGRectGetHeight(_mainScrlView.frame) - 500) {
-        frame.size.height = CGRectGetHeight(_mainScrlView.frame) - 500 -20 ;
+    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 20; //CGRectGetMaxY(_txtDescription.frame) + 15;
+    frame.size.height = heightView;
+    if (frame.size.height > CGRectGetHeight(_mainScrlView.frame) - 620) {
+        frame.size.height = CGRectGetHeight(_mainScrlView.frame) - 620 -20 ;
     }
     _tblSOPList.frame = frame;
-
 }
 
 

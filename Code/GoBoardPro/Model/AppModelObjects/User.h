@@ -10,6 +10,7 @@
 #import "UserFacility.h"
 #import "UserLocation.h"
 #import "UserPosition.h"
+#import "UserLocation1.h"
 
 @interface User : NSObject
 
@@ -19,6 +20,7 @@
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *phone;
 @property (strong, nonatomic) NSString *mobile;
+@property(strong,nonatomic)NSString *AutomaticLogoutTime;
 @property (strong, nonatomic) NSString *password;
 @property (assign, nonatomic) BOOL isAdmin;
 @property (strong, nonatomic) NSString *userId;
@@ -27,6 +29,7 @@
 @property (strong, nonatomic) NSString *clientName;
 @property (strong, nonatomic) NSString *termsAndConditions;
 @property (assign, nonatomic) BOOL isAcceptedTermsAndConditions;
+@property (assign, nonatomic) NSString * userStatus;
 @property (strong, nonatomic) UserFacility *selectedFacility;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedLocations;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedPositions;

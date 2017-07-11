@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES" initialViewController="uAz-MZ-ZCG">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16A323" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES" initialViewController="uAz-MZ-ZCG">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -1409,7 +1409,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="708" height="58"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="78CB0DD6-BBBD-4157-8E04-3A20C313F135" id="qJQ-sU-euC">
+                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imageView:qJQ-sU-euC:image" id="qJQ-sU-euC">
                                                                     <rect key="frame" x="10" y="7" width="44" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 </imageView>
@@ -1448,7 +1448,7 @@
                                                 </connections>
                                             </tableView>
                                             <webView hidden="YES" contentMode="scaleToFill" misplaced="YES" id="2hz-Sz-DXl">
-                                                <rect key="frame" x="30" y="5" width="708" height="30"/>
+                                                <rect key="frame" x="30" y="5" width="708" height="827"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <connections>
@@ -1464,8 +1464,8 @@
                                     <outlet property="delegate" destination="tPs-ox-bdu" id="nYU-1M-sdG"/>
                                 </connections>
                             </scrollView>
-                            <webView hidden="YES" contentMode="scaleToFill" id="dj6-sS-jAy">
-                                <rect key="frame" x="0.0" y="324" width="768" height="375"/>
+                            <webView hidden="YES" contentMode="scaleToFill" misplaced="YES" scalesPageToFit="YES" id="dj6-sS-jAy">
+                                <rect key="frame" x="0.0" y="165" width="768" height="829"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
@@ -1816,7 +1816,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="sU1-vd-ZoD">
-                                <rect key="frame" x="20" y="159" width="718" height="865"/>
+                                <rect key="frame" x="20" y="159" width="718" height="852"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" misplaced="YES" id="cMe-HW-2nt">
@@ -1881,7 +1881,7 @@
                                                 </connections>
                                             </tableView>
                                             <webView hidden="YES" contentMode="scaleToFill" misplaced="YES" id="apf-Sq-8dB">
-                                                <rect key="frame" x="20" y="0.0" width="708" height="30"/>
+                                                <rect key="frame" x="20" y="0.0" width="708" height="830"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <connections>
@@ -1977,8 +1977,8 @@
                                     <action selector="btnERPListTapped:" destination="69O-HX-kmd" eventType="touchUpInside" id="Tav-N9-6EC"/>
                                 </connections>
                             </button>
-                            <webView hidden="YES" contentMode="scaleToFill" id="Be6-Gk-xPs">
-                                <rect key="frame" x="0.0" y="325" width="768" height="375"/>
+                            <webView hidden="YES" contentMode="scaleAspectFill" misplaced="YES" scalesPageToFit="YES" id="Be6-Gk-xPs">
+                                <rect key="frame" x="0.0" y="161" width="768" height="829"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
@@ -2550,9 +2550,7 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="accident_report.png" id="AXs-pn-0uu">
                                         <rect key="frame" x="144" y="-16" width="100" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Accident report image">
-                                            <bool key="isElement" value="YES"/>
-                                        </accessibility>
+                                        <accessibility key="accessibilityConfiguration" hint="Accident report image"/>
                                     </imageView>
                                 </subviews>
                             </scrollView>
@@ -2699,11 +2697,17 @@
                                                                 </label>
                                                             </subviews>
                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <accessibility key="accessibilityConfiguration">
+                                                                <bool key="isElement" value="YES"/>
+                                                            </accessibility>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="YES"/>
+                                                </accessibility>
                                             </tableViewCell>
                                         </prototypes>
                                         <connections>
@@ -2713,6 +2717,9 @@
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2iW-Mv-FNc">
                                 <rect key="frame" x="49" y="929" width="266" height="38"/>
@@ -2943,11 +2950,17 @@
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <accessibility key="accessibilityConfiguration">
+                                                                <bool key="isElement" value="YES"/>
+                                                            </accessibility>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="YES"/>
+                                                </accessibility>
                                             </tableViewCell>
                                         </prototypes>
                                         <connections>
@@ -2957,6 +2970,9 @@
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Log" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fWV-lc-1k4">
                                 <rect key="frame" x="243" y="963" width="106" height="24"/>
@@ -6088,9 +6104,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.png" id="1Z2-hT-WnJ">
                                 <rect key="frame" x="277" y="27" width="214" height="233"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="connect2">
-                                    <bool key="isElement" value="YES"/>
-                                </accessibility>
+                                <accessibility key="accessibilityConfiguration" hint="connect2"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Incident Report" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qnh-T5-Md4">
                                 <rect key="frame" x="131" y="370" width="480" height="30"/>
@@ -6217,9 +6231,7 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="misconduct_icon.png" id="fVP-ip-N0n">
                                         <rect key="frame" x="123" y="-9" width="100" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Incident icon">
-                                            <bool key="isElement" value="YES"/>
-                                        </accessibility>
+                                        <accessibility key="accessibilityConfiguration" hint="Incident icon"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Misconduct Incident Report" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xyb-iX-nqb">
                                         <rect key="frame" x="226" y="23" width="485" height="35"/>
@@ -6431,6 +6443,13 @@
                                                 <rect key="frame" x="55" y="236" width="659" height="114"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Incident Description" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9nB-Zf-wn3">
+                                                <rect key="frame" x="65" y="277" width="641" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="6vm-W5-FGM">
                                                 <rect key="frame" x="60" y="236" width="646" height="104"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -6442,13 +6461,6 @@
                                                     <outlet property="delegate" destination="75u-mX-Fgc" id="EKN-cU-Lkk"/>
                                                 </connections>
                                             </textView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Incident Description" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9nB-Zf-wn3">
-                                                <rect key="frame" x="65" y="277" width="641" height="21"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="*" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JTj-pu-dWn">
                                                 <rect key="frame" x="701" y="282" width="10" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -6645,17 +6657,6 @@
                                                 <rect key="frame" x="55" y="377" width="659" height="114"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="xEJ-4g-ZIo">
-                                                <rect key="frame" x="60" y="377" width="646" height="104"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <accessibility key="accessibilityConfiguration" hint="Report Filer’s Account of Incident"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                <connections>
-                                                    <outlet property="delegate" destination="75u-mX-Fgc" id="yOa-9X-PfG"/>
-                                                </connections>
-                                            </textView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Report Filer’s Account of Incident" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qnh-Cd-fPb">
                                                 <rect key="frame" x="242" y="418" width="284" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -6663,6 +6664,16 @@
                                                 <color key="textColor" red="0.27058823529411763" green="0.27058823529411763" blue="0.27058823529411763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="xEJ-4g-ZIo">
+                                                <rect key="frame" x="60" y="377" width="646" height="104"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="75u-mX-Fgc" id="yOa-9X-PfG"/>
+                                                </connections>
+                                            </textView>
                                             <view contentMode="scaleToFill" id="Xpn-76-gCJ">
                                                 <rect key="frame" x="0.0" y="514" width="768" height="145"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -6763,17 +6774,6 @@
                                                         <rect key="frame" x="55" y="8" width="659" height="114"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     </imageView>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="w6n-gL-jOm">
-                                                        <rect key="frame" x="60" y="8" width="646" height="104"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <accessibility key="accessibilityConfiguration" hint="Additional Information"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                        <connections>
-                                                            <outlet property="delegate" destination="75u-mX-Fgc" id="kZp-7M-maC"/>
-                                                        </connections>
-                                                    </textView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additional Information" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cYi-Az-P1t">
                                                         <rect key="frame" x="192" y="49" width="384" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -6781,6 +6781,16 @@
                                                         <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" id="w6n-gL-jOm">
+                                                        <rect key="frame" x="60" y="8" width="646" height="104"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="75u-mX-Fgc" id="kZp-7M-maC"/>
+                                                        </connections>
+                                                    </textView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             </view>
@@ -7019,10 +7029,16 @@
                                                                         </label>
                                                                     </subviews>
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <accessibility key="accessibilityConfiguration">
+                                                                        <bool key="isElement" value="YES"/>
+                                                                    </accessibility>
                                                                 </view>
                                                             </subviews>
                                                         </tableViewCellContentView>
                                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <accessibility key="accessibilityConfiguration">
+                                                            <bool key="isElement" value="YES"/>
+                                                        </accessibility>
                                                         <connections>
                                                             <outlet property="bgView" destination="wFm-Zb-OLY" id="PBE-hn-bSV"/>
                                                             <outlet property="checkMarkButton" destination="tAq-my-V3n" id="lK7-l8-g0Q"/>
@@ -7233,6 +7249,7 @@
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
+                                            <action selector="btnBack:" destination="5lW-uh-3W4" eventType="touchUpInside" id="1Yo-1r-ufD"/>
                                             <segue destination="fKS-FD-bP1" kind="unwind" unwindAction="unwindBackToLoginScreen:" id="6fv-gl-tS9"/>
                                         </connections>
                                     </button>
@@ -7300,8 +7317,8 @@
                                                 <color key="textColor" red="1" green="0.0" blue="0.075800706819999994" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="bBk-Ob-6kl">
-                                                <rect key="frame" x="141" y="154" width="258" height="241"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="bBk-Ob-6kl">
+                                                <rect key="frame" x="419" y="154" width="258" height="241"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <prototypes>
@@ -7334,8 +7351,8 @@
                                                     <outlet property="delegate" destination="5lW-uh-3W4" id="bIs-VP-vvn"/>
                                                 </connections>
                                             </tableView>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZQM-bj-APa">
-                                                <rect key="frame" x="419" y="154" width="258" height="241"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="35" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZQM-bj-APa">
+                                                <rect key="frame" x="141" y="154" width="258" height="241"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <prototypes>
@@ -7368,8 +7385,8 @@
                                                     <outlet property="delegate" destination="5lW-uh-3W4" id="aJD-SW-Gzv"/>
                                                 </connections>
                                             </tableView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wBE-yO-sXu">
-                                                <rect key="frame" x="141" y="127" width="166" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wBE-yO-sXu">
+                                                <rect key="frame" x="419" y="127" width="166" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <attributedString key="attributedText">
                                                     <fragment content="Location ">
@@ -7389,8 +7406,8 @@
                                                 </attributedString>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3xa-tc-Yzn">
-                                                <rect key="frame" x="419" y="127" width="166" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3xa-tc-Yzn">
+                                                <rect key="frame" x="141" y="127" width="166" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <attributedString key="attributedText">
                                                     <fragment content="Position ">
@@ -7847,9 +7864,6 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="survey_icon.png" id="dS6-p9-9Zl">
                                 <rect key="frame" x="102" y="11" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="guest user list icon">
-                                    <bool key="isElement" value="YES"/>
-                                </accessibility>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-pU-8hQ">
                                 <rect key="frame" x="8" y="28" width="98" height="42"/>
@@ -7967,7 +7981,52 @@
         </scene>
     </scenes>
     <resources>
-        <image name="78CB0DD6-BBBD-4157-8E04-3A20C313F135" width="43" height="43">
+        <image name="Defalut.png" width="768" height="1024"/>
+        <image name="accident_report.png" width="125" height="100"/>
+        <image name="add_icon.png" width="65" height="65"/>
+        <image name="area_supervisor.png" width="66" height="65"/>
+        <image name="area_supervisor_sel.png" width="66" height="65"/>
+        <image name="arrow.png" width="26" height="26"/>
+        <image name="arrow@2X.png" width="52" height="52"/>
+        <image name="attachmentLink.png" width="40" height="40"/>
+        <image name="back_Child.png" width="70" height="42"/>
+        <image name="back_icon.png" width="144" height="56"/>
+        <image name="background.png" width="768" height="1024"/>
+        <image name="building_supervisor.png" width="66" height="65"/>
+        <image name="building_supervisor_sel.png" width="66" height="65"/>
+        <image name="camera_icon.png" width="66" height="66"/>
+        <image name="change_server_backup_text_box.png" width="607" height="43"/>
+        <image name="check_box.png" width="44" height="44"/>
+        <image name="check_box_desel.png" width="43" height="43"/>
+        <image name="check_box_desel_green.png" width="47" height="47"/>
+        <image name="check_box_sel.png" width="47" height="46"/>
+        <image name="checked.png" width="49" height="49"/>
+        <image name="checked_Member.png" width="44" height="44"/>
+        <image name="checked_white_radiobutton.png" width="44" height="44"/>
+        <image name="close_btn.png" width="66" height="66"/>
+        <image name="collaps_icon_default.png" width="49" height="49"/>
+        <image name="complete_a_form.png" width="100" height="100"/>
+        <image name="count_comment.png" width="66" height="65"/>
+        <image name="count_comment_sel.png" width="66" height="65"/>
+        <image name="customer_service.png" width="100" height="100"/>
+        <image name="daily_log_icon.png" width="100" height="100"/>
+        <image name="date.png" width="50" height="50"/>
+        <image name="decrease_icon.png" width="73" height="73"/>
+        <image name="delete_icon.png" width="65" height="65"/>
+        <image name="emergency_response_plan.png" width="100" height="100"/>
+        <image name="eod_icon.png" width="75" height="75"/>
+        <image name="expand_grey.png" width="49" height="49"/>
+        <image name="expand_icon.png" width="51" height="51"/>
+        <image name="faded_n.png" width="44" height="44"/>
+        <image name="faded_y.png" width="44" height="44"/>
+        <image name="go_board_group.png" width="66" height="65"/>
+        <image name="go_board_group_sel.png" width="66" height="65"/>
+        <image name="graph_icon.png" width="53" height="43"/>
+        <image name="graphs.png" width="100" height="100"/>
+        <image name="green_y.png" width="44" height="44"/>
+        <image name="group-users.png" width="47" height="47"/>
+        <image name="hide_completed_icon.png" width="58" height="60"/>
+        <image name="imageView:qJQ-sU-euC:image" width="43" height="43">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -8141,51 +8200,6 @@ AKsArQCyALUAtwC5ALsAvQDCANkA2wDdJmMmaCZzJnwmjyaTJp4mpyasJrQmtya8JssmzybWJt4m6ybw
 JvIm9Cb5JwEnBCcJJxEnFCcmJyknLgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAACcwA
 </mutableData>
         </image>
-        <image name="Defalut.png" width="768" height="1024"/>
-        <image name="accident_report.png" width="125" height="100"/>
-        <image name="add_icon.png" width="65" height="65"/>
-        <image name="area_supervisor.png" width="66" height="65"/>
-        <image name="area_supervisor_sel.png" width="66" height="65"/>
-        <image name="arrow.png" width="26" height="26"/>
-        <image name="arrow@2X.png" width="52" height="52"/>
-        <image name="attachmentLink.png" width="40" height="40"/>
-        <image name="back_Child.png" width="70" height="42"/>
-        <image name="back_icon.png" width="144" height="56"/>
-        <image name="background.png" width="768" height="1024"/>
-        <image name="building_supervisor.png" width="66" height="65"/>
-        <image name="building_supervisor_sel.png" width="66" height="65"/>
-        <image name="camera_icon.png" width="66" height="66"/>
-        <image name="change_server_backup_text_box.png" width="607" height="43"/>
-        <image name="check_box.png" width="44" height="44"/>
-        <image name="check_box_desel.png" width="43" height="43"/>
-        <image name="check_box_desel_green.png" width="47" height="47"/>
-        <image name="check_box_sel.png" width="47" height="46"/>
-        <image name="checked.png" width="49" height="49"/>
-        <image name="checked_Member.png" width="44" height="44"/>
-        <image name="checked_white_radiobutton.png" width="44" height="44"/>
-        <image name="close_btn.png" width="66" height="66"/>
-        <image name="collaps_icon_default.png" width="49" height="49"/>
-        <image name="complete_a_form.png" width="100" height="100"/>
-        <image name="count_comment.png" width="66" height="65"/>
-        <image name="count_comment_sel.png" width="66" height="65"/>
-        <image name="customer_service.png" width="100" height="100"/>
-        <image name="daily_log_icon.png" width="100" height="100"/>
-        <image name="date.png" width="50" height="50"/>
-        <image name="decrease_icon.png" width="73" height="73"/>
-        <image name="delete_icon.png" width="65" height="65"/>
-        <image name="emergency_response_plan.png" width="100" height="100"/>
-        <image name="eod_icon.png" width="75" height="75"/>
-        <image name="expand_grey.png" width="49" height="49"/>
-        <image name="expand_icon.png" width="51" height="51"/>
-        <image name="faded_n.png" width="44" height="44"/>
-        <image name="faded_y.png" width="44" height="44"/>
-        <image name="go_board_group.png" width="66" height="65"/>
-        <image name="go_board_group_sel.png" width="66" height="65"/>
-        <image name="graph_icon.png" width="53" height="43"/>
-        <image name="graphs.png" width="100" height="100"/>
-        <image name="green_y.png" width="44" height="44"/>
-        <image name="group-users.png" width="47" height="47"/>
-        <image name="hide_completed_icon.png" width="58" height="60"/>
         <image name="increase_icon.png" width="73" height="73"/>
         <image name="keyboard_icon.png" width="49" height="37"/>
         <image name="list_icon.png" width="43" height="43"/>
@@ -8246,11 +8260,11 @@ JvIm9Cb5JwEnBCcJJxEnFCcmJyknLgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAACcwA
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="QGh-qe-Zhv"/>
-        <segue reference="nXf-Vb-N5P"/>
-        <segue reference="9JQ-QJ-drJ"/>
+        <segue reference="pPR-kw-p2J"/>
+        <segue reference="oSw-4K-gRo"/>
         <segue reference="k5d-Jg-3em"/>
         <segue reference="vif-Tr-xCv"/>
-        <segue reference="v6e-GR-DHO"/>
-        <segue reference="gt2-aG-td5"/>
+        <segue reference="iHR-tw-vQF"/>
+        <segue reference="Ch6-nF-a6J"/>
     </inferredMetricsTieBreakers>
 </document>

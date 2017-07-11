@@ -13,7 +13,8 @@
 #import "AccidentReportInfo.h"
 #import "UserLocation.h"
 #import "UserFacility.h"
-
+#import "UserPosition.h"
+#import "UserLocation1.h"
 @interface AccidentReportViewController : UIViewController<DropDownValueDelegate,UIAlertViewDelegate> {
     
     FinalSection *finalSection;
@@ -22,6 +23,8 @@
     NSArray *aryFacilities, *aryLocation;
     UserFacility *selectedFacility;
     UserLocation *selectedLocation;
+    UserPosition *selectedPosition;
+
 }
 
 

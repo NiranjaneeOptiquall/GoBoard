@@ -111,6 +111,25 @@
 - (void)callServiceForHomeSetup:(BOOL)waitUntilDone complition:(void (^)(void))completion {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userId=%@", HOME_SCREEN_MODULES, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:HOME_SCREEN_MODULES] complition:^(NSDictionary *response) {
+        NSLog(@"%@",response);
+//            NSMutableArray*moduleArr = [NSMutableArray new];
+//        
+//            for (NSDictionary * tempDic in [response objectForKey:@"Modules"]) {
+//                if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+//                    [moduleArr addObject:tempDic];
+//                }
+//            }
+//            NSLog(@"%@",moduleArr);
+//            if (moduleArr.count == 0) {
+//                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+//                [gblAppDelegate hideActivityIndicator];
+//                gblAppDelegate.shouldHideActivityIndicator = YES;
+//            alert(@"", @"We’re sorry. You do not have permission to access this area. Please see your system administrator.");
+//                return;
+//        
+//                  }
+      
+              
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"Position" ascending:YES];
         gblAppDelegate.mutArrHomeMenus = [response objectForKey:@"Modules"];
         [gblAppDelegate.mutArrHomeMenus sortUsingDescriptors:@[sort]];
@@ -1727,7 +1746,7 @@
     }
     NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
+    NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
 
 
 
@@ -1736,7 +1755,7 @@
         NSLog(@"%@",response);
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"FormToalCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"SurveyToalCount"];
-        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"TeamLogToalCount"];
+        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"TeamLogCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TaskCount"]integerValue] forKey:@"TaskToalCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"MemoCount"]integerValue] forKey:@"MemoToalCount"];
 
@@ -2158,12 +2177,18 @@
         strUserId = [[User currentUser] userId];
     }
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=0", CLIENT_POSITIONS, aStrClientId, strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:CLIENT_POSITIONS] complition:^(NSDictionary *response) {
-        [self deleteAllPositions];
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        [gblAppDelegate hideActivityIndicator];
+        gblAppDelegate.shouldHideActivityIndicator = YES;
+              [self deleteAllPositions];
         [self insertPositions:[response objectForKey:@"FacilityPositions"]];
         isWSComplete = YES;
         if (complition)
             complition();
     } failure:^(NSError *error, NSDictionary *response) {
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        [gblAppDelegate hideActivityIndicator];
+        gblAppDelegate.shouldHideActivityIndicator = YES;
         isWSComplete = YES;
         if (complition)
             complition();
@@ -2186,6 +2211,7 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
 }
+
 
 - (void)insertPositions:(NSArray*)array {
     for (NSDictionary *aDict in array) {
