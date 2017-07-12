@@ -410,6 +410,8 @@
              [self webserviceCallForUserLogOff];
         }
      }failure:^(NSError *error, NSDictionary *response) {
+         NSLog(@"%@",response);
+         NSLog(@"%@",error);
 
         NSDate *methodFinish = [NSDate date];
         NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
