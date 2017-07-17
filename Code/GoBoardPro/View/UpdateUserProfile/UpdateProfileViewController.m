@@ -215,12 +215,12 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
         
         NSString *aStrRcvMSG = (_btnLikeToRcvTextMSG.isSelected) ? @"true" : @"false";
         id aTerms;
-    //    if ([[User currentUser] isAcceptedTermsAndConditions]) {
+        if ([[User currentUser] isAcceptedTermsAndConditions]) {
             aTerms = [NSNull null];
-   //     }
-    //    else {
+        }
+        else {
             aTerms = (_btnAgreeTerms.isSelected) ? @"true" : @"false";
-  //      }
+        }
         NSDictionary *aDictParam = @{@"Id":[[User currentUser] userId], @"FirstName":_txtFitstName.trimText, @"MiddleInitial":_txtMiddleName.trimText, @"LastName":_txtLastName.trimText, @"Email":[_txtEmail trimText], @"Phone":_txtPhone.trimText, @"Mobile":_txtMobile.trimText, @"Password":[_txtPassword trimText], @"Certifications":aMutArrCertificate, @"ReceiveTextMessages":aStrRcvMSG, @"AcceptedTermsAndConditions":aTerms};
         [gblAppDelegate callWebService:USER_SERVICE parameters:aDictParam httpMethod:@"PUT" complition:^(NSDictionary *response) {
         

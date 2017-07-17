@@ -53,7 +53,7 @@ typedef enum : NSUInteger {
 // http://goboardapi.azurewebsites.net/api/
 #define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 //#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/GoBoard.Web.Api/api/"
-//#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/GoBoard.Web.Api/"
+
 
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
