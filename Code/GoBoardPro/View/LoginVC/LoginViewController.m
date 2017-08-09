@@ -302,11 +302,12 @@
             currentUser.userId = nil;
             currentUser.clientId = nil;
             currentUser.clientName = nil;
+            currentUser.accountId = nil;
             currentUser.termsAndConditions = nil;
             currentUser.selectedFacility = nil;
             currentUser.username = nil;
             currentUser.AutomaticLogoutTime = nil;
-            currentUser.userStatus = nil;
+            currentUser.userStatusCheck = nil;
             currentUser.username = self.txtUserId.text;
             
             currentUser.AutomaticLogoutTime = [NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]];
@@ -321,7 +322,9 @@
             }
             currentUser.termsAndConditions = [response objectForKey:@"TermsAndConditions"];
             currentUser.isAcceptedTermsAndConditions = [[response objectForKey:@"AcceptedTermsAndConditions"] boolValue];
-            currentUser.userStatus = [response objectForKey:@"UserStatus"];
+            
+            currentUser.userStatusCheck = [NSString stringWithFormat:@"%@",[response objectForKey:@"UserStatus"]];
+
             currentUser.lastName = [response objectForKey:@"LastName"];
             if ([[response objectForKey:@"Mobile"] isKindOfClass:[NSNull class]]) {
                 currentUser.mobile = @"";
@@ -367,6 +370,9 @@
             
             currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
             currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
+         
+            currentUser.accountId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"AccountId"] integerValue]];
+
             currentUser.isAdmin = [[response objectForKey:@"IsAdmin"] boolValue];
             NSString *prevUserId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
             if (prevUserId) {
@@ -379,6 +385,8 @@
             
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.userId forKey:@"userId"];
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientId forKey:@"clientId"];
+            [[NSUserDefaults standardUserDefaults] setObject:currentUser.accountId forKey:@"accountId"];
+
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             

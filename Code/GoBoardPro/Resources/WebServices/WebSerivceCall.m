@@ -691,12 +691,13 @@
 -(void)callServiceForSurvey:(BOOL)waitUntilDone withSurveyId:(NSString *)surveyId complition:(void (^)(void))complition
 {
     __block BOOL isWSComplete = NO;
-    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+ NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+
     NSString *strUserId = @"";
     if ([User checkUserExist]) {
         strUserId = [[User currentUser] userId];
     }
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&surveyId=%@", SURVEY_SETUP, aStrClientId, strUserId,surveyId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+   [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&surveyId=%@", SURVEY_SETUP, aStrClientId, strUserId,surveyId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response){
         [self deleteAllSurveysInProgress];
         [self insertSurveyHistory:response];
 
@@ -1542,10 +1543,11 @@
     __block BOOL isWSComplete = NO;
     if ([self isNetworkReachable]) {
 
-    NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+ //   NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
     NSString *strUserId = @"";
     NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
-
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        
     if ([User checkUserExist]) {
         strUserId = [[User currentUser] userId];
     }
@@ -1556,7 +1558,8 @@
         else{
             isAdmin= @"True";
         }
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response) {
+  //  [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response)
+          [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response){
         [self deleteAllSurveys];
         [self insertSurvey:[response objectForKey:@"Surveys"]];
         [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSameClientSurvey"];
@@ -1746,8 +1749,9 @@
     }
     NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-    NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
+   // NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
 
+        NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
 
 
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
@@ -1784,7 +1788,8 @@
     if ([self isNetworkReachable]) {
         
         
-        NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+      //  NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
+          NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
         NSString *strUserId = @"";
         NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
         if ([User checkUserExist]) {
@@ -1797,7 +1802,8 @@
         else{
              isAdmin= @"True";
         }
-        [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+ //       [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response)
+         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
             
             [self deleteAllForms];
             

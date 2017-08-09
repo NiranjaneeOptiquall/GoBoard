@@ -26,7 +26,7 @@
     aryLocation  = [[NSMutableArray alloc]init];
     aryPositionId = [[NSMutableArray alloc]init];
     serviceCallCount=2;
-//    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+   //    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
     islogedout = false;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DataUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -59,13 +59,13 @@
     [super viewWillAppear:animated];
     
     [self resetTimer];
-   
-    NSLog(@"%d",[[User currentUser] isAcceptedTermsAndConditions]);
+    NSLog(@"%@",[[User currentUser] userStatusCheck]);
+    
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
         [_lblAcceptTerms setHidden:NO];
         [_vwFacility setHidden:YES];
     }
-    else if (![[[User currentUser] userStatus] isEqualToString:@"Active"]){
+    else if (![[[User currentUser] userStatusCheck] isEqualToString:@"Active"]){
         [_lblAcceptTerms setHidden:NO];
         [_vwFacility setHidden:YES];
     }
@@ -73,7 +73,9 @@
         [_lblAcceptTerms setHidden:YES];
         [_vwFacility setHidden:NO];
     }
-    [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
+
+    
+      [_lblUserName setText:[NSString stringWithFormat:@"Welcome %@ %@", [[User currentUser] firstName], [[User currentUser] lastName]]];
 }
 -(void)resetTimeInterval:(NSNotification *)notification {
     

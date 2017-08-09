@@ -45,12 +45,16 @@ static User *user = nil;
     user.userId = nil;
     user.clientId = nil;
     user.clientName = nil;
+    user.accountId = nil;
     user.termsAndConditions = nil;
     user.selectedFacility = nil;
     user.username = nil;
+    user.userStatusCheck = nil;
+
     user.AutomaticLogoutTime = nil;
     
     user.username=@"";
+    user.userStatusCheck=@"";
     user.firstName = @"";
     user.lastName = @"";
     user.middleInitials = @"";

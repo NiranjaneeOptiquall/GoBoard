@@ -17,13 +17,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getCertificateList];
     mutArrDeletedCertificates = [[NSMutableArray alloc] init];
-    
+    NSLog(@"%@",[[User currentUser] userStatusCheck]);
+
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
 //        if ([[[User currentUser] termsAndConditions] isKindOfClass:[NSString class]])
 //            _txvTerms.text = [[User currentUser] termsAndConditions];
-        
         NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"html"];
         
         NSURL *aUrl = [NSURL fileURLWithPath:aStrPathOfAcceptibleUsePolicy];
@@ -36,7 +35,7 @@
 
         //[_vwWeb loadHTMLString:aStr1 baseURL:nil];
     }
-   else if (![[[User currentUser] userStatus] isEqualToString:@"Active"]){
+   else if (![[[User currentUser] userStatusCheck] isEqualToString:@"Active"]){
        [[User currentUser] setIsAcceptedTermsAndConditions:false];
 
     NSString *aStrPathOfAcceptibleUsePolicy = [[NSBundle mainBundle] pathForResource:@"Acceptible Use Policy HTML_20150301" ofType:@"html"];
@@ -57,6 +56,8 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
         frame.origin.y = CGRectGetMinY(_vwTerms.frame);
         _lblSubmit.frame = frame;
     }
+    [self getCertificateList];
+
     [_btnLikeToRcvTextMSG.titleLabel setNumberOfLines:2];
     [_btnLikeToRcvTextMSG.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     // Do any additional setup after loading the view.
@@ -239,7 +240,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
     [[User currentUser] setEmail:_txtEmail.text];
     [[User currentUser] setPhone:_txtPhone.text];
     [[User currentUser] setMobile:_txtMobile.text];
-    [[User currentUser] setUserStatus:@"Active"];
+    [[User currentUser] setUserStatusCheck:@"Active"];
     if (![[User currentUser] isAcceptedTermsAndConditions]) {
         [[User currentUser] setIsAcceptedTermsAndConditions:_btnAgreeTerms.isSelected];
     }
