@@ -46,6 +46,7 @@ static User *user = nil;
     user.clientId = nil;
     user.clientName = nil;
     user.accountId = nil;
+    user.accountName = nil;
     user.termsAndConditions = nil;
     user.selectedFacility = nil;
     user.username = nil;
@@ -64,6 +65,7 @@ static User *user = nil;
     user.userId = @"";
     user.clientId = @"";
     user.clientName = @"";
+    user.accountName = @"";
     user.termsAndConditions = @"";
     user.AutomaticLogoutTime = @"";
 }

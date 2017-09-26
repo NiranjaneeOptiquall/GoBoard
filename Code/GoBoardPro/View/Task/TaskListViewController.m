@@ -598,9 +598,11 @@
             aCell.txtDropDown.userInteractionEnabled = NO;
         }
         NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:aStrTaskName];
+          [attributeString addAttribute:NSBaselineOffsetAttributeName value:@0 range:NSMakeRange(0, [attributeString length])];
         [attributeString addAttribute:NSStrikethroughStyleAttributeName
                                 value:@2
                                 range:NSMakeRange(0, [attributeString length])];
+    
         [aCell.lblTask setAttributedText:attributeString];
         [aCell.lblTask setTextColor:[UIColor lightGrayColor]];
       //  [aCell.btnKeyboardIcon setHidden:YES];

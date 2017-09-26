@@ -1073,6 +1073,7 @@
     __block BOOL isWSComplete = NO;
     NSLog(@"%@",[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]]);
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", INCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:INCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
+        NSLog(@"%@",response);
         [self deleteAllIncidentReports];
         [self insertIncidentReportSettings:[response objectForKey:@"IncidentReportSetup"]];
         isWSComplete = YES;
@@ -1251,6 +1252,7 @@
 - (void)callServiceForAccidentReport:(BOOL)waitUntilDone complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ACCIDENT_REPORT_SETUP, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ACCIDENT_REPORT_SETUP] complition:^(NSDictionary *response) {
+         NSLog(@"%@",response);
         [self deleteAllAccidentReports];
         [self insertAccidentReportSettings:[response objectForKey:@"AccidentReportSetup"]];
         isWSComplete = YES;
@@ -1748,11 +1750,50 @@
         [arrOfPosition addObject:p.value];
     }
     NSString *aPositionId = [arrOfPosition componentsJoinedByString:@","];
+
+    NSString * strForm = @"False";
+    NSString * strSurvey = @"False";
+    NSString * strTeamLog = @"False";
+    NSString * strTask = @"False";
+    NSString * strMemo = @"False";
+    for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
+        if  ([tempDic[@"SystemModule"] integerValue]  == 2){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                strForm = @"True";
+            }
+        }
+        else if  ([tempDic[@"SystemModule"] integerValue]  == 12){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                
+                 strSurvey = @"True";
+            }
+        }
+        else if  ([tempDic[@"SystemModule"] integerValue]  == 14){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                
+                 strTeamLog = @"True";
+            }
+        }
+        else if  ([tempDic[@"SystemModule"] integerValue]  == 0){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                
+                 strTask = @"True";
+            }
+        }
+        else if  ([tempDic[@"SystemModule"] integerValue]  == 15){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                
+                 strMemo = @"True";
+            }
+        }
+
+           }
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-   // NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
-
-        NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
-
+    // NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
+  
+ //   NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
+    
+      NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@&formAccess=%@&surveyAccess=%@&logAccess=%@&taskAccess=%@&memoAccess=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin,strForm,strSurvey,strTeamLog,strTask,strMemo];
 
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
 

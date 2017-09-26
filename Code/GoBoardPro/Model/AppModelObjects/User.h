@@ -28,6 +28,7 @@
 @property (strong, nonatomic) NSString *clientId;
 @property (strong, nonatomic) NSString *clientName;
 @property (strong, nonatomic) NSString *accountId;
+@property (strong, nonatomic) NSString *accountName;
 @property (strong, nonatomic) NSString *termsAndConditions;
 @property (assign, nonatomic) BOOL isAcceptedTermsAndConditions;
 @property (assign, nonatomic) NSString * userStatusCheck;

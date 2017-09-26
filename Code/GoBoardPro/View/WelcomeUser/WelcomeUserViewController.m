@@ -80,6 +80,7 @@
 -(void)resetTimeInterval:(NSNotification *)notification {
     
     [self resetTimer];
+    
 }
 -(void)resetTimer{
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"istouch"]isEqualToString:@"no"] || [[[NSUserDefaults standardUserDefaults]valueForKey:@"istouch"]isEqualToString:@"yes"]) {
@@ -202,8 +203,9 @@
 - (void)getUserFacilities {
     if ([gblAppDelegate isNetworkReachable]) {
         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",USER_FACILITY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_FACILITY] complition:^(NSDictionary *response) {
+             NSLog(@"%@",response);
             [self deleteAllFacilities];
-        
+           
             NSArray *aryFacility = [response objectForKey:@"Facilities"];
 
             
@@ -476,6 +478,7 @@
 #pragma mark - UITextField Delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+  
     DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
     dropDown.delegate = self;
     if ([textField isEqual:_txtFacility]) {
@@ -493,6 +496,7 @@
     [sender setText:[value valueForKey:@"name"]];
     if ([sender isEqual:_txtFacility]) {
         if (![selectedFacility isEqual:value]) {
+              aryPositionId = [[NSMutableArray alloc]init];
             selectedFacility = value;
             [[[User currentUser] mutArrSelectedPositions] removeAllObjects];
             [[[User currentUser] mutArrSelectedLocations] removeAllObjects];

@@ -46,7 +46,9 @@
     
      [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
     
-    _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+   // _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+   _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountName"];
+
     [_lblVersionNumber setText:[NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsSettingsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     [self initialUIConfig];
@@ -227,13 +229,19 @@
         [arrOfPosition addObject:p.value];
     }
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-    NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
+  //  NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
     
     
+    
+    
+     NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?accountId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@&formAccess=False&surveyAccess=False&logAccess=False&taskAccess=False&memoAccess=False",[[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"],[[User currentUser]userId],isAdmin];
+    
+ //   NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@&formAccess=%@&surveyAccess=%@&logAccess=%@&taskAccess=%@&memoAccess=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin,strForm,strSurvey,strTeamLog,strTask,strMemo];
+
     
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         
-        
+        NSLog(@"%@",response);
 //        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"GuestFormToalCount"];
 //        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"GuestSurveyToalCount"];
 //        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"GuestSurveyToalCount"];
@@ -303,6 +311,7 @@
             currentUser.clientId = nil;
             currentUser.clientName = nil;
             currentUser.accountId = nil;
+            currentUser.accountName = nil;
             currentUser.termsAndConditions = nil;
             currentUser.selectedFacility = nil;
             currentUser.username = nil;
@@ -311,6 +320,9 @@
             currentUser.username = self.txtUserId.text;
             
             currentUser.AutomaticLogoutTime = [NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]];
+            
+            [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isBack"];
+
             
             NSLog(@"Automatic Logout Time======%@",[NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]]);
             currentUser.firstName = [response objectForKey:@"FirstName"];
@@ -341,8 +353,9 @@
             currentUser.email = [response objectForKey:@"Email"];
             
             currentUser.clientName = [response objectForKey:@"ClientName"];
-            
-            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeClient"] isEqualToString:[response objectForKey:@"ClientName"]]) {
+            currentUser.accountName = [response objectForKey:@"AccountName"];
+
+            if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeAccount"] isEqualToString:[response objectForKey:@"AccountName"]]) {
                 if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataSurveyDone"] isEqualToString:@"YES"]){
                     
                     [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientSurvey"];
@@ -364,10 +377,38 @@
                 [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientSurvey"];
                 
             }
+
+            
+            
+    /*        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"oldeClient"] isEqualToString:[response objectForKey:@"ClientName"]]) {
+                if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataSurveyDone"] isEqualToString:@"YES"]){
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientSurvey"];
+                    
+                }
+                if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstTimeDataFormDone"] isEqualToString:@"YES"]){
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"isSameClientForm"];
+                    
+                }
+                
+                
+            }
+            else{
+                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataSurveyDone"];
+                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"isFirstTimeDataFormDone"];
+                
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientForm"];
+                [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSameClientSurvey"];
+                
+            } */
+            
+            
             [[NSUserDefaults standardUserDefaults]setValue:[response objectForKey:@"IsAdmin"] forKey:@"IsAdmin"];
             
             [[NSUserDefaults standardUserDefaults]setValue:currentUser.clientName forKey:@"oldeClient"];
-            
+            [[NSUserDefaults standardUserDefaults]setValue:currentUser.accountName forKey:@"oldeAccount"];
+  
             currentUser.userId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"Id"] integerValue]];
             currentUser.clientId = [NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"ClientId"] integerValue]];
          
@@ -388,10 +429,13 @@
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.accountId forKey:@"accountId"];
 
             [[NSUserDefaults standardUserDefaults] setObject:currentUser.clientName forKey:@"clientName"];
+             [[NSUserDefaults standardUserDefaults] setObject:currentUser.accountName forKey:@"accountName"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             
-            _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+          //  _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientName"];
+            _txtGuestName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountName"];
+
             
             /*====== Checking method complition execution time taken======= */
             NSDate *methodFinish = [NSDate date];

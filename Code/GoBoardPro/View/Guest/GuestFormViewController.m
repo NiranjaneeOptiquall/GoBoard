@@ -1056,9 +1056,6 @@
         }
         [_tblFormList reloadSections:[NSIndexSet indexSetWithIndex:gestureRecognizer.tag] withRowAnimation:UITableViewRowAnimationFade];
         
-      
-
-        
     }
   
     
