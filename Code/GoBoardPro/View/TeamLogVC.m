@@ -99,13 +99,22 @@
     [aFormatter setDateFormat:@"MM/dd/yyyy  hh:mm a"];
     
     [aCell.txtViewDate setText:[aFormatter stringFromDate:log.date]];
-    [aCell.lblDescription setText:log.desc];
+  
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+   // [aCell.lblDescription setText:log.desc];
+     [aCell.lblDescription setAttributedText:attributedString];
     
    // NSString *aStrName = [NSString stringWithFormat:@"%@ %@",[[User currentUser]firstName],[[User currentUser]lastName]];
     [aCell.txtViewUsername setText:log.username];
     
     aCell.txtViewPosition.text = [self getPoistionForLog:log];
-    
+
     aCell.txtViewPosition.textContainerInset = UIEdgeInsetsZero;
     aCell.txtViewDate.textContainerInset = UIEdgeInsetsMake(0, 0, 0, -5);
     aCell.txtViewUsername.textContainerInset = UIEdgeInsetsMake(0, -5, 0, 0);

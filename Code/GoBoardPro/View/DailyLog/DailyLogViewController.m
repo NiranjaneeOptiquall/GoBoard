@@ -15,7 +15,7 @@
 #import "ClientPositions.h"
 #import "WebSerivceCall.h"
 #import "Reachability.h"
-
+#import "facilityListingTableViewCell.h"
 #define kTextLimit 1000
 
 @interface DailyLogViewController ()
@@ -30,12 +30,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    selectedFacilityArr = [[NSMutableArray alloc]init];
     self.btnToggleTeam.selected = NO;
     [self.viewSelectPos setAlpha:0.0];
- 
+ [self.tblFacilityListing setAlpha:0.0];
+    [self getFacilityList];
+    CGRect btnframe = self.btnSubmit.frame;
+    self.btnSubmit.frame = CGRectMake(btnframe.origin.x, self.btnToggleTeam.frame.origin.y + self.btnToggleTeam.frame.size.height + 15, btnframe.size.width, btnframe.size.height);
+
+    CGRect lblMyLogframe = self.lblMyLog.frame;
+    self.lblMyLog.frame = CGRectMake(lblMyLogframe.origin.x, self.btnSubmit.frame.origin.y + self.btnSubmit.frame.size.height + 10, lblMyLogframe.size.width, lblMyLogframe.size.height);
+    
+    CGRect tblDailyLogframe = self.tblDailyLog.frame;
+    CGFloat height = self.view.frame.size.height - (self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10) - 77;
+    self.tblDailyLog.frame = CGRectMake(tblDailyLogframe.origin.x, self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10, tblDailyLogframe.size.width, height);
+
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
+    [tap setCancelsTouchesInView:NO];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -86,14 +101,18 @@
 }
 
 - (IBAction)btnSubmitTapped:(id)sender {
+   
     if ([[_txvDailyLog.text trimString] isEqualToString:@""]) {
         alert(@"", @"Please enter log detail.");
         return;
     }
     [self.txvDailyLog resignFirstResponder];
-    
+ 
     if (self.btnToggleTeam.selected) {
-        
+        if (selectedFacilityArr.count == 0) {
+            alert(@"", @"Please select at least one facility/team for the team log");
+            return;
+        }
         if ([self.txvDailyLog.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0) {
             if (self.txtPosition.text.length>0) {
                 [self addTeamLog];
@@ -136,9 +155,7 @@
     }
     [gblAppDelegate.managedObjectContext save:nil];
     
-    
-    
-    
+
 }
 
 -(void)insertTeamLog{
@@ -162,8 +179,10 @@
     else{
         aTeamLogObj.shouldSync = [NSNumber numberWithBool:YES];
     }
-
+   
+    if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
     [gblAppDelegate.managedObjectContext save:nil];
+     }
 }
 - (BOOL)isNetworkReachable {
     
@@ -229,9 +248,14 @@
    aLog.positionId = [[self getPoistion:self.txtPosition.text]stringValue];
     aLog.facilityId = [[[User currentUser]selectedFacility] value];
     aLog.isTeamLog=@"1";
+    NSString * strFacilitys = [[selectedFacilityArr valueForKey:@"description"] componentsJoinedByString:@","];
+    aLog.selectedFacilities=strFacilitys;
 //    [gblAppDelegate.managedObjectContext insertObject:aLog];
 //    [gblAppDelegate.managedObjectContext save:nil];
-    [mutArrDailyList addObject:aLog];
+    if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
+          [mutArrDailyList addObject:aLog];
+    }
+  
     
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
     NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[mutArrDailyList sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
@@ -245,9 +269,11 @@
     _txvDailyLog.text = @"";
     [_lblLogPlaceholder setHidden:NO];
     self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
+    if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
+
     [_tblDailyLog reloadData];
 
-    
+    }
 }
 
 -(NSNumber *)getPoistion:(NSString *)aStrPosition
@@ -266,37 +292,70 @@
     
 }
 
+
 - (IBAction)btnToggleTeamTapped:(id)sender {
-    
+    selectedFacilityArr = [[NSMutableArray alloc]init];
+     [selectedFacilityArr addObject:[[[User currentUser] selectedFacility] value]];
     self.btnToggleTeam.selected = !self.btnToggleTeam.selected;
     
     if (self.btnToggleTeam.selected) {
         [self.viewSelectPos setHidden:NO];
+         [self.tblFacilityListing setHidden:NO];
         [UIView animateWithDuration:0.5 animations:^{
             [self.viewSelectPos setAlpha:1.0];
-            
+            [self.tblFacilityListing setAlpha:1.0];
+
             CGRect aBtnRect = self.btnSubmit.frame;
             aBtnRect.origin.y = self.viewSelectPos.frame.origin.y+self.viewSelectPos.frame.size.height+13;
             self.btnSubmit.frame = aBtnRect;
+            CGRect lblMyLogframe = self.lblMyLog.frame;
+            self.lblMyLog.frame = CGRectMake(lblMyLogframe.origin.x, self.btnSubmit.frame.origin.y + self.btnSubmit.frame.size.height + 10, lblMyLogframe.size.width, lblMyLogframe.size.height);
             
+            CGRect tblDailyLogframe = self.tblDailyLog.frame;
+            CGFloat height = self.view.frame.size.height - (self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10) - 77;
+            self.tblDailyLog.frame = CGRectMake(tblDailyLogframe.origin.x, self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10, tblDailyLogframe.size.width, height);
+            
+
         } completion:nil];
+        [self.tblFacilityListing reloadData];
     }
     else
     {
         [self.viewSelectPos setHidden:NO];
+           [self.tblFacilityListing setHidden:NO];
         [UIView animateWithDuration:0.5 animations:^{
             [self.viewSelectPos setAlpha:0.0];
-        
+         [self.tblFacilityListing setAlpha:1.0];
+            CGRect lblMyLogframe = self.lblMyLog.frame;
+            self.lblMyLog.frame = CGRectMake(lblMyLogframe.origin.x, self.btnSubmit.frame.origin.y + self.btnSubmit.frame.size.height + 10, lblMyLogframe.size.width, lblMyLogframe.size.height);
+            
+            CGRect tblDailyLogframe = self.tblDailyLog.frame;
+            CGFloat height = self.view.frame.size.height - (self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10) - 77;
+            self.tblDailyLog.frame = CGRectMake(tblDailyLogframe.origin.x, self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10, tblDailyLogframe.size.width, height);
+            
+
         } completion:^(BOOL finished) {
             if (finished) {
                 self.viewSelectPos.hidden = YES;
+                  self.tblFacilityListing.hidden = YES;
                 [UIView animateWithDuration:0.5 animations:^{
-                    CGRect aBtnRect = self.btnSubmit.frame;
-                    aBtnRect.origin.y = self.viewSelectPos.frame.origin.y;
-                    self.btnSubmit.frame = aBtnRect;
+                 //   CGRect aBtnRect = self.btnSubmit.frame;
+                  //  aBtnRect.origin.y = self.viewSelectPos.frame.origin.y;
+                  //  self.btnSubmit.frame = aBtnRect;
+                    CGRect btnframe = self.btnSubmit.frame;
+                    self.btnSubmit.frame = CGRectMake(btnframe.origin.x, self.btnToggleTeam.frame.origin.y + self.btnToggleTeam.frame.size.height + 15, btnframe.size.width, btnframe.size.height);
+                    CGRect lblMyLogframe = self.lblMyLog.frame;
+                    self.lblMyLog.frame = CGRectMake(lblMyLogframe.origin.x, self.btnSubmit.frame.origin.y + self.btnSubmit.frame.size.height + 10, lblMyLogframe.size.width, lblMyLogframe.size.height);
+                    
+                    CGRect tblDailyLogframe = self.tblDailyLog.frame;
+                    CGFloat height = self.view.frame.size.height - (self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10) - 77;
+                    self.tblDailyLog.frame = CGRectMake(tblDailyLogframe.origin.x, self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10, tblDailyLogframe.size.width, height);
+                    
+
                 }];
             }
         }];
+       //  [self.tblFacilityListing reloadData];
     }
 }
 
@@ -315,10 +374,35 @@
     self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
     
     self.btnToggleTeam.selected = NO;
+ 
     [self.viewSelectPos setAlpha:0.0];
-    CGRect aBtnRect = self.btnSubmit.frame;
-    aBtnRect.origin.y = self.viewSelectPos.frame.origin.y;
-    self.btnSubmit.frame = aBtnRect;
+    [self.tblFacilityListing setAlpha:0.0];
+    
+    CGRect tblFacilityframe = self.tblFacilityListing.frame;
+    if (aryFacilities.count * 44 > 176) {
+        
+          self.tblFacilityListing.frame = CGRectMake(tblFacilityframe.origin.x, tblFacilityframe.origin.y, tblFacilityframe.size.width, 176);
+    }
+    else{
+          self.tblFacilityListing.frame = CGRectMake(tblFacilityframe.origin.x, tblFacilityframe.origin.y, tblFacilityframe.size.width, aryFacilities.count * 44);
+    }
+  
+     CGRect viewSelectPosframe = self.viewSelectPos.frame;
+    self.viewSelectPos.frame = CGRectMake(viewSelectPosframe.origin.x, self.tblFacilityListing.frame.origin.y + self.tblFacilityListing.frame.size.height + 15, viewSelectPosframe.size.width, viewSelectPosframe.size.height);
+    
+    CGRect btnframe = self.btnSubmit.frame;
+    self.btnSubmit.frame = CGRectMake(btnframe.origin.x, self.btnToggleTeam.frame.origin.y + self.btnToggleTeam.frame.size.height + 15, btnframe.size.width, btnframe.size.height);
+    
+    CGRect lblMyLogframe = self.lblMyLog.frame;
+    self.lblMyLog.frame = CGRectMake(lblMyLogframe.origin.x, self.btnSubmit.frame.origin.y + self.btnSubmit.frame.size.height + 10, lblMyLogframe.size.width, lblMyLogframe.size.height);
+    
+    CGRect tblDailyLogframe = self.tblDailyLog.frame;
+    CGFloat height = self.view.frame.size.height - (self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10) - 77;
+    self.tblDailyLog.frame = CGRectMake(tblDailyLogframe.origin.x, self.lblMyLog.frame.origin.y + self.lblMyLog.frame.size.height + 10, tblDailyLogframe.size.width, height);
+    
+   // CGRect aBtnRect = self.btnSubmit.frame;
+  //  aBtnRect.origin.y = self.viewSelectPos.frame.origin.y;
+   // self.btnSubmit.frame = aBtnRect;
     
     if (gblAppDelegate.teamLogCountAfterLogin>0 || self.boolISWSCallNeeded) {
         [gblAppDelegate showActivityIndicator];
@@ -397,114 +481,197 @@
         [gblAppDelegate hideActivityIndicator];
 }
 
+-(void)getFacilityList
+{
+    aryFacilities = [[NSArray alloc]init];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserFacility"];
+    [request setPropertiesToFetch:@[@"name", @"value"]];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortByName]];
+    aryFacilities = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    NSLog(@"%@",aryFacilities);
+    
+}
 
 #pragma mark - UITableView DataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (tableView == self.tblFacilityListing) {
+         return aryFacilities.count;
+    }
     return [mutArrDailyList count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self fetchTeamLog];
+
     
-    UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    [aCell setBackgroundColor:[UIColor clearColor]];
-    UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
-    UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
-    UIImageView *aImgView = (UIImageView*)[aCell.contentView viewWithTag:5];
-    [aImgView setHidden:YES];
-
-    if ([mutArrDailyList[indexPath.row]isKindOfClass:[DailyLog class]]) {
-        DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-      
-        [aFormatter setDateFormat:@"hh:mm a"];
+    if (tableView == self.tblFacilityListing) {
+        facilityListingTableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
         
-        
-        [aLblTime setText:[aFormatter stringFromDate:log.date]];
-        [aLblLog setText:log.desc];
-        //----Changes By Chetan Kasundra-------------
-        //-----Before prb in cell height,Content Overlap each other
-        
-        NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-        CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-        
-        CGRect frame = aLblLog.frame;
-        if (aHeight < 21) {
-            frame.size.height = 21;
-            aLblLog.frame = frame;
-        }
-        else
-        {
-            frame.size.height=aHeight;
-            aLblLog.frame=frame;
-        }
-        
-        UIView *bgView = [aCell.contentView viewWithTag:2];
-        frame = bgView.frame;
-        frame.size.height = aHeight + 40;
-        bgView.frame = frame;
-        aImgView.hidden = YES;
-
-    }
-    else
-    {
        
-        TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-
-        NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
-        [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
-        [aFormatter setDateFormat:@"hh:mm a"];
-
-        [aLblTime setText:[aFormatter stringFromDate:log.date]];
-        [aLblLog setText:log.desc];
+        if ([selectedFacilityArr containsObject:[[aryFacilities objectAtIndex:indexPath.row] valueForKey:@"value"]]) {
+       
+            aCell.imgCheck.image = [UIImage imageNamed:@"selected_check_box@2x.png"];
+            
+        }
+        else{
+            aCell.imgCheck.image = [UIImage imageNamed:@"check_box@2x.png"];
+            
+        }
+        aCell.lblFacility.text = [[aryFacilities objectAtIndex:indexPath.row] valueForKey:@"name"];
         
-        //----Changes By Chetan Kasundra-------------
-        //-----Before prb in cell height,Content Overlap each other
+        return aCell;
+    }
+    else{
+            [self fetchTeamLog];
+        UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        [aCell setBackgroundColor:[UIColor clearColor]];
+        UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
+        UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
+        UIImageView *aImgView = (UIImageView*)[aCell.contentView viewWithTag:5];
+        [aImgView setHidden:YES];
+        NSLog(@"%@",[mutArrDailyList objectAtIndex:indexPath.row]);
+        if ([mutArrDailyList[indexPath.row]isKindOfClass:[DailyLog class]]) {
+            DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
+            NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+            
+            [aFormatter setDateFormat:@"hh:mm a"];
+            
+            [aLblTime setText:[aFormatter stringFromDate:log.date]];
         
-        NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-        CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-        
-        CGRect frame = aLblLog.frame;
-        if (aHeight < 21) {
-            frame.size.height = 21;
-            aLblLog.frame = frame;
+             NSString * htmlString = log.desc;
+            NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                                    documentAttributes: nil
+                                                    error: nil
+                                                    ];
+            // [aLblLog setText:log.desc];
+            [aLblLog setAttributedText:attributedString];
+         
+            //----Changes By Chetan Kasundra-------------
+            //-----Before prb in cell height,Content Overlap each other
+            
+            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+            
+            CGRect frame = aLblLog.frame;
+            if (aHeight < 21) {
+                frame.size.height = 21;
+                aLblLog.frame = frame;
+            }
+            else
+            {
+                frame.size.height=aHeight;
+                aLblLog.frame=frame;
+            }
+            
+            UIView *bgView = [aCell.contentView viewWithTag:2];
+            frame = bgView.frame;
+            frame.size.height = aHeight + 40;
+            bgView.frame = frame;
+            aImgView.hidden = YES;
+            
         }
         else
         {
-            frame.size.height=aHeight;
-            aLblLog.frame=frame;
+            
+            TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
+            
+            NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+            [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
+            [aFormatter setDateFormat:@"hh:mm a"];
+            
+            [aLblTime setText:[aFormatter stringFromDate:log.date]];
+            
+            NSString * htmlString = log.desc;
+            
+            NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                                    documentAttributes: nil
+                                                    error: nil
+                                                    ];
+
+            //[aLblLog setText:log.desc];
+               [aLblLog setAttributedText:attributedString];
+            
+        //      UIWebView * discriptionView = [aCell.contentView viewWithTag:6];
+            //    [discriptionView loadHTMLString:htmlString baseURL:nil];
+            
+            //----Changes By Chetan Kasundra-------------
+            //-----Before prb in cell height,Content Overlap each other
+            
+            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+            
+            CGRect frame = aLblLog.frame;
+            if (aHeight < 21) {
+                frame.size.height = 21;
+                aLblLog.frame = frame;
+            }
+            else
+            {
+                frame.size.height=aHeight;
+                aLblLog.frame=frame;
+            }
+            
+          // discriptionView.frame = aLblLog.frame;
+          //  discriptionView.backgroundColor = [UIColor clearColor];
+            UIView *bgView = [aCell.contentView viewWithTag:2];
+            frame = bgView.frame;
+            frame.size.height = aHeight + 40;
+            bgView.frame = frame;
+            
+            if ([log.positionId isEqualToString:@"0"]) {
+                aImgView.hidden = YES;
+            }else{
+                aImgView.hidden = NO;
+            }
+            
         }
-        
-        UIView *bgView = [aCell.contentView viewWithTag:2];
-        frame = bgView.frame;
-        frame.size.height = aHeight + 40;
-        bgView.frame = frame;
-        
-        if ([log.positionId isEqualToString:@"0"]) {
-            aImgView.hidden = YES;
-        }else{
-            aImgView.hidden = NO;
-        }
-    
+
+       // aLblLog.hidden = YES;
+        //---------------------------------
+        return aCell;
     }
-    
-
-    //---------------------------------
-    return aCell;
 }
-
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (tableView == self.tblFacilityListing) {
+        if ([selectedFacilityArr containsObject:[[aryFacilities objectAtIndex:indexPath.row] valueForKey:@"value"]]) {
+            [selectedFacilityArr removeObject:[[aryFacilities objectAtIndex:indexPath.row] valueForKey:@"value"]];
+        }else{
+        [selectedFacilityArr addObject:[[aryFacilities objectAtIndex:indexPath.row] valueForKey:@"value"]];
+        }
+    }
+    [_tblFacilityListing reloadData];
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView == self.tblFacilityListing) {
+          return 44;
+    }
+    else{
     TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
     NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-    CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+        NSString * htmlString = log.desc;
+        NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                                initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                                options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                                documentAttributes: nil
+                                                error: nil
+                                                ];
+        UILabel * lblTemp = [[UILabel alloc]init];
+        lblTemp.attributedText = attributedString;
+        CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
     
     if (aHeight < 21)
     {
         aHeight = 21;
     }
     return aHeight + 49;
+    }
 }
 
 #pragma mark - TextField Delegate
@@ -574,6 +741,7 @@
     NSDictionary *aDictParams = @{@"Id":@"0",
                                   @"FacilityId":aLog.facilityId,
                                   @"PositionId":@"",
+                                  @"selectedFacilities":@"",
                                   @"IsTeamLog":[NSNumber numberWithBool:NO],
                                   @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
                                   @"Date":aParamDate,
@@ -621,6 +789,7 @@
                                   @"IsAlwaysVisible":[NSNumber numberWithBool:NO],
                                   @"Date":aParamDate,
                                   @"UserId":aObj.userId,
+                                  @"SelectedFacilities":aObj.selectedFacilities,
                                   @"DailyLogDetails":@[
                                           @{@"Id":@"0",
                                             @"Date":aParamDate,
@@ -656,9 +825,15 @@
             aTeamLogTraceObj.byuserId = aObj.userId;
             aTeamLogTraceObj.date = aObj.date;
             aTeamLogTraceObj.teamLogId  = aObj.teamLogId;
+            if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
+                [gblAppDelegate.managedObjectContext save:nil];
+
+            }
+            [selectedFacilityArr removeAllObjects];
+            [selectedFacilityArr addObject:[[[User currentUser]selectedFacility] value]];
+            [_tblFacilityListing reloadData];
             
-            [gblAppDelegate.managedObjectContext save:nil];
-        }
+                 }
         
     } failure:^(NSError *error, NSDictionary *response) {
         

@@ -116,8 +116,16 @@
     [aFormatter setDateFormat:@"MM/dd/yyyy  hh:mm a"];
     
     [aCell.lblDate setText:[aFormatter stringFromDate:log.date]];
-    [aCell.lblDescription setText:log.desc];
     
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+  //  [aCell.lblDescription setText:log.desc];
+      [aCell.lblDescription setAttributedText:attributedString];
     NSString *aStrName = [NSString stringWithFormat:@"%@",log.username];
     [aCell.lblUserName setText:aStrName];
     
@@ -157,8 +165,15 @@
 {
     [self createCommentContainer];
 
-    self.txtViewLog.text = self.teamLogObj.desc;
-    
+    NSString * htmlString = self.teamLogObj.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+ //   self.txtViewLog.text = self.teamLogObj.desc;
+     self.txtViewLog.attributedText = attributedString;
     self.mutArrComments = [NSMutableArray array];
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
     NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[self.teamLogObj.teamSubLog.allObjects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];

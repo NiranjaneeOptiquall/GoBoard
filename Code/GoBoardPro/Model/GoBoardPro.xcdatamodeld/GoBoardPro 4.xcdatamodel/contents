@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16A323" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -637,6 +637,7 @@
         <attribute name="includeInEndOfDayReport" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isTeamLog" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="positionId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selectedFacilities" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shouldSync" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="teamLogId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
@@ -681,6 +682,9 @@
     </entity>
     <entity name="UtilizationCount" representedClassName="UtilizationCount" syncable="YES">
         <attribute name="capacity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isClosed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isLocationStatusChanged" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isReadyToSubmit" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastCount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastCountDateTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
@@ -751,14 +755,14 @@
         <element name="SurveyResponseTypeValues" positionX="-873" positionY="1130" width="128" height="103"/>
         <element name="TaskList" positionX="135" positionY="-972" width="128" height="315"/>
         <element name="TaskResponseTypeValues" positionX="134" positionY="-517" width="128" height="103"/>
-        <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="225"/>
+        <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="240"/>
         <element name="TeamLogTrace" positionX="-315" positionY="-630" width="128" height="105"/>
         <element name="TeamSubLog" positionX="-632" positionY="-387" width="128" height="133"/>
         <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="90"/>
         <element name="UserLocation1" positionX="-351" positionY="-1116" width="128" height="88"/>
         <element name="UserPosition" positionX="-164" positionY="-837" width="128" height="105"/>
-        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="178"/>
+        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="225"/>
         <element name="Witness" positionX="520" positionY="-52" width="128" height="195"/>
     </elements>
 </model>

@@ -15,6 +15,8 @@
     UIPopoverController *popOverMessage;
     BOOL isUpdate;
     NSString *strPreviousText;
+    NSMutableArray * readyToSubmitArr, * btnOptionTapArr;
+    NSMutableDictionary * readyToSubmitCellArr , * btnCellOptionTapArr, * btnCellAllClosedArr;//, * btnCellClosedArr;
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *tblCountList;

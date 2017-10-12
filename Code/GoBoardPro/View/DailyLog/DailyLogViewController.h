@@ -10,7 +10,8 @@
 #import "Constants.h"
 
 @interface DailyLogViewController : UIViewController <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate,DropDownValueDelegate> {
-    NSMutableArray *mutArrDailyList;
+    NSMutableArray *mutArrDailyList, * selectedFacilityArr;
+    NSArray *aryFacilities;
     BOOL isUpdate;
 }
 @property (nonatomic,assign) BOOL boolISWSCallNeeded;
@@ -23,6 +24,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnSubmit;
 @property (strong, nonatomic) IBOutlet UITextField *txtPosition;
 @property (strong, nonatomic) IBOutlet UIButton *btnToggleTeam;
+@property (weak, nonatomic) IBOutlet UITableView *tblFacilityListing;
+@property (weak, nonatomic) IBOutlet UILabel *lblMyLog;
 
 - (IBAction)btnBackTapped:(UIButton *)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

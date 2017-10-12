@@ -113,7 +113,7 @@
                              {
                                  [alert dismissViewControllerAnimated:YES completion:nil];
                                  [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-                                 LoginViewController *loginView = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 LoginViewController *loginView = [self.storyboard  instantiateViewControllerWithIdentifier:@"LoginViewController"];
                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"reload"
                                                                                      object:self];
                                  islogedout = true;

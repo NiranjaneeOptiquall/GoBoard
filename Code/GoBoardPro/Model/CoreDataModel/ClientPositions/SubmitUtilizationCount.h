@@ -22,6 +22,9 @@
 @property (nonatomic, retain) SubmitUtilizationCount *location;
 @property (nonatomic, retain) NSSet *sublocations;
 @property (nonatomic, retain) SubmitCountUser *user;
+@property (nonatomic, assign) BOOL isClosed;
+@property (nonatomic, assign) BOOL isReadyToSubmit;
+@property (nonatomic, assign) BOOL isLocationStatusChanged;
 @end
 
 @interface SubmitUtilizationCount (CoreDataGeneratedAccessors)

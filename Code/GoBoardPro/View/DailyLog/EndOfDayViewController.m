@@ -402,13 +402,23 @@
             NSArray *aryDateComp = [[aFormatter stringFromDate:log.date] componentsSeparatedByString:@" "];
             
             [aCell.timeLabel setText:[NSString stringWithFormat:@"%@ %@", aryDateComp[1], aryDateComp[2]]];
-            [aCell.detailLabel setText:log.desc];
-            
+    
+    
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+//            [aCell.detailLabel setText:log.desc];
+        [aCell.detailLabel setAttributedText:attributedString];
+    
             //----Changes By Chetan Kasundra-------------
             //-----Before prb in cell height,Content Overlap each other
             
             NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-            CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+            CGFloat aHeight = [aCell.detailLabel.text boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
             
             CGRect frame = aCell.detailLabel.frame;
             if (aHeight < 21) {
@@ -444,7 +454,16 @@
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
     
     NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-    CGFloat aHeight = [log.desc boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+    UILabel * lblTemp = [[UILabel alloc]init];
+    lblTemp.attributedText = attributedString;
+    CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
 
     if (aHeight < 21)
     {

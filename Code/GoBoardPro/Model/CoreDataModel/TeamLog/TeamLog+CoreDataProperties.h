@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSDate *date;
 @property (nullable, nonatomic, retain) NSString *desc;
 @property (nullable, nonatomic, retain) NSString *facilityId;
+@property (nullable, nonatomic, retain) NSString *selectedFacilities;
 @property (nullable, nonatomic, retain) NSString *includeInEndOfDayReport;
 @property (nullable, nonatomic, retain) NSString *positionId;
 @property (nullable, nonatomic, retain) NSNumber *shouldSync;

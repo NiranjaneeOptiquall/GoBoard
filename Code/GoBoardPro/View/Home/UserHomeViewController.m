@@ -30,7 +30,7 @@
 #import "TeamSubLog.h"
 #import "TeamLogTrace.h"
 #import "LoginViewController.h"
-
+#import "TeamLogVC.h"
 #import "DailyLogViewController.h"
 
 @interface UserHomeViewController ()
@@ -141,10 +141,7 @@
         DailyLogViewController *aVCObj= (DailyLogViewController *)segue.destinationViewController;
         aVCObj.boolISWSCallNeeded = self.boolUpdateTeamLog;
     }
-   
-   
-    
-//
+
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender  {
@@ -288,14 +285,29 @@
 //    Log = 14
 //    Memos = 15
 
+    
+     NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue] != 0) {
+        segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"TeamLog", @"Memos"];
+    }
    
-    NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
+
 //__weak NSDictionary *aDict = [gblAppDelegate.mutArrHomeMenus objectAtIndex:indexPath.item];
+
     __weak NSDictionary *aDict =  [moduleArr objectAtIndex:indexPath.item];
+    if ([segues[[aDict[@"SystemModule"] integerValue]] isEqualToString:@"TeamLog"]) {
+
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Secondary" bundle:nil];
+        TeamLogVC *myVC = (TeamLogVC *)[storyboard instantiateViewControllerWithIdentifier:@"TeamLogVC"];
+        [self.navigationController pushViewController: myVC animated:YES];
+        return;
+        
+    }
 
     if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue])
     {
         if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
+            NSLog(@"%@",segues[[aDict[@"SystemModule"] integerValue]]);
             [self performSegueWithIdentifier:segues[[aDict[@"SystemModule"] integerValue]] sender:nil];
         }
     }

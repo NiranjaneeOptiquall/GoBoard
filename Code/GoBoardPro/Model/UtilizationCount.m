@@ -32,5 +32,7 @@
 @dynamic sequence;
 @dynamic location;
 @dynamic sublocations;
-
+@dynamic isClosed;
+@dynamic isReadyToSubmit;
+@dynamic isLocationStatusChanged;
 @end

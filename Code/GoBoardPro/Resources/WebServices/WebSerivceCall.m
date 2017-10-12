@@ -888,6 +888,7 @@
 
                 //PositionID Removed
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?facilityId=%@", UTILIZATION_COUNT, [[[User currentUser] selectedFacility] value]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        NSLog(@"%@",response);
         [self deleteAllCountLocation];
         [self insertAllCountLocation:[response objectForKey:@"Locations"]];
         isWSComplete = YES;
@@ -933,15 +934,30 @@
         else
             location.message = [aDict objectForKey:@"Message"];
         if ([[aDict objectForKey:@"LastCount"] isKindOfClass:[NSNull class]])
-            location.lastCount = @"0";
-        else
+        {
+         //   location.lastCount = @"0";
+         location.lastCount = @"-";
+    }
+        else {
             location.lastCount = [[aDict objectForKey:@"LastCount"] stringValue];
+
+        }
         if ([[aDict objectForKey:@"LastCountDateTime"] isKindOfClass:[NSNull class]])
             location.lastCountDateTime = @"";
         else {
             NSString *aStrDate = [[[aDict objectForKey:@"LastCountDateTime"] componentsSeparatedByString:@"."] firstObject];
             location.lastCountDateTime = aStrDate;
         }
+        if ([[NSString stringWithFormat:@"%@",[aDict objectForKey:@"IsClosed"]] isEqualToString:@"1"])
+            location.isClosed = YES;
+        else {
+            location.isClosed = NO;
+        }
+    //    if ([[aDict objectForKey:@"Message"] isKindOfClass:[NSNull class]])
+    //        location.message = @"";
+    //    else
+            location.isLocationStatusChanged = false;
+
         
         location.capacity = [[aDict objectForKey:@"Capacity"] stringValue];
         NSMutableSet *set = [NSMutableSet set];
@@ -950,16 +966,30 @@
                 UtilizationCount *subLoc = [NSEntityDescription insertNewObjectForEntityForName:@"UtilizationCount" inManagedObjectContext:gblAppDelegate.managedObjectContext];
                 subLoc.name = [aDictSubLoc objectForKey:@"Name"];
                 subLoc.sequence = [aDictSubLoc objectForKey:@"Sequence"];
-                if ([[aDictSubLoc objectForKey:@"LastCount"] isKindOfClass:[NSNull class]])
-                    subLoc.lastCount = @"0";
-                else
+                if ([[aDictSubLoc objectForKey:@"LastCount"] isKindOfClass:[NSNull class]]){
+                  //  subLoc.lastCount = @"0";
+                    subLoc.lastCount = @"-";
+                }
+                else {
                     subLoc.lastCount = [[aDictSubLoc objectForKey:@"LastCount"] stringValue];
+                }
                 if ([[aDictSubLoc objectForKey:@"LastCountDateTime"] isKindOfClass:[NSNull class]])
                     subLoc.lastCountDateTime = @"";
                 else {
                     NSString *aStrDate = [[[aDictSubLoc objectForKey:@"LastCountDateTime"] componentsSeparatedByString:@"."] firstObject];
                     subLoc.lastCountDateTime = aStrDate;
                 }
+                if ([[NSString stringWithFormat:@"%@",[aDictSubLoc objectForKey:@"IsClosed"]] isEqualToString:@"1"])
+                    subLoc.isClosed = YES;
+                else {
+                    subLoc.isClosed = NO;
+                }
+                
+                //    if ([[aDict objectForKey:@"Message"] isKindOfClass:[NSNull class]])
+                //        location.message = @"";
+                //    else
+                subLoc.isLocationStatusChanged = false;
+                
                 subLoc.locationId = [[aDictSubLoc objectForKey:@"Id"] stringValue];
                 subLoc.location = location;
                 [set addObject:subLoc];

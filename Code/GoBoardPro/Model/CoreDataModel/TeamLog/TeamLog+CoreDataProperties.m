@@ -23,5 +23,5 @@
 @dynamic userId;
 @dynamic username;
 @dynamic teamSubLog;
-
+@dynamic selectedFacilities;
 @end

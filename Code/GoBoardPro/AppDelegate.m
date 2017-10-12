@@ -2,6 +2,7 @@
 
 
 
+
 //  AppDelegate.m
 //  GoBoardPro
 //
@@ -281,6 +282,7 @@
         [dataTask resume];
         
     }
+    
     else {
         failure(nil, @{@"ErrorMessage":MSG_NO_INTERNET});
         return;

@@ -22,5 +22,7 @@
 @dynamic location;
 @dynamic sublocations;
 @dynamic user;
-
+@dynamic isClosed;
+@dynamic isReadyToSubmit;
+@dynamic isLocationStatusChanged;
 @end
