@@ -530,6 +530,8 @@
         UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
         UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
         UIImageView *aImgView = (UIImageView*)[aCell.contentView viewWithTag:5];
+          UIWebView *aWebDescLog = (UIWebView*)[aCell.contentView viewWithTag:6];
+        aWebDescLog.scrollView.scrollEnabled = NO;
         [aImgView setHidden:YES];
         NSLog(@"%@",[mutArrDailyList objectAtIndex:indexPath.row]);
         if ([mutArrDailyList[indexPath.row]isKindOfClass:[DailyLog class]]) {
@@ -548,28 +550,32 @@
                                                     error: nil
                                                     ];
             // [aLblLog setText:log.desc];
+            
             [aLblLog setAttributedText:attributedString];
-         
+          [aWebDescLog loadHTMLString:htmlString baseURL:nil];
             //----Changes By Chetan Kasundra-------------
             //-----Before prb in cell height,Content Overlap each other
             
             NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-            
-            CGRect frame = aLblLog.frame;
-            if (aHeight < 21) {
-                frame.size.height = 21;
-                aLblLog.frame = frame;
+         //   CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+               CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//            CGRect frame = aLblLog.frame;
+             CGRect frame = aWebDescLog.frame;
+            if (aHeight < 30) {
+                frame.size.height = 30;
+//                aLblLog.frame = frame;
+                   aWebDescLog.frame = frame;
             }
             else
             {
-                frame.size.height=aHeight;
-                aLblLog.frame=frame;
+                frame.size.height=aHeight + 10;
+//                aLblLog.frame=frame;
+                   aWebDescLog.frame=frame;
             }
             
             UIView *bgView = [aCell.contentView viewWithTag:2];
             frame = bgView.frame;
-            frame.size.height = aHeight + 40;
+            frame.size.height = aHeight + 50;
             bgView.frame = frame;
             aImgView.hidden = YES;
             
@@ -596,7 +602,7 @@
 
             //[aLblLog setText:log.desc];
                [aLblLog setAttributedText:attributedString];
-            
+                [aWebDescLog loadHTMLString:htmlString baseURL:nil];
         //      UIWebView * discriptionView = [aCell.contentView viewWithTag:6];
             //    [discriptionView loadHTMLString:htmlString baseURL:nil];
             
@@ -604,24 +610,29 @@
             //-----Before prb in cell height,Content Overlap each other
             
             NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+                 CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
             
-            CGRect frame = aLblLog.frame;
-            if (aHeight < 21) {
-                frame.size.height = 21;
-                aLblLog.frame = frame;
+//            CGRect frame = aLblLog.frame;
+               CGRect frame = aWebDescLog.frame;
+            if (aHeight < 30) {
+                frame.size.height = 30;
+//                aLblLog.frame = frame;
+                aWebDescLog.frame = frame;
             }
             else
             {
-                frame.size.height=aHeight;
-                aLblLog.frame=frame;
+                frame.size.height=aHeight + 10;
+//                aLblLog.frame=frame;
+                aWebDescLog.frame=frame;
+                
             }
             
           // discriptionView.frame = aLblLog.frame;
           //  discriptionView.backgroundColor = [UIColor clearColor];
             UIView *bgView = [aCell.contentView viewWithTag:2];
             frame = bgView.frame;
-            frame.size.height = aHeight + 40;
+            frame.size.height = aHeight + 50;
             bgView.frame = frame;
             
             if ([log.positionId isEqualToString:@"0"]) {
@@ -634,8 +645,18 @@
 
        // aLblLog.hidden = YES;
         //---------------------------------
+        aLblLog.hidden = YES;
+      //  aTxtDescLog.backgroundColor = [UIColor purpleColor];
         return aCell;
     }
+}
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -670,7 +691,7 @@
     {
         aHeight = 21;
     }
-    return aHeight + 49;
+    return aHeight + 69;
     }
 }
 

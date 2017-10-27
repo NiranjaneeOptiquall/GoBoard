@@ -33,7 +33,7 @@
 @property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
 @property (strong, nonatomic) IBOutlet UIButton *btnSubmitLater;
 @property(nonatomic,retain)FormsHistory *forms;
-
+@property (assign, nonatomic) BOOL isAllowSharedFormEdit;
 @property (assign, nonatomic) BOOL isSurvey;
 
 - (IBAction)btnBackTapped:(id)sender;

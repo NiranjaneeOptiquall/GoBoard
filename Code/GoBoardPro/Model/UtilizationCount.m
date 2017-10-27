@@ -35,4 +35,5 @@
 @dynamic isClosed;
 @dynamic isReadyToSubmit;
 @dynamic isLocationStatusChanged;
+@dynamic isSameCountTaken;
 @end

@@ -400,7 +400,7 @@
             [aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
             
             NSArray *aryDateComp = [[aFormatter stringFromDate:log.date] componentsSeparatedByString:@" "];
-            
+            aCell.detailWebView.scrollView.scrollEnabled = NO;
             [aCell.timeLabel setText:[NSString stringWithFormat:@"%@ %@", aryDateComp[1], aryDateComp[2]]];
     
     
@@ -413,27 +413,30 @@
                                             ];
 //            [aCell.detailLabel setText:log.desc];
         [aCell.detailLabel setAttributedText:attributedString];
-    
+        [aCell.detailWebView loadHTMLString:htmlString baseURL:nil];
             //----Changes By Chetan Kasundra-------------
             //-----Before prb in cell height,Content Overlap each other
             
             NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
             CGFloat aHeight = [aCell.detailLabel.text boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
             
-            CGRect frame = aCell.detailLabel.frame;
-            if (aHeight < 21) {
-                frame.size.height = 21;
-                aCell.detailLabel.frame = frame;
+            //CGRect frame = aCell.detailLabel.frame;
+    CGRect frame = aCell.detailWebView.frame;
+            if (aHeight < 30) {
+                frame.size.height = 30;
+                //aCell.detailLabel.frame = frame;
+                aCell.detailWebView.frame = frame;
             }
             else
             {
                 frame.size.height=aHeight;
-                aCell.detailLabel.frame=frame;
+                //aCell.detailLabel.frame=frame;
+                aCell.detailWebView.frame=frame;
             }
             
            // UIView *bgView = [aCell.contentView viewWithTag:2];
             frame = aCell.bgView.frame;
-            frame.size.height = aHeight + 40;
+            frame.size.height = aHeight + 50;
             aCell.bgView.frame = frame;
          //   UIButton *aBtn = (UIButton *)[aCell.contentView viewWithTag:220];
             [aCell.checkMarkButton addTarget:self action:@selector(btnCheckMark:) forControlEvents:UIControlEventTouchUpInside];
@@ -445,11 +448,22 @@
     else{
         [aCell.checkMarkButton setImage:[UIImage imageNamed:@"check_box_sel@2x.png"] forState:UIControlStateNormal];
     }
-    
-    
+//    if (aCell.detailWebView.frame.size.height < 30) {
+//        CGRect frame = aCell.detailWebView.frame;
+//        frame.size.height = 30;
+//        aCell.detailWebView.frame = frame;
+//    }
+    aCell.detailLabel.hidden = YES;
     return aCell;
 }
-
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     DailyLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
     
@@ -465,11 +479,11 @@
     lblTemp.attributedText = attributedString;
     CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(588, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
 
-    if (aHeight < 21)
+    if (aHeight < 30)
     {
-        aHeight = 21;
+        aHeight = 30;
     }
-    return aHeight + 49;
+    return aHeight + 59;
 }
 
 #pragma mark - UIAlertViewDelegate

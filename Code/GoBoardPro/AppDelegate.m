@@ -300,7 +300,7 @@
         NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
         aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
-        
+          NSLog(@"%@",aUrl);
         [request setHTTPMethod:httpMethod];
         if (params) {
             NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
@@ -327,6 +327,7 @@
                 
                 [self hideActivityIndicator];
                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                NSLog(@"%@",aDict);
                 if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
                 }
@@ -353,7 +354,7 @@
         NSString *aUrl = [NSString stringWithFormat:@"%@%@", SERVICE_URL, url];
         aUrl = [aUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]];
-        
+            NSLog(@"%@",aUrl);
         [request setHTTPMethod:httpMethod];
         if (params) {
             NSData *aData = [NSJSONSerialization dataWithJSONObject:params options:0 error:nil];
@@ -378,6 +379,7 @@
             } else {
                 
                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+                  NSLog(@"%@",aDict);
                 if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
                  //   [self hideActivityIndicator];

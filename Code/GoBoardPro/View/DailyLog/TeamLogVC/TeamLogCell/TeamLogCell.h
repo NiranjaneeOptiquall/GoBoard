@@ -14,6 +14,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblDate;
 @property (strong, nonatomic) IBOutlet UILabel *lblDescription;
 
+@property (weak, nonatomic) IBOutlet UIWebView *webViewDesc;
 
 @property (strong, nonatomic) IBOutlet UITextView *txtViewUsername;
 @property (strong, nonatomic) IBOutlet UITextView *txtViewPosition;
@@ -25,4 +26,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *cnstTextViewDateHeight;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *cnstLblDescriptionTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cnstWebDescriptionTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cnstWebDescriptionHeight;
+
 @end

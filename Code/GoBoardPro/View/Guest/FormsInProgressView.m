@@ -179,7 +179,7 @@
  //   NSManagedObject *_objFormOrSurvey=[arrOfForms objectAtIndex:indexPath.row];
 //    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
  //NSArray *array = [[_objFormOrSurvey valueForKey:@"questionList"] sortedArrayUsingDescriptors:@[sort]];
-    NSLog(@"%@",[arrOfForms objectAtIndex:indexPath.row]);
+    NSLog(@"%@",arrOfForms);
     [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%@",[obj valueForKey:@"inProgressFormId"]] forKey:@"aStrInProgressFormId"];
     NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"aStrInProgressFormId"]);
 

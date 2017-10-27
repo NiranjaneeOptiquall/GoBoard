@@ -25,5 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *btnOptions;
 @property (weak, nonatomic) IBOutlet UILabel *LblReadyToSubmit;
+@property (weak, nonatomic) IBOutlet UIImageView *imgClosedIndicator;
 @property (assign, nonatomic) NSInteger section;
 @end

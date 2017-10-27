@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Team LogVC-->
         <scene sceneID="UwB-Az-RSI">
             <objects>
-                <viewController storyboardIdentifier="TeamLogVC" id="TIT-eM-oSt" customClass="TeamLogVC" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TeamLogVC" automaticallyAdjustsScrollViewInsets="NO" id="TIT-eM-oSt" customClass="TeamLogVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0IV-V5-tTf"/>
                         <viewControllerLayoutGuide type="bottom" id="ilv-n1-l8F"/>
@@ -66,15 +66,15 @@
                                         <rect key="frame" x="0.0" y="0.0" width="526" height="406"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" rowHeight="141" id="GUl-eu-WKc" customClass="TeamLogCell">
-                                                <rect key="frame" x="0.0" y="22" width="526" height="141"/>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" rowHeight="151" id="GUl-eu-WKc" customClass="TeamLogCell">
+                                                <rect key="frame" x="0.0" y="22" width="526" height="151"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GUl-eu-WKc" id="Xf7-XF-AWY">
-                                                    <rect key="frame" x="0.0" y="0.0" width="526" height="141"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="526" height="151"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iqp-ia-dR7">
-                                                            <rect key="frame" x="0.0" y="0.0" width="526" height="133"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="526" height="143"/>
                                                             <subviews>
                                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZER-iG-C2I">
                                                                     <rect key="frame" x="10" y="8" width="162" height="31"/>
@@ -104,7 +104,7 @@
                                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                                 </textView>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEY-gm-LsO">
-                                                                    <rect key="frame" x="381" y="87" width="135" height="38"/>
+                                                                    <rect key="frame" x="381" y="97" width="135" height="38"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="38" id="mSy-qr-VIA"/>
                                                                         <constraint firstAttribute="width" constant="135" id="s81-BA-t2a"/>
@@ -119,19 +119,33 @@
                                                                     </connections>
                                                                 </button>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Daily log information entered here" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2H4-I2-AhU">
-                                                                    <rect key="frame" x="10" y="47" width="506" height="38"/>
+                                                                    <rect key="frame" x="10" y="47" width="506" height="48"/>
                                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
+                                                                <webView tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhO-cH-2pW">
+                                                                    <rect key="frame" x="10" y="47" width="506" height="48"/>
+                                                                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="uCu-cA-slj"/>
+                                                                    </constraints>
+                                                                    <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                                    <connections>
+                                                                        <outlet property="delegate" destination="TIT-eM-oSt" id="k15-WF-buc"/>
+                                                                    </connections>
+                                                                </webView>
                                                             </subviews>
                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
                                                                 <constraint firstItem="KnW-rZ-Bm5" firstAttribute="leading" secondItem="ZER-iG-C2I" secondAttribute="trailing" constant="10" id="2jQ-Bb-ulI"/>
                                                                 <constraint firstAttribute="trailing" secondItem="2H4-I2-AhU" secondAttribute="trailing" constant="10" id="3eE-hE-Ch7"/>
                                                                 <constraint firstItem="KnW-rZ-Bm5" firstAttribute="width" secondItem="ZER-iG-C2I" secondAttribute="width" id="EQn-Wp-7oV"/>
+                                                                <constraint firstItem="vhO-cH-2pW" firstAttribute="leading" secondItem="Iqp-ia-dR7" secondAttribute="leading" constant="10" id="NlE-YE-T1B"/>
                                                                 <constraint firstItem="ZER-iG-C2I" firstAttribute="leading" secondItem="Iqp-ia-dR7" secondAttribute="leading" constant="10" id="OGB-Ja-yl5"/>
+                                                                <constraint firstItem="vhO-cH-2pW" firstAttribute="top" secondItem="Iqp-ia-dR7" secondAttribute="top" constant="47" id="Qoe-3b-flu"/>
+                                                                <constraint firstAttribute="bottom" secondItem="vhO-cH-2pW" secondAttribute="bottom" constant="48" id="RUR-mh-Xwq"/>
                                                                 <constraint firstItem="qxS-VY-erf" firstAttribute="width" secondItem="ZER-iG-C2I" secondAttribute="width" id="Ter-a5-EvV"/>
                                                                 <constraint firstItem="2H4-I2-AhU" firstAttribute="top" secondItem="Iqp-ia-dR7" secondAttribute="top" constant="47" id="XNR-za-KSt"/>
                                                                 <constraint firstItem="qxS-VY-erf" firstAttribute="top" secondItem="Iqp-ia-dR7" secondAttribute="top" constant="8" id="aA6-tb-K0v"/>
@@ -141,6 +155,7 @@
                                                                 <constraint firstItem="qxS-VY-erf" firstAttribute="leading" secondItem="KnW-rZ-Bm5" secondAttribute="trailing" constant="10" id="kt7-md-sBb"/>
                                                                 <constraint firstItem="ZER-iG-C2I" firstAttribute="top" secondItem="Iqp-ia-dR7" secondAttribute="top" constant="8" id="lvI-TF-uqU"/>
                                                                 <constraint firstItem="KnW-rZ-Bm5" firstAttribute="top" secondItem="Iqp-ia-dR7" secondAttribute="top" constant="8" id="mOR-3D-CiC"/>
+                                                                <constraint firstAttribute="trailing" secondItem="vhO-cH-2pW" secondAttribute="trailing" constant="10" id="oUi-yd-J1Z"/>
                                                                 <constraint firstAttribute="trailing" secondItem="AEY-gm-LsO" secondAttribute="trailing" constant="10" id="pDg-AM-tqY"/>
                                                                 <constraint firstAttribute="bottom" secondItem="2H4-I2-AhU" secondAttribute="bottom" constant="48" id="qTj-i8-Pz8"/>
                                                             </constraints>
@@ -161,10 +176,13 @@
                                                     <outlet property="cnstTextViewDateHeight" destination="lys-0i-NsJ" id="ebq-bT-LFt"/>
                                                     <outlet property="cnstTextViewPositionHeight" destination="Cb4-WA-uV7" id="QlE-Yd-PFV"/>
                                                     <outlet property="cnstTxtViewUserNameHeight" destination="h8T-cn-Leo" id="o5C-mi-Yhm"/>
+                                                    <outlet property="cnstWebDescriptionHeight" destination="uCu-cA-slj" id="zrv-jm-GKA"/>
+                                                    <outlet property="cnstWebDescriptionTop" destination="Qoe-3b-flu" id="2F0-fa-3lg"/>
                                                     <outlet property="lblDescription" destination="2H4-I2-AhU" id="5U0-Bh-19s"/>
                                                     <outlet property="txtViewDate" destination="qxS-VY-erf" id="VKu-MQ-wZV"/>
                                                     <outlet property="txtViewPosition" destination="KnW-rZ-Bm5" id="AOq-in-eZK"/>
                                                     <outlet property="txtViewUsername" destination="ZER-iG-C2I" id="zDC-aX-rKC"/>
+                                                    <outlet property="webViewDesc" destination="vhO-cH-2pW" id="cPl-oj-cz3"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -379,6 +397,14 @@
                                                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
+                                                                                <webView tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y7B-E8-GQb">
+                                                                                    <rect key="frame" x="10" y="31" width="564" height="22"/>
+                                                                                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                    <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                                                    <connections>
+                                                                                        <outlet property="delegate" destination="Lke-ZJ-kta" id="67o-eF-xRR"/>
+                                                                                    </connections>
+                                                                                </webView>
                                                                             </subviews>
                                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <accessibility key="accessibilityConfiguration">
@@ -388,9 +414,13 @@
                                                                                 <constraint firstItem="dCv-n6-kSK" firstAttribute="leading" secondItem="JR6-bq-jne" secondAttribute="leading" constant="10" id="3WR-Yq-BVY"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="dCv-n6-kSK" secondAttribute="trailing" constant="10" id="5Pc-sY-IRq"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="sUe-MQ-gTb" secondAttribute="trailing" constant="10" id="BN3-7u-AzG"/>
+                                                                                <constraint firstAttribute="trailing" secondItem="Y7B-E8-GQb" secondAttribute="trailing" constant="10" id="RKn-0K-z3s"/>
                                                                                 <constraint firstAttribute="bottom" secondItem="dCv-n6-kSK" secondAttribute="bottom" constant="3" id="bNh-iO-Sj7"/>
                                                                                 <constraint firstItem="5LC-lR-4pt" firstAttribute="leading" secondItem="JR6-bq-jne" secondAttribute="leading" constant="10" id="dUA-CX-PDU"/>
                                                                                 <constraint firstItem="5LC-lR-4pt" firstAttribute="top" secondItem="JR6-bq-jne" secondAttribute="top" constant="8" id="dXd-dY-Sk8"/>
+                                                                                <constraint firstItem="Y7B-E8-GQb" firstAttribute="leading" secondItem="JR6-bq-jne" secondAttribute="leading" constant="10" id="eiO-MF-q56"/>
+                                                                                <constraint firstAttribute="bottom" secondItem="Y7B-E8-GQb" secondAttribute="bottom" constant="3" id="nTH-7V-bdD"/>
+                                                                                <constraint firstItem="Y7B-E8-GQb" firstAttribute="top" secondItem="5LC-lR-4pt" secondAttribute="bottom" constant="2" id="qH1-m3-9Kr"/>
                                                                                 <constraint firstItem="dCv-n6-kSK" firstAttribute="top" secondItem="sUe-MQ-gTb" secondAttribute="bottom" constant="2" id="qeq-OW-pZs"/>
                                                                                 <constraint firstItem="sUe-MQ-gTb" firstAttribute="top" secondItem="JR6-bq-jne" secondAttribute="top" constant="8" id="u8h-tT-XeL"/>
                                                                             </constraints>
@@ -412,6 +442,7 @@
                                                                     <outlet property="lblDate" destination="sUe-MQ-gTb" id="kfJ-eK-Eme"/>
                                                                     <outlet property="lblDescription" destination="dCv-n6-kSK" id="Gr9-fu-21N"/>
                                                                     <outlet property="lblUserName" destination="5LC-lR-4pt" id="j39-Gq-zbx"/>
+                                                                    <outlet property="webViewDesc" destination="Y7B-E8-GQb" id="5T8-n8-lBW"/>
                                                                 </connections>
                                                             </tableViewCell>
                                                         </prototypes>

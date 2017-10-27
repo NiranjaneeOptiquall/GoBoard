@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -110,6 +110,10 @@
                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                 </button>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="check_box_desel.png" id="lql-tL-KrQ">
+                    <rect key="frame" x="692" y="17" width="60" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -121,6 +125,7 @@
                 <outlet property="btnIncreaseCount" destination="GN1-RT-mwh" id="Wlr-EF-sFe"/>
                 <outlet property="btnOptions" destination="dcn-Oe-i0q" id="5NQ-i2-jmx"/>
                 <outlet property="btnTapReadyToSubmit" destination="E7Q-5t-Abl" id="DJx-tq-vT0"/>
+                <outlet property="imgClosedIndicator" destination="lql-tL-KrQ" id="hue-uw-HlI"/>
                 <outlet property="imgReadyToSubmit" destination="XDo-E3-hRi" id="VK7-LL-hSw"/>
                 <outlet property="imgTimeExide" destination="oOK-bW-hWL" id="g1z-Hg-VJ7"/>
                 <outlet property="lblCapicity" destination="dCq-jF-rvO" id="NjQ-8D-wW9"/>
@@ -133,14 +138,10 @@
         </view>
     </objects>
     <resources>
+        <image name="check_box_desel.png" width="43" height="43"/>
         <image name="decrease_icon.png" width="73" height="73"/>
         <image name="increase_icon.png" width="73" height="73"/>
         <image name="readyTosubmit_20x20.png" width="20" height="20"/>
         <image name="timeExide_20x20.png" width="20" height="20"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
-    </simulatedMetricsContainer>
 </document>

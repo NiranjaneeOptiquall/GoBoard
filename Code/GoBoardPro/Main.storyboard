@@ -530,6 +530,12 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="2IN-mF-qoU">
+                                                    <rect key="frame" x="666" y="16" width="55" height="55"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="share_g_60"/>
+                                                    <state key="selected" image="share_green_60png"/>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
@@ -539,6 +545,7 @@
                                             <outlet property="btnFormInOfflineTitle" destination="2p9-GT-s7v" id="nMc-pE-gd6"/>
                                             <outlet property="btnFormInProgress" destination="T50-0k-SCy" id="88y-F4-hGa"/>
                                             <outlet property="btnFormInProgressTitle" destination="9Vc-9H-4mj" id="9eO-Sh-c1w"/>
+                                            <outlet property="btnIsSharedForm" destination="2IN-mF-qoU" id="PAk-Hv-IdH"/>
                                             <outlet property="lblFormInOfflineCount" destination="NjT-CY-6pC" id="gVx-3B-Jpe"/>
                                             <outlet property="lblFormName" destination="LF0-J3-KvO" id="pJD-FG-7bu"/>
                                             <outlet property="lblFormsCount" destination="np6-XZ-ZDa" id="VKc-jY-0uD"/>
@@ -565,7 +572,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1NQ-96-zk1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3516" y="980"/>
+            <point key="canvasLocation" x="2233" y="1021"/>
         </scene>
         <!--Dynamic Forms View Controller-->
         <scene sceneID="JrF-F5-e3I">
@@ -1611,7 +1618,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Re-9b-gL0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="k6I-x8-eLy" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2948" y="924"/>
+            <point key="canvasLocation" x="3080" y="923"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="D6e-GI-WuO">
@@ -2033,7 +2040,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="akh-Ph-dml" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3557" y="1104"/>
+            <point key="canvasLocation" x="3866" y="948"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="STY-EL-2hc">
@@ -2948,6 +2955,23 @@
                                                             <rect key="frame" x="638" y="8" width="47" height="47"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="7" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Daily log information entered here" selectable="NO" id="SPq-Bx-Ni3">
+                                                            <rect key="frame" x="15" y="31" width="615" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <fontDescription key="fontDescription" name=".SFNSText" family=".SF NS Text" pointSize="17"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                        </textView>
+                                                        <webView tag="6" contentMode="scaleToFill" misplaced="YES" keyboardDisplayRequiresUserAction="NO" id="BGB-F8-FBr">
+                                                            <rect key="frame" x="15" y="31" width="615" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                            <connections>
+                                                                <outlet property="delegate" destination="Xnf-dY-jU5" id="zrQ-Ku-7Hh"/>
+                                                            </connections>
+                                                        </webView>
                                                     </subviews>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <accessibility key="accessibilityConfiguration">
@@ -4503,6 +4527,10 @@
                                                     <rect key="frame" x="293" y="36" width="15" height="15"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="check_box_desel.png" id="5IG-Bd-nOg">
+                                                    <rect key="frame" x="687" y="16" width="60" height="60"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <accessibility key="accessibilityConfiguration">
@@ -4515,6 +4543,7 @@
                                             <outlet property="btnDecreaseCount" destination="GaZ-xi-ZRN" id="Lza-VN-QgC"/>
                                             <outlet property="btnIncreaseCount" destination="911-KV-Je2" id="DbZ-gu-eKn"/>
                                             <outlet property="btnOptions" destination="ul8-zz-pmU" id="VEw-zf-uco"/>
+                                            <outlet property="imgClosedIndicatior" destination="5IG-Bd-nOg" id="qVI-7g-9GE"/>
                                             <outlet property="imgReadyToSubmit" destination="cFH-kx-O3G" id="HR7-9a-Fd8"/>
                                             <outlet property="imgTimeExide" destination="MfP-6u-d0o" id="QAx-sb-TQt"/>
                                             <outlet property="lblDevider" destination="Rfj-SN-Cl8" id="rUq-AE-5Vw"/>
@@ -7092,6 +7121,14 @@
                                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
+                                                                        <webView contentMode="scaleToFill" misplaced="YES" id="Px7-m8-XZV">
+                                                                            <rect key="frame" x="15" y="31" width="588" height="21"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                            <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <connections>
+                                                                                <outlet property="delegate" destination="j5U-3Q-k6b" id="zVn-mY-qVr"/>
+                                                                            </connections>
+                                                                        </webView>
                                                                     </subviews>
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <accessibility key="accessibilityConfiguration">
@@ -7108,6 +7145,7 @@
                                                             <outlet property="bgView" destination="wFm-Zb-OLY" id="PBE-hn-bSV"/>
                                                             <outlet property="checkMarkButton" destination="tAq-my-V3n" id="lK7-l8-g0Q"/>
                                                             <outlet property="detailLabel" destination="zEn-8A-4Vn" id="ok6-Z0-vdC"/>
+                                                            <outlet property="detailWebView" destination="Px7-m8-XZV" id="deA-mE-gy7"/>
                                                             <outlet property="timeLabel" destination="Qfm-jO-VWG" id="7jF-dq-7aO"/>
                                                         </connections>
                                                     </tableViewCell>
@@ -8288,6 +8326,8 @@ JvIm9Cb5JwEnBCcJJxEnFCcmJyknLgAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAACcwA
         <image name="search_20x20.png" width="20" height="20"/>
         <image name="selected_check_box.png" width="44" height="44"/>
         <image name="selector.png" width="9" height="9"/>
+        <image name="share_g_60" width="60" height="64"/>
+        <image name="share_green_60png" width="60" height="64"/>
         <image name="show_completed_icon.png" width="58" height="60"/>
         <image name="sign_in_btn.png" width="148" height="61"/>
         <image name="small_text_box.png" width="105" height="45"/>

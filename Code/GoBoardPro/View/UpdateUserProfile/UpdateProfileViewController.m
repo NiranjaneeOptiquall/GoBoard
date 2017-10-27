@@ -74,6 +74,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
 
 - (void)getCertificateList {
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@", @"ClientRequirement", [[User currentUser] clientId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+        NSLog(@"%@",response);
         _aryCertificates = [response objectForKey:@"ClientRequirements"];
         [self getUserInfo];
     } failure:^(NSError *error, NSDictionary *response) {
@@ -145,7 +146,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
     NSMutableArray *aMutArrCertificate = [NSMutableArray array];
     for (AddCertificateView *certificate in _scrlCertificationView.subviews) {
         if ([certificate isKindOfClass:[AddCertificateView class]]) {
-            id aPhotoData, fileName, strDropDownId,strExpDate,strCertificateId;
+            id aPhotoData, fileName, strDropDownId,strExpDate,strCertificateId,strIsNoExpiration;
             if (certificate.imgCertificate) {
                 NSData *aData = UIImageJPEGRepresentation(certificate.imgCertificate, 1.0);
                 aPhotoData = [aData base64EncodedStringWithOptions:0];
@@ -171,15 +172,21 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                 [certificate.txtCertificateName becomeFirstResponder];
                 return;
             }
-            
-            if (certificate.txtExpDate.trimText.length >0) {
-                strExpDate = certificate.txtExpDate.text;
-            }else{
-                
-                alert(@"", @"Please select Expiration Date");
-                [certificate btnSelectExpDate:certificate.btnExpDate];
-                return;
-                
+            if (!certificate.btnNoExpDate.selected) {
+                if (certificate.txtExpDate.trimText.length >0) {
+                    strExpDate = certificate.txtExpDate.text;
+                }else{
+                    
+                    alert(@"", @"Please select Expiration Date");
+                    [certificate btnSelectExpDate:certificate.btnExpDate];
+                    return;
+                    
+                }
+                strIsNoExpiration = @"false";
+            }
+            else{
+                strExpDate= @"";
+                  strIsNoExpiration = @"true";
             }
            
             if (certificate.strCertificateId) {
@@ -188,7 +195,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                 strCertificateId = [NSNull null];
             }
             
-            [aMutArrCertificate addObject:@{@"RequirementId":strDropDownId, @"ExpirationDate": strExpDate, @"Id":strCertificateId, @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false"}];
+            [aMutArrCertificate addObject:@{@"RequirementId":strDropDownId, @"ExpirationDate": strExpDate, @"Id":strCertificateId, @"FileName":fileName, @"Photo":aPhotoData, @"IsDeleted":@"false", @"IsNoExpiration":strIsNoExpiration}];
             
         }
     }
@@ -309,8 +316,19 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                     //[aDateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                     NSDate *aDate = [aDateFormatter dateFromString:aStrDate];
                     [aDateFormatter setDateFormat:@"MM/dd/yyyy"];
-                    certificate.txtExpDate.text = [aDateFormatter stringFromDate:aDate];
-//                    certificate.imgCertificate = 
+                   
+                    if ([[[aDict objectForKey:@"IsNoExpiration"] stringValue] isEqualToString:@"1"]) {
+                            certificate.btnNoExpDate.selected = YES;
+                         certificate.txtExpDate.text = @"";
+                        certificate.btnExpDate.userInteractionEnabled = NO;
+                    }
+                    else{
+                            certificate.btnNoExpDate.selected = NO;
+                         certificate.txtExpDate.text = [aDateFormatter stringFromDate:aDate];
+                         certificate.btnExpDate.userInteractionEnabled = YES;
+                    }
+                    certificate.expDate= [aDateFormatter stringFromDate:aDate];
+                    //                    certificate.imgCertificate =
                 }
             }
             [self updateUser];
@@ -345,8 +363,15 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
             }
         }
     }
+    NSString * strExpiration = @"false";
+    if (currentView.btnNoExpDate.isSelected) {
+        strExpiration = @"true";
+    }
+    else{
+        strExpiration = @"false";
+    }
     if (currentView.strCertificateId) {
-        [mutArrDeletedCertificates addObject:@{@"RequirementId": currentView.strDropDownId, @"ExpirationDate":currentView.txtExpDate.trimText, @"Id":currentView.strCertificateId, @"FileName":currentView.strCertificateFileName, @"Photo":[NSNull null], @"IsDeleted":@"true"}];
+        [mutArrDeletedCertificates addObject:@{@"RequirementId": currentView.strDropDownId, @"ExpirationDate":currentView.txtExpDate.trimText, @"Id":currentView.strCertificateId, @"FileName":currentView.strCertificateFileName, @"Photo":[NSNull null], @"IsDeleted":@"true",@"IsNoExpiration":strExpiration}];
     }
     [currentView removeFromSuperview];
     [_scrlCertificationView setContentSize:CGSizeMake(_scrlCertificationView.contentSize.width, CGRectGetMaxY(frame))];
@@ -370,6 +395,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
     aCertView.parentView = self;
     CGRect frame = aCertView.frame;
     [aCertView.btnRemove addTarget:self action:@selector(btnRemoveCertificateTapped:) forControlEvents:UIControlEventTouchUpInside];
+  //  [aCertView.btnNoExpDate addTarget:self action:@selector(btnNoExpDateTapped:) forControlEvents:UIControlEventTouchUpInside];
     frame.origin.y = totalCertificateCount * frame.size.height;
     aCertView.frame = frame;
     totalCertificateCount++;
@@ -392,6 +418,14 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
     }
     return aCertView;
 }
+
+
+//-(void)btnNoExpDateTapped:(UIButton*)sender
+//{
+//    
+//   
+//}
+
 
 #pragma mark - UITextField Delegate
 

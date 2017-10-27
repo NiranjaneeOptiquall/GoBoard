@@ -26,8 +26,12 @@
 @property (nonatomic, retain) NSString * categorySequence;
 @property (nonatomic, retain) NSString * inProgressCount;
 @property (nonatomic, retain) NSString * isAllowInProgress;
+@property (assign, nonatomic) BOOL isSharedForm;
+@property (assign, nonatomic) BOOL isAllowEditSharedForm;
+//@property (nonatomic, retain) NSString * isAllowEditSharedForm;
 @property (nonatomic,retain) NSString * date;
 @property (nonatomic,retain) NSString * inProgressFormId;
+@property (nonatomic,retain) NSString * publishedToFacilityPositions;
 
 
 @end

@@ -25,6 +25,7 @@
 @property (nonatomic, assign) BOOL isClosed;
 @property (nonatomic, assign) BOOL isReadyToSubmit;
 @property (nonatomic, assign) BOOL isLocationStatusChanged;
+@property (nonatomic, assign) BOOL isSameCountTaken;
 @end
 
 @interface SubmitUtilizationCount (CoreDataGeneratedAccessors)

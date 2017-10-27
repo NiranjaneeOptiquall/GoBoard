@@ -20,5 +20,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnGuestUserFormCount;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuestFormInProgressTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblGuestUserShowCount;
+@property (weak, nonatomic) IBOutlet UIButton *btnIsSharedForm;
 
 @end

@@ -957,7 +957,7 @@
     //        location.message = @"";
     //    else
             location.isLocationStatusChanged = false;
-
+        location.isSameCountTaken = false;
         
         location.capacity = [[aDict objectForKey:@"Capacity"] stringValue];
         NSMutableSet *set = [NSMutableSet set];
@@ -989,7 +989,7 @@
                 //        location.message = @"";
                 //    else
                 subLoc.isLocationStatusChanged = false;
-                
+                 subLoc.isSameCountTaken = false;
                 subLoc.locationId = [[aDictSubLoc objectForKey:@"Id"] stringValue];
                 subLoc.location = location;
                 [set addObject:subLoc];
@@ -1979,9 +1979,15 @@
             form.categoryName=[aDict objectForKey:@"CategoryName"];
         form.categorySequence=[NSString stringWithFormat:@"%@",[aDict objectForKey:@"CategorySequence"]];
             form.inProgressCount = [NSString stringWithFormat:@"%@",[aDict valueForKey:@"InProgressCount"]];
+        form.publishedToFacilityPositions = [NSString stringWithFormat:@"%@",[aDict valueForKey:@"PublishedToFacilityPositions"]];
             form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsAllowInProgress"]];
-        
-            
+        if ([[[aDict objectForKey:@"FormTypeId"] stringValue] isEqualToString:@"4"]) {
+               form.isSharedForm = YES;
+        }
+        else{
+           form.isSharedForm = NO;
+        }
+              form.isAllowEditSharedForm = [[aDict valueForKey:@"IsAllowSharedEdit"] boolValue];
             NSMutableSet *aSetQuestions = [NSMutableSet set];
             if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
                 for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {
@@ -2015,9 +2021,41 @@
                 }
             }
             form.questionList = aSetQuestions;
-            [gblAppDelegate.managedObjectContext insertObject:form];
+//        NSLog(@"%@",form);
+//        if ([form.typeId isEqualToString:@"4"]) {
+//            if ([form.publishedToFacilityPositions isEqualToString:@"<null>"] || [form.publishedToFacilityPositions isKindOfClass:[NSNull class]] ) {
+//          
+//                [gblAppDelegate.managedObjectContext insertObject:form];
+//                [gblAppDelegate.managedObjectContext save:nil];
+//                
+//            }
+//            else{
+//                NSArray * tempArr = [[NSArray alloc]init];
+//                 NSArray * tempPositionArr = [[NSArray alloc]init];
+//                 NSLog(@"%@",[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"]);
+//                tempPositionArr =  [[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"];
+//                  tempArr = [form.publishedToFacilityPositions componentsSeparatedByString:@","];
+//                   NSLog(@"%@",tempArr);
+//                 NSLog(@"%@",tempPositionArr);
+//                for (NSString*position in tempPositionArr ) {
+//                    if ([tempArr containsObject:position]){
+//                        
+//                        [gblAppDelegate.managedObjectContext insertObject:form];
+//                        [gblAppDelegate.managedObjectContext save:nil];
+//                    
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        else{
+//            [gblAppDelegate.managedObjectContext insertObject:form];
+//            [gblAppDelegate.managedObjectContext save:nil];
+//        }
         
+        [gblAppDelegate.managedObjectContext insertObject:form];
         [gblAppDelegate.managedObjectContext save:nil];
+        
         }
         
       

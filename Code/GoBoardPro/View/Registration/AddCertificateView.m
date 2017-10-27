@@ -19,12 +19,25 @@
 }
 */
 //- (void)awakeFromNib {
-//    [_txtCertificateName setDelegate:self];
+//    [_txtCertificateName setDelegate:self]; 
 //}
 
 - (IBAction)btnSelectExpDate:(UIButton*)sender {
     DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
     [datePopOver showInPopOverFor:sender limit:DATE_LIMIT_FETURE_ONLY option:DATE_SELECTION_DATE_ONLY updateField:_txtExpDate];
+    //_expDate = _txtExpDate.text;
+}
+- (IBAction)btnNoExpirationClicked:(id)sender {
+    if ([sender isSelected]) {
+         _btnExpDate.userInteractionEnabled=YES;
+        _txtExpDate.text = _expDate;
+         [sender setSelected:NO];
+    }
+    else{
+        _btnExpDate.userInteractionEnabled=NO;
+        _txtExpDate.text = @"";
+        [sender setSelected:YES];
+    }
 }
 
 - (IBAction)btnCaptureCertificatieImageTapped:(UIButton*)sender {

@@ -233,6 +233,7 @@
         
 
         aDynamicView.objFormOrSurvey = [aMutbArray objectAtIndex:selectedIndex];
+            
         if (_guestFormType == 1 || _guestFormType == 5) {
             aDynamicView.isSurvey = YES;
         }
@@ -547,8 +548,40 @@
     mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
     
  
-    //********* to get data in category wise dictionary format*********//
-    
+    //********* remove shared form if  user selected position is not matched with position assigned to it *********//
+
+    NSMutableArray *tempFormArr = [[NSMutableArray alloc]init];
+    tempFormArr = mutArrFormList;
+    for (int a = 0; a<[mutArrFormList count]; a++) {
+        if ([[[mutArrFormList valueForKey:@"typeId"]objectAtIndex:a] isEqualToString:@"4"]) {
+            if ([[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] isEqualToString:@"<null>"] || [[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] isKindOfClass:[NSNull class]] ) {
+                // allow display shared form is no position is assigned to it
+            }
+           else{
+        NSString * flag = @"no";
+        NSArray * tempFormPositionArr = [[NSArray alloc]init];
+        NSArray * tempUserPositionArr = [[NSArray alloc]init];
+
+        tempUserPositionArr =  [[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"];
+        tempFormPositionArr = [[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] componentsSeparatedByString:@","];
+   
+        for (NSString*position in tempUserPositionArr ) {
+            if ([tempFormPositionArr containsObject:position]){
+                flag = @"yes";
+                break;
+            }
+        }
+        if ([flag isEqualToString:@"no"]) {
+            // remove shared form if  user selected position is not matched with position assigned to it
+            [tempFormArr removeObject:[mutArrFormList objectAtIndex:a]];
+        }
+   
+        }
+               }
+      }
+    mutArrFormList = tempFormArr;
+  
+        //********* to get data in category wise dictionary format*********//
     
     for (int i=0; i<[mutArrFormList count]; i++){
                 [arrayForBool addObject:[NSNumber numberWithBool:NO]];
@@ -804,6 +837,7 @@
             [aCell.btnFormInProgressTitle setTitle:@"Form in progress" forState:UIControlStateNormal];
             [aCell.btnFormInOfflineTitle setTitle:@"Form offline" forState:UIControlStateNormal];
             strId=[[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
+            
 
         }
         [aCell.btnFormInProgress addTarget:self action:@selector(formsInProgressList:) forControlEvents:UIControlEventTouchUpInside];
@@ -860,9 +894,32 @@
 
                 
             }
-   
-        
-
+        if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isSurvey"] isEqualToString:@"YES"]) {
+        }
+        else{
+        if ([[[obj valueForKey:@"isSharedForm"]objectAtIndex:indexPath.row] boolValue]) {
+            
+            NSLog(@"shared form");
+            aCell.btnFormInProgress.hidden = YES;
+            aCell.btnFormInOffline.hidden = YES;
+            aCell.btnFormInOfflineTitle.hidden = YES;
+            aCell.btnFormInProgressTitle.hidden = YES;
+            aCell.lblFormsCount.hidden = YES;
+            aCell.lblFormInOfflineCount.hidden = YES;
+            
+            aCell.btnIsSharedForm.hidden = NO;
+            if ([[[obj valueForKey:@"inProgressCount"]objectAtIndex:indexPath.row] intValue] > 0) {
+                aCell.btnIsSharedForm.selected = YES;
+            }
+            else{
+                aCell.btnIsSharedForm.selected = NO;
+            }
+        }
+        else{
+            NSLog(@"no shared form");
+             aCell.btnIsSharedForm.hidden = YES;
+        }
+        }
     }
 
     UIView *aView = [aCell.contentView viewWithTag:4];
@@ -873,6 +930,7 @@
    aCell.btnFormInProgress.tag = indexPath.section * 1000 + indexPath.row;
     aCell.btnFormInOffline.tag = indexPath.section * 1000 + indexPath.row;
  
+
     return aCell;
 }
 
@@ -991,12 +1049,32 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isFormHistory"];
-    NSLog(@"%@",[mutArrFormList objectAtIndex:indexPath.row]);
+ 
+    
     NSMutableArray * dataArray=[[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
+    NSLog(@"%@",dataArray);
     NSManagedObject *obj =[dataArray objectAtIndex:indexPath.row];
     if ([[obj valueForKey:@"typeId"] integerValue] == 1) {
  
         [self initWithIdentifier:@"GoToLink" sender:obj];
+    }
+    else if ([[obj valueForKey:@"typeId"] integerValue] == 4){
+        if ([[obj valueForKey:@"inProgressCount"] integerValue] > 0) {
+            // call formHistory service
+       //     [self callSharedFormHistory:[obj valueForKey:@"formId"]];
+            [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
+              [[NSUserDefaults standardUserDefaults]setValue:@"0" forKey:@"indexpath"];
+ //           [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+            selectedIndex = indexPath.row;
+            selectedSection = indexPath.section;
+            [self callServiceForForms:YES buttonIndex:[[obj valueForKey:@"formId"] integerValue] sharedForm:YES complition:nil];
+     //       return;
+        }
+        else{
+            selectedIndex = indexPath.row;
+            selectedSection = indexPath.section;
+            [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+        }
     }
     else {
         selectedIndex = indexPath.row;
@@ -1012,7 +1090,11 @@
     
   
 }
-
+-(void)callSharedFormHistory:(NSString*)formId{
+    //service call
+    
+    
+}
 - (void)btnClick:(UIButton *)gestureRecognizer{
     //********* category click expand the section or close the section*********//
 //*********category persistancy comming back from detail(dynamic) form/survey view*********//
@@ -1183,16 +1265,14 @@
             [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"isSurvey"];
             [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
- NSLog(@"%ld",indexPath);
-[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",indexPath.row] forKey:@"indexForFormSelected"];
-            
-              NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"indexForFormSelected"] integerValue]);
+
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%ld",indexPath.row] forKey:@"indexForFormSelected"];
             
             NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
             NSString *formId = [[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
             
             
-            [self callServiceForForms:YES buttonIndex:[formId integerValue] complition:nil];
+            [self callServiceForForms:YES buttonIndex:[formId integerValue] sharedForm:NO complition:nil];
             
         }
         
@@ -1211,7 +1291,7 @@
 }
 
 
-- (void)callServiceForForms:(BOOL)waitUntilDone buttonIndex:(NSInteger)button complition:(void(^)(void))complition {
+- (void)callServiceForForms:(BOOL)waitUntilDone buttonIndex:(NSInteger)button sharedForm:(BOOL)isSharedForm complition:(void(^)(void))complition {
     
 
     FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
@@ -1227,7 +1307,13 @@
    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&formId=%@", FORM_SETUP, aStrClientId, strUserId,[NSString stringWithFormat:@"%ld",(long)button]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
        [self deleteAllForms];
         [self insertForms:response];
-        [self.view addSubview:formView];
+       if (isSharedForm) {
+               [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+       }
+       else{
+           [self.view addSubview:formView];
+
+       }
         isWSComplete = YES;
         if (complition)
             complition();
@@ -1310,8 +1396,10 @@
             
             form.date=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Date"]];
             form.inProgressFormId=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Id"]];
-
-            form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsInProgress"]];
+            form.isAllowEditSharedForm=[[aDict valueForKey:@"IsAllowSharedEdit"] stringValue];
+    //        form.isAllowEditSharedForm=[NSString stringWithFormat:@"%@",[aDict valueForKey:@"IsAllowSharedEdit"]];
+            
+                       form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsInProgress"]];
              NSMutableSet *aSetQuestions = [NSMutableSet set];
             if (![[aDict objectForKey:@"Questions"] isKindOfClass:[NSNull class]]) {
                 for (NSDictionary *dictQuest in [aDict objectForKey:@"Questions"]) {

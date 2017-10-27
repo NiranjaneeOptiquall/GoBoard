@@ -76,13 +76,32 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewAutomaticDimension;
+   // return UITableViewAutomaticDimension;
+   TeamLog *log = [self.mutArrTeamLog objectAtIndex:indexPath.row];
+    
+    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+    UILabel * lblTemp = [[UILabel alloc]init];
+    lblTemp.attributedText = attributedString;
+    CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+    
+    if (aHeight < 40)
+    {
+        aHeight = 40;
+    }
+    return aHeight + 90;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewAutomaticDimension;
-}
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return UITableViewAutomaticDimension;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.mutArrTeamLog count];
@@ -97,7 +116,7 @@
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     //[aFormatter setDateFormat:@"yyyy-MM-dd hh:mm:ss a"];
     [aFormatter setDateFormat:@"MM/dd/yyyy  hh:mm a"];
-    
+     aCell.webViewDesc.scrollView.scrollEnabled = NO;
     [aCell.txtViewDate setText:[aFormatter stringFromDate:log.date]];
   
     NSString * htmlString = log.desc;
@@ -109,7 +128,7 @@
                                             ];
    // [aCell.lblDescription setText:log.desc];
      [aCell.lblDescription setAttributedText:attributedString];
-    
+    [aCell.webViewDesc loadHTMLString:htmlString baseURL:nil];
    // NSString *aStrName = [NSString stringWithFormat:@"%@ %@",[[User currentUser]firstName],[[User currentUser]lastName]];
     [aCell.txtViewUsername setText:log.username];
     
@@ -125,6 +144,14 @@
     
     float aMaxFloat  = MAX(MAX(aCell.cnstTextViewDateHeight.constant, aCell.cnstTextViewPositionHeight.constant), aCell.cnstTxtViewUserNameHeight.constant);
     aCell.cnstLblDescriptionTop.constant = aCell.txtViewPosition.frame.origin.y+aMaxFloat+12;
+     aCell.cnstWebDescriptionTop.constant = aCell.txtViewPosition.frame.origin.y+aMaxFloat+12;
+      aCell.cnstWebDescriptionHeight.constant = [self getHeightFromText:aCell.lblDescription.text txtView:aCell.txtViewDate].height;
+    if (aCell.cnstWebDescriptionHeight.constant < 40) {
+        aCell.cnstWebDescriptionHeight.constant = 40;
+    }
+    else{
+        aCell.cnstWebDescriptionHeight.constant = aCell.cnstWebDescriptionHeight.constant + 20;
+    }
     
     aCell.lblUserName.text = log.username;
     
@@ -137,11 +164,19 @@
     
     objc_setAssociatedObject(aCell.btnViewComments,kIndex, indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
+    aCell.lblDescription.hidden = YES;
     //---------------------------------
     return aCell;
 }
 
-
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
+}
 
 #pragma mark - Other Methods
 

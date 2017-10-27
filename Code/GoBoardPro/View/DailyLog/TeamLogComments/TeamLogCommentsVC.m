@@ -94,13 +94,31 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewAutomaticDimension;
+  //  return UITableViewAutomaticDimension;
+ TeamSubLog *log = [self.mutArrComments  objectAtIndex:indexPath.row];
+    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+    NSString * htmlString = log.desc;
+    NSAttributedString *attributedString = [[NSAttributedString alloc]
+                                            initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                            options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+                                            documentAttributes: nil
+                                            error: nil
+                                            ];
+    UILabel * lblTemp = [[UILabel alloc]init];
+    lblTemp.attributedText = attributedString;
+    CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+    
+    if (aHeight < 30)
+    {
+        aHeight = 30;
+    }
+    return aHeight + 50;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewAutomaticDimension;
-}
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return UITableViewAutomaticDimension;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.mutArrComments  count];
@@ -110,7 +128,7 @@
 {
     TeamLogCell *aCell = (TeamLogCell *)[tableView dequeueReusableCellWithIdentifier:@"cell"];
     [aCell setBackgroundColor:[UIColor clearColor]];
-    
+     aCell.webViewDesc.scrollView.scrollEnabled = NO;
     TeamSubLog *log = [self.mutArrComments  objectAtIndex:indexPath.row];
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setDateFormat:@"MM/dd/yyyy  hh:mm a"];
@@ -126,12 +144,21 @@
                                             ];
   //  [aCell.lblDescription setText:log.desc];
       [aCell.lblDescription setAttributedText:attributedString];
+     [aCell.webViewDesc loadHTMLString:htmlString baseURL:nil];
     NSString *aStrName = [NSString stringWithFormat:@"%@",log.username];
     [aCell.lblUserName setText:aStrName];
-    
+
    return aCell;
 }
 
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
+}
 
 #pragma mark - Action Methods
 

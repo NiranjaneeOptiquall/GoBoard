@@ -51,8 +51,18 @@ typedef enum : NSUInteger {
 #define REQUIRED_TYPE_FIRST_AID     @"FirstAid"
 
 // http://goboardapi.azurewebsites.net/api/
-#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
-//#define SERVICE_URL                 (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/GoBoard.Web.Api/api/"
+
+//************** QA_API***************//
+#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
+
+//************** PRASAD_LOCAL_API_1***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/GoBoard.Web.Api/api/"
+
+//************** PRASAD_LOCAL_API_2***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/c2cApi/api/"
+
+//************** KISHOR_LOCAL_API***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.11/GoBoard.Web.Api/api/"
 
 
 #define USER_SERVICE                @"User"

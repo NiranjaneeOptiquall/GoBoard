@@ -28,6 +28,8 @@
 @property (nonatomic,retain) NSString * date;
 @property (nonatomic,retain) NSString * inProgressFormId;
 @property (nonatomic, retain) NSString * userId;
+@property (nonatomic,retain) NSString * isAllowEditSharedForm;
+
 @end
 
 

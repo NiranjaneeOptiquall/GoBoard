@@ -32,6 +32,7 @@
 @property (nonatomic, assign) BOOL isClosed;
 @property (nonatomic, assign) BOOL isReadyToSubmit;
 @property (nonatomic, assign) BOOL isLocationStatusChanged;
+@property (nonatomic, assign) BOOL isSameCountTaken;
 @property (nonatomic, assign) BOOL isUpdateAvailable;
 @property (nonatomic, assign) BOOL isExceedMaximumCapacity;
 

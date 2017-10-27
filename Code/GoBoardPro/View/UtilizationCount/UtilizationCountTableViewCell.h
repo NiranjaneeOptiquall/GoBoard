@@ -23,5 +23,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnOptions;
 @property (weak, nonatomic) IBOutlet UIImageView *imgTimeExide;
 @property (weak, nonatomic) IBOutlet UIImageView *imgReadyToSubmit;
+@property (weak, nonatomic) IBOutlet UIImageView *imgClosedIndicatior;
 
 @end

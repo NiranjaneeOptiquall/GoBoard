@@ -25,4 +25,5 @@
 @dynamic isAllowInProgress;
 @dynamic date;
 @dynamic userId;
+@dynamic isAllowEditSharedForm;
 @end

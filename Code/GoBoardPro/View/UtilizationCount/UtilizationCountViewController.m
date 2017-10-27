@@ -32,6 +32,7 @@
     // readyToSubmitCellArr = [[NSMutableDictionary alloc]init];
     btnOptionTapArr = [[NSMutableArray alloc]init];
     btnCellOptionTapArr = [[NSMutableDictionary alloc]init];
+ //   [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardHide:) name:UIKeyboardWillHideNotification object:nil];
 
     [self getAllCounts];
     NSArray *aryNavigationStack = [self.navigationController viewControllers];
@@ -87,14 +88,57 @@
     if (!location.message) {
         location.message = @"";
     }
-   location.lastCountDateTime = [self getCurrentDate];
-    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id",[NSString stringWithFormat:@"%@",location.isClosed ? @"True" : @"False"],@"IsClosed",[NSString stringWithFormat:@"%@",location.isLocationStatusChanged ? @"True" : @"False"],@"IsLocationStatusChanged",nil];
+   location.lastCountDateTime = [self getCurrentDateForFinalSubmit];
+    NSInteger temp = 0;
+
+    if (location.isClosed) {
+        if (location.sublocations.count != 0) {
+            
+            for (UtilizationCount *subLocation in [location.sublocations array]) {
+                if (subLocation.isClosed) {
+                    subLocation.lastCount = @"0";
+                }
+                temp = temp + [subLocation.lastCount integerValue];
+            }
+            if (temp == 0) {
+                
+                location.lastCount = @"";
+            }
+            else{
+                location.lastCount = [NSString stringWithFormat:@"%ld",(long)temp];
+                
+            }
+        }
+    }
+    else{
+        if (location.sublocations.count != 0) {
+            
+            for (UtilizationCount *subLocation in [location.sublocations array]) {
+                if (subLocation.isClosed) {
+                    subLocation.lastCount = @"0";
+                }
+                temp = temp + [subLocation.lastCount integerValue];
+            }
+            if (temp != [location.lastCount integerValue] && temp != 0) {
+                
+                location.lastCount = [NSString stringWithFormat:@"%ld",(long)temp];;
+            }
+        }
+
+    }
+  
+    
+
+    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id",[NSString stringWithFormat:@"%@",location.isClosed ? @"True" : @"False"],@"IsClosed",[NSString stringWithFormat:@"%@",location.isLocationStatusChanged ? @"True" : @"False"],@"IsLocationStatusChanged",[NSString stringWithFormat:@"%@",location.isSameCountTaken ? @"True" : @"False"],@"IsSameCountTaken",nil];
     NSMutableArray *subLocations = [NSMutableArray array];
     NSLog(@"%@",location.sublocations);
     for (UtilizationCount *subLocation in [location.sublocations array]) {
         if (subLocation.isUpdateAvailable) {
-             subLocation.lastCountDateTime = [self getCurrentDate];
-            [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime, @"IsClosed": [NSString stringWithFormat:@"%@",subLocation.isClosed ? @"True" : @"False"], @"IsLocationStatusChanged": [NSString stringWithFormat:@"%@",subLocation.isLocationStatusChanged ? @"True" : @"False"]}];
+             subLocation.lastCountDateTime = [self getCurrentDateForFinalSubmit];
+            if (subLocation.isClosed) {
+                subLocation.lastCount = @"0";
+            }
+            [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime, @"IsClosed": [NSString stringWithFormat:@"%@",subLocation.isClosed ? @"True" : @"False"], @"IsLocationStatusChanged": [NSString stringWithFormat:@"%@",subLocation.isLocationStatusChanged ? @"True" : @"False"], @"IsSameCountTaken": [NSString stringWithFormat:@"%@",subLocation.isSameCountTaken ? @"True" : @"False"]}];
         }
     }
     if ([subLocations count] > 0) {
@@ -414,25 +458,46 @@
     if ([view isKindOfClass:[UtilizationHeaderView class]]) {
         section = [(UtilizationHeaderView*)view section];
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
+        if (location.isUpdateAvailable) {
+            location.isUpdateAvailable = NO;
+             location.isReadyToSubmit = NO;
+        }else{
+         location.isUpdateAvailable = YES;
+             location.isReadyToSubmit = YES;
+        }
         if (location.isClosed){
             location.isClosed = NO;
             for (int i = 0; i < [location.sublocations array].count; i++) {
                 UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:i];
                 subLocation.isClosed = NO;
-                 subLocation.isUpdateAvailable = YES;
+         
+                if (subLocation.isUpdateAvailable) {
+                    subLocation.isUpdateAvailable = NO;
+                      subLocation.isReadyToSubmit = NO;
+                }else{
+                    subLocation.isUpdateAvailable = YES;
+                      subLocation.isReadyToSubmit = YES;
+                }
             }
+            
         }else{
             location.isClosed = YES;
-            location.isCountRemainSame = NO;
+             location.isCountRemainSame = NO;
             for (int i = 0; i < [location.sublocations array].count; i++) {
                 UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:i];
                 subLocation.isClosed = YES;
-                subLocation.isUpdateAvailable = YES;
+                subLocation.isCountRemainSame = NO;
+                if (subLocation.isUpdateAvailable) {
+                    subLocation.isUpdateAvailable = NO;
+                      subLocation.isReadyToSubmit = NO;
+                }else{
+                    subLocation.isUpdateAvailable = YES;
+                      subLocation.isReadyToSubmit = YES;
+                }
 
             }
         }
     //    location.isReadyToSubmit = YES;
-        location.isUpdateAvailable = YES;
              [btnOptionTapArr replaceObjectAtIndex:section withObject:@"NO"];
           }
     else {
@@ -440,12 +505,20 @@
         section = indexPath.section;
     location = [mutArrCount objectAtIndex:section];
       //  location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
+            location.isCountRemainSame = NO;
        UtilizationCount * subLocation = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
-       //    location.isClosed = YES;
+      
         NSString * index = [NSString stringWithFormat:@"%ld.%ld",(long)indexPath.section,indexPath.row];
+        if (subLocation.isUpdateAvailable) {
+            subLocation.isUpdateAvailable = NO;
+               subLocation.isReadyToSubmit = NO;
+        }else{
+            subLocation.isUpdateAvailable = YES;
+               subLocation.isReadyToSubmit = YES;
+        }
+
         if (subLocation.isClosed) {
             subLocation.isClosed = NO;
-         //   location.isCountRemainSame = NO;
         }
         else{
             subLocation.isClosed = YES;
@@ -453,14 +526,23 @@
         }
    //     location.isReadyToSubmit = YES;
     //    subLocation.isReadyToSubmit = YES;
-          subLocation.isUpdateAvailable = YES;
-//        [readyToSubmitCellArr setValue:@"YES" forKey:index];
+ //        [readyToSubmitCellArr setValue:@"YES" forKey:index];
+ 
          [btnCellOptionTapArr setValue:@"NO" forKey:index];
-      }
+  location.isUpdateAvailable = NO;
+           location.isReadyToSubmit = NO;
+        for (int i = 0; i < [location.sublocations array].count; i++) {
+            UtilizationCount * subLocation = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:i];
+            if (subLocation.isUpdateAvailable) {
+                location.isUpdateAvailable = YES;
+                 location.isReadyToSubmit = YES;
+            }
+           
+        }
   
-    location.isUpdateAvailable = YES;
+    }
     if (location.location) {
-        location.location.isUpdateAvailable = YES;
+
     //    location.location.lastCountDateTime = [self getCurrentDate];
     }
    // location.lastCountDateTime = [self getCurrentDate];
@@ -480,37 +562,112 @@
     if ([view isKindOfClass:[UtilizationHeaderView class]]) {
         section = [(UtilizationHeaderView*)view section];
         location = [mutArrCount objectAtIndex:[(UtilizationHeaderView*)view section]];
-         [btnOptionTapArr replaceObjectAtIndex:section withObject:@"NO"];
-        for (int i = 0; i < [location.sublocations array].count; i++) {
-            UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:i];
-            subLocation.isClosed = NO;
+        [btnOptionTapArr replaceObjectAtIndex:section withObject:@"NO"];
+        if (location.isCountRemainSame) {
+            location.isCountRemainSame = NO;
+            location.isReadyToSubmit = NO;
+            location.isUpdateAvailable = NO;
+            location.isClosed = NO;
+             location.isSameCountTaken = NO;
+               //make sub location changes as main ocation changed
+            for (int i = 0; i < [location.sublocations array].count; i++) {
+                UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:i];
+                subLocation.isClosed = NO;
+                subLocation.isCountRemainSame = NO;
+                subLocation.isReadyToSubmit = NO;
+                subLocation.isUpdateAvailable = NO;
+                 subLocation.isSameCountTaken = NO;
+            }
         }
+        else{
+            location.isCountRemainSame = !location.isCountRemainSame;
+            location.isReadyToSubmit = YES;
+            location.isUpdateAvailable = YES;
+               location.isSameCountTaken = YES;
+            location.isClosed = NO;
+              //make sub location changes as main ocation changed
+            for (int i = 0; i < [location.sublocations array].count; i++) {
+                UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:i];
+                subLocation.isClosed = NO;
+                subLocation.isCountRemainSame = !subLocation.isCountRemainSame;
+                subLocation.isReadyToSubmit = YES;
+                subLocation.isUpdateAvailable = YES;
+                   subLocation.isSameCountTaken = YES;
+            }
+        }
+        
     }
     else {
         NSIndexPath *indexPath = [_tblCountList indexPathForRowAtPoint:[view center]];
         section = indexPath.section;
+        
         location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
         NSString * index = [NSString stringWithFormat:@"%ld.%ld",(long)indexPath.section,indexPath.row];
-      //  [readyToSubmitCellArr setValue:@"YES" forKey:index];
-        location.isReadyToSubmit = YES;
         [btnCellOptionTapArr setValue:@"NO" forKey:index];
+        if (location.isCountRemainSame) {
+            
+            location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
+            location.isReadyToSubmit = NO;
+            location.isCountRemainSame = NO;
+            location.isUpdateAvailable = NO;
+            location.isSameCountTaken = NO;
+            location.isClosed = NO;
+          
+            //make main location changes as sub ocation changed
+            
+            location =  [mutArrCount objectAtIndex:section];
+            location.isReadyToSubmit = NO;
+            location.isCountRemainSame = NO;
+            location.isUpdateAvailable = NO;
+             location.isSameCountTaken = NO;
+            location.isClosed = NO;
+            for (int i = 0; i < [location.sublocations array].count; i++) {
+                UtilizationCount * subLocation = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:i];
+                if (subLocation.isCountRemainSame) {
+                    location.isUpdateAvailable = YES;
+                    location.isReadyToSubmit = YES;
+                    location.isCountRemainSame = YES;
+                    location.isSameCountTaken = YES;
+                }
+                
+            }
+         
+            
+          
+
+            
+        }else{
+            location =  [mutArrCount objectAtIndex:section];
+            location.isReadyToSubmit = YES;
+            location.isCountRemainSame = YES;
+            location.isUpdateAvailable = YES;
+             location.isSameCountTaken = YES;
+            location.isClosed = NO;
+            
+              //make main location changes as sub ocation changed
+            location = [[[[mutArrCount objectAtIndex:indexPath.section] sublocations] array] objectAtIndex:indexPath.row];
+            location.isReadyToSubmit = YES;
+            location.isCountRemainSame = YES;
+            location.isUpdateAvailable = YES;
+              location.isSameCountTaken = YES;
+            location.isClosed = NO;
+        }
+        
     }
-  //  [readyToSubmitArr replaceObjectAtIndex:section withObject:@"YES"];
-    if (location.isCountRemainSame) {
-          location.isCountRemainSame = NO;
-             location.isReadyToSubmit = NO;
-    }else{
-          location.isCountRemainSame = !location.isCountRemainSame;
-             location.isReadyToSubmit = YES;
-    }
-//    location.isCountRemainSame = !location.isCountRemainSame;
-    location.isClosed = NO;
-    location.isUpdateAvailable = YES;
-    if (location.location) {
-        location.location.isUpdateAvailable = YES;
-    //    location.location.lastCountDateTime = [self getCurrentDate];
-    }
-//    location.lastCountDateTime = [self getCurrentDate];
+
+//    if (location.isCountRemainSame) {
+//               location.isUpdateAvailable = NO;
+//        if (location.location) {
+//            location.location.isUpdateAvailable = NO;
+//        }
+//    }else{
+//        location.isUpdateAvailable = YES;
+//        if (location.location) {
+//            location.location.isUpdateAvailable = YES;
+//        }
+//    }
+ 
+    
     [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
     isUpdate = YES;
 }
@@ -529,6 +686,14 @@
 - (void)getAllCounts {
     [[WebSerivceCall webServiceObject] callServiceForUtilizationCount:NO complition:^{
         [self fetchOfflineCountData];
+        
+        for (int i=0; i<mutArrCount.count; i++) {
+            if ([[mutArrCount objectAtIndex:i] sublocations].count > 0) {
+                [_btnToggleSummary setSelected:YES];
+                break;
+            }
+            
+        }
         [_tblCountList reloadData];
     }];
     
@@ -617,6 +782,13 @@
     NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
     return aStr;
 }
+- (NSString *)getCurrentDateForFinalSubmit {
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    NSString *aStr = [aFormatter stringFromDate:[NSDate date]];
+    return aStr;
+}
 
 - (NSString *)getLastUpdate:(NSString*)lastDate {
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
@@ -625,7 +797,7 @@
     NSDate *lastDt = [aFormatter dateFromString:lastDate];
     
      [aFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-     [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        [aFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"EST"]];
     NSString *aStrDt =  [aFormatter stringFromDate:lastDt];
     NSString *aStrTime = [NSString stringWithFormat:@"Last Count : %@", aStrDt];
 
@@ -698,7 +870,8 @@
     NSLog(@"%@",subLocation);
     [aCell.lblFacilityArea setText:[NSString stringWithFormat:@"- %@", subLocation.name]];
     NSString * index = [NSString stringWithFormat:@"%ld.%ld",(long)indexPath.section,indexPath.row];
-
+    aCell.txtCount.userInteractionEnabled = YES;
+  
     if (subLocation.isReadyToSubmit){
         aCell.LblReadyToSubmit.hidden = NO;
           aCell.lblLastUpdate.hidden = YES;
@@ -740,7 +913,8 @@
 
     }
     if ([self getLastUpdateMnt:subLocation.lastCountDateTime]) {
-        
+        aCell.imgTimeExide.hidden = YES;
+
     }
     else{
         aCell.lblLastUpdate.textColor = [UIColor redColor];
@@ -798,16 +972,22 @@
     else {
         [aCell.lblDevider setHidden:YES];
     }
-    if (location.isCountRemainSame || subLocation.isCountRemainSame) {
+    if (subLocation.isCountRemainSame) {
+        aCell.imgClosedIndicatior.hidden =YES;
+        aCell.imgTimeExide.hidden = YES;
+        aCell.txtCount.hidden = NO;
+          aCell.txtCount.userInteractionEnabled = YES;
         aCell.btnCountRemainSame.userInteractionEnabled = YES;
         [aCell.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
         [aCell.btnOptions setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
         [aCell.btnClosed setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
     }
     else if ( subLocation.isClosed) {
+         aCell.imgClosedIndicatior.hidden =NO;
         aCell.lblLastUpdate.textColor = [UIColor darkGrayColor];
         aCell.imgTimeExide.hidden = YES;
         aCell.btnCountRemainSame.userInteractionEnabled = NO;
+        aCell.txtCount.userInteractionEnabled = NO;
         subLocation.isClosed = YES;
         [aCell.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         [aCell.btnOptions setBackgroundColor:[UIColor colorWithHexCodeString:@"#800000"]];
@@ -819,15 +999,21 @@
         aCell.LblReadyToSubmit.hidden = YES;
         aCell.imgReadyToSubmit.hidden = YES;
         aCell.lblLastUpdate.hidden = NO;
-        aCell.imgTimeExide.hidden = YES;
+        if (subLocation.isReadyToSubmit) {
+            aCell.lblLastUpdate.hidden = YES;
+             aCell.imgTimeExide.hidden = YES;
+             aCell.LblReadyToSubmit.hidden = NO;
+             aCell.imgReadyToSubmit.hidden = NO;
+        }
     }
     else {
-          aCell.imgTimeExide.hidden = YES;
+        aCell.imgClosedIndicatior.hidden =YES;
           aCell.btnCountRemainSame.userInteractionEnabled = YES;
         [aCell.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         [aCell.btnOptions setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         [aCell.btnClosed setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         aCell.txtCount.hidden = NO;
+           aCell.txtCount.userInteractionEnabled = YES;
         aCell.btnDecreaseCount.hidden = NO;
         aCell.btnIncreaseCount.hidden = NO;
     }
@@ -837,7 +1023,9 @@
     frame.origin.y = aCell.frame.size.height - frame.size.height;
     [aCell.lblDevider setFrame:frame];
 
-
+    if (!aCell.LblReadyToSubmit.hidden) {
+        aCell.imgTimeExide.hidden = YES;
+    }
     return aCell;
 }
 
@@ -857,7 +1045,8 @@
         [aHeaderView setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
     aHeaderView.txtCount.tag = section;
-
+    aHeaderView.btnTapReadyToSubmit.userInteractionEnabled = YES;
+    aHeaderView.txtCount.userInteractionEnabled = YES;
     if ([[btnOptionTapArr objectAtIndex:section] isEqualToString:@"YES"]) {
         
         aHeaderView.btnCountRemainSame.hidden = NO;
@@ -870,6 +1059,12 @@
          aHeaderView.imgReadyToSubmit.hidden = NO;
         aHeaderView.lblLastUpdate.hidden = YES;
          aHeaderView.imgTimeExide.hidden = YES;
+    }
+    else{
+        aHeaderView.LblReadyToSubmit.hidden = YES;
+        aHeaderView.imgReadyToSubmit.hidden = YES;
+        aHeaderView.lblLastUpdate.hidden = NO;
+        aHeaderView.imgTimeExide.hidden = NO;
     }
     [aHeaderView.lblFacilityArea setText:location.name];
     int aMaxCapacity = [location.capacity intValue];
@@ -971,28 +1166,39 @@
         
     }
     if (location.isCountRemainSame) {
+        aHeaderView.imgClosedIndicator.hidden =YES;
+           aHeaderView.imgTimeExide.hidden = YES;
         [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
         [aHeaderView.btnOptions setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#0c7574"]];
         [aHeaderView.btnClosed setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
     }
     else if (location.isClosed){
+        aHeaderView.imgClosedIndicator.hidden =NO;
         aHeaderView.lblLastUpdate.textColor = [UIColor darkGrayColor];
         aHeaderView.imgTimeExide.hidden = YES;
         aHeaderView.btnCountRemainSame.userInteractionEnabled = NO;
+        aHeaderView.btnTapReadyToSubmit.userInteractionEnabled = NO;
+        aHeaderView.txtCount.userInteractionEnabled = NO;
+
         [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         [aHeaderView.btnOptions setBackgroundColor:[UIColor darkColorWithHexCodeString:@"#800000"]];
         [aHeaderView.btnClosed setBackgroundColor:[UIColor colorWithHexCodeString:@"#800000"]];
         aHeaderView.txtCount.hidden = YES;
          aHeaderView.btnDecreaseCount.hidden = YES;
          aHeaderView.btnIncreaseCount.hidden = YES;
-        
         aHeaderView.LblReadyToSubmit.hidden = YES;
         aHeaderView.imgReadyToSubmit.hidden = YES;
         aHeaderView.lblLastUpdate.hidden = NO;
         aHeaderView.imgTimeExide.hidden = YES;
+        if (location.isReadyToSubmit) {
+            aHeaderView.lblLastUpdate.hidden = YES;
+            aHeaderView.imgTimeExide.hidden = YES;
+            aHeaderView.LblReadyToSubmit.hidden = NO;
+            aHeaderView.imgReadyToSubmit.hidden = NO;
+        }
     }
     else {
-          aHeaderView.imgTimeExide.hidden = YES;
+         aHeaderView.imgClosedIndicator.hidden =YES;
          aHeaderView.btnCountRemainSame.userInteractionEnabled = YES;
         [aHeaderView.btnCountRemainSame setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
         [aHeaderView.btnOptions setBackgroundColor:[UIColor colorWithHexCodeString:@"#169F9E"]];
@@ -1016,7 +1222,9 @@
     else {
         // Summary is shown
     }
-    
+    if (!aHeaderView.LblReadyToSubmit.hidden) {
+        aHeaderView.imgTimeExide.hidden = YES;
+    }
     UITableViewHeaderFooterView *myHeader = [[UITableViewHeaderFooterView alloc] init];
     myHeader.frame=aHeaderView.frame;
     [myHeader addSubview:aHeaderView];
@@ -1024,8 +1232,12 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
  
+ 
     UtilizationCount *location = [mutArrCount objectAtIndex:indexPath.section];
     UtilizationCount *subLocation = [[location.sublocations array] objectAtIndex:indexPath.row];
+    if ( subLocation.isClosed) {
+    }
+    else{
     subLocation.isReadyToSubmit = YES;
        location.isReadyToSubmit = YES;
     //  NSString * index = [NSString stringWithFormat:@"%ld.%ld",(long)indexPath.section,indexPath.row];
@@ -1033,7 +1245,7 @@
    //   [readyToSubmitArr replaceObjectAtIndex:indexPath.section withObject:@"YES"];
     //NSLog(@"%@",readyToSubmitCellArr);
         [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-
+     }
 }
 
 
@@ -1122,16 +1334,23 @@
                 
                 
                 location.location.isUpdateAvailable = YES;
+                  location.location.isReadyToSubmit = YES;
          //       location.location.lastCountDateTime = [self getCurrentDate];
 
             }
             else if (location.sublocations.count > 0) {
                 for (UtilizationCount *subLoc in location.sublocations.array) {
+                    if (subLoc.isClosed) {
+                        
+                    }else{
                     subLoc.lastCount = @"0";
                     subLoc.isUpdateAvailable = YES;
+                      subLoc.isReadyToSubmit = YES;
+                    }
                 }
             }
             location.isUpdateAvailable = YES;
+              location.isReadyToSubmit = YES;
         //    location.lastCountDateTime = [self getCurrentDate];
             
             //Update Current Section Data
@@ -1186,6 +1405,9 @@
                     CGRect frame = [aCell.lblDevider frame];
                     frame.origin.y = aCell.frame.size.height - frame.size.height;
                     [aCell.lblDevider setFrame:frame];
+               NSArray* rowsToReload = [NSArray arrayWithObjects:indexPath, nil];
+                    [_tblCountList reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
+
                 }
             }
             
@@ -1223,7 +1445,10 @@
             
 //          [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
             location.isReadyToSubmit = YES;
-            
+            [aUtiHeaderView.LblReadyToSubmit setHidden:NO];
+             [aUtiHeaderView.lblLastUpdate setHidden:YES];
+            [aUtiHeaderView.imgReadyToSubmit setHidden:NO];
+            [aUtiHeaderView.imgTimeExide setHidden:YES];
         }
         else {
             [textField becomeFirstResponder];
@@ -1236,6 +1461,7 @@
        // [readyToSubmitArr replaceObjectAtIndex:textField.tag withObject:@"YES"];
         [_tblCountList reloadSections:[NSIndexSet indexSetWithIndex:textField.tag] withRowAnimation:UITableViewRowAnimationNone];
     }
+    
 
 }
 
@@ -1260,6 +1486,11 @@
        [textField resignFirstResponder];
     return YES;
 }
+//-(void)keyboardHide:(NSNotification *)notification
+//{
+//   
+//  [[self view] endEditing:TRUE];
+//}
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

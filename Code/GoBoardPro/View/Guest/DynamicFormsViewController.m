@@ -75,6 +75,7 @@ totalSizeOFUploadedVideo=0;
          arrOfForms = [[[arrOfForms reverseObjectEnumerator] allObjects] mutableCopy];
         
         _objFormOrSurvey  = [arrOfForms objectAtIndex:[str intValue]];
+       
   
     }
     
@@ -97,7 +98,34 @@ totalSizeOFUploadedVideo=0;
                 
                 _btnSubmitLater.hidden = NO;
             }
-    
+    if([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFormHistory"]isEqualToString:@"yes"])
+    {
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"fromSuveyViewC" ] isEqualToString:@"YES"]) {
+        _isAllowSharedFormEdit = YES;
+    }
+    else if (_isSurvey){
+          _isAllowSharedFormEdit = YES;
+    }
+  else{
+    NSString * strAllowEdit = [NSString stringWithFormat:@"%@",[_objFormOrSurvey valueForKey:@"isAllowEditSharedForm"]];
+    if ([[_objFormOrSurvey valueForKey:@"typeId"] isEqualToString:@"4"]) {
+        [_btnSubmitLater setTitle:@"Share form" forState:UIControlStateNormal];
+        if ([strAllowEdit isEqualToString:@"1"]) {
+            
+            //allowed to edit
+            _isAllowSharedFormEdit = YES;
+        }
+        else{
+            //not allowed to edit
+            _isAllowSharedFormEdit = NO;
+            _btnSubmitLater.userInteractionEnabled = NO;
+        }
+    }
+  }
+}
+    else{
+          _isAllowSharedFormEdit = YES;
+    }
     [[NSUserDefaults standardUserDefaults]setValue:[_objFormOrSurvey valueForKey:@"date"] forKey:@"lockalDate"]; // This NSUserDefaults is used for remove particular form/survey from local database after online saveInProgress / online final submission
 
             [self fetchQuestion];
@@ -183,8 +211,12 @@ totalSizeOFUploadedVideo=0;
         if([question valueForKey:@"existingResponse"]!=nil  && [[question valueForKey:@"responseType"]isEqualToString:@"checkboxList"])
         {
             mutArray =[NSMutableArray new];
-            NSString *strippedInput =[[question valueForKey:@"existingResponse"] stringByReplacingOccurrencesOfString:@"," withString:@";"];
-            arrOfSelectetCeckBox = [strippedInput componentsSeparatedByString:@";"];
+            //            NSString *strippedInput =[[question valueForKey:@"existingResponse"] stringByReplacingOccurrencesOfString:@"," withString:@";"];
+            //            arrOfSelectetCeckBox = [strippedInput componentsSeparatedByString:@";"];
+            
+            NSString *strippedInput =[question valueForKey:@"existingResponse"];
+            
+            arrOfSelectetCeckBox = [strippedInput componentsSeparatedByString:@"|||"];
             for(NSString *str in arrOfSelectetCeckBox)
             {
                 [mutArray addObject:str];
@@ -192,8 +224,10 @@ totalSizeOFUploadedVideo=0;
         }
         else if ([question valueForKey:@"existingResponse"]!=nil  && [[question valueForKey:@"responseType"]isEqualToString:@"radioButtonList"]){
             mutArray =[NSMutableArray new];
+            
             NSString *strippedInput =[[question valueForKey:@"existingResponse"] stringByReplacingOccurrencesOfString:@"," withString:@";"];
             arrOfSelectetCeckBox = [strippedInput componentsSeparatedByString:@";"];
+            
             for(NSString *str in arrOfSelectetCeckBox)
             {
                 [mutArray addObject:str];
@@ -888,7 +922,8 @@ totalSizeOFUploadedVideo=0;
                         if([arySelectedOptions valueForKey:@"isSelected"])
                         {
                             
-                            [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                        //    [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                             [strTemp appendString:[NSString stringWithFormat:@"%@|||",[dictResponse valueForKey:@"name"]]];
                             [strTempID appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"value"]]];
                             i++;
                             
@@ -897,7 +932,7 @@ totalSizeOFUploadedVideo=0;
                         if(i==arySelectedOptions.count)
                         {
                             
-                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
+                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-3, 3)];
                             [dict setValue:strTemp forKey:@"ResponseText"];
                             [dict setObject:strTempID forKey:@"ResponseId"];
                             
@@ -974,7 +1009,8 @@ totalSizeOFUploadedVideo=0;
                         if([arySelectedOptions valueForKey:@"isSelected"])
                         {
                             
-                            [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                          //  [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                               [strTemp appendString:[NSString stringWithFormat:@"%@|||",[dictResponse valueForKey:@"name"]]];
                             [strTempID appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"value"]]];
                             i++;
                             
@@ -984,7 +1020,7 @@ totalSizeOFUploadedVideo=0;
                         if(i==arySelectedOptions.count)
                         {
                             
-                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
+                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-3, 3)];
                             [dict setValue:strTemp forKey:@"ResponseText"];
                             [dict setObject:strTempID forKey:@"ResponseId"];
                             
@@ -1073,7 +1109,8 @@ totalSizeOFUploadedVideo=0;
                         
                         if([arySelectedOptions valueForKey:@"isSelected"])
                         {
-                            [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                          //  [strTemp appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"name"]]];
+                               [strTemp appendString:[NSString stringWithFormat:@"%@|||",[dictResponse valueForKey:@"name"]]];
                             [strTempID appendString:[NSString stringWithFormat:@"%@,",[dictResponse valueForKey:@"value"]]];
                             i++;
                             
@@ -1083,7 +1120,7 @@ totalSizeOFUploadedVideo=0;
                         if(i==arySelectedOptions.count)
                         {
                             
-                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
+                            [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-3, 3)];
                             [dict setValue:strTemp forKey:@"ResponseText"];
                             [dict setObject:strTempID forKey:@"ResponseId"];
                             
@@ -1443,10 +1480,17 @@ totalSizeOFUploadedVideo=0;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+ 
     DynamicFormCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    NSLog(@"cell:%@",aCell);
+    //NSLog(@"cell:%@",aCell);
     if (!aCell) {
         aCell=[[DynamicFormCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    }
+    if ( _isAllowSharedFormEdit) {
+        aCell.userInteractionEnabled = YES;
+    }
+    else{
+         aCell.userInteractionEnabled = NO;
     }
     aCell.lblQuestion.backgroundColor=[UIColor clearColor];
     [imageArray addObject:@"temp"];
