@@ -11,9 +11,10 @@
 #import "TPKeyboardAvoidingScrollView.h"
 
 @interface SOPViewController : UIViewController<UITableViewDelegate, UITableViewDataSource,UIWebViewDelegate> {
-    NSMutableArray *mutArrSOPList , * allSopArrList,*allSearchData, *tempArr;
+    NSMutableArray *mutArrSOPList , * allSopArrList,*allSearchData, *tempArr,*allDataForLinkedSopErp;
     
 }
+@property (assign, nonatomic) BOOL isBtnSOPListHidden;
 @property (strong, nonatomic) NSMutableArray *mutArrCategoryHierarchy;
 @property (strong, nonatomic) NSDictionary *dictSOPCategory;
 @property (weak, nonatomic) IBOutlet UITableView *tblSOPList;

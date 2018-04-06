@@ -52,6 +52,8 @@
 @property (assign, nonatomic) NSInteger personInvolved;
 
 @property (strong, nonatomic) AccidentReportInfo *reportSetupInfo;
+@property (strong, nonatomic) GenderOptionsList *genderOptionInfo;
+
 @property (assign, nonatomic) BOOL isUpdate;
 
 

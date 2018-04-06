@@ -365,7 +365,7 @@
         allowEditing = NO;
     }
     else if ([textField isEqual:_txtCareProvided]) {
-        [self setKeepViewInFrame:textField];
+[self setKeepViewInFrame:textField];
         DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
         dropDown.delegate = self;
         NSMutableArray *ary = [NSMutableArray arrayWithArray:[[_parentVC.reportSetupInfo.careProviderList allObjects] sortedArrayUsingDescriptors:@[sort]]];

@@ -26,4 +26,5 @@
 @dynamic isReadyToSubmit;
 @dynamic isLocationStatusChanged;
 @dynamic isSameCountTaken;
+@dynamic isEditedByOther;
 @end

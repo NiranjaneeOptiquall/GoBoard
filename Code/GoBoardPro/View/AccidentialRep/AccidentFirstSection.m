@@ -309,14 +309,16 @@
         memberId = _vwPersonalInfo.txtMemberId.text;
     }
 
-    NSString *strPhoto = @"", *strSignature = @"";
+    NSString *strPhoto = @"", *strSignature = @"",*strGuardianSignature = @"";
     if (_imgBodilyFluid) {
         strPhoto = [UIImageJPEGRepresentation(_imgBodilyFluid, 1.0) base64EncodedStringWithOptions:0];
     }
     if (_vwBodilyFluid.signatureView.tempDrawImage.image) {
         strSignature = [UIImageJPEGRepresentation(_vwBodilyFluid.signatureView.tempDrawImage.image, 1.0) base64EncodedStringWithOptions:0];
     }
-    
+    if (_vwPersonalInfo.signatureViewGaurdian.tempDrawImage.image) {
+        strGuardianSignature = [UIImageJPEGRepresentation(_vwPersonalInfo.signatureViewGaurdian.tempDrawImage.image, 1.0) base64EncodedStringWithOptions:0];
+    }
     NSString *careProvidedBy = @"", *activityTypeID = @"", *conditionTypeID = @"", *equipmentTypeID = @"";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", _vwBodyPartInjury.txtCareProvided.text];
     
@@ -371,7 +373,54 @@
     }
     
     
-    NSDictionary *aDict = @{@"FirstName":_vwPersonalInfo.txtFirstName.trimText, @"MiddleInitial":_vwPersonalInfo.txtMi.trimText, @"LastName":_vwPersonalInfo.txtLastName.trimText, @"PrimaryPhone":_vwPersonalInfo.txtHomePhone.text, @"AlternatePhone":_vwPersonalInfo.txtAlternatePhone.text, @"Email":_vwPersonalInfo.txtEmailAddress.text, @"Address1":_vwPersonalInfo.txtStreetAddress.trimText, @"Address2":_vwPersonalInfo.txtAppartment.trimText, @"City":_vwPersonalInfo.txtCity.trimText, @"State":_vwPersonalInfo.txtState.trimText, @"Zip":_vwPersonalInfo.txtZip.trimText, @"EmployeeTitle":_vwPersonalInfo.txtEmployeePosition.trimText, @"EmployeeId":employeeId, @"GuestId":guestId ,@"MemberId":memberId, @"DateOfBirth":strDob, @"FirstAidFirstName":_vwBodilyFluid.txtFName.text, @"FirstAidMiddleInitial":_vwBodilyFluid.txtMI.text, @"FirstAidLastName":_vwBodilyFluid.txtLName.text, @"FirstAidPosition":_vwBodilyFluid.txtPosition.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved], @"GuestOfFirstName":_vwPersonalInfo.txtGuestFName.text, @"GuestOfMiddleInitial":_vwPersonalInfo.txtGuestMI.text, @"GuestOfLastName":_vwPersonalInfo.txtguestLName.text, @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false", @"ActivityTypeId":activityTypeID, @"EquipmentTypeId":equipmentTypeID, @"ConditionId":conditionTypeID, @"CareProvidedById":careProvidedBy, @"PersonPhoto": strPhoto, @"PersonSignature": strSignature, @"PersonName": aSignatureName, @"BloodbornePathogenTypeId":[NSString stringWithFormat:@"%ld", (long)_vwBodilyFluid.intBloodBornePathogen], @"StaffMemberWrittenAccount": _vwBodilyFluid.txvStaffMemberAccount.text, @"WasBloodOrBodilyFluidPresent":(_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false", @"WasBloodCleanupRequired":(_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false", @"WasCaregiverExposedToBlood":(_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false", @"OccuredDuringBusinessHours":(_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"Injuries": injuryList, @"EmergencyPersonnel" : mutArrEmergency};
+    NSDictionary *aDict = @{@"FirstName":_vwPersonalInfo.txtFirstName.trimText,
+                            @"MiddleInitial":_vwPersonalInfo.txtMi.trimText,
+                            @"LastName":_vwPersonalInfo.txtLastName.trimText,
+                            @"PrimaryPhone":_vwPersonalInfo.txtHomePhone.text,
+                            @"AlternatePhone":_vwPersonalInfo.txtAlternatePhone.text,
+                            @"Email":_vwPersonalInfo.txtEmailAddress.text,
+                            @"Address1":_vwPersonalInfo.txtStreetAddress.trimText,
+                            @"Address2":_vwPersonalInfo.txtAppartment.trimText,
+                            @"City":_vwPersonalInfo.txtCity.trimText,
+                            @"State":_vwPersonalInfo.txtState.trimText,
+                            @"Zip":_vwPersonalInfo.txtZip.trimText,
+                            @"EmployeeTitle":_vwPersonalInfo.txtEmployeePosition.trimText,
+                            @"EmployeeId":employeeId,
+                            @"GuestId":guestId ,
+                            @"MemberId":memberId,
+                            @"DateOfBirth":strDob,
+                            @"FirstAidFirstName":_vwBodilyFluid.txtFName.text,
+                            @"FirstAidMiddleInitial":_vwBodilyFluid.txtMI.text,
+                            @"FirstAidLastName":_vwBodilyFluid.txtLName.text,
+                            @"FirstAidPosition":_vwBodilyFluid.txtPosition.text,
+                            @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intAffiliationType],
+                            @"GenderTypeId":@"0",
+                            @"GenderText":[NSString stringWithFormat:@"%@",_vwPersonalInfo.intGenderType],
+                            @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)_vwPersonalInfo.intPersonInvolved],
+                            @"GuestOfFirstName":_vwPersonalInfo.txtGuestFName.text,
+                            @"GuestOfMiddleInitial":_vwPersonalInfo.txtGuestMI.text,
+                            @"GuestOfLastName":_vwPersonalInfo.txtguestLName.text,
+                            @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false",
+                            @"IsGuardianContacted":(_vwPersonalInfo.btnParentContactedYes.isSelected) ? @"true" : @"false",
+                            @"GuardianFirstName":[NSString stringWithFormat:@"%@",_vwPersonalInfo.txtParentFName.text],
+                            @"GuardianLastName":[NSString stringWithFormat:@"%@",_vwPersonalInfo.txtParentLName.text],
+                            @"RelationshipToMinor":[NSString stringWithFormat:@"%@",_vwPersonalInfo.txtRelationshipWithMinor.text],
+                            @"AdditionalGuardianInformation":[NSString stringWithFormat:@"%@",_vwPersonalInfo.txtMinorAdditionalInfo.text],
+                            @"GuardianSignature":strGuardianSignature,
+                            @"ActivityTypeId":activityTypeID,
+                            @"EquipmentTypeId":equipmentTypeID,
+                            @"ConditionId":conditionTypeID,
+                            @"CareProvidedById":careProvidedBy,
+                            @"PersonPhoto": strPhoto,
+                            @"PersonSignature": strSignature,
+                            @"PersonName": aSignatureName,
+                            @"BloodbornePathogenTypeId":[NSString stringWithFormat:@"%ld", (long)_vwBodilyFluid.intBloodBornePathogen],
+                            @"StaffMemberWrittenAccount": _vwBodilyFluid.txvStaffMemberAccount.text, @"WasBloodOrBodilyFluidPresent":(_vwBodilyFluid.btnBloodPresent.isSelected) ? @"true":@"false", @"WasBloodCleanupRequired":(_vwBodilyFluid.btnBloodCleanupRequired.isSelected) ? @"true":@"false",
+                            @"WasCaregiverExposedToBlood":(_vwBodilyFluid.btnExposedToBlood.isSelected) ? @"true":@"false",
+                            @"OccuredDuringBusinessHours":(_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false",
+                            @"Injuries": injuryList,
+                            @"EmergencyPersonnel" : mutArrEmergency
+                            };
     return aDict;
     
 //    aPerson.duringWorkHours = (_vwPersonalInfo.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
@@ -489,4 +538,6 @@
         self.frame = frame;
     }
 }
+
+
 @end

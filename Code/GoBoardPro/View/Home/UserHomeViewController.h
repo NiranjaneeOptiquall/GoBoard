@@ -20,10 +20,12 @@
 @property (nonatomic,assign)NSInteger intFormInProgressCount;
 @property (nonatomic,assign)NSInteger intSurveyInProgressCount;
 @property (nonatomic,assign)NSInteger intTaskCount;
+@property (nonatomic,assign)NSInteger intWorkOrderCount;
 
 @property (nonatomic,assign)BOOL boolUpdateTeamLog;
 @property (nonatomic,assign)BOOL boolUpdateFormInProgress;
 @property (nonatomic,assign)BOOL boolUpdateSurveyInProgress;
+@property (nonatomic,assign)BOOL boolUpdateWorkOrderProgress;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnSurvey;
 @property (weak, nonatomic) IBOutlet UIButton *btnTools;

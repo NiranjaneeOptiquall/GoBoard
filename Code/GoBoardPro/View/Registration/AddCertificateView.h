@@ -11,7 +11,7 @@
 #import "UpdateProfileViewController.h"
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
-@interface AddCertificateView : UIView<UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate> {
+@interface AddCertificateView : UIView<UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, DropDownValueDelegate,UITextFieldDelegate> {
     UIPopoverController *popOver;
 }
 @property (strong,nonatomic) NSString * expDate;
@@ -19,7 +19,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *txtExpDate;
 @property (weak, nonatomic) IBOutlet UIButton *btnCaptureImage;
 @property (strong, nonatomic) NSString *strDropDownId;
+@property (assign, nonatomic) BOOL isExpiry;
+
 @property (strong, nonatomic) NSString *strCertificateId;
+@property (strong, nonatomic) NSString *strCertificateExpDate;
 @property (strong, nonatomic) NSString *strCertificateFileName;
 @property (weak, nonatomic) UpdateProfileViewController *parentView;
 @property (weak, nonatomic) IBOutlet UIButton *btnNoExpDate;
@@ -29,5 +32,6 @@
 - (IBAction)btnSelectExpDate:(id)sender;
 - (IBAction)btnCaptureCertificatieImageTapped:(id)sender;
 - (IBAction)btnNoExpirationClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *imgDisabledIcon;
 
 @end

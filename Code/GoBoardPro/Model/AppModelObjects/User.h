@@ -11,6 +11,7 @@
 #import "UserLocation.h"
 #import "UserPosition.h"
 #import "UserLocation1.h"
+#import "UserInventoryLocation.h"
 
 @interface User : NSObject
 

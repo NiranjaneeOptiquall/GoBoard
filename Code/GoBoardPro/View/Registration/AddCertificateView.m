@@ -62,6 +62,7 @@
         view = superView;
         superView = superView.superview;
     }
+    _txtExpDate.delegate = self;
     return rect;
 }
 
@@ -152,6 +153,19 @@
 - (void)dropDownControllerDidSelectValue:(id)value atIndex:(NSInteger)index sender:(id)sender {
     [sender setText:[value objectForKey:@"Name"]];
     _strDropDownId = [[value objectForKey:@"Id"] stringValue];
+    _isExpiry = [[value objectForKey:@"IsNoExpiry"] boolValue];
+
+    if (_isExpiry) {
+        _btnExpDate.userInteractionEnabled = NO;
+        _txtExpDate.text = @" ";
+        _btnNoExpDate.selected = YES;
+        _imgDisabledIcon.hidden = NO;
+    }
+    else{
+        _btnExpDate.userInteractionEnabled = YES;
+          _btnNoExpDate.selected = NO;
+           _imgDisabledIcon.hidden = YES;
+    }
 }
 
 @end

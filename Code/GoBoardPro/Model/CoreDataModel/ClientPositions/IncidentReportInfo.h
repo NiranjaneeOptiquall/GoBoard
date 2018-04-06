@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ActionTakenList, ActivityList, ConditionList, EquipmentList, NatureList, RequiredField;
+@class ActionTakenList, ActivityList, ConditionList, EquipmentList, NatureList, RequiredField,GenderOptionsList;
 
 @interface IncidentReportInfo : NSManagedObject
 
@@ -39,6 +39,11 @@
 @property (nonatomic, retain) NSNumber * showEmergencyPersonnel;
 @property (nonatomic, retain) NSNumber * showEmployeeId;
 @property (nonatomic, retain) NSNumber * showGender;
+@property (nonatomic, retain) NSNumber * showGuardianContacted;
+@property (nonatomic, retain) NSNumber * showGuardianAddInfo;
+@property (nonatomic, retain) NSNumber * showGuardianName;
+@property (nonatomic, retain) NSNumber * showGuardianSignature;
+@property (nonatomic, retain) NSNumber * showRelationshipToMinor;
 @property (nonatomic, retain) NSNumber * showGuestId;
 @property (nonatomic, retain) NSNumber * showManagementFollowup;
 @property (nonatomic, retain) NSNumber * showMemberIdAndDriverLicense;
@@ -58,6 +63,8 @@
 @property (nonatomic, retain) NSSet *equipmentList;
 @property (nonatomic, retain) NSSet *natureList;
 @property (nonatomic, retain) NSSet *requiredFields;
+@property (nonatomic, retain) NSSet *genderOptionsList;
+
 @end
 
 @interface IncidentReportInfo (CoreDataGeneratedAccessors)
@@ -91,5 +98,10 @@
 - (void)removeRequiredFieldsObject:(RequiredField *)value;
 - (void)addRequiredFields:(NSSet *)values;
 - (void)removeRequiredFields:(NSSet *)values;
+
+- (void)addGenderOptionsListObject:(GenderOptionsList *)value;
+- (void)removeGenderOptionsListObject:(GenderOptionsList *)value;
+- (void)addGenderOptionsList:(NSSet *)values;
+- (void)removeGenderOptionsList:(NSSet *)values;
 
 @end

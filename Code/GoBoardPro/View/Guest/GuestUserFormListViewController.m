@@ -111,7 +111,7 @@
 
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"Guest Forms"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             [self fetchFormList];
             [_tblFormList reloadData];
         }];
@@ -121,7 +121,7 @@
         [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromSugestionViewC"];
         [_imvIcon setImage:[UIImage imageNamed:@"make_a_suggestion.png"]];
         [_lblFormTitle setText:@"Guest Suggestion"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             [self fetchFormList];
             [_tblFormList reloadData];
         }];
@@ -131,7 +131,7 @@
         [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Form List"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             [self fetchFormList];
             [_tblFormList reloadData];
         }];
@@ -145,7 +145,7 @@
 }
 
 - (void)callService {
-    [[WebSerivceCall webServiceObject] callServiceForSurvey:NO complition:^{
+    [[WebSerivceCall webServiceObject] callServiceForSurvey:NO linkedSurveyId:@"0" complition:^{
         [self fetchSurveyList];
         [_tblFormList reloadData];
     }];

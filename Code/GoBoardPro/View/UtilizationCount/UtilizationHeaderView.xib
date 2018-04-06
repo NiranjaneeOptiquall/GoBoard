@@ -97,10 +97,6 @@
                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="E7Q-5t-Abl">
-                    <rect key="frame" x="105" y="11" width="305" height="79"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dcn-Oe-i0q">
                     <rect key="frame" x="550" y="27" width="113" height="37"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -124,7 +120,6 @@
                 <outlet property="btnDecreaseCount" destination="B2a-Gy-hla" id="cW4-4V-Ip8"/>
                 <outlet property="btnIncreaseCount" destination="GN1-RT-mwh" id="Wlr-EF-sFe"/>
                 <outlet property="btnOptions" destination="dcn-Oe-i0q" id="5NQ-i2-jmx"/>
-                <outlet property="btnTapReadyToSubmit" destination="E7Q-5t-Abl" id="DJx-tq-vT0"/>
                 <outlet property="imgClosedIndicator" destination="lql-tL-KrQ" id="hue-uw-HlI"/>
                 <outlet property="imgReadyToSubmit" destination="XDo-E3-hRi" id="VK7-LL-hSw"/>
                 <outlet property="imgTimeExide" destination="oOK-bW-hWL" id="g1z-Hg-VJ7"/>

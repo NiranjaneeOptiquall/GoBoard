@@ -17,11 +17,18 @@
 #import "Reachability.h"
 #import "facilityListingTableViewCell.h"
 #define kTextLimit 1000
-
+#import "SOPViewController.h"
+#import "AccidentReportViewController.h"
+#import "IncidentDetailViewController.h"
+#import "DynamicFormsViewController.h"
+#import "ERPDetailViewController.h"
+#import "EmergencyResponseViewController.h"
 @interface DailyLogViewController ()
 {
     WebSerivceCall * webCall;
-    
+    CGFloat rowHeight;
+    NSMutableArray * arrLoadedIndex,*arrRowHeight,* allDataForLinkedSopErp;
+        
 }
 
 @end
@@ -30,6 +37,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+   // _webViewPopOver.delegate = self;
+    arrLoadedIndex = [[NSMutableArray alloc] init];
+    arrRowHeight = [[NSMutableArray alloc] init];
+    rowHeight = 90;
+
     selectedFacilityArr = [[NSMutableArray alloc]init];
     self.btnToggleTeam.selected = NO;
     [self.viewSelectPos setAlpha:0.0];
@@ -61,6 +73,11 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {    [super viewWillAppear:animated];
+    
+    arrLoadedIndex = [[NSMutableArray alloc] init];
+    arrRowHeight = [[NSMutableArray alloc] init];
+    rowHeight = 90;
+    
     [gblAppDelegate showActivityIndicator];
     [[WebSerivceCall webServiceObject] callServiceForTeamLog:YES complition:^{
         [self doInitialSettings];
@@ -206,7 +223,12 @@
     aLog.shouldSync = [NSNumber numberWithBool:NO];
    // [gblAppDelegate.managedObjectContext insertObject:aLog];
     //[gblAppDelegate.managedObjectContext save:nil];
-
+ 
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithData:[_txvDailyLog.text dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    CGSize size = CGSizeMake(650, 0);
+    CGRect rect = [attrStr boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    
+  
     if ([self isNetworkReachable]) {
         
     }
@@ -225,9 +247,12 @@
     
    
     [self callWebserviceToAddDailyLogWithDailyLogObject:aLog];
+    
     _txvDailyLog.text = @"";
     [_lblLogPlaceholder setHidden:NO];
     self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
+
+    [arrRowHeight insertObject:[NSString stringWithFormat:@"%f",rect.size.height+170] atIndex:0];
    [_tblDailyLog reloadData];
    
 
@@ -250,6 +275,12 @@
     aLog.isTeamLog=@"1";
     NSString * strFacilitys = [[selectedFacilityArr valueForKey:@"description"] componentsJoinedByString:@","];
     aLog.selectedFacilities=strFacilitys;
+    
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithData:[_txvDailyLog.text dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    CGSize size = CGSizeMake(700, 0);
+    CGRect rect = [attrStr boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    
+    
 //    [gblAppDelegate.managedObjectContext insertObject:aLog];
 //    [gblAppDelegate.managedObjectContext save:nil];
     if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
@@ -271,7 +302,9 @@
     self.lblCharacterCount.text = [NSString stringWithFormat:@"%i",kTextLimit];
     if ([selectedFacilityArr containsObject:[[[User currentUser]selectedFacility] value]]) {
 
-    [_tblDailyLog reloadData];
+        [arrRowHeight insertObject:[NSString stringWithFormat:@"%f",rect.size.height+170] atIndex:0];
+ 
+        [_tblDailyLog reloadData];
 
     }
 }
@@ -294,6 +327,8 @@
 
 
 - (IBAction)btnToggleTeamTapped:(id)sender {
+    [NSUserDefaults.standardUserDefaults setValue:@"NO" forKey:@"fromCommentView"];
+
     selectedFacilityArr = [[NSMutableArray alloc]init];
      [selectedFacilityArr addObject:[[[User currentUser] selectedFacility] value]];
     self.btnToggleTeam.selected = !self.btnToggleTeam.selected;
@@ -410,6 +445,11 @@
     
            // [self fetchDailyLog];
             [self fetchTeamLog];
+              arrRowHeight= [[NSMutableArray alloc]init];
+            for (int i = 0; i<mutArrDailyList.count; i++) {
+                [arrRowHeight insertObject:@"90" atIndex:i];
+            }
+            NSLog(@"%@",arrRowHeight);
             [self.tblDailyLog reloadData];
             gblAppDelegate.teamLogCountAfterLogin = 0;
 
@@ -429,8 +469,17 @@
     else
     {
         //[self fetchDailyLog];
+
         [self fetchTeamLog];
+        
+        arrRowHeight= [[NSMutableArray alloc]init];
+        for (int i = 0; i<mutArrDailyList.count; i++) {
+            [arrRowHeight insertObject:@"90" atIndex:i];
+        }
+        NSLog(@"%@",arrRowHeight);
     }
+    
+    
     
 
 }
@@ -479,6 +528,8 @@
         [_lblNoRecords setHidden:NO];
     }
         [gblAppDelegate hideActivityIndicator];
+  
+
 }
 
 -(void)getFacilityList
@@ -525,13 +576,14 @@
     }
     else{
             [self fetchTeamLog];
-        UITableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        facilityListingTableViewCell *aCell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         [aCell setBackgroundColor:[UIColor clearColor]];
         UILabel *aLblTime = (UILabel*)[aCell.contentView viewWithTag:3];
         UILabel *aLblLog = (UILabel*)[aCell.contentView viewWithTag:4];
         UIImageView *aImgView = (UIImageView*)[aCell.contentView viewWithTag:5];
-          UIWebView *aWebDescLog = (UIWebView*)[aCell.contentView viewWithTag:6];
-        aWebDescLog.scrollView.scrollEnabled = NO;
+        aLblLog.hidden = YES;
+      //    UIWebView *aWebDescLog = (UIWebView*)[aCell.contentView viewWithTag:6];
+        aCell.logWebView.scrollView.scrollEnabled = NO;
         [aImgView setHidden:YES];
         NSLog(@"%@",[mutArrDailyList objectAtIndex:indexPath.row]);
         if ([mutArrDailyList[indexPath.row]isKindOfClass:[DailyLog class]]) {
@@ -543,42 +595,44 @@
             [aLblTime setText:[aFormatter stringFromDate:log.date]];
         
              NSString * htmlString = log.desc;
-            NSAttributedString *attributedString = [[NSAttributedString alloc]
-                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
-                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
-                                                    documentAttributes: nil
-                                                    error: nil
-                                                    ];
-            // [aLblLog setText:log.desc];
-            
-            [aLblLog setAttributedText:attributedString];
-          [aWebDescLog loadHTMLString:htmlString baseURL:nil];
+//            NSAttributedString *attributedString = [[NSAttributedString alloc]
+//                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+//                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+//                                                    documentAttributes: nil
+//                                                    error: nil
+//                                                    ];
+//            // [aLblLog setText:log.desc];
+//            
+//            [aLblLog setAttributedText:attributedString];
+         //   NSString *span=@"<span style=\"color:clear; font-size:17px\">";
+          //  htmlString=[span stringByAppendingString:htmlString];
+          [aCell.logWebView loadHTMLString:htmlString baseURL:nil];
             //----Changes By Chetan Kasundra-------------
             //-----Before prb in cell height,Content Overlap each other
             
-            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-         //   CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-               CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-//            CGRect frame = aLblLog.frame;
-             CGRect frame = aWebDescLog.frame;
-            if (aHeight < 30) {
-                frame.size.height = 30;
-//                aLblLog.frame = frame;
-                   aWebDescLog.frame = frame;
-            }
-            else
-            {
-                frame.size.height=aHeight + 10;
-//                aLblLog.frame=frame;
-                   aWebDescLog.frame=frame;
-            }
-            
+//            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+//         //   CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//               CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+////            CGRect frame = aLblLog.frame;
+//             CGRect frame = aWebDescLog.frame;
+//            if (aHeight < 30) {
+//                frame.size.height = 30;
+////                aLblLog.frame = frame;
+//                   aWebDescLog.frame = frame;
+//            }
+//            else
+//            {
+//                frame.size.height=aHeight + 10;
+////                aLblLog.frame=frame;
+//                   aWebDescLog.frame=frame;
+//            }
+//            
             UIView *bgView = [aCell.contentView viewWithTag:2];
-            frame = bgView.frame;
-            frame.size.height = aHeight + 50;
+            CGRect frame = bgView.frame;
+            frame.size.height = [[arrRowHeight objectAtIndex:indexPath.row] integerValue] - 10;
             bgView.frame = frame;
             aImgView.hidden = YES;
-            
+
         }
         else
         {
@@ -593,46 +647,49 @@
             
             NSString * htmlString = log.desc;
             
-            NSAttributedString *attributedString = [[NSAttributedString alloc]
-                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
-                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
-                                                    documentAttributes: nil
-                                                    error: nil
-                                                    ];
-
-            //[aLblLog setText:log.desc];
-               [aLblLog setAttributedText:attributedString];
-                [aWebDescLog loadHTMLString:htmlString baseURL:nil];
-        //      UIWebView * discriptionView = [aCell.contentView viewWithTag:6];
-            //    [discriptionView loadHTMLString:htmlString baseURL:nil];
+//            NSAttributedString *attributedString = [[NSAttributedString alloc]
+//                                                    initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+//                                                    options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+//                                                    documentAttributes: nil
+//                                                    error: nil
+//                                                    ];
+//
+//            //[aLblLog setText:log.desc];
+//               [aLblLog setAttributedText:attributedString];
+          //  NSString *span=@"<span style=\"color:clear; font-size:17px\">";
+ //    htmlString=[span stringByAppendingString:htmlString];
             
-            //----Changes By Chetan Kasundra-------------
-            //-----Before prb in cell height,Content Overlap each other
-            
-            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-//            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-                 CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
-            
-//            CGRect frame = aLblLog.frame;
-               CGRect frame = aWebDescLog.frame;
-            if (aHeight < 30) {
-                frame.size.height = 30;
-//                aLblLog.frame = frame;
-                aWebDescLog.frame = frame;
-            }
-            else
-            {
-                frame.size.height=aHeight + 10;
-//                aLblLog.frame=frame;
-                aWebDescLog.frame=frame;
-                
-            }
-            
-          // discriptionView.frame = aLblLog.frame;
-          //  discriptionView.backgroundColor = [UIColor clearColor];
+                [aCell.logWebView loadHTMLString:htmlString baseURL:nil];
+//        //      UIWebView * discriptionView = [aCell.contentView viewWithTag:6];
+//            //    [discriptionView loadHTMLString:htmlString baseURL:nil];
+//            
+//            //----Changes By Chetan Kasundra-------------
+//            //-----Before prb in cell height,Content Overlap each other
+//            
+//            NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+////            CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//                 CGFloat aHeight = [aLblLog.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//            
+////            CGRect frame = aLblLog.frame;
+//               CGRect frame = aWebDescLog.frame;
+//            if (aHeight < 30) {
+//                frame.size.height = 30;
+////                aLblLog.frame = frame;
+//                aWebDescLog.frame = frame;
+//            }
+//            else
+//            {
+//                frame.size.height=aHeight + 10;
+////                aLblLog.frame=frame;
+//                aWebDescLog.frame=frame;
+//                
+//            }
+//            
+//          // discriptionView.frame = aLblLog.frame;
+//          //  discriptionView.backgroundColor = [UIColor clearColor];
             UIView *bgView = [aCell.contentView viewWithTag:2];
-            frame = bgView.frame;
-            frame.size.height = aHeight + 50;
+           CGRect frame = bgView.frame;
+            frame.size.height = [[arrRowHeight objectAtIndex:indexPath.row] integerValue] - 10;
             bgView.frame = frame;
             
             if ([log.positionId isEqualToString:@"0"]) {
@@ -642,22 +699,344 @@
             }
             
         }
-
+        aCell.logWebView.tag = indexPath.row;
        // aLblLog.hidden = YES;
         //---------------------------------
         aLblLog.hidden = YES;
       //  aTxtDescLog.backgroundColor = [UIColor purpleColor];
+        aCell.logWebView.backgroundColor = [UIColor clearColor];
+        [aCell.logWebView setOpaque:NO];
+     //   aLblLog.hidden = YES;
         return aCell;
     }
 }
--(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
-    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
-        [[UIApplication sharedApplication] openURL:[inRequest URL]];
-        return NO;
+-(void)getLinkedSopData:(NSArray*)dataDic{
+    
+    for (NSMutableDictionary * tempDic in dataDic) {
+        if ([[tempDic valueForKey:@"Children"] count] ==0) {
+            
+            [allDataForLinkedSopErp addObject:tempDic];
+            
+        }
+        else{
+            [self getLinkedSopData:[tempDic valueForKey:@"Children"]];
+        }
     }
     
+}
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType
+//{
+//    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+//        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+//        return NO;
+//    }
+//
+//    return YES;
+//}
+{
+    
+    NSURL *url = [inRequest URL];
+    NSString * strUrl = [NSString stringWithFormat:@"%@",url];
+    NSLog(@"%@",strUrl);
+    if ( [strUrl containsString:@"IsLinked=true"]) {
+        //  NSLog(@"linked type");
+        if ([strUrl containsString:@"SOPs"]) {
+            NSLog(@"linked type SOPs");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
+                
+                
+                SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"SopCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"SopCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                
+                [self getLinkedSopData:[response valueForKey:@"SopCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        sopView.dictSOPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (sopView.dictSOPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        sopView.mutArrCategoryHierarchy = [NSMutableArray array];
+                        [sopView.mutArrCategoryHierarchy addObject:sopView.dictSOPCategory];
+                        sopView.isBtnSOPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:sopView animated:YES];
+                    }
+                    
+                });
+                
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"ERP"]) {
+            NSLog(@"linked type erp");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
+                
+                EmergencyResponseViewController *erpView = [self.storyboard instantiateViewControllerWithIdentifier:@"ERPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"ErpCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                [self getLinkedSopData:[response valueForKey:@"ErpCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        erpView.dictERPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (erpView.dictERPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        erpView.mutArrCategoryHierarchy = [NSMutableArray array];
+                        [erpView.mutArrCategoryHierarchy addObject:erpView.dictERPCategory];
+                        erpView.isBtnERPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:erpView animated:YES];
+                    }
+                    
+                });
+                
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"Accident"]) {
+            NSLog(@"linked type Accident");
+            AccidentReportViewController * acciView = [self.storyboard instantiateViewControllerWithIdentifier:@"AccidentReportViewController"];
+            [self.navigationController pushViewController:acciView animated:YES];
+        }
+        else if ([strUrl containsString:@"Incident"]) {
+            
+            if ([strUrl containsString:@"Misconduct"]) {
+                NSLog(@"linked type Misconduct");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 1;
+                [self.navigationController pushViewController:inciView animated:YES];
+            }
+            else if ([strUrl containsString:@"CustomerService"]) {
+                NSLog(@"linked type CustomerService");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 2;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+            else if ([strUrl containsString:@"Other"]) {
+                NSLog(@"linked type Other");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 3;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+        }
+        else if ([strUrl containsString:@"Survey"]) {
+            NSLog(@"linked type Survey");
+            NSRange r1 = [strUrl rangeOfString:@"surveyId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *surveyId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForSurvey:NO linkedSurveyId:surveyId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@",strSurveyUserType];
+                
+                
+                [request setPredicate:predicate];
+                
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"surveyId" ascending:YES];
+                
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray * mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }
+                    else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = YES;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+                    }
+                });
+                
+                
+            }];
+        }
+        else if ([strUrl containsString:@"Form"]) {
+            
+            NSLog(@"linked type Form");
+            NSRange r1 = [strUrl rangeOfString:@"formId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *formId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:formId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+                [request setPredicate:predicate];
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"formId" ascending:YES];
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray *mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }
+                    else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = NO;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+                    }
+                });
+                
+                
+            }];
+            
+            
+        }
+        return NO;
+    }
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+//        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+//        return NO;
+           [gblAppDelegate showActivityIndicator];
+           NSIndexPath* indexPathLoad = [NSIndexPath indexPathForRow:inWeb.tag inSection:0];
+        
+        if (popOver) {
+            [popOver dismissPopoverAnimated:NO];
+            popOver.contentViewController.view = nil;
+            popOver = nil;
+        }
+  
+
+        [_webViewPopOver loadRequest:inRequest];
+
+        UIViewController *viewController = [[UIViewController alloc] init];
+        viewController.view = _vwPopOver;
+        popOver = [[UIPopoverController alloc] initWithContentViewController:viewController];
+        viewController = nil;
+        [popOver setDelegate:self];
+        [popOver setPopoverContentSize:_vwPopOver.frame.size];
+        UITableViewCell *aCell = [_tblDailyLog cellForRowAtIndexPath:indexPathLoad];
+        CGRect frame = [_tblDailyLog convertRect:aCell.frame toView:self.view];
+        [popOver presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+
+        return NO;
+        
+    }
     return YES;
 }
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    [_webViewPopOver loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+    popOver.contentViewController.view = nil;
+    popOver = nil;
+    
+}
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+//    CGPoint viewCenterRelativeToTableview = [_tblDailyLog convertPoint:CGPointMake(CGRectGetMidX(webView.bounds), CGRectGetMidY(webView.bounds)) fromView:webView];
+//    NSIndexPath * indexPathLoad = [_tblDailyLog indexPathForRowAtPoint:viewCenterRelativeToTableview];
+   
+       [gblAppDelegate hideActivityIndicator];
+       NSIndexPath* indexPathLoad = [NSIndexPath indexPathForRow:webView.tag inSection:0];
+    
+    facilityListingTableViewCell * aCell = [_tblDailyLog cellForRowAtIndexPath:indexPathLoad];
+
+    
+//    CGRect frame = webView.frame;
+//    CGSize fittingSize = [webView sizeThatFits:webView.scrollView.contentSize];
+//    frame.size = fittingSize;
+//    webView.frame = frame;
+//    aCell.logWebView.frame = frame;
+//    rowHeight = frame.size.height + 70;
+
+    
+    CGFloat height= [[aCell.logWebView stringByEvaluatingJavaScriptFromString:@"document.body.scrollHeight"] floatValue];
+    NSLog(@"%f",height);
+    
+    CGRect frame = aCell.logWebView.frame;
+    CGSize fittingSize = [aCell.logWebView sizeThatFits:aCell.logWebView.scrollView.contentSize];
+    frame.size = fittingSize;
+//    frame.size.width = 670;
+    aCell.logWebView.frame = frame;
+    rowHeight = frame.size.height + 70;
+   
+    
+    if ([arrLoadedIndex containsObject:indexPathLoad]) {
+    }
+    else{
+      
+        [arrRowHeight replaceObjectAtIndex:indexPathLoad.row withObject:[NSString stringWithFormat:@"%f",rowHeight]];
+        
+        NSLog(@"%@",arrRowHeight);
+        
+           if ([_tblDailyLog.indexPathsForVisibleRows containsObject:indexPathLoad]) {
+                       [arrLoadedIndex addObject:indexPathLoad];
+
+               dispatch_async(dispatch_get_main_queue(), ^{
+
+               [_tblDailyLog reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPathLoad, nil] withRowAnimation:NO];
+                  });
+           }
+    }
+    
+    
+}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (tableView == self.tblFacilityListing) {
@@ -673,25 +1052,34 @@
     if (tableView == self.tblFacilityListing) {
           return 44;
     }
-    else{
-    TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
-    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
-        NSString * htmlString = log.desc;
-        NSAttributedString *attributedString = [[NSAttributedString alloc]
-                                                initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
-                                                options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
-                                                documentAttributes: nil
-                                                error: nil
-                                                ];
-        UILabel * lblTemp = [[UILabel alloc]init];
-        lblTemp.attributedText = attributedString;
-        CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+   else{
+//       if (arrRowHeight.count == 0) {
+//           
+//      
+//    TeamLog *log = [mutArrDailyList objectAtIndex:indexPath.row];
+//    NSDictionary *aDicAttribute=@{NSFontAttributeName :[UIFont boldSystemFontOfSize:17]};
+//        NSString * htmlString = log.desc;
+//        NSAttributedString *attributedString = [[NSAttributedString alloc]
+//                                                initWithData: [htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+//                                                options: @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType }
+//                                                documentAttributes: nil
+//                                                error: nil
+//                                                ];
+//        UILabel * lblTemp = [[UILabel alloc]init];
+//        lblTemp.attributedText = attributedString;
+//        CGFloat aHeight = [lblTemp.text boundingRectWithSize:CGSizeMake(664, 9999) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:aDicAttribute context:kNilOptions].size.height;
+//    
+//    if (aHeight < 21)
+//    {
+//        aHeight = 21;
+//    }
+//    return aHeight + 69;
+//       }else{
+       
+       
+           return [[arrRowHeight objectAtIndex:indexPath.row] integerValue];
+//       }
     
-    if (aHeight < 21)
-    {
-        aHeight = 21;
-    }
-    return aHeight + 69;
     }
 }
 
@@ -777,6 +1165,7 @@
                                             }
                                           ]
                                   };
+    NSLog(@"%@",aDictParams);
     [gblAppDelegate callWebService:TEAM_LOG parameters:aDictParams httpMethod:@"POST" complition:^(NSDictionary *response) {
         alert(@"", @"Daily Log is submitted successfully")
         if ([response[@"Success"]boolValue]) {
@@ -821,6 +1210,7 @@
                                             }
                                           ]
                                   };
+    NSLog(@"%@",aDictParams);
     [gblAppDelegate callWebService:TEAM_LOG parameters:aDictParams httpMethod:@"POST" complition:^(NSDictionary *response) {
         alert(@"", @"Team Log is submitted successfully")
         if ([response[@"Success"]boolValue]) {

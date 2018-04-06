@@ -13,7 +13,7 @@
 #import "EquipmentList.h"
 #import "NatureList.h"
 #import "RequiredField.h"
-
+#import "GenderOptionsList.h"
 
 @implementation IncidentReportInfo
 
@@ -43,6 +43,11 @@
 @dynamic showEmergencyPersonnel;
 @dynamic showEmployeeId;
 @dynamic showGender;
+@dynamic showGuardianContacted;
+@dynamic showGuardianAddInfo;
+@dynamic showGuardianName;
+@dynamic showGuardianSignature;
+@dynamic showRelationshipToMinor;
 @dynamic showGuestId;
 @dynamic showManagementFollowup;
 @dynamic showMemberIdAndDriverLicense;
@@ -62,5 +67,6 @@
 @dynamic equipmentList;
 @dynamic natureList;
 @dynamic requiredFields;
+@dynamic genderOptionsList;
 
 @end

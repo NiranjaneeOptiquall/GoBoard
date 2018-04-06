@@ -56,7 +56,9 @@
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromSuveyViewC"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"fromInProgress"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Forms/Surveys"];
-
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"lastAccessedByUser"];
+      [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isAllowSharedEdit"];
+    
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
   
     data=[[NSMutableArray alloc]init];
@@ -260,7 +262,7 @@
         // Configure for Complete Form screen
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"Guest Forms"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             
             [self fetchFormList];
             [self.tblFormList reloadData];
@@ -271,7 +273,7 @@
         // Configure for Make a Suggestion screen
         [_imvIcon setImage:[UIImage imageNamed:@"make_a_suggestion.png"]];
         [_lblFormTitle setText:@"Guest Suggestion"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             [self fetchFormList];
             [self.tblFormList reloadData];
 
@@ -281,7 +283,7 @@
         // Configure for User Forms
         [_imvIcon setImage:[UIImage imageNamed:@"complete_a_form.png"]];
         [_lblFormTitle setText:@"User Form List"];
-        [[WebSerivceCall webServiceObject] callServiceForForms:NO complition:^{
+        [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:@"0" complition:^{
             [self fetchFormList];
             [self.tblFormList reloadData];
 
@@ -342,7 +344,7 @@
 }
 
 - (void)callService {
-    [[WebSerivceCall webServiceObject] callServiceForSurvey:NO complition:^{
+    [[WebSerivceCall webServiceObject] callServiceForSurvey:NO linkedSurveyId:@"0" complition:^{
         [self fetchSurveyList];
         [self.tblFormList reloadData];
     }];
@@ -361,8 +363,9 @@
     
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
 
-  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
-
+//  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+    
+      NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
 
     [request setPredicate:predicate];
     
@@ -551,10 +554,12 @@
     //********* remove shared form if  user selected position is not matched with position assigned to it *********//
 
     NSMutableArray *tempFormArr = [[NSMutableArray alloc]init];
-    tempFormArr = mutArrFormList;
+    [tempFormArr addObjectsFromArray:mutArrFormList];
     for (int a = 0; a<[mutArrFormList count]; a++) {
-        if ([[[mutArrFormList valueForKey:@"typeId"]objectAtIndex:a] isEqualToString:@"4"]) {
+      
+     //   if ([[[mutArrFormList valueForKey:@"typeId"]objectAtIndex:a] isEqualToString:@"4"]) {
             if ([[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] isEqualToString:@"<null>"] || [[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] isKindOfClass:[NSNull class]] ) {
+                  NSLog(@"contains form no position assigned to %@", [[mutArrFormList valueForKey:@"name"]objectAtIndex:a]);
                 // allow display shared form is no position is assigned to it
             }
            else{
@@ -563,21 +568,31 @@
         NSArray * tempUserPositionArr = [[NSArray alloc]init];
 
         tempUserPositionArr =  [[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"];
-        tempFormPositionArr = [[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a] componentsSeparatedByString:@","];
-   
+               NSMutableString * strTemp = [NSMutableString stringWithFormat:@"%@",[[mutArrFormList valueForKey:@"publishedToFacilityPositions"]objectAtIndex:a]];
+               if (![strTemp isEqualToString:@""]) {
+                   [strTemp deleteCharactersInRange:NSMakeRange([strTemp length]-1, 1)];
+
+               }
+               
+       tempFormPositionArr  = [strTemp componentsSeparatedByString:@","];
+
+               NSLog(@"FormPosition : %@,,, UserPosition : %@",tempFormPositionArr,tempUserPositionArr);
         for (NSString*position in tempUserPositionArr ) {
             if ([tempFormPositionArr containsObject:position]){
+                NSLog(@"contains form : %@",[mutArrFormList objectAtIndex:a]);
                 flag = @"yes";
                 break;
             }
         }
         if ([flag isEqualToString:@"no"]) {
+             NSLog(@"not contains remove to %@",[[mutArrFormList valueForKey:@"name"]objectAtIndex:a]);
             // remove shared form if  user selected position is not matched with position assigned to it
             [tempFormArr removeObject:[mutArrFormList objectAtIndex:a]];
         }
    
         }
-               }
+             //  }
+        NSLog(@"%d",a);
       }
     mutArrFormList = tempFormArr;
   
@@ -900,13 +915,13 @@
         if ([[[obj valueForKey:@"isSharedForm"]objectAtIndex:indexPath.row] boolValue]) {
             
             NSLog(@"shared form");
-            aCell.btnFormInProgress.hidden = YES;
+           // aCell.btnFormInProgress.hidden = YES;
+           // aCell.btnFormInProgressTitle.hidden = YES;
+           // aCell.lblFormsCount.hidden = YES;
             aCell.btnFormInOffline.hidden = YES;
             aCell.btnFormInOfflineTitle.hidden = YES;
-            aCell.btnFormInProgressTitle.hidden = YES;
-            aCell.lblFormsCount.hidden = YES;
             aCell.lblFormInOfflineCount.hidden = YES;
-            
+              aCell.imgListIcon.hidden = YES;
             aCell.btnIsSharedForm.hidden = NO;
             if ([[[obj valueForKey:@"inProgressCount"]objectAtIndex:indexPath.row] intValue] > 0) {
                 aCell.btnIsSharedForm.selected = YES;
@@ -1059,23 +1074,17 @@
         [self initWithIdentifier:@"GoToLink" sender:obj];
     }
     else if ([[obj valueForKey:@"typeId"] integerValue] == 4){
-        if ([[obj valueForKey:@"inProgressCount"] integerValue] > 0) {
-            // call formHistory service
-       //     [self callSharedFormHistory:[obj valueForKey:@"formId"]];
-            [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
-              [[NSUserDefaults standardUserDefaults]setValue:@"0" forKey:@"indexpath"];
- //           [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
-            selectedIndex = indexPath.row;
+      if ([self isNetworkReachable]) {
+           selectedIndex = indexPath.row;
             selectedSection = indexPath.section;
-            [self callServiceForForms:YES buttonIndex:[[obj valueForKey:@"formId"] integerValue] sharedForm:YES complition:nil];
-     //       return;
-        }
-        else{
-            selectedIndex = indexPath.row;
-            selectedSection = indexPath.section;
-            [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
-        }
+           [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
     }
+    else {
+        alert(@"", @"We’re sorry.  This form is not available while working offline.  Please connect to the internet and try again.");
+        return;
+
+    }
+   }
     else {
         selectedIndex = indexPath.row;
         selectedSection = indexPath.section;
@@ -1271,13 +1280,15 @@
             NSManagedObject *obj = [[data valueForKey:@"categoryFormList"]objectAtIndex:indexPath.section];
             NSString *formId = [[obj valueForKey:@"formId"]objectAtIndex:indexPath.row];
             
-            
-            [self callServiceForForms:YES buttonIndex:[formId integerValue] sharedForm:NO complition:nil];
+            if ([[[obj valueForKey:@"typeId"]objectAtIndex:indexPath.row] isEqualToString:@"4"]){
+                  [self callServiceForForms:YES buttonIndex:[formId integerValue] sharedForm:YES complition:nil];
+            }
+            else{
+                  [self callServiceForForms:YES buttonIndex:[formId integerValue] sharedForm:NO complition:nil];
+            }
+          
             
         }
-        
-
-        
         
     }
     else {
@@ -1297,7 +1308,6 @@
     FormsInProgressView *formView = [[[NSBundle mainBundle] loadNibNamed:@"FormsInProgressView" owner:self options:nil] objectAtIndex:0];
     
    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%ld",(long)button] forKey:@"formId"];
-        NSLog(@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"formId"]);
     __block BOOL isWSComplete = NO;
     NSString *aStrClientId = [[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"];
     NSString *strUserId = @"";
@@ -1305,15 +1315,35 @@
         strUserId = [[User currentUser] userId];
     }
    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&formId=%@", FORM_SETUP, aStrClientId, strUserId,[NSString stringWithFormat:@"%ld",(long)button]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
-       [self deleteAllForms];
-        [self insertForms:response];
-       if (isSharedForm) {
-               [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
-       }
-       else{
+      // NSString * strName = [response valueForKey:@"LastAccessedBy"];
+    //   [[NSUserDefaults standardUserDefaults]setValue:strName forKey:@"lastAccessedByUser"];
+       
+       BOOL SharedEdit = [[response valueForKey:@"IsAllowSharedEdit"] boolValue];
+       [[NSUserDefaults standardUserDefaults]setBool:SharedEdit forKey:@"isAllowSharedEdit"];
+//       if ([[response valueForKey:@"FormHistory"] count] == 0) {
+//
+//           [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"formId"];
+//           [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgress"];
+//           [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isFormHistory"];
+//           [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"fromInProgressSubmit"];
+//
+//           [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+//               isWSComplete = YES;
+//           return;
+//       }
+//       else{
+           [self deleteAllForms];
+           [self insertForms:response];
+ //      }
+
+//       if (isSharedForm) {
+//               [[NSUserDefaults standardUserDefaults]setValue:@"YES" forKey:@"fromInProgress"];
+//               [self performSegueWithIdentifier:@"ShowDynamicForm" sender:nil];
+//       }
+//       else{
            [self.view addSubview:formView];
 
-       }
+//       }
         isWSComplete = YES;
         if (complition)
             complition();
@@ -1397,6 +1427,8 @@
             form.date=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Date"]];
             form.inProgressFormId=[NSString stringWithFormat:@"%@", [aDict valueForKey:@"Id"]];
             form.isAllowEditSharedForm=[[aDict valueForKey:@"IsAllowSharedEdit"] stringValue];
+            form.formLastAccessedBy=[aDict valueForKey:@"LastAccessedBy"];
+
     //        form.isAllowEditSharedForm=[NSString stringWithFormat:@"%@",[aDict valueForKey:@"IsAllowSharedEdit"]];
             
                        form.isAllowInProgress =[NSString stringWithFormat:@"%@", [aDict valueForKey:@"IsInProgress"]];

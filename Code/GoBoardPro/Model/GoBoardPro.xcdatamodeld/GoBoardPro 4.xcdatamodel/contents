@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13240" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G1036" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbdomenInjuryList" representedClassName="AbdomenInjuryList" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -27,6 +27,12 @@
         <attribute name="firstAidPosition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="genderTypeID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianAddInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianContacted" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianFName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianLName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianRelation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianSignature" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="guestId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfFirstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfLastName" optional="YES" attributeType="String" syncable="YES"/>
@@ -85,6 +91,10 @@
         <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showGender" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianAddInfo" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianContacted" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianName" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianSignature" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showGuestId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -96,6 +106,7 @@
         <attribute name="showParticipantSignature" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showRefusedSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showRelationshipToMinor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showSelfCareText" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showStaffMembersWrittenAccount" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="staffMembersWrittenAccountLabel" optional="YES" attributeType="String" syncable="YES"/>
@@ -107,6 +118,7 @@
         <relationship name="careProviderList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CareProvidedType" inverseName="accidentInfo" inverseEntity="CareProvidedType" syncable="YES"/>
         <relationship name="conditionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConditionList" inverseName="accidentInfo" inverseEntity="ConditionList" syncable="YES"/>
         <relationship name="equipmentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EquipmentList" inverseName="accidentInfo" inverseEntity="EquipmentList" syncable="YES"/>
+        <relationship name="genderOptionsList" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="GenderOptionsList" inverseName="accidentInfo" inverseEntity="GenderOptionsList" syncable="YES"/>
         <relationship name="generalInjuryType" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GeneralInjuryType" inverseName="accidentInfo" inverseEntity="GeneralInjuryType" syncable="YES"/>
         <relationship name="headInjuryList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HeadInjuryList" inverseName="accidentInfo" inverseEntity="HeadInjuryList" syncable="YES"/>
         <relationship name="leftArmInjuryList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LeftArmInjuryList" inverseName="accidentInfo" inverseEntity="LeftArmInjuryList" syncable="YES"/>
@@ -281,6 +293,7 @@
         <attribute name="categorySequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="formId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="formLastAccessedBy" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inProgressCount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inProgressFormId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instructions" optional="YES" attributeType="String" syncable="YES"/>
@@ -313,6 +326,13 @@
         <attribute name="typeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="questionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestions" inverseName="formList" inverseEntity="SurveyQuestions" syncable="YES"/>
+    </entity>
+    <entity name="GenderOptionsList" syncable="YES">
+        <attribute name="isShow" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="accidentInfo" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="AccidentReportInfo" inverseName="genderOptionsList" inverseEntity="AccidentReportInfo" syncable="YES"/>
+        <relationship name="incidentType" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="IncidentReportInfo" inverseName="genderOptionsList" inverseEntity="IncidentReportInfo" syncable="YES"/>
     </entity>
     <entity name="GeneralInjuryType" representedClassName="GeneralInjuryType" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -357,6 +377,10 @@
         <attribute name="showEmergencyPersonnel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showEmployeeId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showGender" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianAddInfo" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianContacted" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianName" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showGuardianSignature" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showGuestId" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showManagementFollowup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showMemberIdAndDriverLicense" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -366,10 +390,12 @@
         <attribute name="showNotificationField3" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showNotificationField4" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="showPhotoIcon" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="showRelationshipToMinor" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="actionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActionTakenList" inverseName="incidentType" inverseEntity="ActionTakenList" syncable="YES"/>
         <relationship name="activityList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ActivityList" inverseName="incidentType" inverseEntity="ActivityList" syncable="YES"/>
         <relationship name="conditionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConditionList" inverseName="incidentType" inverseEntity="ConditionList" syncable="YES"/>
         <relationship name="equipmentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EquipmentList" inverseName="incidentType" inverseEntity="EquipmentList" syncable="YES"/>
+        <relationship name="genderOptionsList" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="GenderOptionsList" inverseName="incidentType" inverseEntity="GenderOptionsList" syncable="YES"/>
         <relationship name="natureList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NatureList" inverseName="incidentType" inverseEntity="NatureList" syncable="YES"/>
         <relationship name="requiredFields" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RequiredField" inverseName="incidentType" inverseEntity="RequiredField" syncable="YES"/>
     </entity>
@@ -429,6 +455,13 @@
         <attribute name="equipmentTypeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="genderTypeID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianAddInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianContacted" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianFName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianLName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianRelation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guardianSignature" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="guestId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfFirstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfLastName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guestOfMiddleInitial" optional="YES" attributeType="String" syncable="YES"/>
@@ -541,6 +574,7 @@
     </entity>
     <entity name="SubmitUtilizationCount" representedClassName="SubmitUtilizationCount" syncable="YES">
         <attribute name="capacity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isClosed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastCount" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastCountDateTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationId" optional="YES" attributeType="String" syncable="YES"/>
@@ -665,8 +699,14 @@
     <entity name="UserFacility" representedClassName="UserFacility" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="inventoerLocations" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="UserInventoryLocation" inverseName="facility" inverseEntity="UserInventoryLocation" syncable="YES"/>
         <relationship name="locations1" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="UserLocation1" inverseName="facility" inverseEntity="UserLocation1" syncable="YES"/>
         <relationship name="positions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserPosition" inverseName="facility" inverseEntity="UserPosition" syncable="YES"/>
+    </entity>
+    <entity name="UserInventoryLocation" representedClassName="UserLocation" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="facility" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="UserFacility" inverseName="inventoerLocations" inverseEntity="UserFacility" syncable="YES"/>
     </entity>
     <entity name="UserLocation" representedClassName="UserLocation" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -687,6 +727,7 @@
     <entity name="UtilizationCount" representedClassName="UtilizationCount" syncable="YES">
         <attribute name="capacity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isClosed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isEditedByOther" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isLocationStatusChanged" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isReadyToSubmit" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isSameCountTaken" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -713,8 +754,8 @@
     </entity>
     <elements>
         <element name="AbdomenInjuryList" positionX="7" positionY="560" width="128" height="103"/>
-        <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="673"/>
-        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="990"/>
+        <element name="AccidentPerson" positionX="252" positionY="207" width="128" height="765"/>
+        <element name="AccidentReportInfo" positionX="-200" positionY="353" width="128" height="1080"/>
         <element name="AccidentReportSubmit" positionX="954" positionY="-385" width="128" height="403"/>
         <element name="ActionTakenList" positionX="-495" positionY="-252" width="128" height="133"/>
         <element name="ActivityList" positionX="-576" positionY="-85" width="128" height="118"/>
@@ -733,27 +774,28 @@
         <element name="ERPSubcategory" positionX="-35" positionY="-837" width="128" height="103"/>
         <element name="ERPTask" positionX="-36" positionY="-688" width="128" height="103"/>
         <element name="FormCategory" positionX="-801" positionY="-756" width="128" height="103"/>
-        <element name="FormsInProgress" positionX="-713" positionY="936" width="128" height="300"/>
+        <element name="FormsInProgress" positionX="-713" positionY="936" width="128" height="315"/>
         <element name="FormsList" positionX="-513" positionY="675" width="144" height="315"/>
+        <element name="GenderOptionsList" positionX="-693" positionY="-981" width="128" height="120"/>
         <element name="GeneralInjuryType" positionX="34" positionY="162" width="128" height="103"/>
         <element name="HeadInjuryList" positionX="43" positionY="425" width="128" height="103"/>
-        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="720"/>
+        <element name="IncidentReportInfo" positionX="-198" positionY="-364" width="128" height="810"/>
         <element name="InjuryDetail" positionX="495" positionY="635" width="128" height="165"/>
         <element name="LeftArmInjuryList" positionX="108" positionY="977" width="128" height="103"/>
         <element name="LeftLegInjuryList" positionX="-506" positionY="549" width="128" height="103"/>
         <element name="Memoboard" positionX="-299" positionY="-693" width="128" height="118"/>
         <element name="NatureList" positionX="79" positionY="18" width="128" height="103"/>
         <element name="OfflineResponseTypeValues" positionX="-702" positionY="-981" width="128" height="105"/>
-        <element name="Person" positionX="520" positionY="-738" width="182" height="493"/>
+        <element name="Person" positionX="520" positionY="-738" width="182" height="600"/>
         <element name="QuestionDetails" positionX="124" positionY="1097" width="128" height="225"/>
         <element name="Report" positionX="342" positionY="-684" width="128" height="495"/>
         <element name="RequiredField" positionX="25" positionY="-126" width="128" height="103"/>
         <element name="RightArmInjuryList" positionX="106" positionY="860" width="128" height="103"/>
-        <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="103"/>
+        <element name="RightLegInjuryList" positionX="-648" positionY="549" width="128" height="105"/>
         <element name="SubmitCountUser" positionX="-495" positionY="-990" width="128" height="88"/>
         <element name="SubmitFormAndSurvey" positionX="-200" positionY="1259" width="128" height="195"/>
         <element name="SubmittedTask" positionX="-801" positionY="-1129" width="128" height="193"/>
-        <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="178"/>
+        <element name="SubmitUtilizationCount" positionX="-496" positionY="-817" width="128" height="195"/>
         <element name="SurveyInProgress" positionX="-900" positionY="812" width="128" height="285"/>
         <element name="SurveyList" positionX="-738" positionY="657" width="128" height="270"/>
         <element name="SurveyQuestions" positionX="-542" positionY="1019" width="128" height="255"/>
@@ -763,11 +805,12 @@
         <element name="TeamLog" positionX="-837" positionY="-391" width="128" height="240"/>
         <element name="TeamLogTrace" positionX="-315" positionY="-630" width="128" height="105"/>
         <element name="TeamSubLog" positionX="-632" positionY="-387" width="128" height="133"/>
-        <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="103"/>
+        <element name="UserFacility" positionX="-261" positionY="-972" width="128" height="118"/>
+        <element name="UserInventoryLocation" positionX="-542" positionY="-1134" width="128" height="88"/>
         <element name="UserLocation" positionX="-342" positionY="-828" width="128" height="90"/>
         <element name="UserLocation1" positionX="-351" positionY="-1116" width="128" height="88"/>
         <element name="UserPosition" positionX="-164" positionY="-837" width="128" height="105"/>
-        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="240"/>
+        <element name="UtilizationCount" positionX="-493" positionY="-604" width="128" height="255"/>
         <element name="Witness" positionX="520" positionY="-52" width="128" height="195"/>
     </elements>
 </model>

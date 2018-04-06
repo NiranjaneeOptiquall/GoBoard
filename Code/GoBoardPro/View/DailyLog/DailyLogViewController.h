@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface DailyLogViewController : UIViewController <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate,DropDownValueDelegate> {
+@interface DailyLogViewController : UIViewController <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate,DropDownValueDelegate,UIPopoverControllerDelegate> {
     NSMutableArray *mutArrDailyList, * selectedFacilityArr;
     NSArray *aryFacilities;
     BOOL isUpdate;
+    UIPopoverController *popOver;
 }
 @property (nonatomic,assign) BOOL boolISWSCallNeeded;
 @property (strong, nonatomic) IBOutlet UILabel *lblCharacterCount;
@@ -26,6 +27,10 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnToggleTeam;
 @property (weak, nonatomic) IBOutlet UITableView *tblFacilityListing;
 @property (weak, nonatomic) IBOutlet UILabel *lblMyLog;
+
+@property (weak, nonatomic) IBOutlet UIView *vwPopOver;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOver;
+
 
 - (IBAction)btnBackTapped:(UIButton *)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

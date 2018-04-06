@@ -8,6 +8,7 @@
 
 #import "AccidentReportViewController.h"
 #import "AccidentFirstSection.h"
+#import "GenderOptionsList.h"
 #import "AccidentReportSubmit.h"
 #import "AccidentPerson.h"
 #import "InjuryDetail.h"
@@ -193,18 +194,51 @@
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         vwPersonalInfo.txtDob.text = [aFormatter stringFromDate:aDate];
         
-        if (aPerson.genderTypeID.intValue == 2){
+        NSArray * tempGenderArr = [[NSArray alloc]init];
+        tempGenderArr = [_reportSetupInfo.genderOptionsList allObjects];
+        NSString *strF = @"",*strN = @"",*strO = @"";
+        for (NSDictionary *dict in tempGenderArr) {
+            if ([[dict valueForKey:@"value"] isEqualToString:@"Female"])
+            {
+                strF = [dict valueForKey:@"name"];
+            }
+            else if ([[dict valueForKey:@"value"] isEqualToString:@"Neutral"])
+            {
+                strN = [dict valueForKey:@"name"];
+            }
+            else if ([[dict valueForKey:@"value"] isEqualToString:@"Other"])
+            {
+                strO = [dict valueForKey:@"name"];
+            }
+        }
+        
+        if ([aPerson.genderTypeID isEqualToString: strF]){
             [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnFemale];
-        }else if (aPerson.genderTypeID.intValue == 3){
-           [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnNeutral];
-        }else if (aPerson.genderTypeID.intValue == 4){
-           [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnOtherGender];
+        }else if ([aPerson.genderTypeID isEqualToString: strN]){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnNeutral];
+        }else if ([aPerson.genderTypeID isEqualToString: strO]){
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnOtherGender];
         }else{
-        [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnMale];
+            [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnMale];
         }
         
         if ([aPerson.minor isEqualToString:@"true"]) {
             [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnMinor];
+            vwPersonalInfo.txtParentFName.text = aPerson.guardianFName;
+            vwPersonalInfo.txtParentLName.text = aPerson.guardianLName;
+            vwPersonalInfo.txtRelationshipWithMinor.text = aPerson.guardianRelation;
+            vwPersonalInfo.txtMinorAdditionalInfo.text = aPerson.guardianAddInfo;
+            if (![aPerson.guardianAddInfo isEqualToString:@""]) {
+                vwPersonalInfo.lblMinorAdditionalInfo.hidden = YES;
+            }
+            vwPersonalInfo.signatureViewGaurdian.lastSignatureImage = [UIImage imageWithData:aPerson.participantSignature];
+            if ([aPerson.guardianContacted isEqualToString:@"true"]) {
+                [vwPersonalInfo btnGaurdianContactedTapped:vwPersonalInfo.btnParentContactedYes];
+            }
+            else{
+                [vwPersonalInfo btnGaurdianContactedTapped:vwPersonalInfo.btnParentContactedNo];
+                
+            }
         }else{
             [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnNotMinor];
         }
@@ -454,6 +488,7 @@
     requestLoc = nil;
 }
 
+
 - (void)saveAccidentReportToLocal:(NSDictionary*)aDict completed:(BOOL)isCompleted {
     
     AccidentReportSubmit *aReport = [NSEntityDescription insertNewObjectForEntityForName:@"AccidentReportSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
@@ -522,8 +557,8 @@
         aWitness.accidentInfo = aReport;
         [witnessSet addObject:aWitness];
     }
-    aReport.witnesses = witnessSet;
     
+    aReport.witnesses = witnessSet;
     aReport.employeeFirstName = [aDict objectForKey:@"EmployeeFirstName"];
     aReport.employeeMiddleInitial = [aDict objectForKey:@"EmployeeMiddleInitial"];
     aReport.employeeLastName = [aDict objectForKey:@"EmployeeLastName"];
@@ -914,8 +949,46 @@
     accidentView.vwPersonalInfo.isEmployeeIdVisible = [_reportSetupInfo.showEmployeeId boolValue];
     accidentView.vwPersonalInfo.isDOBVisible = [_reportSetupInfo.showDateOfBirth boolValue];
     accidentView.vwPersonalInfo.isGenderVisible = [_reportSetupInfo.showGender boolValue];
-    accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showMinor boolValue];
+
     
+    accidentView.vwPersonalInfo.isGuardianContactedVisible = [_reportSetupInfo.showGuardianContacted boolValue];
+    accidentView.vwPersonalInfo.isGuardianNameVisible = [_reportSetupInfo.showGuardianName boolValue];
+    accidentView.vwPersonalInfo.isGuardianRelationVisible = [_reportSetupInfo.showRelationshipToMinor boolValue];
+    accidentView.vwPersonalInfo.isGuardianSignatureVisible = [_reportSetupInfo.showGuardianSignature boolValue];
+    accidentView.vwPersonalInfo.isGuardianAddInfoVisible = [_reportSetupInfo.showGuardianAddInfo boolValue];
+
+
+    NSArray * tempGenderArr = [[NSArray alloc]init];
+    tempGenderArr = [_reportSetupInfo.genderOptionsList allObjects];
+  for (NSDictionary *dict in tempGenderArr) {
+      
+      if ([[dict valueForKey:@"value"] isEqualToString:@"Male"]) {
+            accidentView.vwPersonalInfo.isGenderMVisible = [[dict valueForKey:@"isShow"] boolValue];
+         accidentView.vwPersonalInfo.strMale = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+      }
+      else if ([[dict valueForKey:@"value"] isEqualToString:@"Female"])
+      {
+          accidentView.vwPersonalInfo.isGenderFVisible = [[dict valueForKey:@"isShow"] boolValue];
+          accidentView.vwPersonalInfo.strFemale = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+      }
+      else if ([[dict valueForKey:@"value"] isEqualToString:@"Neutral"])
+      {
+          accidentView.vwPersonalInfo.isGenderNVisible = [[dict valueForKey:@"isShow"] boolValue];
+          accidentView.vwPersonalInfo.strNutrel = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+      }
+      else if ([[dict valueForKey:@"value"] isEqualToString:@"Other"])
+      {
+          accidentView.vwPersonalInfo.isGenderOVisible = [[dict valueForKey:@"isShow"] boolValue];
+          accidentView.vwPersonalInfo.strOther = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+      }
+      
+    }
+    
+    if (!accidentView.vwPersonalInfo.isGenderMVisible && !accidentView.vwPersonalInfo.isGenderFVisible && !accidentView.vwPersonalInfo.isGenderNVisible && !accidentView.vwPersonalInfo.isGenderOVisible) {
+        accidentView.vwPersonalInfo.isGenderVisible = false;
+    }
+    
+    accidentView.vwPersonalInfo.isMinorVisible = [_reportSetupInfo.showMinor boolValue];
     accidentView.vwPersonalInfo.isConditionsVisible = [_reportSetupInfo.showConditions boolValue];
     [accidentView.vwPersonalInfo callInitialActions];
     
@@ -1056,7 +1129,15 @@
 
     NSMutableArray *mutArrWitness = [NSMutableArray array];
     for (WitnessView *vwWitness in finalSection.mutArrWitnessViews) {
-        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText, @"MiddleInitial":vwWitness.txtWitnessMI.trimText, @"LastName":vwWitness.txtWitnessLName.trimText, @"HomePhone":vwWitness.txtWitnessHomePhone.text, @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text, @"Email":vwWitness.txtWitnessEmailAddress.text, @"IncidentDescription":vwWitness.txvDescIncident.text,@"PersonTypeId" : [NSString stringWithFormat:@"%d",vwWitness.witnessInvolved]};
+        NSDictionary *aDict = @{@"FirstName":vwWitness.txtWitnessFName.trimText,
+                                @"MiddleInitial":vwWitness.txtWitnessMI.trimText,
+                                @"LastName":vwWitness.txtWitnessLName.trimText,
+                                @"HomePhone":vwWitness.txtWitnessHomePhone.text,
+                                @"AlternatePhone":vwWitness.txtWitnessAlternatePhone.text,
+                                @"Email":vwWitness.txtWitnessEmailAddress.text,
+                                @"IncidentDescription":vwWitness.txvDescIncident.text,
+                                @"PersonTypeId" : [NSString stringWithFormat:@"%d",vwWitness.witnessInvolved]
+                                };
         [mutArrWitness addObject:aDict];
     }
     NSString *facilityId = [NSString string], *locationId = [NSString string];
@@ -1066,7 +1147,30 @@
     if (selectedLocation.value) {
         locationId = selectedLocation.value;
     }
-    NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"AccidentDate":astrAccidentDate, @"FacilityId":facilityId, @"LocationId":locationId, @"AccidentDescription":_txvDescription.text, @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false", @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false", @"IsNotificationField3Selected":(_btnManager.isSelected) ? @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false", @"EmployeeFirstName":finalSection.txtEmpFName.trimText, @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText, @"EmployeeLastName":finalSection.txtEmpLName.trimText, @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text, @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text, @"EmployeeEmail":finalSection.txtEmpEmailAddr.text, @"AdditionalInformation":finalSection.txvAdditionalInformation.text, @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false", @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false", @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false", @"ReportFilerAccount":finalSection.txvReportFilerAccount.text, @"PersonsInvolved":personList , @"EmergencyPersonnel":mutArrEmergency , @"Witnesses":mutArrWitness};
+    NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],
+                            @"AccidentDate":astrAccidentDate,
+                            @"FacilityId":facilityId,
+                            @"LocationId":locationId,
+                            @"AccidentDescription":_txvDescription.text,
+                            @"IsNotificationField1Selected":(_btn911Called.isSelected) ? @"true":@"false",
+                            @"IsNotificationField2Selected":(_btnPoliceCalled.isSelected) ? @"true":@"false",
+                            @"IsNotificationField3Selected":(_btnManager.isSelected) ?
+                            @"true":@"false",@"IsNotificationField4Selected":(_btnNone.isSelected) ? @"true":@"false",
+                            @"EmployeeFirstName":finalSection.txtEmpFName.trimText,
+                            @"EmployeeMiddleInitial":finalSection.txtEmpMI.trimText,
+                            @"EmployeeLastName":finalSection.txtEmpLName.trimText,
+                            @"EmployeeHomePhone":finalSection.txtEmpHomePhone.text,
+                            @"EmployeeAlternatePhone":finalSection.txtEmpAlternatePhone.text,
+                            @"EmployeeEmail":finalSection.txtEmpEmailAddr.text,
+                            @"AdditionalInformation":finalSection.txvAdditionalInformation.text,
+                            @"IsAdministrationAlertSelected":(finalSection.btnAdmin.isSelected)?@"true":@"false",
+                            @"IsSupervisorAlertSelected":(finalSection.btnSupervisers.isSelected)?@"true":@"false",
+                            @"IsRiskManagementAlertSelected":(finalSection.btnRiskManagement.isSelected)?@"true":@"false",
+                            @"ReportFilerAccount":finalSection.txvReportFilerAccount.text,
+                            @"PersonsInvolved":personList ,
+                            @"EmergencyPersonnel":mutArrEmergency ,
+                            @"Witnesses":mutArrWitness
+                            };
     return aDict;
 }
 
@@ -1092,12 +1196,23 @@
     aPerson.firstAidLastName = dict[@"FirstAidLastName"];
     aPerson.firstAidPosition = [dict objectForKey:@"FirstAidPosition"];
     aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
-    aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];
+    aPerson.genderTypeID = [dict objectForKey:@"GenderText"];
     aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
     aPerson.guestOfFirstName = [dict objectForKey:@"GuestOfFirstName"];
     aPerson.guestOfMiddleInitial = [dict objectForKey:@"GuestOfMiddleInitial"];
     aPerson.guestOfLastName = [dict objectForKey:@"GuestOfLastName"];
     aPerson.minor = [dict objectForKey:@"IsMinor"];
+    
+    aPerson.guardianContacted = [dict objectForKey:@"IsGuardianContacted"];
+    aPerson.guardianFName = [dict objectForKey:@"GuardianFirstName"];
+    aPerson.guardianLName = [dict objectForKey:@"GuardianLastName"];
+    aPerson.guardianRelation = [dict objectForKey:@"RelationshipToMinor"];
+    aPerson.guardianAddInfo = [dict objectForKey:@"AdditionalGuardianInformation"];
+    if (![[dict objectForKey:@"GuardianSignature"] isEqualToString:@""])
+        aPerson.guardianSignature = [[NSData alloc] initWithBase64EncodedString:[dict objectForKey:@"GuardianSignature"] options:0];
+    
+    
+    
     aPerson.activityTypeID = [dict objectForKey:@"ActivityTypeId"];
     aPerson.equipmentTypeID = [dict objectForKey:@"EquipmentTypeId"];
     aPerson.conditionTypeID = [dict objectForKey:@"ConditionId"];

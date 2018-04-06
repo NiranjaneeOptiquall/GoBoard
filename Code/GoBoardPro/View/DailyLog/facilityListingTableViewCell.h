@@ -11,5 +11,6 @@
 @interface facilityListingTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *lblFacility;
 @property (weak, nonatomic) IBOutlet UIImageView *imgCheck;
+@property (weak, nonatomic) IBOutlet UIWebView *logWebView;
 
 @end

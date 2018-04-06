@@ -21,5 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnGuestFormInProgressTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblGuestUserShowCount;
 @property (weak, nonatomic) IBOutlet UIButton *btnIsSharedForm;
+@property (weak, nonatomic) IBOutlet UIImageView *imgListIcon;
 
 @end

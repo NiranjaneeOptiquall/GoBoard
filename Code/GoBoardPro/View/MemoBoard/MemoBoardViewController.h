@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tblMemoList;
 @property (weak, nonatomic) IBOutlet UIView *vwPopOver;
 @property (weak, nonatomic) IBOutlet UITextView *txvPopOver;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOver;
 
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnDeleteTapped:(id)sender;

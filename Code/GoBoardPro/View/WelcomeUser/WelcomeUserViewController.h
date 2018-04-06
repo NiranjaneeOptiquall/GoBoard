@@ -12,6 +12,7 @@
 #import "UserPosition.h"
 #import "UserFacility.h"
 #import "UserLocation1.h"
+#import "UserInventoryLocation.h"
 
 @interface WelcomeUserViewController : UIViewController<UITextFieldDelegate, DropDownValueDelegate, UITableViewDataSource, UITableViewDelegate> {
     NSArray *aryFacilities, *aryPositions;

@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 
-@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate, DropDownValueDelegate,UIPopoverPresentationControllerDelegate,UIViewControllerTransitioningDelegate> {
+@interface TaskListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPopoverControllerDelegate, UITextViewDelegate, DropDownValueDelegate,UIPopoverPresentationControllerDelegate,UIViewControllerTransitioningDelegate,UIWebViewDelegate> {
     NSArray *mutArrTaskList;
     NSArray *mutArrTaskUptoNx2Hrs;
     NSArray *mutArrFilteredTaskList;
     UIPopoverController *popOver;
+    UIPopoverController *popOverOtherLink;
     UIPopoverController *popOverMessage;
     NSInteger editingIndex;
     BOOL isUpdate;
@@ -32,6 +33,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskLocation;
 @property (weak, nonatomic) IBOutlet UITextView *txvPopOverMessage;
+@property (weak, nonatomic) IBOutlet UIWebView *webPopOverMessage;
+
+@property (strong, nonatomic) IBOutlet UIView *vwPopOverOtherLink;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOverOtherLink;
+
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTime;
 @property (weak, nonatomic) IBOutlet UILabel *lblTask;
 @property (weak, nonatomic) IBOutlet UILabel *lblCount;

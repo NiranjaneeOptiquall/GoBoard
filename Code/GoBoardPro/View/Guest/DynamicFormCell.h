@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface DynamicFormCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblQuestion;
 @property (weak, nonatomic) IBOutlet UIButton *btnCheckMark;

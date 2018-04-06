@@ -12,11 +12,15 @@
 #import "ERPCategory.h"
 #import "ERPSubcategory.h"
 #import "ERPTask.h"
+#import "DynamicFormsViewController.h"
+#import "AccidentReportViewController.h"
+#import "IncidentDetailViewController.h"
+#import "SOPViewController.h"
 
 @interface EmergencyResponseViewController ()<UITextFieldDelegate>
 {
     NSString *searchTextString;
-    NSMutableArray *searchArray;
+    NSMutableArray *searchArray,*allDataForLinkedSopErp;
     BOOL isFilter;
     CGPoint contentOffset;
     bool isScroll;
@@ -124,7 +128,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
  
-
+    if (_isBtnERPListHidden) {
+        [_btnERPList setHidden:YES];
+    }
     scrollFlag=@"NO";
     [_lblSearchNote setHidden:YES];
 
@@ -819,5 +825,236 @@
             break;
         }
     }
+}
+-(void)getLinkedSopData:(NSArray*)dataDic{
+    
+    for (NSMutableDictionary * tempDic in dataDic) {
+        if ([[tempDic valueForKey:@"Children"] count] ==0) {
+            
+            [allDataForLinkedSopErp addObject:tempDic];
+            
+        }
+        else{
+            [self getLinkedSopData:[tempDic valueForKey:@"Children"]];
+        }
+    }
+    
+}
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    
+    NSURL *url = [request URL];
+    NSString * strUrl = [NSString stringWithFormat:@"%@",url];
+    NSLog(@"%@",strUrl);
+    if ( [strUrl containsString:@"IsLinked=true"]) {
+        //  NSLog(@"linked type");
+        if ([strUrl containsString:@"SOPs"]) {
+            NSLog(@"linked type SOPs");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
+                
+                
+                
+                
+                SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"SopCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                [self getLinkedSopData:[response valueForKey:@"SopCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        sopView.dictSOPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (sopView.dictSOPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        sopView.mutArrCategoryHierarchy = [NSMutableArray array];
+                         [sopView.mutArrCategoryHierarchy addObject:sopView.dictSOPCategory];
+                        sopView.isBtnSOPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:sopView animated:YES];
+                    }
+                    
+                });
+               
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"ERP"]) {
+            NSLog(@"linked type SOPs");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+          [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
+
+                EmergencyResponseViewController *erpView = [self.storyboard instantiateViewControllerWithIdentifier:@"ERPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+              for (NSMutableDictionary * tempDic in [response valueForKey:@"ErpCategories"]) {
+                  [allDataForLinkedSopErp addObject:tempDic];
+              }
+                [self getLinkedSopData:[response valueForKey:@"ErpCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        erpView.dictERPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (erpView.dictERPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        erpView.mutArrCategoryHierarchy = [NSMutableArray array];
+                        [erpView.mutArrCategoryHierarchy addObject:erpView.dictERPCategory];
+                        erpView.isBtnERPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:erpView animated:YES];
+                    }
+                    
+                });
+              
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"Accident"]) {
+            NSLog(@"linked type Accident");
+            AccidentReportViewController * acciView = [self.storyboard instantiateViewControllerWithIdentifier:@"AccidentReportViewController"];
+            [self.navigationController pushViewController:acciView animated:YES];
+        }
+        else if ([strUrl containsString:@"Incident"]) {
+            
+            if ([strUrl containsString:@"Misconduct"]) {
+                NSLog(@"linked type Misconduct");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 1;
+                [self.navigationController pushViewController:inciView animated:YES];
+            }
+            else if ([strUrl containsString:@"CustomerService"]) {
+                NSLog(@"linked type CustomerService");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 2;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+            else if ([strUrl containsString:@"Other"]) {
+                NSLog(@"linked type Other");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 3;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+        }
+        else if ([strUrl containsString:@"Survey"]) {
+            NSLog(@"linked type Survey");
+            NSRange r1 = [strUrl rangeOfString:@"surveyId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *surveyId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForSurvey:NO linkedSurveyId:surveyId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
+//                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@",strSurveyUserType];
+
+                
+                [request setPredicate:predicate];
+                
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"surveyId" ascending:YES];
+                
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray * mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = YES;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+
+                    }
+                });
+                
+            }];
+        }
+        else if ([strUrl containsString:@"Form"]) {
+            NSLog(@"linked type Form");
+            NSRange r1 = [strUrl rangeOfString:@"formId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *formId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:formId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+                [request setPredicate:predicate];
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"formId" ascending:YES];
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray *mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = NO;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+
+                    }
+                });
+                
+            }];
+            
+            
+        }
+        return NO;
+    }
+    
+    return YES;
 }
 @end

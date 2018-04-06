@@ -109,6 +109,7 @@
     }
     else if (_incidentType == 3) {
         _lblIncidentTitle.text = @"Other Incident Report";
+        
         [_imvIncidentIcon setImage:[UIImage imageNamed:@"other_incidents.png"]];
     }
     _isUpdate = NO;
@@ -260,19 +261,51 @@
         [aFormatter setDateFormat:@"MM/dd/yyyy"];
         vwPersonalInfo.txtDob.text = [aFormatter stringFromDate:aDate];
         vwPersonalInfo.imgIncidentPerson = [UIImage imageWithData:aPerson.personPhoto];
+  
+        NSArray * tempGenderArr = [[NSArray alloc]init];
+        tempGenderArr = [reportSetupInfo.genderOptionsList allObjects];
+        NSString *strF = @"",*strN = @"",*strO = @"";
+        for (NSDictionary *dict in tempGenderArr) {
+           if ([[dict valueForKey:@"value"] isEqualToString:@"Female"])
+            {
+                 strF = [dict valueForKey:@"name"];
+            }
+            else if ([[dict valueForKey:@"value"] isEqualToString:@"Neutral"])
+            {
+                 strN = [dict valueForKey:@"name"];
+            }
+            else if ([[dict valueForKey:@"value"] isEqualToString:@"Other"])
+            {
+                 strO = [dict valueForKey:@"name"];
+            }
+        }
         
-        if (aPerson.genderTypeID.intValue == 2){
+        if ([aPerson.genderTypeID isEqualToString: strF]){
             [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnFemale];
-        }else if (aPerson.genderTypeID.intValue == 3){
+        }else if ([aPerson.genderTypeID isEqualToString: strN]){
             [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnNeutral];
-        }else if (aPerson.genderTypeID.intValue == 4){
+        }else if ([aPerson.genderTypeID isEqualToString: strO]){
             [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnOtherGender];
         }else{
             [vwPersonalInfo btnGenderTapped:vwPersonalInfo.btnMale];
         }
-        
+        NSLog(@"%@",aPerson);
         if ([aPerson.minor isEqualToString:@"true"]) {
             [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnMinor];
+            vwPersonalInfo.txtParentFName.text = aPerson.guardianFName;
+            vwPersonalInfo.txtParentLName.text = aPerson.guardianLName;
+            vwPersonalInfo.txtRelationshipWithMinor.text = aPerson.guardianRelation;
+            vwPersonalInfo.txtMinorAdditionalInfo.text = aPerson.guardianAddInfo;
+            if (![aPerson.guardianAddInfo isEqualToString:@""]) {
+                vwPersonalInfo.lblMinorAdditionalInfo.hidden = YES;
+            }
+            if ([aPerson.guardianContacted isEqualToString:@"true"]) {
+                [vwPersonalInfo btnGaurdianContactedTapped:vwPersonalInfo.btnParentContactedYes];
+            }
+            else{
+                [vwPersonalInfo btnGaurdianContactedTapped:vwPersonalInfo.btnParentContactedNo];
+
+            }
         }else{
             [vwPersonalInfo btnIsMinorTapped:vwPersonalInfo.btnNotMinor];
         }
@@ -643,11 +676,13 @@
             memberId = vwPerson.txtMemberId.text;
         }
         
-        NSString *strPhoto = @"";
+        NSString *strPhoto = @"",*strGuardianSignature = @"";
         if (vwPerson.imgIncidentPerson) {
             strPhoto = [UIImageJPEGRepresentation(vwPerson.imgIncidentPerson, 1.0) base64EncodedStringWithOptions:0];
         }
-        
+        if (vwPerson.signatureViewGaurdian.tempDrawImage.image) {
+            strGuardianSignature = [UIImageJPEGRepresentation(vwPerson.signatureViewGaurdian.tempDrawImage.image, 1.0) base64EncodedStringWithOptions:0];
+        }
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"name", vwPerson.txtActivity.text];
         NSArray *ary = [[reportSetupInfo.activityList allObjects] filteredArrayUsingPredicate:predicate];
         NSString *activityTypeID = [[ary firstObject] valueForKey:@"activityId"];
@@ -707,8 +742,46 @@
         if (!natureId) natureId = @"";
         
         
-        
-        NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],@"FirstName": vwPerson.txtFirstName.trimText, @"MiddleInitial":vwPerson.txtMi.trimText, @"LastName":vwPerson.txtLastName.trimText, @"PrimaryPhone":vwPerson.txtHomePhone.text, @"AlternatePhone":vwPerson.txtAlternatePhone.text, @"Email":vwPerson.txtEmailAddress.text, @"Address1":vwPerson.txtStreetAddress.trimText, @"Address2":vwPerson.txtAppartment.trimText, @"City":vwPerson.txtCity.trimText, @"State":vwPerson.txtState.trimText, @"Zip": vwPerson.txtZip.text, @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType], @"GenderTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intGenderType], @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved], @"GuestOfFirstName":vwPerson.txtGuestFName.text, @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text, @"GuestOfLastName": vwPerson.txtguestLName.text, @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false", @"EmployeeTitle":vwPerson.txtEmployeePosition.text, @"EmployeeId":employeeId, @"GuestId":guestId ,@"MemberId":memberId, @"OccuredDuringBusinessHours":(vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false", @"DateOfBirth":strDob, @"PersonPhoto":strPhoto , @"EmergencyPersonnel" : mutArrEmergency, @"NatureId" : natureId, @"ActionTakenId" : actionId, @"ActivityTypeId" : activityTypeID,@"EquipmentTypeId" : equipmentTypeID,@"ConditionId" : conditionTypeID};
+        NSDictionary *aDict = @{@"UserId": [[User currentUser] userId],
+                                @"FirstName": vwPerson.txtFirstName.trimText,
+                                @"MiddleInitial":vwPerson.txtMi.trimText,
+                                @"LastName":vwPerson.txtLastName.trimText,
+                                @"PrimaryPhone":vwPerson.txtHomePhone.text,
+                                @"AlternatePhone":vwPerson.txtAlternatePhone.text,
+                                @"Email":vwPerson.txtEmailAddress.text,
+                                @"Address1":vwPerson.txtStreetAddress.trimText,
+                                @"Address2":vwPerson.txtAppartment.trimText,
+                                @"City":vwPerson.txtCity.trimText,
+                                @"State":vwPerson.txtState.trimText,
+                                @"Zip": vwPerson.txtZip.text,
+                                @"AffiliationTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intAffiliationType],
+                                @"GenderTypeId":@"0",
+                                @"GenderText":[NSString stringWithFormat:@"%@", vwPerson.intGenderType],
+                                @"PersonTypeId":[NSString stringWithFormat:@"%ld", (long)vwPerson.intPersonInvolved],
+                                @"GuestOfFirstName":vwPerson.txtGuestFName.text,
+                                @"GuestOfMiddleInitial":vwPerson.txtGuestMI.text,
+                                @"GuestOfLastName": vwPerson.txtguestLName.text,
+                                @"IsMinor":(vwPerson.btnMinor.isSelected) ? @"true" : @"false",
+                                @"IsGuardianContacted":(vwPerson.btnParentContactedYes.isSelected) ? @"true" : @"false",
+                                @"GuardianFirstName":[NSString stringWithFormat:@"%@",vwPerson.txtParentFName.text],
+                                @"GuardianLastName":[NSString stringWithFormat:@"%@",vwPerson.txtParentLName.text],
+                                @"RelationshipToMinor":[NSString stringWithFormat:@"%@",vwPerson.txtRelationshipWithMinor.text],
+                                @"AdditionalGuardianInformation":[NSString stringWithFormat:@"%@",vwPerson.txtMinorAdditionalInfo.text],
+                                @"GuardianSignature":strGuardianSignature,
+                                @"EmployeeTitle":vwPerson.txtEmployeePosition.text,
+                                @"EmployeeId":employeeId,
+                                @"GuestId":guestId ,
+                                @"MemberId":memberId,
+                                @"OccuredDuringBusinessHours":(vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false",
+                                @"DateOfBirth":strDob,
+                                @"PersonPhoto":strPhoto ,
+                                @"EmergencyPersonnel" : mutArrEmergency,
+                                @"NatureId" : natureId,
+                                @"ActionTakenId" : actionId,
+                                @"ActivityTypeId" : activityTypeID,
+                                @"EquipmentTypeId" : equipmentTypeID,
+                                @"ConditionId" : conditionTypeID
+                                };
         
         [mutArrPersons addObject:aDict];
     }
@@ -874,6 +947,7 @@
     if ([array count] > 0) {
         reportSetupInfo = [array firstObject];
     }
+    NSLog(@"%@",reportSetupInfo.genderOptionsList);
 }
 
 - (void)fetchFacilities {
@@ -947,10 +1021,10 @@
         aPerson.memberId =  ([[dict objectForKey:@"PersonTypeId"] intValue] == 3) ? [dict objectForKey:@"EmployeId"] : [dict objectForKey:@"MemberId"];
         aPerson.dateOfBirth = [dict objectForKey:@"DateOfBirth"];
         aPerson.affiliationTypeID = [dict objectForKey:@"AffiliationTypeId"];
-        aPerson.genderTypeID = [dict objectForKey:@"GenderTypeId"];
+        aPerson.genderTypeID = [dict objectForKey:@"GenderText"];
         aPerson.personTypeID = [dict objectForKey:@"PersonTypeId"];
         aPerson.duringWorkHours = [dict objectForKey:@"OccuredDuringBusinessHours"];
-
+        aPerson.guestId = [dict objectForKey:@"GuestId"];
         aPerson.guestOfFirstName = [dict objectForKey:@"GuestOfFirstName"];
         aPerson.guestOfMiddleInitial = [dict objectForKey:@"GuestOfMiddleInitial"];
         aPerson.guestOfLastName = [dict objectForKey:@"GuestOfLastName"];
@@ -968,6 +1042,16 @@
             aPerson.personPhoto = [[aDict objectForKey:@"PersonPhoto"] base64EncodedDataWithOptions:0];
         }
         aPerson.minor = [dict objectForKey:@"IsMinor"];
+          aPerson.guardianContacted = [dict objectForKey:@"IsGuardianContacted"];
+          aPerson.guardianFName = [dict objectForKey:@"GuardianFirstName"];
+          aPerson.guardianLName = [dict objectForKey:@"GuardianLastName"];
+          aPerson.guardianRelation = [dict objectForKey:@"RelationshipToMinor"];
+          aPerson.guardianAddInfo = [dict objectForKey:@"AdditionalGuardianInformation"];
+        if (![[dict objectForKey:@"GuardianSignature"] isEqualToString:@""])
+            aPerson.guardianSignature = [[NSData alloc] initWithBase64EncodedString:[dict objectForKey:@"GuardianSignature"] options:0];
+        
+
+        
         //        aPerson.duringWorkHours = (vwPerson.btnEmployeeOnWork.isSelected) ? @"true" : @"false";
         aPerson.report = aReport;
         
@@ -1057,7 +1141,42 @@
     personalInfoView.isConditionVisible = [reportSetupInfo.showConditions boolValue];
     personalInfoView.parentVC = self;
     
-
+    personalInfoView.isGuardianContactedVisible = [reportSetupInfo.showGuardianContacted boolValue];
+    personalInfoView.isGuardianNameVisible = [reportSetupInfo.showGuardianName boolValue];
+    personalInfoView.isGuardianRelationVisible = [reportSetupInfo.showRelationshipToMinor boolValue];
+    personalInfoView.isGuardianSignatureVisible = [reportSetupInfo.showGuardianSignature boolValue];
+    personalInfoView.isGuardianAddInfoVisible = [reportSetupInfo.showGuardianAddInfo boolValue];
+   
+    NSArray * tempGenderArr = [[NSArray alloc]init];
+    tempGenderArr = [reportSetupInfo.genderOptionsList allObjects];
+    
+  
+    for (NSDictionary *dict in tempGenderArr) {
+        
+        if ([[dict valueForKey:@"value"] isEqualToString:@"Male"]) {
+            personalInfoView.isGenderMVisible = [[dict valueForKey:@"isShow"] boolValue];
+            personalInfoView.strMale = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+        }
+        else if ([[dict valueForKey:@"value"] isEqualToString:@"Female"])
+        {
+            personalInfoView.isGenderFVisible = [[dict valueForKey:@"isShow"] boolValue];
+            personalInfoView.strFemale = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+        }
+        else if ([[dict valueForKey:@"value"] isEqualToString:@"Neutral"])
+        {
+            personalInfoView.isGenderNVisible = [[dict valueForKey:@"isShow"] boolValue];
+            personalInfoView.strNutrel = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+        }
+        else if ([[dict valueForKey:@"value"] isEqualToString:@"Other"])
+        {
+            personalInfoView.isGenderOVisible = [[dict valueForKey:@"isShow"] boolValue];
+            personalInfoView.strOther = [NSString stringWithFormat:@"%@",[dict valueForKey:@"name"]];
+        }
+        
+    }
+    if (!personalInfoView.isGenderMVisible && !personalInfoView.isGenderFVisible && !personalInfoView.isGenderNVisible && !personalInfoView.isGenderOVisible) {
+        personalInfoView.isGenderVisible = false;
+    }
     [personalInfoView callInitialActions:reportSetupInfo];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"type", REQUIRED_TYPE_PERSON];
     NSArray *fields = [[reportSetupInfo.requiredFields allObjects] filteredArrayUsingPredicate:predicate];

@@ -22,6 +22,7 @@
 #import "RequiredField.h"
 #import "ConditionList.h"
 #import "ActionTakenList.h"
+#import "GenderOptionsList.h"
 #import "ActivityList.h"
 #import "QuestionDetails.h"
 #import "AccidentReportInfo.h"
@@ -134,6 +135,7 @@
         gblAppDelegate.mutArrHomeMenus = [response objectForKey:@"Modules"];
         [gblAppDelegate.mutArrHomeMenus sortUsingDescriptors:@[sort]];
         int Pos = 0;
+        NSLog(@"%@",gblAppDelegate.mutArrHomeMenus);
         for (int i = 0; i < gblAppDelegate.mutArrHomeMenus.count; i++) {
             int currentPos = [[gblAppDelegate.mutArrHomeMenus[i] objectForKey:@"Position"] intValue];
             int differance = currentPos - Pos;
@@ -146,7 +148,7 @@
             }
             Pos = currentPos;
         }
-        
+            NSLog(@"%@",gblAppDelegate.mutArrHomeMenus);
         if ([gblAppDelegate.managedObjectContext save:nil]) {
             isWSComplete = YES;
         }
@@ -1164,6 +1166,13 @@
         report.affiliation6 = [aDict objectForKey:@"Affiliation6"];
         report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
         report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
+   
+        report.showGuardianContacted = [NSNumber numberWithBool:[[aDict objectForKey:@"IsGuardianContacted"] boolValue]];
+        report.showGuardianAddInfo = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianAdditionalInformation"] boolValue]];
+        report.showGuardianName = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianFirstNameLastName"] boolValue]];
+        report.showGuardianSignature = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianSignature"] boolValue]];
+        report.showRelationshipToMinor = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowRelationshipToMinor"] boolValue]];
+        
         report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
         report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberId"] boolValue]];
         report.showManagementFollowup = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowManagementFollowup"] boolValue]];
@@ -1195,6 +1204,19 @@
             [actionSet addObject:obj];
         }
         report.actionList = actionSet;
+        
+        
+        NSMutableSet *genderOptionsSet = [NSMutableSet set];
+        for (NSDictionary *dict in [aDict objectForKey:@"GenderOptions"]) {
+            GenderOptionsList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"GenderOptionsList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+            obj.name = [dict objectForKey:@"Text"];
+            obj.value = [dict objectForKey:@"Value"];
+            obj.isShow = [NSString stringWithFormat:@"%@",[dict objectForKey:@"IsShow"]];
+            obj.incidentType = report;
+            [genderOptionsSet addObject:obj];
+        }
+        report.genderOptionsList = genderOptionsSet;
+        
         
         NSMutableSet *activitySet = [NSMutableSet set];
         for (NSDictionary *dict in [aDict objectForKey:@"ActivityList"]) {
@@ -1349,6 +1371,15 @@
     report.selfCareStatement = [aDict objectForKey:@"SelfCareStatement"];
     report.showAffiliation = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowAffiliation"] boolValue]];
     report.showGender = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGender"] boolValue]];
+ 
+    report.showGuardianContacted = [NSNumber numberWithBool:[[aDict objectForKey:@"IsGuardianContacted"] boolValue]];
+    report.showGuardianAddInfo = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianAdditionalInformation"] boolValue]];
+    report.showGuardianName = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianFirstNameLastName"] boolValue]];
+    report.showGuardianSignature = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowGuardianSignature"] boolValue]];
+    report.showRelationshipToMinor = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowRelationshipToMinor"] boolValue]];
+    
+       
+    
     report.showEmergencyPersonnel = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowEmergencyPersonnel"] boolValue]];
     report.showMemberIdAndDriverLicense = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowMemberId"] boolValue]];
     report.showManagementFollowup = [NSNumber numberWithBool:[[aDict objectForKey:@"ShowManagementFollowup"] boolValue]];
@@ -1384,6 +1415,20 @@
         [actionSet addObject:obj];
     }
     report.actionList = actionSet;
+    
+    NSMutableSet *genderOptionsSet = [NSMutableSet set];
+    for (NSDictionary *dict in [aDict objectForKey:@"GenderOptions"]) {
+        GenderOptionsList *obj = [NSEntityDescription insertNewObjectForEntityForName:@"GenderOptionsList" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+        obj.name = [dict objectForKey:@"Text"];
+        obj.value = [dict objectForKey:@"Value"];
+        obj.isShow = [NSString stringWithFormat:@"%@",[dict objectForKey:@"IsShow"]];
+        obj.accidentInfo = report;
+        [genderOptionsSet addObject:obj];
+    }
+    report.genderOptionsList = genderOptionsSet;
+
+    NSLog(@"%@",genderOptionsSet);
+    NSLog(@"%@",report.genderOptionsList);
     
     NSMutableSet *activitySet = [NSMutableSet set];
     for (NSDictionary *dict in [aDict objectForKey:@"ActivityList"]) {
@@ -1571,7 +1616,7 @@
 
 #pragma mark - Survey
 
-- (void)callServiceForSurvey:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+- (void)callServiceForSurvey:(BOOL)waitUntilDone linkedSurveyId:(NSString*)linkedSurveyId complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
     if ([self isNetworkReachable]) {
 
@@ -1591,7 +1636,7 @@
             isAdmin= @"True";
         }
   //  [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response)
-          [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@", SURVEY_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response){
+          [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@&surveyId=%@", SURVEY_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin,linkedSurveyId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SURVEY_SETUP] complition:^(NSDictionary *response){
         [self deleteAllSurveys];
         [self insertSurvey:[response objectForKey:@"Surveys"]];
         [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"isSameClientSurvey"];
@@ -1760,7 +1805,8 @@
     NSMutableArray *arrOfPosition = [NSMutableArray new];
     
    // NSString *aStrFacilityID = [[User currentUser]selectedFacility].value;
-    
+    NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
+
    // NSString *aStrUserID = [[User currentUser]userId];
     
     NSMutableArray *arr=  [[User currentUser]mutArrSelectedPositions];
@@ -1786,6 +1832,7 @@
     NSString * strTeamLog = @"False";
     NSString * strTask = @"False";
     NSString * strMemo = @"False";
+    NSString * workOrderAccess = @"False";
     for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
         if  ([tempDic[@"SystemModule"] integerValue]  == 2){
             if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
@@ -1816,20 +1863,26 @@
                  strMemo = @"True";
             }
         }
-
+        else if  ([tempDic[@"SystemModule"] integerValue]  == 20){
+            if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                
+                workOrderAccess = @"True";
+            }
+        }
            }
     //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
     // NSString *strUrl =[NSString stringWithFormat:@"%@?clientId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] clientId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
   
  //   NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin];
     
-      NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@&formAccess=%@&surveyAccess=%@&logAccess=%@&taskAccess=%@&memoAccess=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin,strForm,strSurvey,strTeamLog,strTask,strMemo];
+      NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@&formAccess=%@&surveyAccess=%@&logAccess=%@&taskAccess=%@&memoAccess=%@&workOrderAccess=%@ ",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],strFacilityId,aPositionId,strLocationIds,isAdmin,strForm,strSurvey,strTeamLog,strTask,strMemo,workOrderAccess];
 
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
 
         NSLog(@"%@",response);
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"FormToalCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"SurveyToalCount"];
+             [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"WorkOrderCount"]integerValue] forKey:@"WorkOrderToalCount"];
         [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"TeamLogCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TaskCount"]integerValue] forKey:@"TaskToalCount"];
         [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"MemoCount"]integerValue] forKey:@"MemoToalCount"];
@@ -1853,7 +1906,7 @@
 }
 #pragma mark - Forms
 
-- (void)callServiceForForms:(BOOL)waitUntilDone complition:(void(^)(void))complition {
+- (void)callServiceForForms:(BOOL)waitUntilDone linkedFormId:(NSString*)linkedFormId complition:(void(^)(void))complition {
     __block BOOL isWSComplete = NO;
 
     if ([self isNetworkReachable]) {
@@ -1874,7 +1927,7 @@
              isAdmin= @"True";
         }
  //       [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrClientId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response)
-         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@", FORM_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
+         [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&UserId=%@&facilityId=%@&isAdmin=%@&formId=%@", FORM_SETUP, aStrAccountId, strUserId,strFacilityId,isAdmin,linkedFormId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:FORM_SETUP] complition:^(NSDictionary *response) {
             
             [self deleteAllForms];
             
@@ -2021,37 +2074,6 @@
                 }
             }
             form.questionList = aSetQuestions;
-//        NSLog(@"%@",form);
-//        if ([form.typeId isEqualToString:@"4"]) {
-//            if ([form.publishedToFacilityPositions isEqualToString:@"<null>"] || [form.publishedToFacilityPositions isKindOfClass:[NSNull class]] ) {
-//          
-//                [gblAppDelegate.managedObjectContext insertObject:form];
-//                [gblAppDelegate.managedObjectContext save:nil];
-//                
-//            }
-//            else{
-//                NSArray * tempArr = [[NSArray alloc]init];
-//                 NSArray * tempPositionArr = [[NSArray alloc]init];
-//                 NSLog(@"%@",[[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"]);
-//                tempPositionArr =  [[[User currentUser] mutArrSelectedPositions] valueForKey:@"value"];
-//                  tempArr = [form.publishedToFacilityPositions componentsSeparatedByString:@","];
-//                   NSLog(@"%@",tempArr);
-//                 NSLog(@"%@",tempPositionArr);
-//                for (NSString*position in tempPositionArr ) {
-//                    if ([tempArr containsObject:position]){
-//                        
-//                        [gblAppDelegate.managedObjectContext insertObject:form];
-//                        [gblAppDelegate.managedObjectContext save:nil];
-//                    
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        else{
-//            [gblAppDelegate.managedObjectContext insertObject:form];
-//            [gblAppDelegate.managedObjectContext save:nil];
-//        }
         
         [gblAppDelegate.managedObjectContext insertObject:form];
         [gblAppDelegate.managedObjectContext save:nil];
@@ -2338,5 +2360,576 @@
     [gblAppDelegate.managedObjectContext save:nil];
 }
 
+//-(void)callServiceForMyWorkOrders:(BOOL)waitUntilDone complition:(void (^)(void))complition
+//{
+//    __block BOOL isWSComplete = NO;
+//    
+//    NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
+//    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+//    NSString *strUserId = @"";
+//    if ([User checkUserExist]) {
+//        strUserId = [[User currentUser] userId];
+//    }
+//
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@", MY_WORK_ORDERS, aStrAccountId, strUserId,strFacilityId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+//        NSLog(@"%@",response);
+//        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+//        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"myWorkOrderRecponce"];
+//        
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//    } failure:^(NSError *error, NSDictionary *response) {
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//        NSLog(@"%@", response);
+//    }];
+//    if (waitUntilDone) {
+//        while (!isWSComplete) {
+//            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+//        }
+//    }
+//    
+//}
+-(void)callServiceForGetAddNoteWorkOrder:(BOOL)waitUntilDone orderId:(NSString*)orderId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
 
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&id=%@", MY_WORK_ORDERS, aStrAccountId,orderId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"addNoteWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetCreateWorkOrder:(BOOL)waitUntilDone complition:(void (^)(void))complition
+{
+    
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Create?accountId=%@&userId=%@&IsCreate=true", MY_WORK_ORDERS, aStrAccountId,strUserId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"createWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetInventoryPartsUsedWorkOrder:(BOOL)waitUntilDone equipmentId:(NSString*)equipmentId checkFilter:(NSString*)checkFilter complition:(void (^)(void))complition
+{
+    
+// GetInventoryParts(int accountId, string equipmentId, bool checkFilter)
+    
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+  
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&equipmentId=%@&checkFilter=%@", MY_WORK_ORDERS, aStrAccountId,equipmentId,checkFilter] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"inventoryPartsUsedRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        NSLog(@"%@", response);
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetEquipmentDetailsWorkOrder:(BOOL)waitUntilDone strBarcode:(NSString*)strBarcode strIsBarCode:(NSString*)strIsBarcode complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&barcode=%@&IsBarCode=%@", MY_WORK_ORDERS, aStrAccountId,strBarcode,strIsBarcode] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"equipmentWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"equipmentWorkOrderRecponce"];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForAddNewCreateWorkOrder:(BOOL)waitUntilDone paraDic:(NSDictionary*)paraDic isReadyForFollowupcomplition:(NSString*)isReadyForFollowupcomplition complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Create?accountId=%@&userId=%@&IsReadyForFollowup=%@",MY_WORK_ORDERS,aStrAccountId,strUserId,isReadyForFollowupcomplition] parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+              isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetEditWorkOrder:(BOOL)waitUntilDone orderId:(NSString*)orderId workOrderHistoryId:(NSString*)workOrderHistoryId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+ //Edit(int id, int accountId = 0, int userId = 0, int WorkOrderHistoryId = 0)
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Edit?id=%@&accountId=%@&userId=%@&WorkOrderHistoryId=%@", MY_WORK_ORDERS,orderId, aStrAccountId,strUserId,workOrderHistoryId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+       // NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"editWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetPhotoVideoWorkOrder:(BOOL)waitUntilDone workOrderHistoryId:(NSString*)workOrderHistoryId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    //Edit(int id, int accountId = 0, int userId = 0, int WorkOrderHistoryId = 0)
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Edit?historyId=%@", MY_WORK_ORDERS,workOrderHistoryId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+     //   NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"photoVideoWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetPhotoVideoDataWorkOrder:(BOOL)waitUntilDone workOrderHistoryId:(NSString*)workOrderHistoryId fileName:(NSString*)fileName complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+ 
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"photoVideoWorkOrderData"];
+
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    //    [System.Web.Http.Route("api/WorkOrder/Edit")]
+    //    public WorkOrderMedia GetWorkOrderMediaBytes(string fileName, int historyId = 0)
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Edit?fileName=%@&historyId=%@", MY_WORK_ORDERS,fileName,workOrderHistoryId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+        //   NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"photoVideoWorkOrderData"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+-(void)callServiceForGetEditWithFollowUpWorkOrder:(BOOL)waitUntilDone workOrderId:(NSString*)workOrderId isInResponses:(NSString*)isInResponses workOrderHistoryId:(NSString*)workOrderHistoryId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    
+    //    api/WorkOrder/Followup(int id, bool IsInResponses, int accountId = 0, int userId = 0, int workOrderHistoryId = 0)
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Followup?id=%@&IsInResponses=%@&accountId=%@&userId=%@&workOrderHistoryId=%@",MY_WORK_ORDERS,workOrderId,isInResponses,aStrAccountId,strUserId,workOrderHistoryId] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+        //NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"editwithFollowUpWorkOrderRecponce"];
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForEditWorkOrder:(BOOL)waitUntilDone paraDic:(NSDictionary*)paraDic isFollowPresent:(NSString*)isFollowPresent isSubmit:(NSString*)isSubmit historyReportId:(NSString*)historyReportId revisionId:(NSString*)revisionId sequence:(NSString*)sequence complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+
+//    bool isSubmit, int historyReportId, int accountId, int userId, int sequence, int revisionId, bool isFollowPresent, WorkOrderResponsesViewModel workOrder
+    
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Edit?isSubmit=%@&historyReportId=%@&accountId=%@&userId=%@&sequence=%@&revisionId=%@&isFollowPresent=%@&isVmImageUploaded=false&isVmVedioUploaded=false",MY_WORK_ORDERS,isSubmit,historyReportId,aStrAccountId,strUserId,sequence,revisionId,isFollowPresent] parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response){
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Edit?isSubmit=%@&historyReportId=%@&accountId=%@&userId=%@&sequence=%@&revisionId=%@&isFollowPresent=%@",MY_WORK_ORDERS,isSubmit,historyReportId,aStrAccountId,strUserId,sequence,revisionId,isFollowPresent] parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForDeleteWorkOrder:(BOOL)waitUntilDone workOrderId:(NSString*)workOrderId sequence:(NSString*)sequence complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+//    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+//    NSString *strUserId = @"";
+//    if ([User checkUserExist]) {
+//        strUserId = [[User currentUser] userId];
+//    }
+
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Delete?id=%@&sequence=%@",MY_WORK_ORDERS,workOrderId,sequence] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForDeleteFollowupWorkOrder:(BOOL)waitUntilDone workOrderId:(NSString*)workOrderId sequence:(NSString*)sequence isFollowupLog:(BOOL)isFollowupLog complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    //    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    //    NSString *strUserId = @"";
+    //    if ([User checkUserExist]) {
+    //        strUserId = [[User currentUser] userId];
+    //    }
+   
+    NSString * dltF_UpQorLog = @"DeleteFollowup";
+    if (isFollowupLog) {
+        dltF_UpQorLog = @"DeleteFollowupLog";
+    }
+
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@?id=%@&sequence=%@",MY_WORK_ORDERS,dltF_UpQorLog,workOrderId,sequence] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForSaveFollowupLogWorkOrder:(BOOL)waitUntilDone strCell:(NSString*)strCell strName:(NSString*)strName strMail:(NSString*)strMail strPhn:(NSString*)strPhn strInfo:(NSString*)strInfo strCall:(NSString*)strCall strId:(NSString*)strId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/EditFollowupLog?followupCell=%@&followupName=%@&followupMail=%@&followupPhone=%@&followupAddInfo=%@&followupCall=%@&followupLogId=%@",MY_WORK_ORDERS,strCell,strName,strMail,strPhn,strInfo,strCall,strId] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForSaveFollowupQWorkOrder:(BOOL)waitUntilDone questionResponse1:(NSString*)questionResponse1 questionResponse2:(NSString*)questionResponse2 questionResponse3:(NSString*)questionResponse3 questionResponse4:(NSString*)questionResponse4 followupId:(NSString*)followupId complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+ //   SaveFollowup(bool? questionResponse1, bool? questionResponse2, bool? questionResponse3, bool? questionResponse4, int followupId = 0)
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/EditFollowup?questionResponse1=%@&questionResponse2=%@&questionResponse3=%@&questionResponse4=%@&followupId=%@",MY_WORK_ORDERS,questionResponse1,questionResponse2,questionResponse3,questionResponse4,followupId] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+-(void)callServiceForSubmitWithFollowupEditWorkOrder:(BOOL)waitUntilDone paraDic:(NSDictionary*)paraDic isFollowPresent:(NSString*)isFollowPresent isSubmit:(NSString*)isSubmit historyReportId:(NSString*)historyReportId revisionId:(NSString*)revisionId isImage:(NSString*)isImage isVideo:(NSString*)isVideo  sequence:(NSString*)sequence complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    
+ 
+    
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/Followup?isSubmit=%@&historyReportId=%@&accountId=%@&userId=%@&sequence=%@&revisionId=%@&isFollowPresent=%@&isVmImageUploaded=%@&isVmVedioUploaded=%@",MY_WORK_ORDERS,isSubmit,historyReportId,aStrAccountId,strUserId,sequence,revisionId,isFollowPresent,isImage,isVideo] parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+
+
+
+-(void)callServiceForUpdateAddNoteWorkOrder:(BOOL)waitUntilDone orderId:(NSString*)orderId statusId:(NSString*)statusId notesId:(NSString*)notesId dateSubmited:(NSString*)dateSubmited sequence:(NSString*)sequence complition:(void (^)(void))complition
+{
+    __block BOOL isWSComplete = NO;
+    
+    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    
+    //    AddNote(int accountId, int userId, int workOrderId, int sequence, int statusId, DateTime dateSubmited, string notes)
+
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&workOrderId=%@&sequence=%@&statusId=%@&dateSubmited=%@&notes=%@", MY_WORK_ORDERS, aStrAccountId,strUserId,orderId,sequence,statusId,dateSubmited,notesId] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response){
+        NSLog(@"%@",response);
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"updateAddNoteWorkOrderRecponce"];
+        
+        isWSComplete = YES;
+        if (complition)
+            complition();
+    } failure:^(NSError *error, NSDictionary *response) {
+        isWSComplete = YES;
+        if (complition)
+            complition();
+        NSLog(@"%@", response);
+    }];
+    if (waitUntilDone) {
+        while (!isWSComplete) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    
+}
+//-(void)callServiceForFilterMyWorkOrders:(BOOL)waitUntilDone strFacility:(NSString*)strFacility dateFrom:(NSString*)dateFrom dateTo:(NSString*)dateTo timeFrom:(NSString*)timeFrom timeTo:(NSString*)timeTo locationIds:(NSString*)locationIds categoryIds:(NSString*)categoryIds typeIds:(NSString*)typeIds assignedToMe:(NSString*)assignedToMe showAll:(NSString*)showAll showInProgressWorkOrder:(NSString*)showInProgressWorkOrder complition:(void (^)(void))complition
+//{
+//    __block BOOL isWSComplete = NO;
+//    
+//    NSString *strFacilityId =[[NSUserDefaults standardUserDefaults] objectForKey:@"facilityId"];
+//    NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+//    NSString *strUserId = @"";
+//    if ([User checkUserExist]) {
+//        strUserId = [[User currentUser] userId];
+//    }
+//    
+//
+//    
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&datefrom=%@&dateto=%@&timeFrom=%@&timeTo=%@&facilityIds=%@&invLocationIds=%@&categoryIds=%@&typeIds=%@&showWorkOrdersAssignedToMe=%@&showAllWorkOrders=%@&showInProgressWorkOrder=%@", MY_WORK_ORDERS, aStrAccountId,strUserId, dateFrom,dateTo,timeFrom,timeTo,strFacility,locationIds,categoryIds,typeIds,assignedToMe,showAll,showInProgressWorkOrder] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:MY_WORK_ORDERS] complition:^(NSDictionary *response){
+//        NSLog(@"%@",response);
+//        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:response];
+//        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"myWorkOrderFilterRecponce"];
+//        
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//    } failure:^(NSError *error, NSDictionary *response) {
+//        isWSComplete = YES;
+//        if (complition)
+//            complition();
+//        NSLog(@"%@", response);
+//    }];
+//    if (waitUntilDone) {
+//        while (!isWSComplete) {
+//            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+//        }
+//    }
+//    
+//}
 @end

@@ -226,6 +226,18 @@
                 facility.locations1 = locations;
                 
                 
+                
+                NSMutableSet *inventoryLocations = [NSMutableSet set];
+                for (NSDictionary *aDictLoc in [aDict objectForKey:@"InventoryLocations"]) {
+                    UserInventoryLocation *inventoryLocation = [NSEntityDescription insertNewObjectForEntityForName:@"UserInventoryLocation" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+                    inventoryLocation.name = [aDictLoc objectForKey:@"Name"];
+                    inventoryLocation.value = [NSString stringWithFormat:@"%ld", (long)[[aDictLoc objectForKey:@"Id"] integerValue]];
+                    inventoryLocation.facility = facility;
+                    [inventoryLocations addObject:inventoryLocation];
+                }
+                facility.inventoerLocations = inventoryLocations;
+                
+                
                 NSMutableSet *positions = [NSMutableSet set];
                 for (NSDictionary *aDictPos in [aDict objectForKey:@"Positions"]) {
                     UserPosition *position = [NSEntityDescription insertNewObjectForEntityForName:@"UserPosition" inManagedObjectContext:gblAppDelegate.managedObjectContext];

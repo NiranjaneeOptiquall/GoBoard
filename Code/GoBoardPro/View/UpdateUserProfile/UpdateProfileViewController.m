@@ -56,6 +56,9 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
         frame.origin.y = CGRectGetMinY(_vwTerms.frame);
         _lblSubmit.frame = frame;
     }
+    
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
     [self getCertificateList];
 
     [_btnLikeToRcvTextMSG.titleLabel setNumberOfLines:2];
@@ -73,9 +76,16 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
 }
 
 - (void)getCertificateList {
-    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@", @"ClientRequirement", [[User currentUser] clientId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+//    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?ClientId=%@", @"ClientRequirement", [[User currentUser] clientId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
+//        NSLog(@"%@",response);
+//        _aryCertificates = [response objectForKey:@"ClientRequirements"];
+//        [self getUserInfo];
+//    } failure:^(NSError *error, NSDictionary *response) {
+//
+//    }];
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?AccountId=%@", @"AccountRequirement", [[User currentUser] accountId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         NSLog(@"%@",response);
-        _aryCertificates = [response objectForKey:@"ClientRequirements"];
+        _aryCertificates = [response objectForKey:@"AccountRequirements"];
         [self getUserInfo];
     } failure:^(NSError *error, NSDictionary *response) {
         
@@ -172,20 +182,25 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                 [certificate.txtCertificateName becomeFirstResponder];
                 return;
             }
-            if (!certificate.btnNoExpDate.selected) {
-                if (certificate.txtExpDate.trimText.length >0) {
-                    strExpDate = certificate.txtExpDate.text;
-                }else{
-                    
-                    alert(@"", @"Please select Expiration Date");
-                    [certificate btnSelectExpDate:certificate.btnExpDate];
-                    return;
-                    
+            if (certificate.txtExpDate.trimText.length >0) {
+                strExpDate = certificate.txtExpDate.text;
+            }else{
+                if (certificate.btnNoExpDate.selected) {
+                      strExpDate = certificate.strCertificateExpDate;
                 }
+               else {
+                alert(@"", @"Please select Expiration Date");
+                [certificate btnSelectExpDate:certificate.btnExpDate];
+                return;
+                }
+            }
+            
+            if (!certificate.btnNoExpDate.selected) {
+          
                 strIsNoExpiration = @"false";
             }
             else{
-                strExpDate= @"";
+ 
                   strIsNoExpiration = @"true";
             }
            
@@ -279,6 +294,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
 #pragma mark - Methods
 
 - (void)getUserInfo {
+    
     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", USER_SERVICE, [[User currentUser]userId]] parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         if ([[response objectForKey:@"Success"] boolValue]) {
             if([response objectForKey:@"FirstName"] && ![[response objectForKey:@"FirstName"]isKindOfClass:[NSNull class]]) {
@@ -316,14 +332,16 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                     //[aDateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
                     NSDate *aDate = [aDateFormatter dateFromString:aStrDate];
                     [aDateFormatter setDateFormat:@"MM/dd/yyyy"];
-                   
+                    certificate.strCertificateExpDate = [aDateFormatter stringFromDate:aDate];
                     if ([[[aDict objectForKey:@"IsNoExpiration"] stringValue] isEqualToString:@"1"]) {
                             certificate.btnNoExpDate.selected = YES;
-                         certificate.txtExpDate.text = @"";
+                         certificate.txtExpDate.text = @" ";
+                        certificate.imgDisabledIcon.hidden = NO;
                         certificate.btnExpDate.userInteractionEnabled = NO;
                     }
                     else{
                             certificate.btnNoExpDate.selected = NO;
+                        certificate.imgDisabledIcon.hidden = YES;
                          certificate.txtExpDate.text = [aDateFormatter stringFromDate:aDate];
                          certificate.btnExpDate.userInteractionEnabled = YES;
                     }
@@ -332,9 +350,10 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
                 }
             }
             [self updateUser];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         }
     } failure:^(NSError *error, NSDictionary *response) {
-        
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }];
     
 }
@@ -371,7 +390,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
         strExpiration = @"false";
     }
     if (currentView.strCertificateId) {
-        [mutArrDeletedCertificates addObject:@{@"RequirementId": currentView.strDropDownId, @"ExpirationDate":currentView.txtExpDate.trimText, @"Id":currentView.strCertificateId, @"FileName":currentView.strCertificateFileName, @"Photo":[NSNull null], @"IsDeleted":@"true",@"IsNoExpiration":strExpiration}];
+        [mutArrDeletedCertificates addObject:@{@"RequirementId": currentView.strDropDownId, @"ExpirationDate":currentView.strCertificateExpDate, @"Id":currentView.strCertificateId, @"FileName":currentView.strCertificateFileName, @"Photo":[NSNull null], @"IsDeleted":@"true",@"IsNoExpiration":strExpiration}];
     }
     [currentView removeFromSuperview];
     [_scrlCertificationView setContentSize:CGSizeMake(_scrlCertificationView.contentSize.width, CGRectGetMaxY(frame))];
@@ -416,6 +435,11 @@ NSURLRequest *request = [NSURLRequest requestWithURL:aUrl];
     if (totalCertificateCount > 3) {
     [_scrlCertificationView setContentOffset:CGPointMake(0, _scrlCertificationView.contentSize.height - _scrlCertificationView.frame.size.height - 5) animated:YES];    
     }
+    NSDateFormatter *aDateFormatter = [[NSDateFormatter alloc] init];
+    [aDateFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate * date = [NSDate date];
+    aCertView.strCertificateExpDate =  [aDateFormatter stringFromDate:date];
+    NSLog(@"%@",aCertView.strCertificateExpDate);
     return aCertView;
 }
 

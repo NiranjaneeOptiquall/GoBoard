@@ -21,6 +21,7 @@
 #import "LeftLegInjuryList.h"
 #import "LegInjuryList.h"
 #import "RequiredField.h"
+#import "GenderOptionsList.h"
 
 
 @implementation AccidentReportInfo
@@ -53,6 +54,11 @@
 @dynamic showEmergencyPersonnel;
 @dynamic showEmployeeId;
 @dynamic showGender;
+@dynamic showGuardianContacted;
+@dynamic showGuardianAddInfo;
+@dynamic showGuardianName;
+@dynamic showGuardianSignature;
+@dynamic showRelationshipToMinor;
 @dynamic showGuestId;
 @dynamic showManagementFollowup;
 @dynamic showMemberIdAndDriverLicense;
@@ -88,4 +94,5 @@
 @dynamic staffMembersWrittenAccountLabel;
 @dynamic showAdditionalInformation;
 @dynamic showStaffMembersWrittenAccount;
+@dynamic genderOptionsList;
 @end

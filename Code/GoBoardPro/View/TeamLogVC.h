@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TeamLogVC : UIViewController
+@interface TeamLogVC : UIViewController<UIPopoverControllerDelegate>
+{
+     UIPopoverController *popOver;
+}
 @property (strong, nonatomic) IBOutlet UITableView *tblViewteamLog;
 @property (strong, nonatomic) IBOutlet UILabel *lblNoRecords;
 @property (nonatomic,strong)NSMutableArray *mutArrTeamLog;
+
+@property (weak, nonatomic) IBOutlet UIView *vwPopOver;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOver;
+
 - (IBAction)toggleDailyLogBtnAction:(id)sender;
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnViewCommentsTapped:(id)sender;

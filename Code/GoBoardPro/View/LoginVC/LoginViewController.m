@@ -12,6 +12,7 @@
 #import "Reachability.h"
 #import <Raygun4iOS/Raygun.h>
 #import "MyApplication.h"
+#import "MyWorkOrdersTypeViewController.h"
 @interface LoginViewController ()
 
 @end
@@ -22,6 +23,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+
 
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"istouch"];
     
@@ -171,10 +174,7 @@
 }
 
 - (IBAction)btnUserSignInTapped:(UIButton*)sender {
-    
 
-    
-    
     
     if (![sender isSelected]) {
         [sender setSelected:YES];
@@ -449,7 +449,55 @@
             //            else {
             MyApplication *myApp;
             [myApp resetIdleTimer];
-            [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
+
+            
+            if ([[response objectForKey:@"IsServiceProvider"] boolValue]) {
+                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                  [[WebSerivceCall webServiceObject]callServiceForHomeSetup:YES complition:nil];
+                    
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                      
+                             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                        
+                                 [[WebSerivceCall webServiceObject]callServiceForDashboardCount:NO  complition:^(NSDictionary *aDict){
+                           
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+
+                                  NSMutableArray*moduleArr = [NSMutableArray new];
+                                  for (NSDictionary * tempDic in gblAppDelegate.mutArrHomeMenus) {
+                                      if (([tempDic[@"IsActive"] boolValue] && [tempDic[@"IsAccessAllowed"] boolValue])) {
+                                          [moduleArr addObject:tempDic];
+                                      }
+                                  }
+                                  NSLog(@"%@",moduleArr);
+                                  
+                                  MyWorkOrdersTypeViewController * workOrderView = [self.storyboard instantiateViewControllerWithIdentifier:@"MyWorkOrdersTypeViewController"];
+                                  if (moduleArr.count == 0) {
+                                      
+                                      workOrderView.IsAccessAllowed = NO;
+                                      
+                                  }
+                                  else{
+                                      workOrderView.IsAccessAllowed = YES;
+                                  }
+                                  workOrderView.IsServoceProvider = YES;
+                                  
+                                  
+                                  
+                                  [self.navigationController pushViewController:workOrderView animated:YES];
+                                  
+                                      
+                                       });
+                                            }];
+                                   });
+          });
+          
+                   });
+            }
+            else{
+                [self performSegueWithIdentifier:@"loginToWelcome" sender:nil];
+            }
+            
             
             
             //            }

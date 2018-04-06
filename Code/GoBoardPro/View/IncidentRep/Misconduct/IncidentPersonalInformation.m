@@ -22,6 +22,8 @@
 */
 
 - (void)awakeFromNib {
+  
+
 
 }
 
@@ -105,18 +107,222 @@
 }
 
 - (IBAction)btnGenderTapped:(UIButton *)sender {
-    _intGenderType = sender.tag;
+    _intGenderType = sender.titleLabel.text;
     [_btnMale setSelected:NO];
     [_btnFemale setSelected:NO];
     [_btnNeutral setSelected:NO];
     [_btnOtherGender setSelected:NO];
     [sender setSelected:YES];
+    _parentVC.isUpdate = YES;
+    
+    if (!_isGenderVisible){
+   
+        CGRect frame = _vwCommon.frame;
+        frame.size.height = CGRectGetMinY(_vwGender.frame);
+        _vwCommon.frame = frame;
+        
+    }else{
+        
+        CGRect frame;
+        
+        if (!_isGenderMVisible) {
+             frame = _btnMale.frame;
+             frame.size.height = 0;
+            _btnMale.frame = frame;
+        }
+        if (!_isGenderFVisible) {
+            frame = _btnFemale.frame;
+            frame.size.height = 0;
+            _btnFemale.frame = frame;
+        }
+        if (!_isGenderNVisible)
+        {
+            frame = _btnNeutral.frame;
+            frame.size.height = 0;
+            _btnNeutral.frame = frame;
+        }
+        if (!_isGenderOVisible)
+        {
+            frame = _btnOtherGender.frame;
+            frame.size.height = 0;
+            _btnOtherGender.frame = frame;
+        }
+        
+        frame = _btnMale.frame;
+        frame.origin.y = CGRectGetMaxY(_lblGenderTitle.frame);
+        _btnMale.frame = frame;
+        
+        frame = _btnFemale.frame;
+        frame.origin.y = CGRectGetMaxY(_btnMale.frame);
+        _btnFemale.frame = frame;
+        
+        frame = _btnNeutral.frame;
+        frame.origin.y = CGRectGetMaxY(_btnFemale.frame);
+        _btnNeutral.frame = frame;
+        
+        frame = _btnOtherGender.frame;
+       frame.origin.y = CGRectGetMaxY(_btnNeutral.frame);
+        _btnOtherGender.frame = frame;
+        
+        frame = _vwGender.frame;
+        frame.size.height = CGRectGetMaxY(_btnOtherGender.frame) +10;
+        _vwGender.frame = frame;
+        
+        frame = _vwMinor.frame;
+        frame.origin.y = CGRectGetMaxY(_vwGender.frame);
+        _vwMinor.frame = frame;
+        
+        frame = _vwMinorParentInfo.frame;
+        frame.origin.y = CGRectGetMaxY(_vwMinor.frame);
+        _vwMinorParentInfo.frame = frame;
+        
+        frame = _vwCommon.frame;
+        frame.size.height = CGRectGetMinY(_vwMinorParentInfo.frame);
+        _vwCommon.frame = frame;
+    }
+    
+    CGRect frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _btnCapturePerson.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
+    self.frame = frame;
+    
 }
 
 - (IBAction)btnIsMinorTapped:(UIButton *)sender {
     [_btnNotMinor setSelected:NO];
     [_btnMinor setSelected:NO];
     [sender setSelected:YES];
+    
+     _parentVC.isUpdate = YES;
+    
+    if (!_isMinorVisible){
+        
+        [_vwMinorParentInfo setHidden:YES];
+   
+        CGRect frame = _vwCommon.frame;
+        frame.size.height = CGRectGetMinY(_vwMinor.frame);
+        _vwCommon.frame = frame;
+
+    }else{
+   
+
+    if ([sender isEqual:_btnMinor]) {
+        [_vwMinorParentInfo setHidden:NO];
+        
+        CGRect frame ;
+        
+        if (!_isGuardianContactedVisible) {
+            NSLog(@"_isGuardianContactedVisible");
+            
+            frame = _vwParentContacted.frame;
+            frame.size.height = 0;
+            _vwParentContacted.frame = frame;
+            
+        }
+        if (!_isGuardianNameVisible) {
+            NSLog(@"_isGuardianNameVisible");
+            
+            frame = _vwParentName.frame;
+            frame.size.height = 0;
+            _vwParentName.frame = frame;
+            
+        }
+        if (!_isGuardianRelationVisible) {
+            NSLog(@"_isGuardianRelationVisible");
+            
+            frame = _vwParentRelation.frame;
+            frame.size.height = 0;
+            _vwParentRelation.frame = frame;
+            
+        }
+        if (!_isGuardianSignatureVisible) {
+            NSLog(@"_isGuardianSignatureVisible");
+            
+            frame = _btnParentSignature.frame;
+            frame.size.height = 0;
+            _btnParentSignature.frame = frame;
+            
+        }
+        if (!_isGuardianAddInfoVisible) {
+            NSLog(@"_isGuardianAddInfoVisible");
+            frame = _vwParentAddInfo.frame;
+            frame.size.height = 0;
+            _vwParentAddInfo.frame = frame;
+            
+        }
+        
+        frame = _vwParentContacted.frame;
+        frame.origin.y = 0;
+        _vwParentContacted.frame = frame;
+        
+        frame = _vwParentName.frame;
+        frame.origin.y = _vwParentContacted.frame.origin.y+_vwParentContacted.frame.size.height;
+        _vwParentName.frame = frame;
+        
+        frame = _vwParentRelation.frame;
+        frame.origin.y = _vwParentName.frame.origin.y +_vwParentName.frame.size.height;
+        _vwParentRelation.frame = frame;
+        
+        frame = _vwParentAddInfo.frame;
+        frame.origin.y = _vwParentRelation.frame.origin.y +_vwParentRelation.frame.size.height;
+        _vwParentAddInfo.frame = frame;
+        
+        frame = _btnParentSignature.frame;
+        frame.origin.y = _vwParentAddInfo.frame.origin.y +_vwParentAddInfo.frame.size.height;
+        _btnParentSignature.frame = frame;
+        
+        
+        frame = _vwMinorParentInfo.frame;
+        frame.origin.y = _vwMinor.frame.origin.y +_vwMinor.frame.size.height + 5;
+        frame.size.height = _btnParentSignature.frame.origin.y +_btnParentSignature.frame.size.height +10;
+        _vwMinorParentInfo.frame = frame;
+
+        frame = _vwCommon.frame;
+        frame.size.height = CGRectGetMaxY(_vwMinorParentInfo.frame);
+        _vwCommon.frame = frame;
+        
+        
+    }
+    else {
+        [_vwMinorParentInfo setHidden:YES];
+        CGRect frame = _vwCommon.frame;
+        frame.size.height = CGRectGetMaxY(_vwMinor.frame);
+        _vwCommon.frame = frame;
+        
+    }
+    
+//    CGRect frame = self.frame;
+//    frame.size.height = CGRectGetMaxY(_vwCommon.frame);
+//    self.frame = frame;
+    
+    }
+    
+    CGRect frame = _vwIncidentDetail.frame;
+    frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
+    _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
+    
+    frame = _btnCapturePerson.frame;
+    frame.origin.y = CGRectGetMaxY(_vwEmergencyPersonnel.frame);
+    _btnCapturePerson.frame = frame;
+    
+    frame = self.frame;
+    frame.size.height = CGRectGetMaxY(_btnCapturePerson.frame);
+    self.frame = frame;
 }
 
 - (IBAction)btnCapturePersonPic:(UIButton*)sender {
@@ -347,8 +553,26 @@
     
     if (!_isAffiliationVisible) [self hideAffiliation];
     if (!_isDOBVisible) [self hideDateOfBirth];
+  
     if (!_isGenderVisible) [self hideGender];
+    if (!_isGenderMVisible) self.btnMale.hidden = YES;
+    if (!_isGenderFVisible) self.btnFemale.hidden = YES;
+    if (!_isGenderNVisible) self.btnNeutral.hidden = YES;
+    if (!_isGenderOVisible) self.btnOtherGender.hidden = YES;
+    if (!_isGenderMVisible && !_isGenderFVisible && !_isGenderNVisible && !_isGenderOVisible) {
+        [self hideGender];
+    }
+   
     if (!_isMinorVisible) [self hideMinor];
+    if (!_isGuardianContactedVisible) self.vwParentContacted.hidden = YES;
+    if (!_isGuardianNameVisible) self.vwParentName.hidden = YES;
+    if (!_isGuardianRelationVisible) self.vwParentRelation.hidden = YES;
+    if (!_isGuardianSignatureVisible) self.btnParentSignature.hidden = YES;
+    if (!_isGuardianAddInfoVisible) self.vwParentAddInfo.hidden = YES;
+//    if (!_isGuardianContactedVisible && !_isGuardianNameVisible && !_isGuardianRelationVisible && !_isGuardianSignatureVisible && !_isGuardianAddInfoVisible) {
+//        [self hideMinor];
+//    }
+
     if (!_isCapturePhotoVisible) [self hideCaptureButton];
     if (!_isConditionVisible) [self hideCondition];
     
@@ -363,11 +587,18 @@
     [_btnCommunity setTitle:reportSetupInfo.affiliation5 forState:UIControlStateNormal];
     [_btnOther setTitle:reportSetupInfo.affiliation6 forState:UIControlStateNormal];
     
+    [_btnMale setTitle:_strMale forState:UIControlStateNormal];
+    [_btnFemale setTitle:_strFemale forState:UIControlStateNormal];
+    [_btnNeutral setTitle:_strNutrel forState:UIControlStateNormal];
+    [_btnOtherGender setTitle:_strOther forState:UIControlStateNormal];
+
+    
     [self btnPersonInvolvedTapped:_btnMember];
     [self btnAffiliationTapped:_btnNonAssessedStudent];
     [self btnWasEmployeeOnWorkTapped:_btnEmployeeOnWork];
     [self btnGenderTapped:_btnMale];
     [self btnIsMinorTapped:_btnNotMinor];
+    
 }
 
 -(void)hideCondition{
@@ -417,6 +648,10 @@
     frame = _vwIncidentDetail.frame;
     frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
     _vwIncidentDetail.frame = frame;
+    
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
 }
 
 
@@ -447,7 +682,9 @@
     frame.origin.y = CGRectGetMaxY(_vwCommon.frame);
     _vwIncidentDetail.frame = frame;
     
-   
+    frame = _vwEmergencyPersonnel.frame;
+    frame.origin.y = CGRectGetMaxY(_vwIncidentDetail.frame);
+    _vwEmergencyPersonnel.frame = frame;
 }
 
 - (void)hideDateOfBirth {
@@ -475,6 +712,7 @@
 
 - (void)hideMinor {
     [_vwMinor setHidden:YES];
+    
     CGRect frame = _vwCommon.frame;
     frame.size.height = CGRectGetMinY(_vwMinor.frame);
     _vwCommon.frame = frame;
@@ -563,7 +801,18 @@
     }
     return allowEditing;
 }
-
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+    if ([textView isEqual:_txtMinorAdditionalInfo]){
+        _lblMinorAdditionalInfo.hidden = YES;
+    }
+}
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    if ([textView isEqual:_txtMinorAdditionalInfo]){
+        if ([textView.text isEqualToString:@""]) {
+            _lblMinorAdditionalInfo.hidden = NO;
+        }
+    }
+}
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if ([string isEqualToString:@""]) {
         if ([textField isEqual:_txtHomePhone] || [textField isEqual:_txtAlternatePhone]) {
@@ -754,5 +1003,28 @@
             }];
         }
     }
+}
+- (IBAction)btnParentsSignatureTapped:(UIButton *)sender {
+    if (!_signatureViewGaurdian)
+        
+        _signatureViewGaurdian = [[SignatureView alloc] initWithNibName:@"SignatureView" bundle:nil];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"isForm"];
+    __weak SignatureView *weakSignature = _signatureViewGaurdian;
+    [_signatureViewGaurdian setCompletion:^{
+        if (weakSignature.tempDrawImage.image) {
+            [sender setTitle:@"Edit Participant's Signature" forState:UIControlStateNormal];
+        }
+        else {
+            [sender setTitle:@"Participant's Signature" forState:UIControlStateNormal];
+        }
+    }];
+    [_signatureViewGaurdian showPopOverWithSender:sender];
+}
+
+- (IBAction)btnGaurdianContactedTapped:(UIButton *)sender {
+    [_btnParentContactedYes setSelected:NO];
+    [_btnParentContactedNo setSelected:NO];
+    [sender setSelected:YES];
+    
 }
 @end

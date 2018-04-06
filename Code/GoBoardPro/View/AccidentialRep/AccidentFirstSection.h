@@ -28,6 +28,8 @@
 @property (assign, nonatomic) BOOL islblStaffMemberAccountVisible;
 
 
+
+
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 - (BOOL)validateAccidentFirstSectionWith:(NSArray*)firstAid;
 

@@ -164,7 +164,9 @@
     deleteButton.tag=indexPath.row;
 
      [cell.contentView addSubview:deleteButton];
-
+    if ([[obj valueForKey:@"typeId"] isEqualToString:@"4"]) {
+        deleteButton.hidden = YES;
+    }
     return cell;
 
 }
@@ -172,20 +174,30 @@
 {
     return 70.0f;
 }
+-(void)callServiceForFormStatus:(NSString*)strFormHistoryId StrIndexPath:(NSString*)strIndexPath FormData:(NSManagedObject*)obj{
+    NSString *strUserId = @"";
+    if ([User checkUserExist]) {
+        strUserId = [[User currentUser] userId];
+    }
+    //FormHistory/UpdateFormStatus ((int? userId, int formHistoryHeaderId, bool status))
+    [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/UpdateFormStatus?UserId=%@&formHistoryHeaderId=%@&status=true", FORM_HISTORY_POST, strUserId,strFormHistoryId] parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response) {
+     NSString * strName = [response valueForKey:@"LastAccessedBy"];
+           [[NSUserDefaults standardUserDefaults]setValue:strName forKey:@"lastAccessedByUser"];
+  BOOL SharedEdit = [[response valueForKey:@"IsAllowedEditMode"] boolValue];       [[NSUserDefaults standardUserDefaults]setBool:SharedEdit forKey:@"isAllowSharedEdit"];
+          [self callNextView:obj StrIndexPath:strIndexPath];
+        
+    } failure:^(NSError *error, NSDictionary *response) {
+        
+        alert(@"", @"An unexpected error occurred.  Please try again.");
+    }];
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSManagedObject *obj = [arrOfForms objectAtIndex:indexPath.row];
- //   NSManagedObject *_objFormOrSurvey=[arrOfForms objectAtIndex:indexPath.row];
-//    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
- //NSArray *array = [[_objFormOrSurvey valueForKey:@"questionList"] sortedArrayUsingDescriptors:@[sort]];
-    NSLog(@"%@",arrOfForms);
+}
+-(void)callNextView:(NSManagedObject*)obj StrIndexPath:(NSString*)strIndexPath{
     [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%@",[obj valueForKey:@"inProgressFormId"]] forKey:@"aStrInProgressFormId"];
-    NSLog(@"%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"aStrInProgressFormId"]);
-
-    NSString *strIndexPath = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
     
-     [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
+    //NSString *strIndexPath = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"isFormHistory"];
     
     if ([[NSUserDefaults standardUserDefaults]valueForKey:@"indexpath"]!=nil) {
         
@@ -193,24 +205,50 @@
     }
     
     [[NSUserDefaults standardUserDefaults]setValue:strIndexPath forKey:@"indexpath"];
-   
-  
+    
+    
     UIViewController *viewController = [self viewController];
     
-
-        if(viewController)
-        {
-
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UIViewController *viewControllerObject = [storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
-            [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"OfflineForListTitle"];
-
-              [self removeFromSuperview];
-            if ([viewController class] != [viewControllerObject class]) {
-                [viewController.navigationController pushViewController:viewControllerObject animated:NO];
-            }
+    
+    if(viewController)
+    {
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *viewControllerObject = [storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"OfflineForListTitle"];
+        
+        [self removeFromSuperview];
+        if ([viewController class] != [viewControllerObject class]) {
+            [viewController.navigationController pushViewController:viewControllerObject animated:NO];
+        }
+        
+    }
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSManagedObject *obj = [arrOfForms objectAtIndex:indexPath.row];
+ //   NSManagedObject *_objFormOrSurvey=[arrOfForms objectAtIndex:indexPath.row];
+//    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+ //NSArray *array = [[_objFormOrSurvey valueForKey:@"questionList"] sortedArrayUsingDescriptors:@[sort]];
+    
+    NSString *strIndexPath = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
+    
+    if ([[obj valueForKey:@"typeId"] isEqualToString:@"4"]) {
+        if ([self isNetworkReachable]) {
+          
+            [self callServiceForFormStatus:[obj valueForKey:@"inProgressFormId"] StrIndexPath:strIndexPath FormData:obj];
+}
+        else {
+            alert(@"", @"We’re sorry.  This form is not available while working offline.  Please connect to the internet and try again.");
+            return;
             
         }
+     
+    }
+    else{
+        [self callNextView:obj StrIndexPath:strIndexPath];
+    }
+  
 }
 
 - (UIViewController*)viewController

@@ -266,17 +266,20 @@
                 NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
                NSData *d = [request HTTPBody];
                NSString *aStr = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", aStr);
+         //   NSLog(@"%@", aStr);
                if ([[aDict objectForKey:@"Success"] boolValue]) {
                     completion(aDict);
                }
                else {
+                   dispatch_async(dispatch_get_main_queue(), ^{
                    alert(@"", [aDict objectForKey:@"ErrorMessage"]);
+                   });
                    failure (nil, aDict);
-                   NSLog(@"%@",aDict);
+                  // NSLog(@"%@",aDict);
                 }
                 
             }
+            
              [self hideActivityIndicator];
         }];
         [dataTask resume];

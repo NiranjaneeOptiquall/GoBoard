@@ -12,7 +12,7 @@
     NSMutableArray *allSearchData,*allSopArrList,*mutArrEmergencies;
     NSIndexPath *selectedIndexPath;
 }
-
+@property (assign, nonatomic) BOOL isBtnERPListHidden;
 @property (weak, nonatomic) IBOutlet UITableView *tblEmergencyList;
 @property (weak, nonatomic) IBOutlet UILabel *lblNoRecords;
 @property (strong, nonatomic) IBOutlet UITableView *tblERPCategory;

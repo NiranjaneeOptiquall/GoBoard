@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -75,7 +75,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.95294117649999999" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="w8o-lw-8Rc">
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="w8o-lw-8Rc">
                     <rect key="frame" x="393" y="75" width="141" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -88,6 +88,10 @@
                         <action selector="btnNoExpirationClicked:" destination="iN0-l3-epB" eventType="touchUpInside" id="lKv-Zf-TJS"/>
                     </connections>
                 </button>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="disabled_50x50.png" id="iWy-G9-aNn">
+                    <rect key="frame" x="407" y="24" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -96,6 +100,7 @@
                 <outlet property="btnExpDate" destination="Gvm-oq-ZLf" id="CG0-5x-WSb"/>
                 <outlet property="btnNoExpDate" destination="w8o-lw-8Rc" id="dUo-gO-RWa"/>
                 <outlet property="btnRemove" destination="a4Z-sv-BMg" id="F0W-NS-ken"/>
+                <outlet property="imgDisabledIcon" destination="iWy-G9-aNn" id="jV3-sY-LnX"/>
                 <outlet property="txtCertificateName" destination="OgE-gM-xWL" id="qx4-1s-dtL"/>
                 <outlet property="txtExpDate" destination="IT6-5C-7oy" id="GPQ-Ij-57X"/>
             </connections>
@@ -108,13 +113,9 @@
         <image name="checkBox_20x20.png" width="20" height="20"/>
         <image name="collaps_icon_default.png" width="49" height="49"/>
         <image name="date.png" width="50" height="50"/>
+        <image name="disabled_50x50.png" width="50" height="50"/>
         <image name="text_box_date.png" width="204" height="62"/>
         <image name="text_box_email.png" width="315" height="62"/>
         <image name="uncheckBox_20x20.png" width="20" height="20"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
-    </simulatedMetricsContainer>
 </document>

@@ -9,7 +9,6 @@
 #import "DailyLogReviewProgressViewController.h"
 
 @interface DailyLogReviewProgressViewController ()
-
 @end
 
 @implementation DailyLogReviewProgressViewController

@@ -23,6 +23,7 @@
 @dynamic employeeTitle;
 @dynamic firstName;
 @dynamic genderTypeID;
+@dynamic guestId;
 @dynamic guestOfFirstName;
 @dynamic guestOfLastName;
 @dynamic guestOfMiddleInitial;
@@ -43,5 +44,10 @@
 @dynamic conditionId;
 @dynamic emergencyPersonnelIncident;
 @dynamic report;
-
+@dynamic guardianContacted;
+@dynamic guardianFName;
+@dynamic guardianLName;
+@dynamic guardianRelation;
+@dynamic guardianSignature;
+@dynamic guardianAddInfo;
 @end

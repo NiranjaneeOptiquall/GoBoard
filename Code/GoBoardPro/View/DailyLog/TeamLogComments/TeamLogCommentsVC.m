@@ -17,8 +17,18 @@
 
 #define kTextLimit 1000
 
+#import "SOPViewController.h"
+#import "AccidentReportViewController.h"
+#import "IncidentDetailViewController.h"
+#import "DynamicFormsViewController.h"
+#import "ERPDetailViewController.h"
+#import "EmergencyResponseViewController.h"
 
-@interface TeamLogCommentsVC ()
+@interface TeamLogCommentsVC ()<UIWebViewDelegate>
+{
+    NSMutableArray * allDataForLinkedSopErp;
+    
+}
 
 @end
 
@@ -27,6 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self doInitialSettings];
+    _webView.scrollView.scrollEnabled = NO;
+
     // Do any additional setup after loading the view.
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     
@@ -39,6 +51,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -151,20 +164,320 @@
    return aCell;
 }
 
--(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
-    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
-        [[UIApplication sharedApplication] openURL:[inRequest URL]];
-        return NO;
+-(void)getLinkedSopData:(NSArray*)dataDic{
+    
+    for (NSMutableDictionary * tempDic in dataDic) {
+        if ([[tempDic valueForKey:@"Children"] count] ==0) {
+            
+            [allDataForLinkedSopErp addObject:tempDic];
+            
+        }
+        else{
+            [self getLinkedSopData:[tempDic valueForKey:@"Children"]];
+        }
     }
     
+}
+
+-(BOOL) webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType
+//{
+//
+//    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+//        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+//        return NO;
+//    }
+//
+//    return YES;
+//}
+{
+    
+    NSURL *url = [inRequest URL];
+    NSString * strUrl = [NSString stringWithFormat:@"%@",url];
+    NSLog(@"%@",strUrl);
+    if ( [strUrl containsString:@"IsLinked=true"]) {
+        //  NSLog(@"linked type");
+        if ([strUrl containsString:@"SOPs"]) {
+            NSLog(@"linked type SOPs");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@",SOP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:SOP_CATEGORY] complition:^(NSDictionary *response) {
+                
+                
+                SOPViewController *sopView = [self.storyboard instantiateViewControllerWithIdentifier:@"SOPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"SopCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"SopCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                
+                [self getLinkedSopData:[response valueForKey:@"SopCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        sopView.dictSOPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (sopView.dictSOPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        sopView.mutArrCategoryHierarchy = [NSMutableArray array];
+                        [sopView.mutArrCategoryHierarchy addObject:sopView.dictSOPCategory];
+                        sopView.isBtnSOPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:sopView animated:YES];
+                    }
+                    
+                });
+                
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"ERP"]) {
+            NSLog(@"linked type erp");
+            
+            NSRange r1 = [strUrl rangeOfString:@"id="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *sopId = [strUrl substringWithRange:rSub];
+            
+            [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@/%@", ERP_CATEGORY, [[User currentUser] userId]] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:ERP_CATEGORY] complition:^(NSDictionary *response) {
+                
+                EmergencyResponseViewController *erpView = [self.storyboard instantiateViewControllerWithIdentifier:@"ERPViewController"];
+                allDataForLinkedSopErp= [[NSMutableArray alloc]init];
+                for (NSMutableDictionary * tempDic in [response valueForKey:@"ErpCategories"]) {
+                    [allDataForLinkedSopErp addObject:tempDic];
+                }
+                [self getLinkedSopData:[response valueForKey:@"ErpCategories"]];
+                
+                for (int i = 0; i<allDataForLinkedSopErp.count; i++) {
+                    if ([[NSString stringWithFormat:@"%@",[[allDataForLinkedSopErp valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:sopId]) {
+                        erpView.dictERPCategory = [allDataForLinkedSopErp objectAtIndex:i];
+                    }
+                }
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (erpView.dictERPCategory == nil) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }else{
+                        erpView.mutArrCategoryHierarchy = [NSMutableArray array];
+                        [erpView.mutArrCategoryHierarchy addObject:erpView.dictERPCategory];
+                        erpView.isBtnERPListHidden = YES;
+                        [[NSUserDefaults standardUserDefaults]setValue:@"" forKey:@"NOTE"];
+
+                        [self.navigationController pushViewController:erpView animated:YES];
+                    }
+                    
+                });
+                
+                
+            } failure:^(NSError *error, NSDictionary *response) {
+                
+            }];
+            
+        }
+        else if ([strUrl containsString:@"Accident"]) {
+            NSLog(@"linked type Accident");
+            AccidentReportViewController * acciView = [self.storyboard instantiateViewControllerWithIdentifier:@"AccidentReportViewController"];
+            [self.navigationController pushViewController:acciView animated:YES];
+        }
+        else if ([strUrl containsString:@"Incident"]) {
+            
+            if ([strUrl containsString:@"Misconduct"]) {
+                NSLog(@"linked type Misconduct");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 1;
+                [self.navigationController pushViewController:inciView animated:YES];
+            }
+            else if ([strUrl containsString:@"CustomerService"]) {
+                NSLog(@"linked type CustomerService");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 2;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+            else if ([strUrl containsString:@"Other"]) {
+                NSLog(@"linked type Other");
+                IncidentDetailViewController * inciView = [self.storyboard instantiateViewControllerWithIdentifier:@"IncidentDetailViewController"];
+                inciView.incidentType = 3;
+                [self.navigationController pushViewController:inciView animated:YES];
+                
+            }
+        }
+        else if ([strUrl containsString:@"Survey"]) {
+            NSLog(@"linked type Survey");
+            NSRange r1 = [strUrl rangeOfString:@"surveyId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *surveyId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForSurvey:NO linkedSurveyId:surveyId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SurveyList"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@",strSurveyUserType];
+                
+                
+                [request setPredicate:predicate];
+                
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"surveyId" ascending:YES];
+                
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray * mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }
+                    else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = YES;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+                    }
+                });
+                
+                
+            }];
+        }
+        else if ([strUrl containsString:@"Form"]) {
+            
+            NSLog(@"linked type Form");
+            NSRange r1 = [strUrl rangeOfString:@"formId="];
+            NSRange r2 = [strUrl rangeOfString:@"&"];
+            NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+            NSString *formId = [strUrl substringWithRange:rSub];
+            
+            [[WebSerivceCall webServiceObject] callServiceForForms:NO linkedFormId:formId complition:^{
+                DynamicFormsViewController * formView = [self.storyboard instantiateViewControllerWithIdentifier:@"DYFormsView"];
+                
+                NSString *strSurveyUserType = @"1";
+                if ([User checkUserExist]) {
+                    strSurveyUserType = @"2";
+                }
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"FormsList"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userTypeId ==[CD] %@ AND NOT (typeId ==[cd] %@)",strSurveyUserType,[NSString stringWithFormat:@"%d", 3]];
+                [request setPredicate:predicate];
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+                NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"formId" ascending:YES];
+                [request setSortDescriptors:@[sort,sort1]];
+                NSMutableArray *mutArrFormList = [NSMutableArray arrayWithArray:[gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil]];
+                NSLog(@"%@",mutArrFormList);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (mutArrFormList.count == 0) {
+                        alert(@"", @"This link is broken or no longer exists.");
+                        return;
+                    }
+                    else{
+                        formView.objFormOrSurvey = [mutArrFormList objectAtIndex:0];
+                        
+                        formView.isSurvey = NO;
+                        
+                        [self.navigationController pushViewController:formView animated:YES];
+                    }
+                });
+                
+                
+            }];
+            
+            
+        }
+        return NO;
+    }
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        //        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        //        return NO;
+    
+        [gblAppDelegate showActivityIndicator];
+        
+        NSIndexPath* indexPathLoad = [NSIndexPath indexPathForRow:webView.tag inSection:0];
+        
+        if (popOver) {
+            [popOver dismissPopoverAnimated:NO];
+            popOver.contentViewController.view = nil;
+            popOver = nil;
+        }
+        
+        
+        [_webViewPopOver loadRequest:inRequest];
+        
+        UIViewController *viewController = [[UIViewController alloc] init];
+        viewController.view = _vwPopOver;
+        popOver = [[UIPopoverController alloc] initWithContentViewController:viewController];
+        viewController = nil;
+        [popOver setDelegate:self];
+        [popOver setPopoverContentSize:_vwPopOver.frame.size];
+        CGRect frame = _webView.frame;
+        [popOver presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+        return NO;
+        
+    }
+
     return YES;
+}
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    [_webViewPopOver loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+    popOver.contentViewController.view = nil;
+    popOver = nil;
+    
+}
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+
+   [gblAppDelegate hideActivityIndicator];
+    
+    CGRect frame = _webView.frame;
+    CGSize fittingSize = [_webView sizeThatFits:_webView.scrollView.contentSize];
+    frame.size = fittingSize;
+    _webView.frame = frame;
+    _cnstwebViewLogHeight.constant = frame.size.height;
+    
+    
+//    rowHeight = frame.size.height + 109;
+//    
+//    if ([arrLoadedIndex containsObject:indexPathLoad]) {
+//        
+//    }
+//    else{
+//        [arrLoadedIndex addObject:indexPathLoad];
+//        [arrRowHeight replaceObjectAtIndex:indexPathLoad.row withObject:[NSString stringWithFormat:@"%f",rowHeight]];
+//        
+//        NSLog(@"%@",arrRowHeight);
+//        
+//        [_tblViewteamLog reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPathLoad, nil] withRowAnimation:NO];
+//    }
+//    
+    
 }
 
 #pragma mark - Action Methods
 
 
 - (IBAction)btnBackTapped:(id)sender {
-    
+    [NSUserDefaults.standardUserDefaults setValue:@"YES" forKey:@"fromCommentView"];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -201,15 +514,12 @@
                                             ];
  //   self.txtViewLog.text = self.teamLogObj.desc;
      self.txtViewLog.attributedText = attributedString;
+    [_webView loadHTMLString:htmlString baseURL:nil];
     self.mutArrComments = [NSMutableArray array];
     NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
     NSMutableArray *aMutArrTemp = [[NSMutableArray alloc]initWithArray:[self.teamLogObj.teamSubLog.allObjects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortByName]]];
     [self.mutArrComments addObjectsFromArray:aMutArrTemp];
 
-    
-    
-    
-   
     self.lblPosition.text = [self getPoistionForLog:self.teamLogObj];
     
     if ([self.teamLogObj.teamSubLog allObjects].count==0) {
@@ -226,7 +536,8 @@
     
     CGSize constrainedSize = CGSizeMake(aFloatWidth, 9999);
     
-    CGSize newSize = [self.txtViewLog sizeThatFits:constrainedSize];
+  //  CGSize newSize = [self.txtViewLog sizeThatFits:constrainedSize];
+      CGSize newSize = [self.webView sizeThatFits:constrainedSize];
     self.cnstTxtViewLogHeight.constant = newSize.height;
     [self.view layoutIfNeeded];
 }

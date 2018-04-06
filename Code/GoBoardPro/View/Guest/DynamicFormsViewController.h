@@ -15,26 +15,31 @@
 
 
 
-@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate, DatePickerDelegate, UITextViewDelegate> {
+@interface DynamicFormsViewController : UIViewController <UITableViewDataSource, UITextFieldDelegate, DropDownValueDelegate, DatePickerDelegate, UITextViewDelegate,UIPopoverControllerDelegate> {
     NSMutableArray *mutArrQuestions;
     NSInteger currentIndex;
     BOOL isUpdate;
     UIPopoverController *popOver;
     UIActivityIndicatorView *indicatorView;
-    
+       UIPopoverController *popOverWeb;
 }
+@property (weak, nonatomic) IBOutlet UIButton *btnSubmit;
 @property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 @property (weak, nonatomic) IBOutlet UITableView *tblForm;
 @property (strong, nonatomic) IBOutlet UILabel *lblInstruction;
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
 @property (strong, nonatomic) UIImage *imgBodilyFluid;
 @property(nonatomic,retain)NSMutableArray *tempArray;
-
+@property(nonatomic, strong) NSCache *myCache;
 @property (weak, nonatomic) NSManagedObject *objFormOrSurvey;
 @property (strong, nonatomic) IBOutlet UIButton *btnSubmitLater;
 @property(nonatomic,retain)FormsHistory *forms;
-@property (assign, nonatomic) BOOL isAllowSharedFormEdit;
+@property (assign, nonatomic) BOOL isAllowFormEdit;
 @property (assign, nonatomic) BOOL isSurvey;
+@property (nonatomic, copy) void (^Completion)();
+
+@property (weak, nonatomic) IBOutlet UIView *vwPopOver;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOver;
 
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

@@ -1,3 +1,4 @@
+
 //
 //  UserHomeViewController.m
 //  GoBoardPro
@@ -33,8 +34,7 @@
 #import "TeamLogVC.h"
 #import "DailyLogViewController.h"
 
-@interface UserHomeViewController ()
-{
+@interface UserHomeViewController (){
     NSDictionary *dictReq;
     NSMutableArray *moduleArr;
 }
@@ -95,8 +95,6 @@
     [_cvMenuGrid reloadData];
     [self getSyncCount];
  //   [self callWebserviceToUpdateTeamLog];
-
-    
 
    [self callWebserviceForMissedTaskNotification];
 
@@ -225,7 +223,7 @@
      __weak NSDictionary *aDict = [moduleArr objectAtIndex:indexPath.item];
     NSLog(@"%@",aDict);
  //   if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue]) {
-        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
+        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {// && [aDict[@"SystemModule"] integerValue] != 20
             aImvIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"menu_%ld.png", (long)[aDict[@"SystemModule"] integerValue]]];
             aLblMenu.text = aDict[@"Name"];
             NSInteger count = 0;
@@ -247,6 +245,9 @@
             }
             else if ([aDict[@"SystemModule"] integerValue] == 12 && self.intSurveyInProgressCount > 0) {
                 count = self.intSurveyInProgressCount;
+            }
+            else if ([aDict[@"SystemModule"] integerValue] == 20 && self.intWorkOrderCount > 0) {
+                count = self.intWorkOrderCount;
             }
             else if ([aDict[@"SystemModule"] integerValue] == 0){
                count = self.intTaskCount;
@@ -284,11 +285,17 @@
 //    EOD = 13
 //    Log = 14
 //    Memos = 15
-
+//    Workorder = 19
     
-     NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
+     NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos",@"",@"",@"",@"",@"Workorder"];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue] != 0) {
-        segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"TeamLog", @"Memos"];
+        segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"TeamLog", @"Memos",@"",@"",@"",@"",@"Workorder"];
+    
+//    
+//    NSArray *segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"DailyLog", @"Memos"];
+//    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue] != 0) {
+//        segues = @[@"Tasks", @"Counts", @"userForms", @"Graphs", @"ERP", @"Incident", @"SOPs", @"Tools", @"", @"", @"", @"Accident", @"userSurvey", @"EOD", @"TeamLog", @"Memos"];
+    
     }
    
 
@@ -306,7 +313,7 @@
 
     if ([aDict[@"IsActive"] boolValue] && [aDict[@"IsAccessAllowed"] boolValue])
     {
-        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {
+        if ([aDict[@"SystemModule"] integerValue] != 8 && [aDict[@"SystemModule"] integerValue] != 9 && [aDict[@"SystemModule"] integerValue] != 10) {// && [aDict[@"SystemModule"] integerValue] != 20
             NSLog(@"%@",segues[[aDict[@"SystemModule"] integerValue]]);
             [self performSegueWithIdentifier:segues[[aDict[@"SystemModule"] integerValue]] sender:nil];
         }
@@ -445,12 +452,26 @@
     return isErrorOccurred;
 }
 
+
+//Chnages
 - (NSDictionary *)getPostLocation:(SubmitUtilizationCount*)location {
     
-    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id", nil];
+    NSString *strVal;
+    if ([[NSString stringWithFormat:@"%d",location.isClosed] isEqualToString:@"1"]) {
+        strVal = @"True";
+    }else{
+        strVal = @"False";
+    }
+    NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:location.message, @"Message", location.lastCount, @"LastCount", location.lastCountDateTime, @"LastCountDateTime", location.capacity, @"Capacity", location.name, @"Name", location.locationId, @"Id",strVal,@"IsClosed" ,nil];
     NSMutableArray *subLocations = [NSMutableArray array];
     for (SubmitUtilizationCount *subLocation in [location.sublocations allObjects]) {
-        [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime}];
+        NSString *strVal;
+        if ([[NSString stringWithFormat:@"%d",subLocation.isClosed] isEqualToString:@"1"]) {
+            strVal = @"True";
+        }else{
+            strVal = @"False";
+        }
+        [subLocations addObject:@{@"Id": subLocation.locationId, @"Name": subLocation.name, @"LastCount" : subLocation.lastCount, @"LastCountDateTime":subLocation.lastCountDateTime,@"IsClosed":strVal}];
     }
     if ([subLocations count] > 0) {
         [aDict setObject:subLocations forKey:@"Sublocations"];
@@ -503,24 +524,38 @@
         isSingleDataSaved = NO;
         NSMutableArray *mutArrPerson = [NSMutableArray array];
         for (Person *obj in [aReport.persons allObjects]) {
-            NSString *memberId = @"", *employeeId = @"";
+            
+            NSString *memberId = @"", *employeeId = @"", *guestId = @"";
             if ([obj.personTypeID integerValue] == 3) {
-                if (obj.memberId==nil) {
-                    employeeId = @"";
-                }
-                else
-                    employeeId = obj.memberId;
-            }
+                employeeId = obj.memberId;
+            }else if ([obj.personTypeID integerValue] == 2)
+                guestId = obj.guestId;
             else {
-                if (obj.memberId==nil) {
-                    memberId = @"";
-                }
-                else
-                    memberId = obj.memberId;
+                memberId = obj.memberId;
             }
+            
+//            NSString *memberId = @"", *employeeId = @"";
+//            if ([obj.personTypeID integerValue] == 3) {
+//                if (obj.memberId==nil) {
+//                    employeeId = @"";
+//                }
+//                else
+//                    employeeId = obj.memberId;
+//            }
+//            else {
+//                if (obj.memberId==nil) {
+//                    memberId = @"";
+//                }
+//                else
+//                    memberId = obj.memberId;
+//            }
             NSString *aStrPhoto = @"";
             if (obj.personPhoto) {
                 aStrPhoto = [obj.personPhoto base64EncodedStringWithOptions:0];
+            }
+            NSString *strGuardianSignature = @"";
+            if (obj.guardianSignature) {
+                strGuardianSignature = [obj.guardianSignature base64EncodedStringWithOptions:0];
             }
         
             NSMutableArray *mutArrEmergency = [NSMutableArray array];
@@ -550,8 +585,48 @@
                 NSDictionary *aDict = @{@"FirstName":objEmergency.firstName, @"MiddleInitial":objEmergency.middleInitial, @"LastName":objEmergency.lastName, @"Phone":objEmergency.phone, @"AdditionalInformation":objEmergency.additionalInformation, @"CaseNumber":objEmergency.caseNumber, @"BadgeNumber":objEmergency.badgeNumber, @"Time911Called":time911Called, @"ArrivalTime":timeArrival, @"DepartureTime":timeDeparture};
                 [mutArrEmergency addObject:aDict];
             }
+        
             
-            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"PersonPhoto":aStrPhoto, @"EmergencyPersonnel" : mutArrEmergency,@"NatureId" : obj.natureId, @"ActionTakenId" : obj.actionTakenId, @"ActivityTypeId" : obj.activityTypeId,@"EquipmentTypeId" : obj.equipmentTypeId,@"ConditionId" : obj.conditionId};
+            NSDictionary *aDict = @{
+                                    @"FirstName": obj.firstName,
+                                    @"MiddleInitial":obj.middleInitial,
+                                    @"LastName":obj.lastName,
+                                    @"PrimaryPhone":obj.primaryPhone,
+                                    @"AlternatePhone":obj.alternatePhone,
+                                    @"Email":obj.email,
+                                    @"Address1":obj.streetAddress,
+                                    @"Address2":obj.apartmentNumber,
+                                    @"City":obj.city,
+                                    @"State":obj.state,
+                                    @"Zip": obj.zip,
+                                    @"AffiliationTypeId":obj.affiliationTypeID,
+                                    @"GenderTypeId":@"0",
+                                    @"GenderText":obj.genderTypeID,
+                                    @"PersonTypeId":obj.personTypeID,
+                                    @"GuestId":obj.guestId ,
+                                    @"GuestOfFirstName":obj.guestOfFirstName,
+                                    @"GuestOfMiddleInitial":obj.guestOfMiddleInitial,
+                                    @"GuestOfLastName": obj.guestOfLastName,
+                                    @"IsMinor":obj.minor,
+                                    @"IsGuardianContacted":obj.guardianContacted,
+                                    @"GuardianFirstName":obj.guardianFName,
+                                    @"GuardianLastName":obj.guardianLName,
+                                    @"RelationshipToMinor":obj.guardianRelation,
+                                    @"AdditionalGuardianInformation":obj.guardianAddInfo,
+                                    @"GuardianSignature":strGuardianSignature,
+                                    @"EmployeeTitle":obj.employeeTitle,
+                                    @"EmployeId":employeeId,
+                                    @"MemberId":memberId,
+                                    @"DateOfBirth":obj.dateOfBirth,
+                                    @"OccuredDuringBusinessHours":obj.duringWorkHours,
+                                    @"PersonPhoto":aStrPhoto,
+                                    @"EmergencyPersonnel" : mutArrEmergency,
+                                    @"NatureId" : obj.natureId,
+                                    @"ActionTakenId" : obj.actionTakenId,
+                                    @"ActivityTypeId" : obj.activityTypeId,
+                                    @"EquipmentTypeId" : obj.equipmentTypeId,
+                                    @"ConditionId" : obj.conditionId
+                                    };
             [mutArrPerson addObject:aDict];
         }
         
@@ -608,6 +683,11 @@
             if (obj.personPhoto) {
                 aStrPhoto = [obj.personPhoto base64EncodedStringWithOptions:0];
             }
+            NSString *aStrGuardianSignature = @"";
+            if (obj.guardianSignature) {
+                aStrGuardianSignature = [obj.guardianSignature base64EncodedStringWithOptions:0];
+            }
+            
             NSString *strSignature = @"";
             if (obj.participantSignature) {
                 strSignature = [obj.participantSignature base64EncodedStringWithOptions:0];
@@ -649,7 +729,62 @@
                 [injuryList addObject:aDict];
             }
             
-            NSDictionary *aDict = @{@"FirstName": obj.firstName, @"MiddleInitial":obj.middleInitial, @"LastName":obj.lastName, @"PrimaryPhone":obj.primaryPhone, @"AlternatePhone":obj.alternatePhone, @"Email":obj.email, @"Address1":obj.streetAddress, @"Address2":obj.apartmentNumber, @"City":obj.city, @"State":obj.state, @"Zip": obj.zip, @"AffiliationTypeId":obj.affiliationTypeID, @"GenderTypeId":obj.genderTypeID, @"PersonTypeId":obj.personTypeID, @"GuestOfFirstName":obj.guestOfFirstName, @"GuestOfMiddleInitial":obj.guestOfMiddleInitial, @"GuestOfLastName": obj.guestOfLastName, @"IsMinor":obj.minor, @"EmployeeTitle":obj.employeeTitle, @"EmployeId":employeeId, @"MemberId":memberId, @"DateOfBirth":obj.dateOfBirth, @"PersonPhoto":aStrPhoto, @"FirstAidFirstName":obj.firstAidFirstName, @"FirstAidMiddleInitial":obj.firstAidMiddleInitial, @"FirstAidLastName":obj.firstAidLastName, @"FirstAidPosition":obj.firstAidPosition, @"ActivityTypeId":obj.activityTypeID, @"EquipmentTypeId":obj.equipmentTypeID, @"ConditionId":obj.conditionTypeID, @"":obj.conditionTypeID, @"PersonSignature":strSignature, @"PersonName":obj.participantName, @"BloodbornePathogenTypeId":obj.bloodBornePathogenType, @"StaffMemberWrittenAccount":obj.staffMemberWrittenAccount, @"WasBloodOrBodilyFluidPresent":obj.wasBloodPresent, @"WasBloodCleanupRequired":obj.bloodCleanUpRequired, @"WasCaregiverExposedToBlood":obj.wasExposedToBlood, @"OccuredDuringBusinessHours":obj.duringWorkHours, @"Injuries":injuryList , @"EmergencyPersonnel" : mutArrEmergencyPersonnel};
+            
+            
+        //    @"IsMinor":(_vwPersonalInfo.btnMinor.isSelected) ? @"true" : @"false",
+            
+            
+            NSDictionary *aDict = @{
+                                    @"FirstName": obj.firstName,
+                                    @"MiddleInitial":obj.middleInitial,
+                                    @"LastName":obj.lastName,
+                                    @"PrimaryPhone":obj.primaryPhone,
+                                    @"AlternatePhone":obj.alternatePhone,
+                                    @"CareProvidedById":obj.careProvidedBy,
+                                    @"Email":obj.email,
+                                    @"Address1":obj.streetAddress,
+                                    @"Address2":obj.apartmentNumber,
+                                    @"City":obj.city,
+                                    @"State":obj.state,
+                                    @"Zip": obj.zip,
+                                    @"AffiliationTypeId":obj.affiliationTypeID,
+                                    @"GenderTypeId":@"0",
+                                    @"GenderText":obj.genderTypeID,
+                                    @"PersonTypeId":obj.personTypeID,
+                                    @"GuestOfFirstName":obj.guestOfFirstName,
+                                    @"GuestOfMiddleInitial":obj.guestOfMiddleInitial,
+                                    @"GuestOfLastName": obj.guestOfLastName,
+                                    @"IsMinor":obj.minor,
+                                    @"IsGuardianContacted":obj.guardianContacted,
+                                    @"GuardianFirstName":obj.guardianFName,
+                                    @"GuardianLastName":obj.guardianLName,
+                                    @"RelationshipToMinor":obj.guardianRelation,
+                                    @"AdditionalGuardianInformation":obj.guardianAddInfo,
+                                    @"GuardianSignature":aStrGuardianSignature,
+                                    @"EmployeeTitle":obj.employeeTitle,
+                                    @"EmployeId":employeeId,
+                                    @"MemberId":memberId,
+                                    @"DateOfBirth":obj.dateOfBirth,
+                                    @"PersonPhoto":aStrPhoto,
+                                    @"FirstAidFirstName":obj.firstAidFirstName,
+                                    @"FirstAidMiddleInitial":obj.firstAidMiddleInitial,
+                                    @"FirstAidLastName":obj.firstAidLastName,
+                                    @"FirstAidPosition":obj.firstAidPosition,
+                                    @"ActivityTypeId":obj.activityTypeID,
+                                    @"EquipmentTypeId":obj.equipmentTypeID,
+                                    @"ConditionId":obj.conditionTypeID,
+                                    @"":obj.conditionTypeID,
+                                    @"PersonSignature":strSignature,
+                                    @"PersonName":obj.participantName,
+                                    @"BloodbornePathogenTypeId":obj.bloodBornePathogenType,
+                                    @"StaffMemberWrittenAccount":obj.staffMemberWrittenAccount,
+                                    @"WasBloodOrBodilyFluidPresent":obj.wasBloodPresent,
+                                    @"WasBloodCleanupRequired":obj.bloodCleanUpRequired,
+                                    @"WasCaregiverExposedToBlood":obj.wasExposedToBlood,
+                                    @"OccuredDuringBusinessHours":obj.duringWorkHours,
+                                    @"Injuries":injuryList ,
+                                    @"EmergencyPersonnel" : mutArrEmergencyPersonnel
+                                    };
             [mutArrPerson addObject:aDict];
         }
         
@@ -682,8 +817,6 @@
 
 
 - (BOOL)syncSurveysAndForms {
-    
-
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId];
     [request setPredicate:predicate];
@@ -1013,6 +1146,8 @@
     self.intUnreadLogCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TeamLogCount"]integerValue];
     self.intFormInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"FormToalCount"]integerValue];
     self.intSurveyInProgressCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"SurveyToalCount"]integerValue];
+        self.intWorkOrderCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"WorkOrderToalCount"]integerValue];
+
         NSLog(@"%ld",[[[NSUserDefaults standardUserDefaults] valueForKey:@"TaskToalCount"]integerValue]);
     self.intTaskCount = [[[NSUserDefaults standardUserDefaults] valueForKey:@"TaskToalCount"]integerValue];
         if (self.intUnreadLogCount>0) {
@@ -1024,7 +1159,9 @@
         if (self.intSurveyInProgressCount>0) {
             self.boolUpdateSurveyInProgress  = YES;
         }
-
+        if (self.intWorkOrderCount>0) {
+            self.boolUpdateWorkOrderProgress  = YES;
+        }
         if (self.allowMemoWSCall) {
             
             [self.cvMenuGrid reloadData];
@@ -1098,6 +1235,8 @@
         self.intUnreadLogCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
         self.intFormInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
         self.intSurveyInProgressCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+        self.intWorkOrderCount = [[aDict valueForKey:@"TeamLogCount"]integerValue];
+
         if (self.intUnreadLogCount>0) {
             self.boolUpdateTeamLog  = YES;
         }
@@ -1106,6 +1245,9 @@
         }
         if (self.intSurveyInProgressCount>0) {
             self.boolUpdateSurveyInProgress  = YES;
+        }
+        if (self.intWorkOrderCount>0) {
+            self.boolUpdateWorkOrderProgress  = YES;
         }
         [self.cvMenuGrid reloadData];
         

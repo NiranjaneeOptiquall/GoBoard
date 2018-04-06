@@ -21,6 +21,7 @@
     self.isCountRemainSame = NO;
     self.isUpdateAvailable = NO;
     self.isExceedMaximumCapacity=NO;
+   // self.isEditedByOther = NO;
 }
 
 @dynamic capacity;
@@ -36,4 +37,5 @@
 @dynamic isReadyToSubmit;
 @dynamic isLocationStatusChanged;
 @dynamic isSameCountTaken;
+@dynamic isEditedByOther;
 @end

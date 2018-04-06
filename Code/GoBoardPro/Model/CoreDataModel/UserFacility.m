@@ -9,7 +9,7 @@
 #import "UserFacility.h"
 #import "UserLocation1.h"
 #import "UserPosition.h"
-
+#import "UserInventoryLocation.h"
 
 @implementation UserFacility
 
@@ -17,5 +17,5 @@
 @dynamic name;
 @dynamic locations1;
 @dynamic positions;
-
+@dynamic inventoerLocations;
 @end

@@ -18,7 +18,7 @@
         UITouchPhase phase = ((UITouch *)[allTouches anyObject]).phase;
         if (phase == UITouchPhaseBegan || phase == UITouchPhaseEnded)
               [self resetIdleTimer];
-            NSLog(@"resetIdleTimer");
+        //    NSLog(@"resetIdleTimer");
         [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"istouch"];
     }
 }
@@ -30,10 +30,10 @@
    NSTimeInterval timeInterva = [[[User currentUser]AutomaticLogoutTime] doubleValue]*60;
     //NSTimeInterval timeInterva = 30;
 
-    NSLog(@"Total Time ====%f",timeInterva);
+//    NSLog(@"Total Time ====%f",timeInterva);
     if (timeInterva > 0) {
         [[NSUserDefaults standardUserDefaults]setValue:@"yes" forKey:@"istouch"];
-        NSLog(@"TimerStarted............");
+ //       NSLog(@"TimerStarted............");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"updateAtFacility"
                                                             object:self];
         self.idleTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterva target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] ;

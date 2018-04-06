@@ -29,7 +29,9 @@
         [_lblInstruction setText:_strInstruction];
     }
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    
+}
 - (void)setUpInitials:(NSString*)aStrClientId {
     if (_guestFormType == 1) {
         // Configure for Take a Survey screen

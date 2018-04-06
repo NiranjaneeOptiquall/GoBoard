@@ -28,4 +28,5 @@
 @dynamic isSharedForm;
 @dynamic isAllowEditSharedForm;
 @dynamic publishedToFacilityPositions;
+
 @end

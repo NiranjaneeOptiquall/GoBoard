@@ -56,15 +56,21 @@ typedef enum : NSUInteger {
 #define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
 //************** PRASAD_LOCAL_API_1***************//
-//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/GoBoard.Web.Api/api/"
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.115/GoBoard.Web.Api/api/"
 
 //************** PRASAD_LOCAL_API_2***************//
-//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.149/c2cApi/api/"
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.123/c2cApi/api/"
 
-//************** KISHOR_LOCAL_API***************//
+//************** SAMIR_SIR_LOCAL_API***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.117/GoBoard.Web.Api/api/"
+
+//************** ABHIJEET_LOCAL_API***************//
 //#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.11/GoBoard.Web.Api/api/"
 
+//************** Local_&_QA_API***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"http://192.168.0.114/c2cApi/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
+//http://localhost:47654/Library/ShowFile?path=D%3A%2FWorkArea2%2FConnect2%2FDevelopment%2FGoBoard%2FApp_Data%2FStorage%2FGallery%2FC2C%2Fpenguin%20(2).jpg
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
 #define USER_FORGOT_PASSWORD        @"UserForgotPassword"
@@ -99,8 +105,9 @@ typedef enum : NSUInteger {
 #define FORM_DELETE             @"FormSetup"
 #define DAILY_LOG_TEAM               @"DailyLogTeam"
 #define EOD_SUBMIT              @"SubmitLogForEOD"
+#define MY_WORK_ORDERS                @"WorkOrder"
 
-#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", EOD_SUBMIT:@"POST",ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET",CLIENT_POSITIONS:@"GET",FORM_DELETE:@"PUT"}
+#define SERVICE_HTTP_METHOD         @{USER_LOGIN:@"GET", USER_FORGOT_PASSWORD : @"POST", USER_FACILITY:@"GET", SOP_CATEGORY:@"GET", SOP_DETAIL:@"GET", ERP_CATEGORY:@"GET", ERP_HISTORY: @"POST", INCIDENT_REPORT_SETUP : @"GET", ACCIDENT_REPORT_SETUP : @"GET", INCIDENT_REPORT_POST:@"POST", ACCIDENT_REPORT_POST:@"POST", SURVEY_SETUP:@"GET", FORM_SETUP:@"GET", SURVEY_HISTORY_POST:@"POST", FORM_HISTORY_POST:@"POST", INCIDENT_GRAPH:@"GET", UTILIZATION_GRAPH:@"GET", DAILY_MATRICS:@"GET", DAILY_LOG:@"POST", EOD_SUBMIT:@"POST",ADMIN_TASK_LIST:@"GET", HOME_SCREEN_MODULES:@"GET", APPVERSION:@"GET",CLIENT_POSITIONS:@"GET",FORM_DELETE:@"PUT",MY_WORK_ORDERS:@"GET"}
 
 
 

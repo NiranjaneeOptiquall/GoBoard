@@ -40,6 +40,12 @@
 @property (nonatomic, retain) NSString * memberId;
 @property (nonatomic, retain) NSString * middleInitial;
 @property (nonatomic, retain) NSString * minor;
+@property (nonatomic, retain) NSString * guardianContacted;
+@property (nonatomic, retain) NSString * guardianFName;
+@property (nonatomic, retain) NSString * guardianLName;
+@property (nonatomic, retain) NSString * guardianRelation;
+@property (nonatomic, retain) NSData * guardianSignature;
+@property (nonatomic, retain) NSString * guardianAddInfo;
 @property (nonatomic, retain) NSString * participantName;
 @property (nonatomic, retain) NSData * participantSignature;
 @property (nonatomic, retain) NSData * personPhoto;

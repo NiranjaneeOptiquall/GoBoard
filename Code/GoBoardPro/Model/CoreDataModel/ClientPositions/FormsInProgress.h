@@ -29,6 +29,8 @@
 @property (nonatomic,retain) NSString * inProgressFormId;
 @property (nonatomic, retain) NSString * userId;
 @property (nonatomic,retain) NSString * isAllowEditSharedForm;
+@property (nonatomic,retain) NSString * formLastAccessedBy;
+
 
 @end
 

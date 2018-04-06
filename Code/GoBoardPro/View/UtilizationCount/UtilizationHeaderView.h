@@ -18,7 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblDevider;
 @property (weak, nonatomic) IBOutlet UIButton *btnMessage;
 @property (weak, nonatomic) IBOutlet UIButton *btnCountRemainSame;
-@property (weak, nonatomic) IBOutlet UIButton *btnTapReadyToSubmit;
+//@property (weak, nonatomic) IBOutlet UIButton *btnTapReadyToSubmit;
 @property (weak, nonatomic) IBOutlet UIButton *btnClosed;
 @property (weak, nonatomic) IBOutlet UIImageView *imgReadyToSubmit;
 @property (weak, nonatomic) IBOutlet UIImageView *imgTimeExide;

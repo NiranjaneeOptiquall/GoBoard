@@ -7,7 +7,6 @@
 //
 
 #import "ThankYouViewController.h"
-
 @implementation ThankYouViewController
 
 - (void)viewDidLoad {
@@ -26,8 +25,18 @@
             [self.navigationController popToViewController:vc animated:YES];
         }
         else if ([vc isKindOfClass:[NSClassFromString(@"GuestUserFormListViewController") class]])
-            [self.navigationController popToViewController:vc animated:YES];
+        {   [self.navigationController popToViewController:vc animated:YES];
 
     }
+    else if ([vc isKindOfClass:[NSClassFromString(@"MyWorkOrdersViewController") class]])
+    {[self.navigationController popToViewController:vc animated:YES];
+    }
+    else{
+        NSArray *viewControllers = [self.navigationController viewControllers];
+        [self.navigationController popToViewController:[viewControllers objectAtIndex:viewControllers.count-3] animated:NO];
+        
+    }
+}
+    
 }
 @end

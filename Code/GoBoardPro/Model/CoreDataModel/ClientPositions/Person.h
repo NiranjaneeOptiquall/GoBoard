@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSString * employeeTitle;
 @property (nonatomic, retain) NSString * firstName;
 @property (nonatomic, retain) NSString * genderTypeID;
+@property (nonatomic, retain) NSString * guestId;
 @property (nonatomic, retain) NSString * guestOfFirstName;
 @property (nonatomic, retain) NSString * guestOfLastName;
 @property (nonatomic, retain) NSString * guestOfMiddleInitial;
@@ -41,6 +42,12 @@
 @property (nonatomic, retain) NSString * activityTypeId;
 @property (nonatomic, retain) NSString * equipmentTypeId;
 @property (nonatomic, retain) NSString * conditionId;
+@property (nonatomic, retain) NSString * guardianContacted;
+@property (nonatomic, retain) NSString * guardianFName;
+@property (nonatomic, retain) NSString * guardianLName;
+@property (nonatomic, retain) NSString * guardianRelation;
+@property (nonatomic, retain) NSData * guardianSignature;
+@property (nonatomic, retain) NSString * guardianAddInfo;
 @property (nonatomic, retain) NSSet *emergencyPersonnelIncident;
 @property (nonatomic, retain) Report *report;
 @end

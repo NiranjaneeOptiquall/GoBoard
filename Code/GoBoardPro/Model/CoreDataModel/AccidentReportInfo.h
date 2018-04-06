@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class AbdomenInjuryList, ActionTakenList, ActivityList, ArmInjuryList, BodyPartInjuryType, CareProvidedType, ConditionList, EquipmentList, GeneralInjuryType, HeadInjuryList, LeftArmInjuryList, LeftLegInjuryList, LegInjuryList, RequiredField;
+@class AbdomenInjuryList, ActionTakenList, ActivityList, ArmInjuryList, BodyPartInjuryType, CareProvidedType, ConditionList, EquipmentList, GeneralInjuryType, HeadInjuryList, LeftArmInjuryList, LeftLegInjuryList, LegInjuryList, RequiredField,GenderOptionsList;
 
 @interface AccidentReportInfo : NSManagedObject
 
@@ -46,6 +46,11 @@
 @property (nonatomic, retain) NSNumber * showEmergencyPersonnel;
 @property (nonatomic, retain) NSNumber * showEmployeeId;
 @property (nonatomic, retain) NSNumber * showGender;
+@property (nonatomic, retain) NSNumber * showGuardianContacted;
+@property (nonatomic, retain) NSNumber * showGuardianAddInfo;
+@property (nonatomic, retain) NSNumber * showGuardianName;
+@property (nonatomic, retain) NSNumber * showGuardianSignature;
+@property (nonatomic, retain) NSNumber * showRelationshipToMinor;
 @property (nonatomic, retain) NSNumber * showGuestId;
 @property (nonatomic, retain) NSNumber * showManagementFollowup;
 @property (nonatomic, retain) NSNumber * showMemberIdAndDriverLicense;
@@ -76,6 +81,8 @@
 @property (nonatomic, retain) NSSet *requiredFields;
 @property (nonatomic, retain) NSSet *rightArmInjuryList;
 @property (nonatomic, retain) NSSet *rightLegInjuryList;
+@property (nonatomic, retain) NSSet *genderOptionsList;
+
 @end
 
 @interface AccidentReportInfo (CoreDataGeneratedAccessors)
@@ -149,5 +156,10 @@
 - (void)removeRightLegInjuryListObject:(LegInjuryList *)value;
 - (void)addRightLegInjuryList:(NSSet *)values;
 - (void)removeRightLegInjuryList:(NSSet *)values;
+
+- (void)addGenderOptionsListObject:(GenderOptionsList *)value;
+- (void)removeGenderOptionsListObject:(GenderOptionsList *)value;
+- (void)addGenderOptionsList:(NSSet *)values;
+- (void)removeGenderOptionsList:(NSSet *)values;
 
 @end

@@ -9,14 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "HPGrowingTextView.h"
 #import "TeamLog.h"
-@interface TeamLogCommentsVC : UIViewController<HPGrowingTextViewDelegate>
+@interface TeamLogCommentsVC : UIViewController<HPGrowingTextViewDelegate,UIPopoverControllerDelegate>
 {
     UIView *containerView;
     HPGrowingTextView *textView;
     UILabel *lblCount;
-
+ UIPopoverController *popOver;
 }
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cnstTextViewHeight;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+//@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cnstTextViewHeight;
 @property (strong, nonatomic) IBOutlet UITextView *txtViewLog;
 @property (nonatomic,strong)TeamLog *teamLogObj;
 @property (nonatomic,strong)NSMutableArray *mutArrComments;
@@ -27,6 +28,11 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *cnstTxtViewLogHeight;
 @property (strong, nonatomic) IBOutlet UILabel *lblComments;
 @property (strong, nonatomic) IBOutlet UILabel *lblDate;
+//@property (weak, nonatomic) IBOutlet UIWebView *webViewLog;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cnstwebViewLogHeight;
+
+@property (weak, nonatomic) IBOutlet UIView *vwPopOver;
+@property (weak, nonatomic) IBOutlet UIWebView *webViewPopOver;
 
 - (IBAction)btnBackTapped:(id)sender;
 - (IBAction)btnSubmitTapped:(id)sender;

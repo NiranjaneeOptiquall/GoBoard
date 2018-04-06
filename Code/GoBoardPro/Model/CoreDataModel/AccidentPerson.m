@@ -55,5 +55,11 @@
 @dynamic accidentInfo;
 @dynamic injuryList;
 @dynamic emergency;
+@dynamic guardianContacted;
+@dynamic guardianFName;
+@dynamic guardianLName;
+@dynamic guardianRelation;
+@dynamic guardianSignature;
+@dynamic guardianAddInfo;
 
 @end

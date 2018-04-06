@@ -11,10 +11,11 @@
 #import "AccidentReportViewController.h"
 
 
-@interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate> {
+@interface PersonInformation : UIView <UITextFieldDelegate, DropDownValueDelegate,UITextViewDelegate> {
      NSArray *requiredFields;
 }
 
+@property (strong, nonatomic) SignatureView *signatureViewGaurdian;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnMember;
 @property (weak, nonatomic) IBOutlet UIButton *btnGuest;
@@ -55,7 +56,7 @@
 @property (weak, nonatomic) IBOutlet UIView *vwEmployee;
 @property (weak, nonatomic) IBOutlet UIButton *btnEmployeeOnWork;
 @property (weak, nonatomic) IBOutlet UIButton *btnEmployeeNotOnWork;
-
+@property (weak, nonatomic) IBOutlet UILabel *lblGender;
 @property (weak, nonatomic) IBOutlet UIView *vwCommon;
 @property (weak, nonatomic) IBOutlet UIView *vwGender;
 @property (weak, nonatomic) IBOutlet UIButton *btnMale;
@@ -66,6 +67,23 @@
 @property (weak, nonatomic) IBOutlet UIView *vwMinor;
 @property (weak, nonatomic) IBOutlet UIButton *btnNotMinor;
 @property (weak, nonatomic) IBOutlet UIButton *btnMinor;
+
+@property (weak, nonatomic) IBOutlet UIView *vwMinorParentInfo;
+@property (weak, nonatomic) IBOutlet UIButton *btnParentContactedYes;
+@property (weak, nonatomic) IBOutlet UIButton *btnParentContactedNo;
+
+@property (weak, nonatomic) IBOutlet UIButton *btnParentSignature;
+@property (weak, nonatomic) IBOutlet UITextField *txtParentFName;
+@property (weak, nonatomic) IBOutlet UITextField *txtParentMName;
+@property (weak, nonatomic) IBOutlet UITextField *txtParentLName;
+@property (weak, nonatomic) IBOutlet UITextField *txtRelationshipWithMinor;
+@property (weak, nonatomic) IBOutlet UITextView *txtMinorAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UILabel *lblMinorAdditionalInfo;
+@property (weak, nonatomic) IBOutlet UIView *vwParentName;
+@property (weak, nonatomic) IBOutlet UIView *vwParentRelation;
+@property (weak, nonatomic) IBOutlet UIView *vwParentAddInfo;
+@property (weak, nonatomic) IBOutlet UIView *vwParentContacted;
+
 
 @property (weak, nonatomic) IBOutlet UIView *vwActivity;
 
@@ -100,24 +118,39 @@
 @property (assign, nonatomic) BOOL isGuestIdVisible;
 @property (assign, nonatomic) BOOL isDOBVisible;
 @property (assign, nonatomic) BOOL isGenderVisible;
+@property (assign, nonatomic) BOOL isGenderMVisible;
+@property (assign, nonatomic) BOOL isGenderFVisible;
+@property (assign, nonatomic) BOOL isGenderNVisible;
+@property (assign, nonatomic) BOOL isGenderOVisible;
+
+@property (assign, nonatomic) BOOL isGuardianContactedVisible;
+@property (assign, nonatomic) BOOL isGuardianNameVisible;
+@property (assign, nonatomic) BOOL isGuardianRelationVisible;
+@property (assign, nonatomic) BOOL isGuardianSignatureVisible;
+@property (assign, nonatomic) BOOL isGuardianAddInfoVisible;
+
 @property (assign, nonatomic) BOOL isMinorVisible;
 @property (assign, nonatomic) BOOL isEmployeeIdVisible;
 @property (assign, nonatomic) BOOL isConditionsVisible;
 
 @property (assign, nonatomic) NSInteger intPersonInvolved;
 @property (assign, nonatomic) NSInteger intAffiliationType;
-@property (assign, nonatomic) NSInteger intGenderType;
+@property (assign, nonatomic) NSString * intGenderType;
 
-
+@property (assign, nonatomic) NSString * strMale;
+@property (assign, nonatomic) NSString * strFemale;
+@property (assign, nonatomic) NSString * strNutrel;
+@property (assign, nonatomic) NSString * strOther;
 
 
 @property (weak, nonatomic) AccidentReportViewController *parentVC;
-
+- (IBAction)btnParentsOrGuardiansSignatureTapped:(UIButton *)sender;
 - (IBAction)btnPersonInvolvedTapped:(UIButton *)sender;
 - (IBAction)btnAffiliationTapped:(UIButton *)sender;
 - (IBAction)btnWasEmployeeOnWorkTapped:(UIButton *)sender;
 - (IBAction)btnGenderTapped:(UIButton *)sender;
 - (IBAction)btnIsMinorTapped:(UIButton *)sender;
+- (IBAction)btnGaurdianContactedTapped:(UIButton *)sender;
 - (void)setRequiredFields:(NSArray*)fields;
 - (BOOL)isPersonalInfoValidationSuccess;
 - (void)callInitialActions;

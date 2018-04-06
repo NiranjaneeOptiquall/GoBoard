@@ -26,4 +26,5 @@
 @dynamic date;
 @dynamic userId;
 @dynamic isAllowEditSharedForm;
+@dynamic formLastAccessedBy;
 @end

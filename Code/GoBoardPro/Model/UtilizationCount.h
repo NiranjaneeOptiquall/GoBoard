@@ -22,9 +22,6 @@
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) UtilizationCount *location;
 @property (nonatomic, retain) NSOrderedSet *sublocations;
-
-
-
 @property (nonatomic, retain) NSString *originalMessage;
 @property (nonatomic, assign) NSInteger originalCount;
 @property (nonatomic, assign) BOOL isCountRemainSame;
@@ -35,7 +32,7 @@
 @property (nonatomic, assign) BOOL isSameCountTaken;
 @property (nonatomic, assign) BOOL isUpdateAvailable;
 @property (nonatomic, assign) BOOL isExceedMaximumCapacity;
-
+@property (nonatomic, assign) BOOL isEditedByOther;
 
 - (void)setInitialValues;
 @end
