@@ -57,7 +57,7 @@
     NSDateFormatter * dateformatter = [[NSDateFormatter alloc]init];
     [dateformatter setDateFormat:@"MM/dd/yyyy"];
    _txtDateSubmitted.text = [dateformatter stringFromDate:[NSDate date]];
-    
+      if (gblAppDelegate.isNetworkReachable) {
     [gblAppDelegate showActivityIndicator];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
    
@@ -205,6 +205,11 @@
     
        });
 }
+else{
+    [gblAppDelegate hideActivityIndicator];
+    alert(@"", @"We're sorry. C2IT is not currently available offline");
+}
+}
 -(void)viewSetup{
     
     CGRect frame =  _tblAssignedTo.frame;
@@ -338,13 +343,34 @@
             }
         }
     }
+      if (gblAppDelegate.isNetworkReachable) {
    [[WebSerivceCall webServiceObject]callServiceForUpdateAddNoteWorkOrder:YES orderId:_orderId statusId:statusID notesId:_txtNotes.text dateSubmited:statusDate sequence:[responceDic valueForKey:@"Sequence"] complition:^{
   
               [self performSegueWithIdentifier:@"ThankYouEditScreen" sender:nil];
 
  }];
-
+      }
+      else{
+          //WorkOrderAddNotesSubmit
+          [gblAppDelegate hideActivityIndicator];
+          WorkOrderAddNotesSubmit * workOrder = [NSEntityDescription insertNewObjectForEntityForName:@"WorkOrderAddNotesSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+          
+          workOrder.statusId = statusID;
+          workOrder.workOrderId = [NSString stringWithFormat:@"%@",_orderId];
+          workOrder.notes = _txtNotes.text;
+          workOrder.dateSubmited = statusDate;
+          workOrder.sequence = [NSString stringWithFormat:@"%@",[responceDic valueForKey:@"Sequence"]];
+          workOrder.isCompleted = [NSNumber numberWithBool:YES];
+          workOrder.userId = [[User currentUser] userId];
+          
+          [gblAppDelegate.managedObjectContext insertObject:workOrder];
+          [gblAppDelegate.managedObjectContext save:nil];
+     
+          [self performSegueWithIdentifier:@"ThankYouEditScreenOffline" sender:nil];
+          alert(@"", MSG_ADDED_TO_SYNC);
+      }
 }
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
         return arrAssignedTo.count;
@@ -365,8 +391,8 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     BOOL allowEditing = YES;
     if ([textField isEqual:_txtDateSubmitted]) {
-        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
-        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_ALL_DATE option:DATE_SELECTION_DATE_ONLY updateField:textField];
+//        DatePopOverView *datePopOver = (DatePopOverView *)[[[NSBundle mainBundle] loadNibNamed:@"DatePopOverView" owner:self options:nil] firstObject];
+//        [datePopOver showInPopOverFor:textField limit:DATE_LIMIT_ALL_DATE option:DATE_SELECTION_DATE_ONLY updateField:textField];
         allowEditing = NO;
     }
 //    else if ([textField isEqual:_txtCurrentStatus]){
@@ -403,6 +429,11 @@
     if ([segue.identifier isEqualToString:@"ThankYouEditScreen"]) {
         ThankYouViewController *thanksVC = (ThankYouViewController*)segue.destinationViewController;
         thanksVC.strMsg = @"Thank you. Your Work Order has been updated successfully.";
+        thanksVC.strBackTitle = @"Back to Work Order list";
+    }
+    else if ([segue.identifier isEqualToString:@"ThankYouEditScreenOffline"]){
+        ThankYouViewController *thanksVC = (ThankYouViewController*)segue.destinationViewController;
+        thanksVC.strMsg = MSG_ADDED_TO_SYNC;
         thanksVC.strBackTitle = @"Back to Work Order list";
     }
 }

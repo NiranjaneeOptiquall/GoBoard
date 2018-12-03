@@ -7,13 +7,21 @@
 //
 
 #import "LoginViewController.h"
+#import <WebKit/WebKit.h>
 #import "GuestFormViewController.h"
 #import "DailyLog.h"
 #import "Reachability.h"
 #import <Raygun4iOS/Raygun.h>
 #import "MyApplication.h"
 #import "MyWorkOrdersTypeViewController.h"
-@interface LoginViewController ()
+@interface LoginViewController ()<WKNavigationDelegate,WKUIDelegate>
+{
+    NSString * loginWithSSO, *strSSOUserName, *strSSOUserKey;
+    NSArray *cookies;
+}
+@property (weak, nonatomic) IBOutlet UIButton *btnSSOSignIn;
+
+//@property (weak, nonatomic) IBOutlet WKWebView *ssoWebView;
 
 @end
 
@@ -23,11 +31,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-
-
+    cookies = [[NSArray alloc]init];
+    loginWithSSO = @"NO";
+    _btnSSOSignIn.hidden = YES;
+ 
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"istouch"];
-    
+ 
     _lblGuestFormCount.hidden=YES;
     _lblGuestSurveyCount.hidden=YES;
     _lblGuestSugessionCount.hidden=YES;
@@ -58,19 +67,20 @@
     gblAppDelegate.shouldHideActivityIndicator = NO;
     [self checkAppVersions];
     gblAppDelegate.shouldHideActivityIndicator = YES;
-}
+    
 
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    loginWithSSO = @"NO";
+    [_btnUserSignIn sendActionsForControlEvents: UIControlEventTouchUpInside];
     
-     [_btnUserSignIn sendActionsForControlEvents: UIControlEventTouchUpInside];
-    
-//    if ([_isTimeExpire isEqualToString:@"yes"]) {
-//        UIApplication *myapp=[UIApplication sharedApplication];
-//        AppDelegate *mydelegatefile=(AppDelegate *)myapp.delegate;
-      //[mydelegatefile resetWindowToInitialView];
-//    }
+    //    if ([_isTimeExpire isEqualToString:@"yes"]) {
+    //        UIApplication *myapp=[UIApplication sharedApplication];
+    //        AppDelegate *mydelegatefile=(AppDelegate *)myapp.delegate;
+    //[mydelegatefile resetWindowToInitialView];
+    //    }
     
     //[self.txtUserId becomeFirstResponder];
     
@@ -81,13 +91,194 @@
     [User destroyCurrentUser];
     
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"backFromGuestUserListView"] isEqualToString:@"YES"]) {
-         [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
-     //   [_btnGuestSignIn setSelected:NO];
+        [[NSUserDefaults standardUserDefaults]setValue:@"NO" forKey:@"backFromGuestUserListView"];
+        //   [_btnGuestSignIn setSelected:NO];
         [self btnGuestSignInTapped:_btnGuestSignIn];
-       
+        
     }
-   
+    else{
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"ssoKey"] != nil) {
+        
+        if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"ssoKey"] isEqualToString:@""]) {
+            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+            NSString * url = [NSString stringWithFormat:@"Account?AKey=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"ssoKey"]];
+                 [gblAppDelegate showActivityIndicator];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+            [gblAppDelegate callWebService:url parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+     
+
+                NSLog(@"%@",response);
+                BOOL isSuperAdmin = NO;
+                
+                   if ([[NSUserDefaults standardUserDefaults] valueForKey:@"isSuperAdmin"] != nil) {
+                        isSuperAdmin = [[[NSUserDefaults standardUserDefaults] valueForKey:@"isSuperAdmin"] boolValue];
+                   }
+                if (isSuperAdmin) {
+                    if ([[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"0"]) {
+                        _btnSSOSignIn.hidden = YES;
+                    }
+                    else  if ([[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"2"]) {
+                        
+                        _btnSSOSignIn.hidden = NO;
+                    }
+                  
+                    else  {
+                        _btnSSOSignIn.hidden = YES;
+                    }
+                }else{
+                if ([[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"0"]) {
+                     _btnSSOSignIn.hidden = YES;
+                }
+                else  if ([[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"1"]) {
+                     _btnSSOSignIn.hidden = NO;
+                }
+                else  if ([[NSString stringWithFormat:@"%@",[response valueForKey:@"SSOActivationStatus"]] isEqualToString:@"2"]) {
+                    _vwCUserSignIn.hidden = YES;
+                    _btnSSOSignIn.hidden = NO;
+                    CGRect frame = _btnSSOSignIn.frame;
+                    frame.origin.y = _vwCUserSignIn.frame.origin.y + 30;
+                    _btnSSOSignIn.frame = frame;
+                }
+                else  {
+                    _btnSSOSignIn.hidden = YES;
+                }
+                }
+                [gblAppDelegate hideActivityIndicator];
+            }failure:^(NSError *error, NSDictionary *response) {
+                NSLog(@"%@",response);
+                NSLog(@"%@",error);
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                _btnSSOSignIn.hidden = YES;
+                           [gblAppDelegate hideActivityIndicator];
+            }];
+                  });
+        }
+    }
+    }
 }
+- (IBAction)btnSSOSignInTapped:(UIButton *)sender {
+    loginWithSSO = @"YES";
+    //    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+    //
+//        NSData *cookieData = [[NSUserDefaults standardUserDefaults] objectForKey:@"ssoCookies"];
+//        cookies = [NSKeyedUnarchiver unarchiveObjectWithData:cookieData];
+//
+//    NSString *cookiesString = @"";//[cookies componentsJoinedByString:@";"];
+//
+//    for (int i = 0; i < cookies.count; i++) {
+//        NSArray * dic = [cookies objectAtIndex:i];
+//        cookiesString = [NSString stringWithFormat:@"%@",[dic objectAtIndex:0] ];
+//        for (int j = 1; j <dic.count; j++) {
+//            cookiesString = [NSString stringWithFormat:@"%@,%@",cookiesString,[dic objectAtIndex:j] ];
+//        }
+//    }
+    
+
+ //   WKUserContentController* userContentController = WKUserContentController.new;
+//    WKUserScript * cookieScript = [[WKUserScript alloc]
+//                                   initWithSource: cookiesString
+//                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+    // again, use stringWithFormat: in the above line to inject your values programmatically
+//    [userContentController addUserScript:cookieScript];
+    
+    
+    WKWebViewConfiguration *theConfiguration = [[WKWebViewConfiguration alloc] init];
+   //  theConfiguration.userContentController = userContentController;
+    WKWebView *ssoWebView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:theConfiguration];
+    ssoWebView.hidden = NO;
+
+
+    ssoWebView.navigationDelegate = self;
+    ssoWebView.allowsBackForwardNavigationGestures = YES;
+    NSString * strSSOKey = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"ssoKey"]];
+    // NSString * strSSOKey = @"39D4DF38-9F0C-49AA-92D7-92E93E8C07FB";
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@AKey=%@&RS=iOS",SERVICE_URL_SSO,strSSOKey]];
+    
+    [ssoWebView loadRequest:[NSURLRequest requestWithURL:url]];
+    [self.view addSubview:ssoWebView];
+}
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+    NSLog(@"Allow all");
+    SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+    CFDataRef exceptions = SecTrustCopyExceptions (serverTrust);
+    SecTrustSetExceptions (serverTrust, exceptions);
+    CFRelease (exceptions);
+    completionHandler (NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:serverTrust]);
+}
+-(void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
+    NSLog(@"ERRRRRR: %@",error.localizedDescription);
+}
+-(void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
+    [gblAppDelegate showActivityIndicator];
+    NSLog(@"Strat to load");
+}
+-(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+    NSLog(@"finish to load");
+    [gblAppDelegate hideActivityIndicator];
+
+}
+-(void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(nonnull WKNavigationAction *)navigationAction decisionHandler:(nonnull void (^)(WKNavigationActionPolicy))decisionHandler{
+   NSLog(@"%@",navigationAction.request.URL.absoluteString);
+    NSString * urlString = navigationAction.request.URL.absoluteString;
+    NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
+    if ([urlString containsString:@"/IOSLogin?"]) {
+        NSArray *urlComponents = [urlString componentsSeparatedByString:@"&"];
+        NSLog(@"%@",urlComponents);
+        for (NSString *keyValuePair in urlComponents)
+        {
+            NSArray *pairComponents = [keyValuePair componentsSeparatedByString:@"="];
+            NSString *key = [[pairComponents firstObject] stringByRemovingPercentEncoding];
+            NSString *value = [[pairComponents lastObject] stringByRemovingPercentEncoding];
+            NSLog(@"%@ : %@",key,value);
+           [queryStringDictionary setObject:value forKey:key];
+     
+        }
+        for (NSString *key in queryStringDictionary) {
+            id value = queryStringDictionary[key];
+            NSLog(@"Value: %@ for key: %@", value, key);
+            if ([key containsString:@"IOSLogin?UN"]) {
+                strSSOUserName = [NSString stringWithFormat:@"%@",value ];
+            }
+        }
+        strSSOUserKey = [NSString stringWithFormat:@"%@",[queryStringDictionary valueForKey:@"UKey"] ];
+        [self btnSignInTapped:_btnSSOSignIn];
+        webView.hidden = YES;
+        [webView stopLoading];
+    }
+ 
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+-(void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+//    NSLog(@"%@",navigationResponse);
+    NSHTTPURLResponse * response = (NSHTTPURLResponse *)navigationResponse.response;
+//    NSLog(@"%@",response);
+//    NSDictionary *dictionary1 = [(NSHTTPURLResponse*)response allHeaderFields];
+//    NSLog(@"%@",dictionary1);
+//    NSDictionary *dictionary2 = [NSDictionary dictionaryWithObjects:[dictionary1 allValues] forKeys:[dictionary1 allKeys]];
+//    NSLog(@"%@",dictionary2);
+//
+    
+    
+//    cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:[NSURL URLWithString:@""]];
+//     NSLog(@"%@",cookies);
+//    if (cookies.count != 0) {
+//        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:cookies];
+//        [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"ssoCookies"];
+//    }
+    
+    
+//    for (NSHTTPCookie *cookie in cookies) {
+//        // Do something with the cookie
+//        NSLog(@"%@",cookie);
+//
+//    }
+    
+    
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -228,25 +419,13 @@
         
         [arrOfPosition addObject:p.value];
     }
-    //  int clientId, int? userId, int facilityId,  string positionIds,bool isAdmin
-  //  NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?clientId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"clientId"],[[User currentUser]userId],isAdmin];
-    
-    
-    
-    
-     NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?accountId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@&formAccess=False&surveyAccess=False&logAccess=False&taskAccess=False&memoAccess=False",[[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"],[[User currentUser]userId],isAdmin];
-    
- //   NSString *strUrl =[NSString stringWithFormat:@"%@?accountId=%@&userId=%@&facilityId=%@&positionIds=%@&locationIds=%@&isAdmin=%@&formAccess=%@&surveyAccess=%@&logAccess=%@&taskAccess=%@&memoAccess=%@",HOME_SCREEN_MODULES,[[User currentUser] accountId],[[User currentUser]userId],[[User currentUser]selectedFacility].value,aPositionId,strLocationIds,isAdmin,strForm,strSurvey,strTeamLog,strTask,strMemo];
 
-    
+     NSString *strUrl =[NSString stringWithFormat:@"HomeScreenModules?accountId=%@&userId=%@&facilityId=0&positionIds=0&locationIds=0&isAdmin=%@&formAccess=False&surveyAccess=False&logAccess=False&taskAccess=False&memoAccess=False",[[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"],[[User currentUser]userId],isAdmin];
+
     [gblAppDelegate callWebService:strUrl parameters:nil httpMethod:@"GET" complition:^(NSDictionary *response) {
         
         NSLog(@"%@",response);
-//        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"FormInprogressCount"]integerValue] forKey:@"GuestFormToalCount"];
-//        [[NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"SurveyInprogressCount"]integerValue] forKey:@"GuestSurveyToalCount"];
-//        [ [NSUserDefaults standardUserDefaults]setInteger:[[[response valueForKey:@"DashboardCount"] valueForKey:@"TeamLogCount"]integerValue] forKey:@"GuestSurveyToalCount"];
-        
-        
+   
         isWSComplete = YES;
         if (complition)
             complition(response);
@@ -265,8 +444,10 @@
     
 }
 - (IBAction)btnSignInTapped:(id)sender {
-    
-    NSDate *methodStart = [NSDate date];
+    NSString * urlStr = @"";
+     NSDate *methodStart = [NSDate date];
+    if ([loginWithSSO isEqualToString:@"NO"]) {
+
     _btnSignInTapped.userInteractionEnabled=NO;
     if ([_txtUserId isTextFieldBlank]) {
         alert(@"Login", @"Please enter a Username");
@@ -280,19 +461,24 @@
         alert(@"Login", @"Password must be between 8-16 characters with the use of both upper- and lower-case letters (case sensitivity) and inclusion of one or more numerical digits");
         return;
     }
- //   NSString * pwString = _txtPassword.text;
- //   pwString = [pwString stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
-   // pwString = [pwString stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-    //NSLog(@"%@",pwString);
-    
-    NSDictionary * aDic = @{@"UserCredentials" :
-                                                        @{
-                                                            @"Username":_txtUserId.trimText,
-                                                            @"Password":_txtPassword.text
-                                                            }
-                                            };
+       
+
+//
+//    NSDictionary * aDic = @{@"UserCredentials" :
+//                                                        @{
+//                                                            @"Username":_txtUserId.trimText,
+//                                                            @"Password":_txtPassword.text
+//                                                            }
+//                                            };
+        
+        urlStr = [NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text];
+    }
+    else{
+        NSString * accountID = [[NSUserDefaults standardUserDefaults] valueForKey:@"ssoKey"];
+          urlStr = [NSString stringWithFormat:@"%@?userName=%@&UKey=%@&AKey=%@",USER_LOGIN,strSSOUserName,strSSOUserKey,accountID];
+    }
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-     [gblAppDelegate callWebService:[NSString stringWithFormat:@"%@?userName=%@&password=%@",USER_LOGIN,_txtUserId.trimText, _txtPassword.text] parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
+     [gblAppDelegate callWebService:urlStr parameters:nil httpMethod:[SERVICE_HTTP_METHOD objectForKey:USER_LOGIN] complition:^(NSDictionary *response) {
      // [gblAppDelegate callWebService:[NSString stringWithFormat:@"TestUser/AuthenticateUser"] parameters:aDic httpMethod:@"POST" complition:^(NSDictionary *response) {
         NSLog(@"%@",response);
         _btnSignInTapped.userInteractionEnabled=YES;
@@ -318,11 +504,19 @@
             currentUser.AutomaticLogoutTime = nil;
             currentUser.userStatusCheck = nil;
             currentUser.username = self.txtUserId.text;
-            
+          //  currentUser.ssoKey = @"";
             currentUser.AutomaticLogoutTime = [NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]];
+           
+            [[NSUserDefaults standardUserDefaults] setValue:[response objectForKey:@"IsSuperAdmin"] forKey:@"isSuperAdmin"];
+            
+            [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%@",[response objectForKey:@"AccountKey"]] forKey:@"ssoKey"];
+    //        [[NSUserDefaults standardUserDefaults] setValue:@"39D4DF38-9F0C-49AA-92D7-92E93E8C07FB" forKey:@"ssoKey"];
+
+            
+          //  [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%ld",(long)[[response objectForKey:@"AccountId"] integerValue]] forKey:@"accountId"];
             
             [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"isBack"];
-
+            [[NSUserDefaults standardUserDefaults]setValue:@"no" forKey:@"fromSugestionViewC"];
             
             NSLog(@"Automatic Logout Time======%@",[NSString stringWithFormat:@"%@",[response objectForKey:@"AutomaticLogoutTime"]]);
             currentUser.firstName = [response objectForKey:@"FirstName"];

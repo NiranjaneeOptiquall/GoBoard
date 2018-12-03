@@ -28,6 +28,8 @@
 @property (nonatomic, retain) NSString * inProgressCount;
 @property (nonatomic, retain) NSString * isAllowInProgress;
 @property (nonatomic, retain) NSString * inProgressFormId;
+@property (nonatomic, retain) NSString * isShowResponses;
+@property (nonatomic, retain) NSString * isAllowEditsToResponses;
 
 @end
 

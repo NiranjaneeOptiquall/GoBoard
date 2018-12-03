@@ -31,6 +31,10 @@
 @property (nonatomic, retain) NSDate * expirationTime;
 @property (nonatomic, retain) NSSet *responseTypeValues;
 @property (nonatomic, retain) NSString * taskType;
+@property (nonatomic, retain) NSNumber * isHeighPriority;
+@property (nonatomic, retain) NSString * colorCode;
+@property (nonatomic, retain) NSNumber * beforeTaskTime;
+@property (nonatomic, retain) NSNumber * isShow;
 
 @end
 

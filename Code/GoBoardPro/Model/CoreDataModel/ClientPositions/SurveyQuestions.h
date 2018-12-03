@@ -22,6 +22,7 @@
 @property (nonatomic, retain) NSString * existingResponseIds;
 @property (nonatomic, retain) NSString * detailImageVideoText;
 @property (nonatomic, retain) NSNumber * sequence;
+@property (nonatomic, retain) NSNumber * isShowOnForm;
 @property (nonatomic, retain) NSSet *responseList;
 @property (nonatomic, retain) SurveyList *survey;
 @property (nonatomic, retain) SurveyInProgress *surveyInProgressList;
@@ -29,6 +30,9 @@
 @property (nonatomic, retain) FormsList *formList;
 @property (nonatomic, retain) FormsInProgress *formInProgressList;
 
+
+@property (nonatomic, retain) NSNumber * isSkipLogic;
+@property (nonatomic, retain) NSNumber * isSkipLogicQuestionShow;
 @end
 
 @interface SurveyQuestions (CoreDataGeneratedAccessors)

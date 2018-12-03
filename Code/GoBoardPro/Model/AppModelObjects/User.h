@@ -36,6 +36,7 @@
 @property (strong, nonatomic) UserFacility *selectedFacility;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedLocations;
 @property (strong, nonatomic) NSMutableArray *mutArrSelectedPositions;
+@property (assign, nonatomic) NSString * ssoKey;
 + (User *)currentUser;
 + (void)destroyCurrentUser;
 + (BOOL)checkUserExist;

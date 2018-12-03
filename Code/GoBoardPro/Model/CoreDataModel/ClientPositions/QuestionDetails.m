@@ -23,6 +23,7 @@
 @dynamic responseType;
 @dynamic responseList;
 @dynamic sequence;
-
-
+@dynamic isSkipLogic;
+@dynamic isSkipLogicQuestionShow;
+@dynamic isShowOnForm;
 @end

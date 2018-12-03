@@ -24,4 +24,7 @@
 @dynamic categoryId;
 @dynamic inProgressCount;
 @dynamic isAllowInProgress;
+@dynamic isShowResponses;
+@dynamic isAllowEditsToResponses;
+
 @end

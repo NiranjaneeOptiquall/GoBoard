@@ -15,5 +15,6 @@
 @dynamic value;
 @dynamic sequence;
 @dynamic question;
+@dynamic parentQuestionId;
 
 @end

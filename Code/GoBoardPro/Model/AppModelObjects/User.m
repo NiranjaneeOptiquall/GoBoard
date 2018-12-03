@@ -51,7 +51,7 @@ static User *user = nil;
     user.selectedFacility = nil;
     user.username = nil;
     user.userStatusCheck = nil;
-
+    user.ssoKey = nil;
     user.AutomaticLogoutTime = nil;
     
     user.username=@"";
@@ -68,6 +68,7 @@ static User *user = nil;
     user.accountName = @"";
     user.termsAndConditions = @"";
     user.AutomaticLogoutTime = @"";
+    user.ssoKey = @"";
 }
 
 + (BOOL)checkUserExist {

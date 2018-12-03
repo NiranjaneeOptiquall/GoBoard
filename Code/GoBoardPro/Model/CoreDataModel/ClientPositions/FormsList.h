@@ -26,6 +26,9 @@
 @property (nonatomic, retain) NSString * categorySequence;
 @property (nonatomic, retain) NSString * inProgressCount;
 @property (nonatomic, retain) NSString * isAllowInProgress;
+@property (nonatomic, retain) NSString * isShowResponses;
+@property (nonatomic, retain) NSString * isAllowEditsToResponses;
+
 @property (assign, nonatomic) BOOL isSharedForm;
 @property (assign, nonatomic) BOOL isAllowEditSharedForm;
 //@property (nonatomic, retain) NSString * isAllowEditSharedForm;

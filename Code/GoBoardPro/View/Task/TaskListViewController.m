@@ -19,6 +19,7 @@
 #import "DynamicFormsViewController.h"
 #import "ERPDetailViewController.h"
 #import "EmergencyResponseViewController.h"
+#import <CoreText/CoreText.h>
 
 @interface TaskListViewController ()<UIWebViewDelegate>
 {
@@ -99,13 +100,55 @@
         
         //NSDate *dateSourceTemp = [calendar dateBySettingHour:0 minute:0 second:0 ofDate:destinationDate options:0];
         
-        NSDate* dateSource = [[NSDate alloc] initWithTimeInterval:interval sinceDate:dateSourceTemp];
+       // NSDate* dateSource = [[NSDate alloc] initWithTimeInterval:interval sinceDate:dateSourceTemp];
         
-        //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
-        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime >= %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
+//        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"taskDateTime >= %@ AND taskDateTime < %@", dateSource , [destinationDate dateByAddingTimeInterval:60*60*2]];
+//
+//        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
         
-        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+        NSMutableArray * mutArrTaskUptoNxHrs = [[NSMutableArray alloc]init];
+        
+        mutArrTaskUptoNxHrs = [[NSMutableArray alloc]initWithArray:mutArrTaskList];
+        
+        for (int i = 0; i < mutArrTaskUptoNxHrs.count; i++) {
+            NSTimeInterval interval = 7200;
+            if ([[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] isKindOfClass:[NSNull class]]) {
+                
+            }
+            else{
+                int time = [[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] intValue];
+                interval = time;
+            }
+            
+            TaskList *task = [mutArrTaskUptoNxHrs objectAtIndex:i];
+            
+            
+            NSComparisonResult result1 = [[destinationDate dateByAddingTimeInterval:interval] compare:task.taskDateTime];
+            NSComparisonResult result2 = [dateSourceTemp compare:task.taskDateTime];
+            
+//            if (result1 == NSOrderedDescending && result2 == NSOrderedAscending || NSOrderedSame) {
+            if (result1 == NSOrderedDescending) {
+                    NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                    
+                    [tempDic setValue:[NSNumber numberWithBool:YES] forKey:@"isShow"];
+                    
+                    [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+
+            }
+            else{
+                NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                
+                [tempDic setValue:[NSNumber numberWithBool:NO] forKey:@"isShow"];
+                
+                [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+            }
+            
+        }
+        mutArrTaskUptoNx2Hrs = [NSMutableArray new];
+        
+        NSPredicate *predicateDate = [NSPredicate predicateWithFormat:@"isShow == 1"];
+        mutArrTaskUptoNx2Hrs = [NSMutableArray arrayWithArray:[mutArrTaskUptoNxHrs filteredArrayUsingPredicate:predicateDate]];
         
         mutArrFilteredTaskList =  mutArrTaskUptoNx2Hrs;
     }
@@ -125,11 +168,62 @@
         
         NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
         
-        //   NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
         
-        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
+//
+//        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
+//
+//        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
         
-        mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+        NSMutableArray * mutArrTaskUptoNxHrs = [[NSMutableArray alloc]init];
+        
+        mutArrTaskUptoNxHrs = [[NSMutableArray alloc]initWithArray:mutArrTaskList];
+        
+        for (int i = 0; i < mutArrTaskUptoNxHrs.count; i++) {
+            NSTimeInterval interval = 7200;
+            if ([[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] isKindOfClass:[NSNull class]]) {
+                
+            }
+            else{
+                int time = [[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] intValue];
+                interval = time;
+            }
+            
+            TaskList *task = [mutArrTaskUptoNxHrs objectAtIndex:i];
+            
+            
+            NSComparisonResult result1 = [[destinationDate dateByAddingTimeInterval:interval] compare:task.taskDateTime];
+            NSComparisonResult result3 = [destinationDate compare:task.expirationTime];
+            
+            if (result1 == NSOrderedDescending || result1 == NSOrderedSame) {
+                if (result3 == NSOrderedAscending || result3 == NSOrderedSame) {
+                    NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                    
+                    [tempDic setValue:[NSNumber numberWithBool:YES] forKey:@"isShow"];
+                    
+                    [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+                }
+                else{
+                    NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                    
+                    [tempDic setValue:[NSNumber numberWithBool:NO] forKey:@"isShow"];
+                    
+                    [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+                }
+            }
+            else{
+                NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                
+                [tempDic setValue:[NSNumber numberWithBool:NO] forKey:@"isShow"];
+                
+                [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+            }
+            
+        }
+        mutArrTaskUptoNx2Hrs = [NSMutableArray new];
+        
+        NSPredicate *predicateDate = [NSPredicate predicateWithFormat:@"isShow == 1"];
+        mutArrTaskUptoNx2Hrs = [NSMutableArray arrayWithArray:[mutArrTaskUptoNxHrs filteredArrayUsingPredicate:predicateDate]];
+        
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
         
@@ -174,6 +268,7 @@
     if ([mutArrPostTask count] > 0) {
         [gblAppDelegate.managedObjectContext save:nil];
         NSDictionary *aDict = @{@"UserId":[[User currentUser]userId], @"Tasks":mutArrPostTask};
+       
         [gblAppDelegate callWebService:TASK parameters:aDict httpMethod:@"POST" complition:^(NSDictionary *response) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[gblAppDelegate appName] message:@"Task has been submitted successfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
             if (showCount) {
@@ -510,11 +605,67 @@
     
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
     
-    //  NSLog(@"taskDateTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]);
+  //  NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]];
+
     
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"expirationTime > %@ AND taskDateTime < %@", destinationDate , [destinationDate dateByAddingTimeInterval:60*60*2]]; // AND taskDateTime > %@,destinationDate
+//    mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
     
-    mutArrTaskUptoNx2Hrs = [mutArrTaskList filteredArrayUsingPredicate:predicate1];
+    
+    NSMutableArray * mutArrTaskUptoNxHrs = [[NSMutableArray alloc]init];
+    
+    mutArrTaskUptoNxHrs = [[NSMutableArray alloc]initWithArray:mutArrTaskList];
+    
+    for (int i = 0; i < mutArrTaskUptoNxHrs.count; i++) {
+        NSTimeInterval interval = 7200;
+        if ([[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] isKindOfClass:[NSNull class]]) {
+            
+        }
+        else{
+            int time = [[[mutArrTaskUptoNxHrs valueForKey:@"beforeTaskTime"] objectAtIndex:i] intValue];
+         interval = time;
+        }
+        
+            TaskList *task = [mutArrTaskUptoNxHrs objectAtIndex:i];
+      
+        
+            NSComparisonResult result1 = [[destinationDate dateByAddingTimeInterval:interval] compare:task.taskDateTime];
+         NSComparisonResult result3 = [destinationDate compare:task.expirationTime];
+        
+        if (result1 == NSOrderedDescending || result1 == NSOrderedSame) {
+            if (result3 == NSOrderedAscending || result3 == NSOrderedSame) {
+                NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                
+                [tempDic setValue:[NSNumber numberWithBool:YES] forKey:@"isShow"];
+                
+                [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+            }
+            else{
+                NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+                
+                [tempDic setValue:[NSNumber numberWithBool:NO] forKey:@"isShow"];
+                
+                [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+            }
+        }
+        else{
+            NSMutableDictionary * tempDic = [mutArrTaskUptoNxHrs objectAtIndex:i];
+            
+            [tempDic setValue:[NSNumber numberWithBool:NO] forKey:@"isShow"];
+            
+            [mutArrTaskUptoNxHrs replaceObjectAtIndex:i withObject:tempDic];
+        }
+
+    }
+    mutArrTaskUptoNx2Hrs = [NSMutableArray new];
+
+        NSPredicate *predicateDate = [NSPredicate predicateWithFormat:@"isShow == 1"];
+        mutArrTaskUptoNx2Hrs = [NSMutableArray arrayWithArray:[mutArrTaskUptoNxHrs filteredArrayUsingPredicate:predicateDate]];
+
+
+    
+    //    mutArrTaskUptoNx2Hrs = mutArrTaskUptoNxHrs;
+    
+
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isCompleted == NO"];
     mutArrFilteredTaskList = [NSMutableArray arrayWithArray:[mutArrTaskUptoNx2Hrs filteredArrayUsingPredicate:predicate]];
@@ -548,7 +699,8 @@
     else {
         [aCell setBackgroundColor:[UIColor colorWithRed:241.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0]];
     }
-    [aCell.imageOneTimeTask setHidden:YES];
+     // [aCell.imageHeighPriority setHidden:YES];
+   
     [aCell.txtTemp setHidden:YES];
     [aCell.btnNo setHidden:YES];
     [aCell.btnYes setHidden:YES];
@@ -561,7 +713,12 @@
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     BOOL isCompleted = [task.isCompleted boolValue];
     [aCell.btnKeyboardIcon addTarget:self action:@selector(btnKeyboardIconTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
+    if (![task.isHeighPriority boolValue]) {
+         [aCell.imageHeighPriority setHidden:YES];
+    }
+    else{
+            [aCell.imageHeighPriority setHidden:NO];
+    }
     
     NSDate* sourceDate = task.taskDateTime;
     
@@ -573,17 +730,13 @@
     NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
     NSDate* currentDate = [[NSDate alloc]initWithTimeInterval:-interval sinceDate:[NSDate date]]; //Interval is assign by '-' to convert it into EDT Time.
     
-    //    NSTimeInterval interval1 = destinationGMTOffset - sourceGMTOffset ;
-    //    NSDate* destinationDate1 = [[NSDate alloc] initWithTimeInterval:interval1 sinceDate:sourceDate];
-    //    NSDate* currentDate1 = [[NSDate alloc]initWithTimeInterval:interval1 sinceDate:[NSDate date]];
-    
     NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
     [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
     [aFormatter setDateFormat:@"hh:mm a"];
     NSLog(@"String %@", [aFormatter stringFromDate:destinationDate]);
-    NSString *aStrTaskName = [NSString stringWithFormat:@"%@ %@", [aFormatter stringFromDate:destinationDate],task.name];
-    
-    
+   
+   NSString *aStrTaskName = [NSString stringWithFormat:@"%@  %@", [aFormatter stringFromDate:destinationDate],task.name];
+
     [aCell.imvTextBG setHidden:YES];
     if (isCompleted) {
         if ([task.responseType isEqualToString:@"checkbox"]) {
@@ -626,9 +779,13 @@
         [attributeString addAttribute:NSStrikethroughStyleAttributeName
                                 value:@2
                                 range:NSMakeRange(0, [attributeString length])];
-        
+    
+      
         [aCell.lblTask setAttributedText:attributeString];
-        [aCell.lblTask setTextColor:[UIColor lightGrayColor]];
+          [aCell.lblTask setTextColor:[UIColor colorWithHexCodeString:task.colorCode]];
+        
+
+        
         //  [aCell.btnKeyboardIcon setHidden:YES];
         //#warning edited by Imaginovation
         //#warning btnkeyboard icon gray here
@@ -640,9 +797,20 @@
         //#warning edited by Imaginovation
         [aCell.btnKeyboardIcon setImage:[UIImage imageNamed:@"keyboard_icon@2x.png"] forState:UIControlStateNormal];
         
+      //  NSAttributedString * str = [[NSAttributedString alloc]initWithString:aStrTaskName];
         [aCell.lblTask setAttributedText:nil];
         [aCell.lblTask setText:aStrTaskName];
-        [aCell.lblTask setTextColor:[UIColor darkGrayColor]];
+        [aCell.lblTask setTextColor:[UIColor colorWithHexCodeString:task.colorCode]];
+        
+//        NSMutableAttributedString *text =
+//        [[NSMutableAttributedString alloc]
+//         initWithAttributedString: _lblTask.attributedText];
+//        NSRange range = [aStrTaskName rangeOfString:task.name];
+//        [text addAttribute:NSForegroundColorAttributeName
+//                     value:[UIColor colorWithHexCodeString:task.colorCode]
+//                     range:range];
+//        [_lblTask setAttributedText: text];
+        
         aCell.btnKeyboardIcon.hidden = NO;
         
         if ([task.responseType isEqualToString:@"checkbox"]) {
@@ -738,11 +906,19 @@
                                     value:@2
                                     range:NSMakeRange(0, [attributeString length])];
             
-            
-            
+
+         
             [aCell.lblTask setAttributedText:attributeString];
-            [aCell.lblTask setTextColor:[UIColor redColor]];
+               [aCell.lblTask setTextColor:[UIColor redColor]];
             [aCell.btnKeyboardIcon setHidden:YES];
+            
+//                NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithAttributedString:_lblTask.attributedText];
+//                NSRange range = [aStrTaskName rangeOfString:task.name];
+//                [text addAttribute:NSForegroundColorAttributeName
+//                                        value:[UIColor redColor]
+//                                        range:range];
+//
+//                      [_lblTask setAttributedText: text];
             
         }else if ([currentDate compare:sourceDate] == NSOrderedAscending || NSOrderedSame){
             NSLog(@"Task Is not Expire and will occur after words");
@@ -753,37 +929,68 @@
         [aCell.imageOneTimeTask setHidden:NO];
         
     }
+    else{
+        [aCell.imageOneTimeTask setHidden:YES];
+    }
     [aCell.lblFarenhite setTextColor:aCell.txtTemp.textColor];
     [aCell.lblFarenhite setHidden:aCell.txtTemp.isHidden];
     UIView *aView = [aCell.contentView viewWithTag:4];
     CGRect frame = aView.frame;
     frame.origin.y = aCell.frame.size.height - 3;
     [aView setFrame:frame];
-    
+
     return aCell;
 }
 
 //--------- changes by chetan kasundra -------------
 //--------- show the description in full area ------------
 
+-(NSString*)FormatedDate:(NSDate*)date{
+    NSDate* sourceDate = date;
+    
+    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:[NSDate date]];
+    NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+    NSTimeInterval interval = sourceGMTOffset - destinationGMTOffset ;
+    NSDate* destinationDate = [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+    NSDateFormatter *aFormatter = [[NSDateFormatter alloc] init];
+    [aFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    [aFormatter setDateFormat:@"hh:mm a"];
+    NSLog(@"String %@", [aFormatter stringFromDate:destinationDate]);
+    
+    return [aFormatter stringFromDate:destinationDate];
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     TaskList *task = [mutArrFilteredTaskList objectAtIndex:indexPath.row];
     
     [_lblDetailTitle setText:task.name];
+    
+    NSDate* sourceDate = task.taskDateTime;
+    NSDate * endDate = task.expirationTime;
+    NSString * strTime = [NSString stringWithFormat:@"From : %@   To : %@",[self  FormatedDate:sourceDate],[self  FormatedDate:endDate]];
+    [_lblStartAndEndTime setText:strTime];
     
     float height=[task.desc boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.height;
     
     
     float heightTaskTitle=[task.name boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblDetailTitle.font} context:nil].size.height;
     
+       float heightTaskTime=[strTime boundingRectWithSize:CGSizeMake(470, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblStartAndEndTime.font} context:nil].size.height;
+    
     CGRect frameTitle = _lblDetailTitle.frame;
     frameTitle.size.height = heightTaskTitle;
     _lblDetailTitle.frame = frameTitle;
     [_lblDetailTitle setText:task.name];
     
+    CGRect frameTime = _lblStartAndEndTime.frame;
+     frameTime.origin.y = heightTaskTitle + 10;
+    frameTime.size.height = heightTaskTime;
+    _lblStartAndEndTime.frame = frameTime;
+    [_lblStartAndEndTime setText:strTime];
     
     CGRect frame = _lblDetailDesc.frame;
-    frame.origin.y = heightTaskTitle + 10;
+    frame.origin.y = _lblStartAndEndTime.frame.origin.y +_lblStartAndEndTime.frame.size.height + 10;
     frame.size.height = height;
     _lblDetailDesc.frame = frame;
     [_lblDetailDesc setText:task.desc];
@@ -791,7 +998,7 @@
     
     [_webPopOverMessage loadHTMLString:task.desc baseURL:nil];
     frame = _webPopOverMessage.frame;
-    frame.origin.y = heightTaskTitle + 10;
+    frame.origin.y = _lblStartAndEndTime.frame.origin.y +_lblStartAndEndTime.frame.size.height + 10;
     frame.size.height = _webPopOverMessage.scrollView.contentSize.height;
 
     

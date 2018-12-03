@@ -528,8 +528,7 @@
         [_lblNoRecords setHidden:NO];
     }
         [gblAppDelegate hideActivityIndicator];
-  
-
+    
 }
 
 -(void)getFacilityList

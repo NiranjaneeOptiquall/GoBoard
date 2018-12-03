@@ -19,6 +19,14 @@
 #import "EmergencyPersonnel.h"
 #import "Witness.h"
 #import "AccidentReportSubmit.h"
+#import "WorkOrderNewEquipmentInventory.h"
+#import "WorkOrderCreateNewSubmit.h"
+#import "WorkOrderCreatedInProgressSubmit.h"
+#import "WorkOrderWithFollowupSubmit.h"
+#import "WorkOrderInventoryPartsUsed.h"
+#import "WorkOrderFollowup.h"
+#import "WorkOrderFollowupLogsNew.h"
+#import "WorkOrderAddNotesSubmit.h"
 #import "AccidentPerson.h"
 #import "Emergency.h"
 #import "InjuryDetail.h"
@@ -344,6 +352,26 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
     
+    request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderCreateNewSubmit"];
+    //  [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+
+    request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderCreatedInProgressSubmit"];
+    //  [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderWithFollowupSubmit"];
+    //  [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderAddNotesSubmit"];
+    //  [request setPredicate:[NSPredicate predicateWithFormat:@"isCompleted == 1"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1",[User currentUser].userId]];
+    syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
+    
     request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
     [request setPredicate:[NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId]];
     syncCount += [gblAppDelegate.managedObjectContext countForFetchRequest:request error:nil];
@@ -375,6 +403,16 @@
         isSyncError = [self syncIncidentReport];
     if (!isSyncError)
         isSyncError = [self syncAccidentReport];
+    if (!isSyncError)
+        isSyncError = [self syncWorkOrderNewEquipmentInventory];
+    if (!isSyncError)
+        isSyncError = [self syncWorkOrderNewCreate];
+    if (!isSyncError)
+        isSyncError = [self syncWorkOrderEditInProgress];
+    if (!isSyncError)
+        isSyncError = [self syncWorkOrderWithFollowupSubmit];
+    if (!isSyncError)
+        isSyncError = [self syncWorkOrderAddNotesSubmit];
     if (!isSyncError)
         isSyncError = [self syncSurveysAndForms];
     if (!isSyncError)
@@ -814,8 +852,474 @@
     [gblAppDelegate.managedObjectContext save:nil];
     return isErrorOccurred;
 }
+-(BOOL)syncWorkOrderNewEquipmentInventory{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderNewEquipmentInventory"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (WorkOrderNewEquipmentInventory *workOrder in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSDictionary *paraDic = @{
+                                  @"SerialId":workOrder.serialId,
+                                  @"InventorySetupId":workOrder.inventorySetupId,
+                                  @"InventoryManufactureId":workOrder.inventoryManufactureId,
+                                  @"InventoryBrandId":workOrder.inventoryBrandId,
+                                  @"InventoryModelId":workOrder.inventoryModelId,
+                                  @"InventoryTypeId":workOrder.inventoryTypeId,
+                                  @"InventoryCategoryId":workOrder.inventoryCategoryId,
+                                  @"EquipmentId":workOrder.equipmentId,
+                                  @"EquipmentName":workOrder.equipmentName,
+                                  @"UnitQuantity":@"1",
+                                  @"ItemPerUnit":@"1",
+                                  @"ItemPerUnitCost":@"0",
+                                  @"TotalQuantity":@"1"
+                                  };
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        NSString * strWebServiceName = [NSString stringWithFormat:@"%@/AddInvenoryToSetup?accountId=%@&userId=%@",MY_WORK_ORDERS,aStrAccountId,strUserId];
+        
+        [gblAppDelegate callWebService:strWebServiceName parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:workOrder];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
 
+- (BOOL)syncWorkOrderNewCreate{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderCreateNewSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (WorkOrderCreateNewSubmit *workOrder in aryOfflineData) {
+        isSingleDataSaved = NO;
+        NSDictionary *paraDic = @{
+                                @"Id":@"0",
+                                @"SerialId":workOrder.serialId,
+                                @"WorkOrderSetUpId":@"0",
+                                @"WorkOrderDate":workOrder.workOrderDate,
+                                @"WorkOrderTime":workOrder.workOrderTime,
+                                @"DescriptionOfIssue":workOrder.descriptionOfIssue,
+                                @"AdditionalInformation":workOrder.additionalInformation,
+                                @"StatusId":workOrder.statusId,
+                                @"EquipmentActionId":workOrder.equipmentActionId,
+                                @"EquipmentNatureId":workOrder.equipmentNatureId,
+                                @"GeneralActionId":workOrder.generalActionId,
+                                @"GeneralNatureId":workOrder.generalNatureId,
+                                @"OtherGeneralNature":workOrder.otherGeneralNature,
+                                @"OtherEquipmentNature":workOrder.otherEquipmentNature,
+                                @"MaintenanceType":workOrder.maintenanceType,
+                                @"InventorySetupId":workOrder.inventorySetupId,
+                                @"InventoryManufactureId":workOrder.inventoryManufactureId,
+                                @"InventoryBrandId":workOrder.inventoryBrandId,
+                                @"InventoryModelId":workOrder.inventoryModelId,
+                                @"InventoryLocationId":workOrder.inventoryLocationId,
+                                @"InventoryTypeId":workOrder.inventoryTypeId,
+                                @"InventoryCategoryId":workOrder.inventoryCategoryId,
+                                @"IsNotificationField1Selected":workOrder.isNotificationField1Selected,
+                                @"IsNotificationField2Selected":workOrder.isNotificationField2Selected,
+                                @"IsNotificationField3Selected":workOrder.isNotificationField3Selected,
+                                @"IsNotificationField4Selected":workOrder.isNotificationField4Selected,
+                                @"EquipmentId":workOrder.equipmentId,
+                                @"EquipmentName":workOrder.equipmentName,
+                                @"IsPhotoExists":workOrder.isPhotoExists,
+                                @"IsVideoExist":workOrder.isVideoExist,
+                                @"Photo1":workOrder.photo1,
+                                @"Photo2":workOrder.photo2,
+                                @"Photo3":workOrder.photo3,
+                                @"Video1":workOrder.video1,
+                                @"PersonFirstName":workOrder.personFirstName,
+                                @"PersonMiddleInitial":workOrder.personMiddleInitial,
+                                @"PersonLastName":workOrder.personLastName,
+                                @"PersonHomePhone":workOrder.personHomePhone,
+                                @"PersonAlternatePhone":workOrder.personAlternatePhone,
+                                @"PersonEmail":workOrder.personEmail
+                                };
+        
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        
+        NSString * strWebServiceName = [NSString stringWithFormat:@"%@/Create?accountId=%@&userId=%@&IsReadyForFollowup=%@",MY_WORK_ORDERS,aStrAccountId,strUserId,workOrder.isReadyForFollowupcomplition];
+        
+        [gblAppDelegate callWebService:strWebServiceName parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:workOrder];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
 
+- (BOOL)syncWorkOrderEditInProgress{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderCreatedInProgressSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (WorkOrderCreatedInProgressSubmit *workOrder in aryOfflineData) {
+        isSingleDataSaved = NO;
+      
+        NSDictionary *paraDic = @{
+                                  @"Id":workOrder.woId,
+                                  @"WorkOrderSetUpId":workOrder.workOrderSetUpId,
+                                  @"WorkOrderDate":workOrder.workOrderDate,
+                                  @"WorkOrderTime":workOrder.workOrderTime,
+                                  @"DescriptionOfIssue":workOrder.descriptionOfIssue,
+                                  @"AdditionalInformation":workOrder.additionalInformation,
+                                  @"WorkOrderStatusId":workOrder.statusId,
+                                  @"EquipmentActionId":workOrder.equipmentActionId,
+                                  @"EquipmentNatureId":workOrder.equipmentNatureId,
+                                  @"GeneralActionId":workOrder.generalActionId,
+                                  @"GeneralNatureId":workOrder.generalNatureId,
+                                  @"OtherGeneralNature":workOrder.otherGeneralNature,
+                                  @"OtherEquipmentNature":workOrder.otherEquipmentNature,
+                                  @"MaintenanceType":workOrder.maintenanceType,
+                                  @"InventorySetupId":workOrder.inventorySetupId,
+                                  @"InventoryManufactureId":workOrder.inventoryManufactureId,
+                                  @"InventoryBrandId":workOrder.inventoryBrandId,
+                                  @"InventoryModelId":workOrder.inventoryModelId,
+                                  @"InventoryLocationId":workOrder.inventoryLocationId,
+                                  @"InventoryCategoryId":workOrder.inventoryCategoryId,
+                                  @"IsNotificationField1Selected":workOrder.isNotificationField1Selected,
+                                  @"IsNotificationField2Selected":workOrder.isNotificationField2Selected,
+                                  @"IsNotificationField3Selected":workOrder.isNotificationField3Selected,
+                                  @"IsNotificationField4Selected":workOrder.isNotificationField4Selected,
+                                  @"EquipmentId":workOrder.equipmentId,
+                                  @"EquipmentName":workOrder.equipmentName,
+                                  @"IsVideoExist":workOrder.isVideoExist,
+                                  @"IsPhotoExists":workOrder.isPhotoExists,
+                                  @"ExistingImages":workOrder.existingImages,
+                                  @"ExistingVideo":workOrder.existingVideo,
+                                  @"Photo1":workOrder.photo1,
+                                  @"Photo2":workOrder.photo2,
+                                  @"Photo3":workOrder.photo3,
+                                  @"Video1":workOrder.video1,
+                                  @"PersonFirstName":workOrder.personFirstName,
+                                  @"PersonMiddleInitial":workOrder.personMiddleInitial,
+                                  @"PersonLastName":workOrder.personLastName,
+                                  @"PersonHomePhone":workOrder.personHomePhone,
+                                  @"PersonAlternatePhone":workOrder.personAlternatePhone,
+                                  @"PersonEmail":workOrder.personEmail
+                                  };
+  
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        
+        NSString * strWebServiceName = [NSString stringWithFormat:@"%@/Edit?isSubmit=%@&historyReportId=%@&accountId=%@&userId=%@&sequence=%@&revisionId=%@&isFollowPresent=false",MY_WORK_ORDERS,workOrder.isReadyForFollowupcomplition,workOrder.historyReportId,aStrAccountId,strUserId,workOrder.sequence,workOrder.revisionId];
+        
+          [gblAppDelegate callWebService:strWebServiceName parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response) {
+            
+            [gblAppDelegate.managedObjectContext deleteObject:workOrder];
+            isSingleDataSaved = YES;
+            
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
+
+- (BOOL)syncWorkOrderWithFollowupSubmit{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderWithFollowupSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    
+    for (WorkOrderWithFollowupSubmit *workOrder in aryOfflineData) {
+        isSingleDataSaved = NO;
+        
+        
+        NSFetchRequest *requestPartsUsed = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderInventoryPartsUsed"];
+        NSPredicate *predicatePartsUsed = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+        [requestPartsUsed setPredicate:predicatePartsUsed];
+        
+        NSArray *aryOfflineDataPartsUsed = [gblAppDelegate.managedObjectContext executeFetchRequest:requestPartsUsed error:nil];
+        
+        NSMutableArray * arrPartsUsed = [[NSMutableArray alloc]init];
+        
+        for (WorkOrderInventoryPartsUsed * partsUsed in aryOfflineDataPartsUsed) {
+            NSDictionary * partsUsedDic = @{
+                                                  @"Cost" : partsUsed.cost,
+                                                  @"Name" : partsUsed.name,
+                                                  @"id" : partsUsed.partId,
+                                                  @"inventorydetailsId" : partsUsed.inventorydetailsId
+                                                  };
+            [arrPartsUsed addObject:partsUsedDic];
+        }
+        
+        
+        NSFetchRequest *requestFollowup = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderFollowup"];
+        NSPredicate *predicateFollowup = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+        [requestFollowup setPredicate:predicateFollowup];
+        NSArray *aryOfflineDataFollowup = [gblAppDelegate.managedObjectContext executeFetchRequest:requestFollowup error:nil];
+   
+        NSMutableArray * arrFollowup = [[NSMutableArray alloc]init];
+        
+            for (WorkOrderFollowup * followup in aryOfflineDataFollowup) {
+                NSString * isNewFollowup = @"";
+                if ([followup.isNewFollowup boolValue]) {
+                    isNewFollowup = @"true";
+                }
+                else{
+                    isNewFollowup = @"0";
+                }
+                   NSDictionary * followupDic = @{
+                                                   @"Date" : followup.date,
+                                                   @"DisplayDate" : followup.displayDate,
+                                                   @"FFollowupId" : followup.fFollowupId,
+                                                   @"FollowupId" : followup.followupId,
+                                                   @"FollowupLogs" : followup.followupLogs,
+                                                   @"HistoryId" : followup.historyId,
+                                                   @"Id" : followup.fId,
+                                                   @"IsAllowEditing" : followup.isAllowEditing,
+                                                   @"IsEmployeeReport" : followup.isEmployeeReport,
+                                                   @"IsNewFollowup" : isNewFollowup,
+                                                   @"QuestionResponse1" : followup.questionResponse1,
+                                                   @"QuestionResponse2" : followup.questionResponse2,
+                                                   @"QuestionResponse3" :followup.questionResponse3,
+                                                   @"QuestionResponse4" : followup.questionResponse4,
+                                                   @"QuestionYesNoText1" : followup.questionYesNoText1,
+                                                   @"QuestionYesNoText2" : followup.questionYesNoText2,
+                                                   @"QuestionYesNoText3" : followup.questionYesNoText3,
+                                                   @"QuestionYesNoText4" : followup.questionYesNoText4,
+                                                   @"UpdatedOn" : followup.updatedOn,
+                                                     };
+                [arrFollowup addObject:followupDic];
+            }
+        
+        NSFetchRequest *requestFollowupLogsNew = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderFollowupLogsNew"];
+        NSPredicate *predicateFollowupLogsNew = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+        [requestFollowupLogsNew setPredicate:predicateFollowupLogsNew];
+      
+        NSArray *aryOfflineDataFollowupLogsNew = [gblAppDelegate.managedObjectContext executeFetchRequest:requestFollowupLogsNew error:nil];
+       
+        NSMutableArray * arrFollowupLogsNew = [[NSMutableArray alloc]init];
+        
+        for (WorkOrderFollowupLogsNew * followupLogsNew in aryOfflineDataFollowupLogsNew) {
+            NSDictionary * followupLogsNewDic = @{
+                                           @"CellNumber" : followupLogsNew.cellNumber,
+                                           @"Date" : followupLogsNew.date,
+                                           @"DisplayDate" : followupLogsNew.displayDate,
+                                           @"Email" : followupLogsNew.email,
+                                           @"FFollowupId" : followupLogsNew.fFollowupId,
+                                           @"FollowupCall" : followupLogsNew.followupCall,
+                                           @"FollowupId" : followupLogsNew.followupId,
+                                           @"FollowupLogId" : followupLogsNew.followupLogId,
+                                           @"Information" : followupLogsNew.information,
+                                           @"InformationShowLess" : followupLogsNew.informationShowLess,
+                                           @"IsAllowEditing" : followupLogsNew.isAllowEditing,
+                                           @"Name" : followupLogsNew.name,
+                                           @"PhoneNumber" :followupLogsNew.phoneNumber,
+                                           @"UpdatedOn" : followupLogsNew.updatedOn,
+                                           @"WorkOrderFollowupHistoryId" : followupLogsNew.workOrderFollowupHistoryId
+                                           };
+            [arrFollowupLogsNew addObject:followupLogsNewDic];
+        }
+        
+        NSDictionary *paraDic = @{
+                                  @"Id":workOrder.woId,
+                                  @"PreviousHistoryId":workOrder.previousHistoryId,
+                                  @"WorkOrderSetUpId":workOrder.workOrderSetUpId,
+                                  @"IsMedia":workOrder.isMedia,
+                                  @"IsInProgress":workOrder.isInProgress,
+                                  @"IsEquipmentMaintenance":workOrder.isEquipmentMaintenance,
+                                  @"RepairTypeId":workOrder.repairTypeId,
+                                  @"WorkOrderDate":workOrder.workOrderDate,
+                                  @"WorkOrderTime":workOrder.workOrderTime,
+                                  @"DateOfCompletion":workOrder.dateOfCompletion,
+                                  @"EstimatedDateOfCompletion":workOrder.estimatedDateOfCompletion,
+                                  @"FacilityId":workOrder.facilityId,
+                                  @"DescriptionOfIssue":workOrder.descriptionOfIssue,
+                                  @"AdditionalInformation":workOrder.additionalInformation,
+                                  @"WorkOrderStatusId":workOrder.statusId,
+                                  @"AssignedToUserIds":workOrder.assignedToUserIds,
+                                  @"EquipmentActionId":workOrder.equipmentActionId,
+                                  @"GeneralActionId":workOrder.generalActionId,
+                                  @"EquipmentNatureId":workOrder.equipmentNatureId,
+                                  @"GeneralNatureId":workOrder.generalNatureId,
+                                  @"OtherGeneralNature":workOrder.otherGeneralNature,
+                                  @"OtherEquipmentNature":workOrder.otherEquipmentNature,
+                                  @"MaintenanceType":workOrder.maintenanceType,
+                                  @"InventorySetupId":workOrder.inventorySetupId,
+                                  @"SerialId":workOrder.serialId,
+                                  @"ItemId":workOrder.itemId,
+                                  @"ItemName":workOrder.itemName,
+                                  @"InventoryLocationId":workOrder.inventoryLocationId,
+                                  @"InventoryManufactureId":workOrder.inventoryManufactureId,
+                                  @"InventoryBrandId":workOrder.inventoryBrandId,
+                                  @"InventoryModelId":workOrder.inventoryModelId,
+                                  @"InventoryCategoryId":workOrder.inventoryCategoryId,
+                                  @"InventoryTypeId":workOrder.inventoryTypeId,
+                                  @"EmployeeEmail":workOrder.employeeEmail,
+                                  @"EmployeeFirstName":workOrder.employeeFirstName,
+                                  @"EmployeeLastName":workOrder.employeeLastName,
+                                  @"EmployeeMiddleName":workOrder.employeeMiddleName,
+                                  @"IsNotificationField1Selected":workOrder.isNotificationField1Selected,
+                                  @"IsNotificationField2Selected":workOrder.isNotificationField2Selected,
+                                  @"IsNotificationField3Selected":workOrder.isNotificationField3Selected,
+                                  @"IsNotificationField4Selected":workOrder.isNotificationField4Selected,
+                                  @"EquipmentQRCode":workOrder.equipmentQRCode,
+                                  @"EquipmentBarCode":workOrder.equipmentBarCode,
+                                  @"EquipmentId":workOrder.equipmentId,
+                                  @"EquipmentName":workOrder.equipmentName,
+                                  @"RepairCostOfParts":workOrder.repairCostOfParts,
+                                  @"RepairLabourHourlyCost":workOrder.repairLabourHourlyCost,
+                                  @"RepairLabourHour":workOrder.repairLabourHour,
+                                  @"RepairTotalCost":workOrder.repairTotalCost,
+                                  @"ReplacementCost":workOrder.replacementCost,
+                                  @"IsShowWorkOrderTypeRepair":workOrder.isShowWorkOrderTypeRepair,
+                                  @"IsShowWorkOrderTypeReplacement":workOrder.isShowWorkOrderTypeReplacement,
+                                  @"IsVideoExist":workOrder.isVideoExist,
+                                  @"IsPhotoExists":workOrder.isPhotoExists,
+                                  @"InventoryPartsUsed":arrPartsUsed,
+                                  @"Followups":arrFollowup,
+                                  @"FollowupsLogsNew":arrFollowupLogsNew,
+                                  @"Photo1":workOrder.photo1,
+                                  @"Photo2":workOrder.photo2,
+                                  @"Photo3":workOrder.photo3,
+                                  @"Video1":workOrder.video1,
+                                  @"ExistingImages":workOrder.existingImages,
+                                  @"ExistingVideo":workOrder.existingVideo,
+                                  @"PersonFirstName":workOrder.personFirstName,
+                                  @"PersonMiddleInitial":workOrder.personMiddleInitial,
+                                  @"PersonLastName":workOrder.personLastName,
+                                  @"PersonHomePhone":workOrder.personHomePhone,
+                                  @"PersonAlternatePhone":workOrder.personAlternatePhone,
+                                  @"PersonEmail":workOrder.personEmail
+                                  };
+        
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        
+        NSString * strWebServiceName = [NSString stringWithFormat:@"%@/Followup?isSubmit=false&historyReportId=%@&accountId=%@&userId=%@&sequence=%@&revisionId=%@&isFollowPresent=true&isVmImageUploaded=%@&isVmVedioUploaded=%@",MY_WORK_ORDERS,workOrder.historyReportId,aStrAccountId,strUserId,workOrder.sequence,workOrder.revisionId,workOrder.isPhotoExists,workOrder.isVideoExist];
+        
+        [gblAppDelegate callWebService:strWebServiceName parameters:paraDic httpMethod:@"POST" complition:^(NSDictionary *response) {
+            
+         
+         
+            NSFetchRequest *requestPartsUsed = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderInventoryPartsUsed"];
+            NSPredicate *predicatePartsUsed = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+            [requestPartsUsed setPredicate:predicatePartsUsed];
+            
+            NSArray *aryOfflineDataPartsUsed = [gblAppDelegate.managedObjectContext executeFetchRequest:requestPartsUsed error:nil];
+            
+            for (WorkOrderInventoryPartsUsed * partsUsed in aryOfflineDataPartsUsed) {
+                [gblAppDelegate.managedObjectContext deleteObject:partsUsed];
+            }
+            NSFetchRequest *requestFollowup = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderFollowup"];
+            NSPredicate *predicateFollowup = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+            [requestFollowup setPredicate:predicateFollowup];
+            NSArray *aryOfflineDataFollowup = [gblAppDelegate.managedObjectContext executeFetchRequest:requestFollowup error:nil];
+            for (WorkOrderFollowup * followup in aryOfflineDataFollowup) {
+                [gblAppDelegate.managedObjectContext deleteObject:followup];
+            }
+            NSFetchRequest *requestFollowupLogsNew = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderFollowupLogsNew"];
+            NSPredicate *predicateFollowupLogsNew = [NSPredicate predicateWithFormat:@"(woId MATCHES[cd] %@)" ,workOrder.historyReportId];
+            [requestFollowupLogsNew setPredicate:predicateFollowupLogsNew];
+            
+            NSArray *aryOfflineDataFollowupLogsNew = [gblAppDelegate.managedObjectContext executeFetchRequest:requestFollowupLogsNew error:nil];
+            for (WorkOrderFollowupLogsNew * followupLogsNew in aryOfflineDataFollowupLogsNew) {
+                [gblAppDelegate.managedObjectContext deleteObject:followupLogsNew];
+            }
+               [gblAppDelegate.managedObjectContext deleteObject:workOrder];
+            isSingleDataSaved = YES;
+            
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
+
+- (BOOL)syncWorkOrderAddNotesSubmit{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WorkOrderAddNotesSubmit"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) AND isCompleted == 1" ,[User currentUser].userId];
+    [request setPredicate:predicate];
+    NSArray *aryOfflineData = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
+    isErrorOccurred = NO;
+    __block BOOL isSingleDataSaved = NO;
+    for (WorkOrderAddNotesSubmit *workOrder in aryOfflineData) {
+        isSingleDataSaved = NO;
+        
+        NSString *aStrAccountId = [[NSUserDefaults standardUserDefaults] objectForKey:@"accountId"];
+        NSString *strUserId = @"";
+        if ([User checkUserExist]) {
+            strUserId = [[User currentUser] userId];
+        }
+        
+        NSString * strWebServiceName = [NSString stringWithFormat:@"%@?accountId=%@&userId=%@&workOrderId=%@&sequence=%@&statusId=%@&dateSubmited=%@&notes=%@", MY_WORK_ORDERS, aStrAccountId,strUserId,workOrder.workOrderId,workOrder.sequence,workOrder.statusId,workOrder.dateSubmited,workOrder.notes];
+        
+        [gblAppDelegate callWebService:strWebServiceName parameters:nil httpMethod:@"POST" complition:^(NSDictionary *response) {
+            [gblAppDelegate.managedObjectContext deleteObject:workOrder];
+            isSingleDataSaved = YES;
+        } failure:^(NSError *error, NSDictionary *response) {
+            isSingleDataSaved = YES;
+            isErrorOccurred = YES;
+        }];
+        while (!isSingleDataSaved) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        }
+        if (isErrorOccurred) {
+            break;
+        }
+    }
+    [gblAppDelegate.managedObjectContext save:nil];
+    return isErrorOccurred;
+}
 - (BOOL)syncSurveysAndForms {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"SubmitFormAndSurvey"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(userId MATCHES[cd] %@) OR userId == '' ",[User currentUser].userId];

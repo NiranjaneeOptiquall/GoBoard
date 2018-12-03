@@ -18,6 +18,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblWorkOrderNumber;
 @property (weak, nonatomic) IBOutlet UILabel *lblGeneralEquipment;
 @property (weak, nonatomic) IBOutlet UILabel *lblGeneralEquipmentId;
+@property (weak, nonatomic) IBOutlet UILabel *lblTitleDescription;
+@property (weak, nonatomic) IBOutlet UILabel *lblTitleDes;
+
+
 @property (weak, nonatomic) IBOutlet UILabel *lblCurrentStatus;
 @property (weak, nonatomic) IBOutlet UILabel *lblDescription;
 @property (weak, nonatomic) IBOutlet UILabel *lblImage;

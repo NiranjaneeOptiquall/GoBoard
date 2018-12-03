@@ -28,5 +28,7 @@
 @dynamic existingResponseBool;
 @dynamic existingResponseIds;
 @dynamic detailImageVideoText;
-
+@dynamic isSkipLogic;
+@dynamic isSkipLogicQuestionShow;
+@dynamic isShowOnForm;
 @end

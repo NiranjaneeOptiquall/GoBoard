@@ -28,6 +28,17 @@
 @property (nonatomic, retain) NSString * isAllowInProgress;
 @property (nonatomic, retain) NSString * inProgressFormId;
 @property (nonatomic, retain) NSString * userId;
+
+@property (nonatomic,retain) NSNumber * userFormIsAllowEdit;
+@property (nonatomic,retain) NSNumber * userFormIsAllowView;
+@property (nonatomic,retain) NSString * reportNumber;
+@property (nonatomic,retain) NSString * user;
+@property (nonatomic,retain) NSString * updatedBy;
+@property (nonatomic,retain) NSString * updatedOn;
+@property (nonatomic,retain) NSString * deactivate;
+@property (nonatomic,retain) NSString * changeQuestionResponseTypeVersion;
+@property (nonatomic,retain) NSNumber * userFormIsAllowDelete;
+@property (nonatomic,retain) NSNumber * userFormIsAllowDeactivate;
 @end
 
 @interface SurveyInProgress (CoreDataGeneratedAccessors)

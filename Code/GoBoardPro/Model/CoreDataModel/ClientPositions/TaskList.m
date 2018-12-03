@@ -30,4 +30,8 @@
 @dynamic expirationTime;
 @dynamic responseTypeValues;
 @dynamic taskType;
+@dynamic isHeighPriority;
+@dynamic colorCode;
+@dynamic beforeTaskTime;
+@dynamic isShow;
 @end

@@ -81,10 +81,6 @@
         CFMutableAttributedStringRef attrString = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
         CFAttributedStringReplaceString (attrString,CFRangeMake(0, 0), string);
 
-
-
-
-
         CGColorRef _red=[UIColor blackColor].CGColor;
 
         //Lets have our string  as red 

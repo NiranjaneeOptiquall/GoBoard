@@ -16,6 +16,8 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSString * sequence;
+@property (nonatomic, retain) NSString * parentQuestionId;
+
 @property (nonatomic, retain) SurveyQuestions *question;
 
 

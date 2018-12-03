@@ -1,4 +1,4 @@
-//
+    //
 //  Constants.h
 //  GoBoardPro
 //
@@ -52,8 +52,12 @@ typedef enum : NSUInteger {
 
 // http://goboardapi.azurewebsites.net/api/
 
+#define SERVICE_URL_SSO (gblAppDelegate.isProduction) ? @"https://www.connect2mycloud.com/User/Login?" : @"https://goboardadmin-qa.azurewebsites.net/User/Login?"
+
+
 //************** QA_API***************//
-#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
+
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
 //************** PRASAD_LOCAL_API_1***************//
 //#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.115/GoBoard.Web.Api/api/"
@@ -65,12 +69,22 @@ typedef enum : NSUInteger {
 //#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.117/GoBoard.Web.Api/api/"
 
 //************** ABHIJEET_LOCAL_API***************//
-//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"https://api.goboardrec.com/api/" : @"http://192.168.0.11/GoBoard.Web.Api/api/"
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"http://goboardapi-qa.azurewebsites.net/api/" : @"http://192.168.0.111/GoBoard.Web.Api/api/"
+
+//************** ALPESH_LOCAL_API***************//
+//#define SERVICE_URL (gblAppDelegate.isProduction) ? @"http://goboardapi-qa.azurewebsites.net/api/" : @"http://192.168.0.119/GoBoard.Web.Api/api/"
+
+//************** SURAJ_LOCAL_API***************//
+
+#define SERVICE_URL (gblAppDelegate.isProduction) ? @"http://goboardapi-qa.azurewebsites.net/api/" : @"http://192.168.0.111/GoBoard.Web.Api/api/"
 
 //************** Local_&_QA_API***************//
 //#define SERVICE_URL (gblAppDelegate.isProduction) ? @"http://192.168.0.114/c2cApi/api/" : @"http://goboardapi-qa.azurewebsites.net/api/"
 
+
 //http://localhost:47654/Library/ShowFile?path=D%3A%2FWorkArea2%2FConnect2%2FDevelopment%2FGoBoard%2FApp_Data%2FStorage%2FGallery%2FC2C%2Fpenguin%20(2).jpg
+
+
 #define USER_SERVICE                @"User"
 #define USER_LOGIN                  @"UserAuthentication"
 #define USER_FORGOT_PASSWORD        @"UserForgotPassword"

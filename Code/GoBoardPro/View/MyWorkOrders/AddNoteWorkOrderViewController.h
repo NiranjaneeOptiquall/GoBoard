@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "WorkOrderAddNotesSubmit.h"
 @interface AddNoteWorkOrderViewController : UIViewController
 @property (strong,nonatomic) NSString * orderId;
+@property (strong, nonatomic) WorkOrderAddNotesSubmit  * addNotesSubmit;
+
 @end

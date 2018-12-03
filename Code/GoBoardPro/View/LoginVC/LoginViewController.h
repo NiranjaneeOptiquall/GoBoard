@@ -24,6 +24,7 @@
 
 
 //********** User Sign In View **********//
+@property (weak, nonatomic) IBOutlet UIView *vwCUserSignIn;
 
 @property (weak, nonatomic) IBOutlet UIView *vwUserSignIn;
 @property (weak, nonatomic) IBOutlet UITextField *txtUserId;

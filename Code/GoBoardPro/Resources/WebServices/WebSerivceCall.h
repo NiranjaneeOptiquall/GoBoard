@@ -66,5 +66,6 @@
 -(void)callServiceForSaveFollowupQWorkOrder:(BOOL)waitUntilDone questionResponse1:(NSString*)questionResponse1 questionResponse2:(NSString*)questionResponse2 questionResponse3:(NSString*)questionResponse3 questionResponse4:(NSString*)questionResponse4 followupId:(NSString*)followupId complition:(void (^)(void))complition;
 - (void)callServiceForHomeSetup:(BOOL)waitUntilDone complition:(void (^)(void))completion;
 -(void)callServiceForGetPhotoVideoDataWorkOrder:(BOOL)waitUntilDone workOrderHistoryId:(NSString*)workOrderHistoryId fileName:(NSString*)fileName complition:(void (^)(void))complition;
-
+-(void)callServiceForAddNewEquipmentInventoryToDatabase:(BOOL)waitUntilDone paraDic:(NSDictionary*)paraDic complition:(void (^)(NSDictionary *response))complition;
+-(void)callServiceForFormResponses:(BOOL)waitUntilDone strApiName:(NSString*)strApiName formSurveyId:(NSString*)formSurveyId questionID:(NSString*)questionID questionField:(NSString*)questionField columnValue:(NSString*)columnValue isShowInprogress:(NSString*)isShowInprogress isShowInactive:(NSString*)isShowInactive isShowunpublished:(NSString*)isShowunpublished  complition:(void (^)(void))complition;
 @end

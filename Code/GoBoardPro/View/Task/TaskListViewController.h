@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblDetailTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lblDetailDesc;
 @property (strong, nonatomic) IBOutlet UILabel *lblLocation;
+@property (weak, nonatomic) IBOutlet UILabel *lblStartAndEndTime;
 
 @property (weak, nonatomic) IBOutlet UIView *vwMessagePopOver;
 @property (weak, nonatomic) IBOutlet UILabel *lblPopOverTaskTitle;

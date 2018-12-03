@@ -24,4 +24,15 @@
 @dynamic inProgressCount;
 @dynamic isAllowInProgress;
 @dynamic userId;
+
+@dynamic reportNumber;
+@dynamic user;
+@dynamic updatedBy;
+@dynamic updatedOn;
+@dynamic userFormIsAllowEdit;
+@dynamic userFormIsAllowView;
+@dynamic deactivate;
+@dynamic changeQuestionResponseTypeVersion;
+@dynamic userFormIsAllowDelete;
+@dynamic userFormIsAllowDeactivate;
 @end

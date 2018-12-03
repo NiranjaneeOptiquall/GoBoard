@@ -32,103 +32,11 @@
 
 @implementation SOPViewController
 
-/*- (void)viewDidLoad {
-    [super viewDidLoad];
-    if (!_dictSOPCategory) {
-        [_btnSOPList setHidden:YES];
-        [_lblTitle setText:@"Standard Operating Procedures"];
-        [_tblSOPCategory setHidden:YES];
-        [self getSOPCategories];
-    }
-    else {
-        [_lblTitle setHidden:YES];
-        CGRect frame = _tblSOPCategory.frame;
-        frame.size.height = _mutArrCategoryHierarchy.count * _tblSOPCategory.rowHeight;
-        _tblSOPCategory.frame = frame;
-        
-        if (CGRectGetMaxY(frame) > _tblSOPList.frame.origin.y) {
-            frame = _tblSOPList.frame;
-            frame.origin.y = CGRectGetMaxY(_tblSOPCategory.frame) + 5;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblSOPList.frame = frame;
-        }
-        
-        frame = _txtDescription.frame;
-        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
-        [_txtDescription setFrame:frame];
-        
-        frame = _viewWeb.frame;
-        frame.origin.y = CGRectGetMinY(_tblSOPList.frame) ;
-        [_viewWeb setFrame:frame];
-        
-        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
-        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-        
-        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"Children"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
-
-        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
-        
-        //If Type has a value of 1 (Link) then the 'Link' property should be set
-        //If Type has a value of 2 (Text) then the 'Description' property should be set
-        
-        [_viewWeb setHidden:YES];
-        [_txtDescription setHidden:YES];
-        
-        if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 2) {
-          
-            [_txtDescription setHidden:NO];
-            NSString *aStrDescription = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Description"]];
-            
-            [_txtDescription setText:aStrDescription];
-            NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:20] forKey: NSFontAttributeName];
-
-            float height = 0;
-            
-            if ([[_dictSOPCategory objectForKey:@"Children"] count] > 0) {
-                height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, 625) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
-            }else{
-                height = [aStrDescription boundingRectWithSize:CGSizeMake(_txtDescription.frame.size.width, self.view.frame.size.height - _txtDescription.frame.origin.y - 15) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin  attributes:stringAttributes context:nil].size.height +20;
-            }
-            
-            CGRect frameLblDescription  = _txtDescription.frame;
-            if (_txtDescription.frame.origin.y + height >= 745) {
-                height = 745-_txtDescription.frame.origin.y;
-            }
-            
-            frameLblDescription.size.height = height;
-            _txtDescription.frame = frameLblDescription;
-            [_txtDescription setFont:[UIFont systemFontOfSize:20]];
-            [_txtDescription setTextAlignment:NSTextAlignmentLeft];
-            
-            
-            frame = _tblSOPList.frame;
-            frame.origin.y = 765; //CGRectGetMaxY(_txtDescription.frame) + 15;
-            frame.size.height = self.view.frame.size.height - frame.origin.y;
-            _tblSOPList.frame = frame;
-            
-        }else if ([[_dictSOPCategory objectForKey:@"Type"] integerValue] == 1){
-            [_viewWeb setHidden:NO];
-            
-            frame = _viewWeb.frame;
-            frame.size.height = self.view.frame.size.height - _tblSOPList.frame.origin.y;
-            [_viewWeb setFrame:frame];
-            
-            NSString *aStrLink = [NSString stringWithFormat:@"%@",[_dictSOPCategory objectForKey:@"Link"]];
-             [_viewWeb loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:aStrLink]]];
-        }
-    }
-}
-*/
 
 /* 
 changes by chetan kasundra
 Put the webview in place  of textview for type 2( for html Description set in webview)
 */
-
-
-
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [_txtSearchTag resignFirstResponder];
@@ -287,38 +195,13 @@ Put the webview in place  of textview for type 2( for html Description set in we
             _lblSearchNote.text=[NSString stringWithFormat:@"Showing search result for '%@'",[[NSUserDefaults standardUserDefaults]valueForKey:@"NOTE"]];
         }
     }
-//    else{
-//        
-//        [_btnSearchTag setHidden:NO];
-//        [_lblSearchNote setHidden:YES];
-//
-//        if(!_btnSearchTag.isSelected)
-//        {
-//           
-//               _txtSearchTag.hidden=YES;
-//        }
-//        else{
-//         _txtSearchTag.hidden=NO;
-//        
-//        }
-//
-//    }
+
     
     
     
 }
 -(IBAction)btnSearchTagClicked:(id)sender {
-    
-    
-//    if(!_btnSearchTag.isSelected)
-//    {
-//      _txtSearchTag.hidden=NO;
-//        [_btnSearchTag setSelected:YES];
-//    }
-//    else{
-//        _txtSearchTag.hidden=YES;
-//        [_btnSearchTag setSelected:NO];
-//    }
+
     
 }
 
@@ -407,33 +290,6 @@ Put the webview in place  of textview for type 2( for html Description set in we
 
 #pragma mark UIWebViewDelgate
 
-//-(void)webViewDidFinishLoad:(UIWebView *)webView
-//{
-//    if ([webView isEqual:_viewWebDescription])
-//    {
-//        //CGFloat height=[[webView stringByEvaluatingJavaScriptFromString:@"document.height"] floatValue];
-        
-//        CGFloat height= webView.scrollView.contentSize.height;
-        
-//        CGRect frameWebView=_viewWebDescription.frame;
-        
-//        if (_viewWebDescription.frame.origin.y + height >= 490)
-//        {
-//            height= 490 - _viewWebDescription.frame.origin.y;
-//        }
-        
-//        frameWebView.size.height=height;
-//        _viewWebDescription.frame= frameWebView;
-//    }
-//    CGRect frame = _tblSOPList.frame;
-//    frame.origin.y = _viewWebDescription.frame.origin.y+ _viewWebDescription.frame.size.height + 10; //CGRectGetMaxY(_txtDescription.frame) + 15;
-//       frame.size.height = self.view.frame.size.height - frame.origin.y;
-//    if (frame.size.height > CGRectGetHeight(_mainScrlView.frame) - 500) {
-//        frame.size.height = CGRectGetHeight(_mainScrlView.frame) - 500 -20 ;
-//    }
-//    _tblSOPList.frame = frame;
-
-//}
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
     
@@ -596,26 +452,7 @@ Put the webview in place  of textview for type 2( for html Description set in we
         [_tblSOPList reloadData];
     } failure:^(NSError *error, NSDictionary *response) {
         [_lblNoRecords setHidden:NO];
-        
-//        NSString *strDocumentPath = [NSString stringWithFormat:@"%@",gblAppDelegate.applicationDocumentsDirectory.path];
-//        NSString *strSopFilePath = [strDocumentPath stringByAppendingPathComponent:@"SopCategory.txt"];
-//        
-//        NSString *strData = [[NSString alloc] initWithContentsOfFile:strSopFilePath encoding:NSUTF8StringEncoding error:nil];
-//
-//        _dictSOPCategory = [NSJSONSerialization JSONObjectWithData:[strData dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-//        NSSortDescriptor *sortBySequence = [[NSSortDescriptor alloc] initWithKey:@"Sequence.intValue" ascending:YES];
-//        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"Title" ascending:YES];
-//        
-//        NSMutableArray *aMutArrSOPList = [NSMutableArray arrayWithArray:[[_dictSOPCategory objectForKey:@"SopCategories"] sortedArrayUsingDescriptors:@[sortBySequence,sortByTitle]]];
-//        
-//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Published == 1"];
-//        
-//        mutArrSOPList = [NSMutableArray arrayWithArray:[aMutArrSOPList filteredArrayUsingPredicate:predicate]];
-//        
-//        if ([mutArrSOPList count] == 0) {
-//            [_lblNoRecords setHidden:NO];
-//        }
-//        [_tblSOPList reloadData];
+
 
     }];
    

@@ -1652,7 +1652,7 @@ else {
     }
 }
     if ([string length] > 0) {
-        if (textField.trimText.length < 3) {
+        if (textField.trimText.length < 5) {
             NSCharacterSet *numericCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
             if ([string rangeOfCharacterFromSet:numericCharacterSet].location == NSNotFound) {
                 return YES;

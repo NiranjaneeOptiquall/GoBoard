@@ -20,5 +20,6 @@
 @property (weak, nonatomic) IBOutlet UIView *vwDrpDown;
 @property (weak, nonatomic) IBOutlet UITextField *txtDropDown;
 @property (weak, nonatomic) IBOutlet UIImageView *imageOneTimeTask;
+@property (weak, nonatomic) IBOutlet UIImageView *imageHeighPriority;
 
 @end

@@ -27,4 +27,15 @@
 @dynamic userId;
 @dynamic isAllowEditSharedForm;
 @dynamic formLastAccessedBy;
+
+@dynamic reportNumber;
+@dynamic user;
+@dynamic updatedBy;
+@dynamic updatedOn;
+@dynamic userFormIsAllowEdit;
+@dynamic userFormIsAllowView;
+@dynamic changeQuestionResponseTypeVersion;
+@dynamic userFormIsAllowDelete;
+@dynamic userFormIsAllowDeactivate;
+
 @end

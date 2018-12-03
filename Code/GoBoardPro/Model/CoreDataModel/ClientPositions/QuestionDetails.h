@@ -25,4 +25,8 @@
 @property (nonatomic, retain) NSString * sequence;
 @property (nonatomic, retain) SubmitFormAndSurvey *formOrSurvey;
 
+@property (nonatomic, retain) NSNumber * isSkipLogic;
+@property (nonatomic, retain) NSNumber * isSkipLogicQuestionShow;
+@property (nonatomic, retain) NSNumber * isShowOnForm;
+
 @end

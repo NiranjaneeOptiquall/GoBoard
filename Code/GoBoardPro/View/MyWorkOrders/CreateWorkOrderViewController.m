@@ -18,11 +18,11 @@
 
 @import AVFoundation;
 
-@interface CreateWorkOrderViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,DropDownValueDelegate,UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,AVCaptureMetadataOutputObjectsDelegate,UITextViewDelegate>
+@interface CreateWorkOrderViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,DropDownValueDelegate,UIPopoverControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate,AVCaptureMetadataOutputObjectsDelegate,UITextViewDelegate,UIGestureRecognizerDelegate>
 {
      CGRect rect;
       UIPopoverController *popOver;
-    NSMutableArray * arrAssignedTo,*arrStatus,*arrCategoty,*arrGenralNature,*arrGenralActionTaken,*arrEquipmentNature,*arrEquipmentActionTaken,*arrRepairType,*arrInventoryPartsUsed,*arrPositon,*arrUsers,*arrNotification,*arrVideoOrImage,*arrInventoryPartUsed,*arrManufactur,*arrEquipmentType,*arrModel,*arrBrand,*selectedPositionArr,*selectedUserArr,*arrEquipmentId,*arrEmployeeReq,*arrEquipmentReq,*arrGenReq;
+    NSMutableArray * arrAssignedTo,*arrStatus,*arrCategoty,*arrGenralNature,*arrGenralActionTaken,*arrEquipmentNature,*arrEquipmentActionTaken,*arrRepairType,*arrInventoryPartsUsed,*arrPositon,*arrUsers,*arrNotification,*arrVideo, *arrImage,*arrInventoryPartUsed,*arrManufactur,*arrEquipmentType,*arrModel,*arrBrand,*selectedPositionArr,*selectedUserArr,*arrEquipmentId,*arrEmployeeReq,*arrEquipmentReq,*arrGenReq;
     NSInteger selectedImgVidIndex;
     NSString * selectedNumber,*tempstrDataType,*selectedStatusId,*selectedNature,*selectedActionTaken,*flagReloadHeader,*selectedFacilityId,*selectedLocationId,*flagServiseCall;
     NSDictionary * responceDic,*equipmentResponceDic,*responceEquipmentIdDic;
@@ -33,6 +33,12 @@
     UILabel * disclaimer,*disclaimerNote;
 }
 @property (strong, nonatomic) AVPlayerViewController *playerViewController;
+
+@property (weak, nonatomic) IBOutlet UITextField *txtOtherNote;
+@property (weak, nonatomic) IBOutlet UITextField *txtOtherNote2;
+@property (weak, nonatomic) IBOutlet UIImageView *imgBGOtherNote2;
+@property (weak, nonatomic) IBOutlet UIImageView *imgBGOtherNote;
+
 @property (weak, nonatomic) IBOutlet UIImageView *imgViewPhotoVideo;
 @property (weak, nonatomic) IBOutlet UIView *viewFullBGImageVideo;
 @property (weak, nonatomic) IBOutlet UILabel *lblShowImageVideo;
@@ -169,10 +175,20 @@
     AVCaptureSession *captureSession;
     AVCaptureVideoPreviewLayer *captureLayer;
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
+     initWithTarget:self action:@selector(didTapOutSideOfDropDown:)];
+   [self.view addGestureRecognizer:tapGesture];
+    tapGesture.delegate = self;
+    
     _isUpdate = NO;
+    _txtOtherNote.hidden = true;
+    _imgBGOtherNote.hidden = true;
+    _txtOtherNote2.hidden = true;
+    _imgBGOtherNote2.hidden = true;
     
     disclaimer = [[UILabel alloc]init];
     disclaimer.backgroundColor = [UIColor clearColor];
@@ -235,7 +251,8 @@
     arrPositon = [[NSMutableArray alloc]init];
     arrUsers = [[NSMutableArray alloc]init];
     arrNotification = [[NSMutableArray alloc]init];
-    arrVideoOrImage = [[NSMutableArray alloc]init];
+    arrVideo = [[NSMutableArray alloc]init];
+    arrImage = [[NSMutableArray alloc]init];
     arrInventoryPartUsed = [[NSMutableArray alloc]init];
     arrManufactur = [[NSMutableArray alloc]init];
     arrEquipmentType = [[NSMutableArray alloc]init];
@@ -261,7 +278,8 @@
     _lblStarEqBrand.hidden = YES;
     _lblStarEqNature.hidden = YES;
     _lblStarEqAction.hidden = YES;
-    
+    _lblStarCategory.hidden = YES;
+
     _lblStarMName.hidden = YES;
     _lblStarLName.hidden = YES;
     _lblStarEmail.hidden = YES;
@@ -294,24 +312,19 @@
     [request setSortDescriptors:@[sortByName]];
     NSArray * arr = [gblAppDelegate.managedObjectContext executeFetchRequest:request error:nil];
     arrFacility = [arr mutableCopy];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"createWorkOrderRecponce"];
  
-    
-    [gblAppDelegate showActivityIndicator];
+//     if (gblAppDelegate.isNetworkReachable) {
+//    [gblAppDelegate showActivityIndicator];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     
     [[WebSerivceCall webServiceObject]callServiceForGetCreateWorkOrder:YES complition:^{
-        
+        if (gblAppDelegate.isNetworkReachable) {
+        }else{
+            alert(@"", @"To see updated data please check your internet connection.");
+        }
         NSData *dictionaryData = [[NSUserDefaults standardUserDefaults] objectForKey:@"createWorkOrderRecponce"];
         responceDic = [NSKeyedUnarchiver unarchiveObjectWithData:dictionaryData];
-    //    //NSLog(@"%@",responceDic);
-        
-  // [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//       if ([responceDic isKindOfClass:[NSNull class]] || responceDic == nil) {
-//              //[self.navigationController popViewControllerAnimated:YES];
-//           [self btnBackTapped:_btnBack];
-//        }
-   //       }];
+
         arrCategoty = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"CategoryOptions"];
         arrEquipmentNature = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"EquipmentNatureOptions"];
         arrEquipmentActionTaken = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"EquipmentActionOptions"];
@@ -330,12 +343,25 @@
         arrEquipmentReq = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"EquipmentRequiredFields"];
          arrGenReq = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"GeneralMaintenanceRequiredFields"];
         arrEmployeeReq = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"EmployeeRequiredFields"];
+             if (![[[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"Instructions"]isKindOfClass:[NSNull class]]){
         _lblInstructions.text = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"Instructions"];
+             }
+             else{
+                  _lblInstructions.text = @"";
+             }
         [_radioBtnMaintenanceType1 setSelected:YES];
         [_radioBtnImg setSelected:YES];
         _lblVideo.text = @"Image(s)";
         _lblBgDescriptionIssue.text = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"Description"];
         [_btnAttachVideoOrPhoto setTitle:@"Attach image" forState:UIControlStateNormal];
+        
+        if (![[[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"AdditionalInformationLabel"]isKindOfClass:[NSNull class]]){
+            if ( ![[[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"AdditionalInformationLabel"] isEqualToString:@""]) {
+                _lblAddiInfo.text = [[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"AdditionalInformationLabel"];
+                
+            }
+            
+        }
         
         if ([[[arrNotification valueForKey:@"Visible"] objectAtIndex:0] boolValue]) {
             if (![[[arrNotification valueForKey:@"Text"] objectAtIndex:0] isKindOfClass:[NSNull class]]) {
@@ -433,16 +459,18 @@
     //    [_radioBtnServity4 setTitle:[[arrNotification valueForKey:@"Text"] objectAtIndex:3] forState:UIControlStateNormal];
         if (![[[arrNotification valueForKey:@"Color"] objectAtIndex:3] isKindOfClass:[NSNull class]]) {
                     [_radioBtnServity4 setTitleColor:[UIColor colorWithHexCodeString:[[arrNotification valueForKey:@"Color"] objectAtIndex:3]] forState:UIControlStateNormal];
-        }
-
-        
-        
+        }        
         
       
         if (_radioBtnMaintenanceType1.isSelected) {
             
         for (int i =0; i<arrEquipmentReq.count; i++) {
-            if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"13"]) {
+            if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"16"]) {
+                if ([[[arrEquipmentReq valueForKey:@"Selected"] objectAtIndex:i] boolValue]) {
+                    _lblStarCategory.hidden = NO;
+                }
+            }
+            else if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"13"]) {
                 if ([[[arrEquipmentReq valueForKey:@"Selected"] objectAtIndex:i] boolValue]) {
                     _lblStarEqAction.hidden = NO;
                 }
@@ -534,8 +562,9 @@
         
         
         _txtStatus.text = [[arrStatus valueForKey:@"Text"] objectAtIndex:0];
-          arrVideoOrImage = [[NSMutableArray alloc]init];
- 
+          arrVideo = [[NSMutableArray alloc]init];
+        arrImage = [[NSMutableArray alloc]init];
+        
 //        GeneralMaintenanceRequiredFields =         (
 //                                                    {
 //                                                        Id = 14;
@@ -578,10 +607,13 @@
           [self viewSetUp:YES];
     }];
        });
+//}
+//else{
+//    alert(@"", @"We're sorry. C2IT is not currently available offline");
+//}
 }
--(void)viewDidLayoutSubviews{
-    
-}
+
+
 -(void)viewWillAppear:(BOOL)animated{
      [self viewSetUp:NO];
   
@@ -625,8 +657,15 @@
         }
 
     }
+    CGSize boundingSize = CGSizeMake(_lblInstructions.frame.size.width, FLT_MAX);
 
-    CGRect frame =  _lblDate.frame;
+    float height =[_lblInstructions.text boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_lblInstructions.font} context:nil].size.height;
+    
+    CGRect frame =  _lblInstructions.frame;
+    frame.size.height = height;
+    _lblInstructions.frame = frame;
+    
+    frame =  _lblDate.frame;
     frame.origin.y = _lblInstructions.frame.origin.y + _lblInstructions.frame.size.height + 20;
     _lblDate.frame = frame;
     
@@ -698,32 +737,32 @@
     frame.origin.y = _imgBgDateOfWorkOrder.frame.origin.y + _imgBgDateOfWorkOrder.frame.size.height + 25;
     _txtLocation.frame = frame;
     
-    frame =  _imgBgCategory.frame;
-    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 20;
-    _imgBgCategory.frame = frame;
-    
-    frame =  _imgCategory.frame;
-    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 25;
-    _imgCategory.frame = frame;
-    
-    frame =  _txtCategory.frame;
-    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 25;
-    _txtCategory.frame = frame;
+//    frame =  _imgBgCategory.frame;
+//    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 20;
+//    _imgBgCategory.frame = frame;
+//    
+//    frame =  _imgCategory.frame;
+//    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 25;
+//    _imgCategory.frame = frame;
+//    
+//    frame =  _txtCategory.frame;
+//    frame.origin.y = _imgBGFacility.frame.origin.y + _imgBGFacility.frame.size.height + 25;
+//    _txtCategory.frame = frame;
     
     frame =  _imgBGDescriptionIssue.frame;
-    frame.origin.y = _imgBgCategory.frame.origin.y + _imgBgCategory.frame.size.height + 20;
+    frame.origin.y = _imgBGLocationWorkOrder.frame.origin.y + _imgBGLocationWorkOrder.frame.size.height + 20;
     _imgBGDescriptionIssue.frame = frame;
     
     frame =  _lblStarDescriptionIssue.frame;
-    frame.origin.y = _imgBgCategory.frame.origin.y + _imgBgCategory.frame.size.height + 30;
+    frame.origin.y = _imgBGLocationWorkOrder.frame.origin.y + _imgBGLocationWorkOrder.frame.size.height + 30;
     _lblStarDescriptionIssue.frame = frame;
     
     frame =  _lblBgDescriptionIssue.frame;
-    frame.origin.y = _imgBgCategory.frame.origin.y + _imgBgCategory.frame.size.height + 30;
+    frame.origin.y = _imgBGLocationWorkOrder.frame.origin.y + _imgBGLocationWorkOrder.frame.size.height + 30;
     _lblBgDescriptionIssue.frame = frame;
     
     frame =  _txtDescriptionIssue.frame;
-    frame.origin.y = _imgBgCategory.frame.origin.y + _imgBgCategory.frame.size.height + 30;
+    frame.origin.y = _imgBGLocationWorkOrder.frame.origin.y + _imgBGLocationWorkOrder.frame.size.height + 30;
     _txtDescriptionIssue.frame = frame;
     
     frame =  _lblServity.frame;
@@ -786,8 +825,8 @@
     _imgNature.frame = frame;
     
     frame =  _lblStarGNature.frame;
-    frame.origin.y = _imgBgNature.frame.origin.y + (_imgBgNature.frame.size.height /2) -5;
-    frame.origin.x = _imgBgNature.frame.origin.x + _imgBgNature.frame.size.width -5;
+    frame.origin.y = _imgBgNature.frame.origin.y + (_imgBgNature.frame.size.height /2) -10;
+    frame.origin.x = _imgBgNature.frame.origin.x + _imgBgNature.frame.size.width -10;
     _lblStarGNature.frame = frame;
     
     frame =  _txtNature.frame;
@@ -799,8 +838,8 @@
     _imgBgActionTaken.frame = frame;
     
     frame =  _lblStarGAction.frame;
-    frame.origin.y = _imgBgActionTaken.frame.origin.y + (_imgBgActionTaken.frame.size.height /2) -5;
-      frame.origin.x = _imgBgActionTaken.frame.origin.x + _imgBgActionTaken.frame.size.width -5;
+    frame.origin.y = _imgBgActionTaken.frame.origin.y + (_imgBgActionTaken.frame.size.height /2) -10;
+      frame.origin.x = _imgBgActionTaken.frame.origin.x + _imgBgActionTaken.frame.size.width -10;
     _lblStarGAction.frame = frame;
     
     frame =  _imgActionTaken.frame;
@@ -811,18 +850,38 @@
     frame.origin.y = _lblTitleGeneralActionTaken.frame.origin.y + _lblTitleGeneralActionTaken.frame.size.height + 25;
     _txtActionTaken.frame = frame;
     
+    frame =  _txtOtherNote.frame;
+    frame.origin.y = _imgBgActionTaken.frame.origin.y + _imgBgActionTaken.frame.size.height + 25;
+    _txtOtherNote.frame = frame;
+    
+    frame =  _imgBGOtherNote.frame;
+    frame.origin.y = _imgBgActionTaken.frame.origin.y + _imgBgActionTaken.frame.size.height + 20;
+    _imgBGOtherNote.frame = frame;
     
     
     frame =  _viewBgBarcode.frame;
     frame.origin.y = _radioBtnMaintenanceType1.frame.origin.y + _radioBtnMaintenanceType1.frame.size.height + 20;
+   
+  
+    if (_radioBtnMaintenanceType1.selected) {
+        if (_txtOtherNote2.isHidden) {
+              frame.size.height = 560;
+        }else{
+              frame.size.height = 623;
+        }
+      
+    }else{
+        frame.size.height = 560;
+    }
+    
     _viewBgBarcode.frame = frame;
- 
+    
     if (_radioBtnMaintenanceType1.selected) {
         
         frame =  _lblAddImg.frame;
         frame.origin.y = _viewBgBarcode.frame.origin.y + _viewBgBarcode.frame.size.height + 20;
         _lblAddImg.frame = frame;
-        
+
         _imgBgNature.hidden = YES;
         _imgNature.hidden = YES;
         _txtNature.hidden = YES;
@@ -843,7 +902,14 @@
          _lblTitleGeneralActionTaken.hidden = NO;
         _viewBgBarcode.hidden = YES;
         frame =  _lblAddImg.frame;
-        frame.origin.y = _imgBgNature.frame.origin.y + _imgBgNature.frame.size.height + 20;
+        
+        if (_txtOtherNote.isHidden) {
+            frame.origin.y = _imgBgNature.frame.origin.y + _imgBgNature.frame.size.height + 20;
+
+        }else{
+            frame.origin.y = _imgBgNature.frame.origin.y + _imgBgNature.frame.size.height + 20 + 83;
+
+        }
         _lblAddImg.frame = frame;
         
     }
@@ -1015,8 +1081,14 @@
          return 1;
     }
     else {
-         return arrVideoOrImage.count;
-    }
+        if (_radioBtnVideo.isSelected) {
+            return arrVideo.count;
+        }
+        else{
+            return arrImage.count;
+
+        }
+            }
    
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -1029,10 +1101,13 @@
    if ([tableView isEqual:_tblVideoList]) {
 
        cell.lblId.text = [NSString stringWithFormat:@"%ld",indexPath.row+1];
-       cell.lblFileName.text = [[arrVideoOrImage valueForKey:@"Key"] objectAtIndex:indexPath.row];
        if (_radioBtnImg.selected) {
+           cell.lblFileName.text = [[arrImage valueForKey:@"Key"] objectAtIndex:indexPath.row];
+
            cell.lblFileType.text = @"Image";
        }else {
+           cell.lblFileName.text = [[arrVideo valueForKey:@"Key"] objectAtIndex:indexPath.row];
+
            cell.lblFileType.text = @"Video";
            
        }
@@ -1068,10 +1143,10 @@
     _viewFullBGImageVideo.hidden = NO;
     
 
- NSData* data = [[NSData alloc] initWithBase64EncodedString:[[arrVideoOrImage valueForKey:@"Value"] objectAtIndex:sender.tag] options:0];
+
 
     if (_radioBtnImg.selected){
-        
+         NSData* data = [[NSData alloc] initWithBase64EncodedString:[[arrImage valueForKey:@"Value"] objectAtIndex:sender.tag] options:0];
         _imgViewPhotoVideo.hidden = NO;
         _webViewVideoShow.hidden = YES;
         UIImage* image = [UIImage imageWithData:data];
@@ -1079,6 +1154,8 @@
         
     }
     else if (_radioBtnVideo.selected){
+         NSData* data = [[NSData alloc] initWithBase64EncodedString:[[arrVideo valueForKey:@"Value"] objectAtIndex:sender.tag] options:0];
+        
         _imgViewPhotoVideo.hidden = YES;
         _webViewVideoShow.hidden = NO;
         NSString *base64String = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
@@ -1102,9 +1179,38 @@
 }
 -(void)btnDeleteImageVideoTapped:(UIButton*)sender{
     _isUpdate = YES;
-    [arrVideoOrImage removeObjectAtIndex:sender.tag];
-    [_tblVideoList reloadData];
+    if (_radioBtnImg.isSelected) {
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure you want to delete this image?" preferredStyle:UIAlertControllerStyleAlert];
     
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                         {
+                             //BUTTON OK CLICK EVENT
+                             [arrImage removeObjectAtIndex:sender.tag];
+                             [_tblVideoList reloadData];
+                         }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:cancel];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    }
+    else{
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure you want to delete this video?" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                             {
+                                 //BUTTON OK CLICK EVENT
+                                 [arrVideo removeObjectAtIndex:sender.tag];
+                                 [_tblVideoList reloadData];
+                             }];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+        
+    }
 }
 
 
@@ -1161,7 +1267,39 @@
     [textView resignFirstResponder];
     return YES;
 }
-
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    if ([textField isEqual:_txtEquipmentId]) {
+        NSLog(@"check in dropdownarry %@",_txtEquipmentId.text);
+        if (_isEqInventoryAddToDb) {
+           // check dropdown arr and call btnfill
+              if ([arrEquipmentId containsObject:_txtEquipmentId.text]) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                 _isEqInventoryAddToDb = NO;
+                [tempBtn setTitle:@"Fill" forState:UIControlStateNormal];
+                [self btnFillTapped:tempBtn];
+            });
+              }
+        }else{
+            //chk userinteraction
+            //then check in dropdownarr and call btnfill
+            if (_txtCategory.userInteractionEnabled) {
+                if ([[arrEquipmentId valueForKey:@"Text"] containsObject:_txtEquipmentId.text]) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                        _isEqInventoryAddToDb = NO;
+                        [tempBtn setTitle:@"Fill" forState:UIControlStateNormal];
+                        [self btnFillTapped:tempBtn];
+                    });
+                }
+                else{
+                     _isEqInventoryAddToDb = YES;
+                }
+            }
+        }
+    }
+}
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField{
+    return YES;
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 
     [textField resignFirstResponder];
@@ -1171,6 +1309,8 @@
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     _isUpdate = YES;
     if ([textField isEqual:_txtEquipmentId]){
+        
+        _isEqInventoryAddToDb = YES;
             _txtSerialId.text = @"";
             _txtEquipmentName.text = @"";
             _txtManufacture.text = @"";
@@ -1184,33 +1324,47 @@
         _txtType.userInteractionEnabled = YES;
         _txtMode.userInteractionEnabled = YES;
         _txtBrand.userInteractionEnabled = YES;
+           _txtCategory.userInteractionEnabled = YES;
         
         if ([_txtEquipmentId.text length] >1) {
             popOver = nil;
             NSString * strTemp = _txtEquipmentId.text;
+            if (gblAppDelegate.isNetworkReachable) {
+           
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 
             [[WebSerivceCall webServiceObject]callServiceForGetInventoryPartsUsedWorkOrder:YES equipmentId:strTemp checkFilter:@"true" complition:^{
-                
+                _isEqInventoryAddToDb = NO;
                 NSData *dictionaryData = [[NSUserDefaults standardUserDefaults] objectForKey:@"inventoryPartsUsedRecponce"];
                 responceEquipmentIdDic = [NSKeyedUnarchiver unarchiveObjectWithData:dictionaryData];
            //     //NSLog(@"%@",responceEquipmentIdDic);
+                
+
                 if (![[responceEquipmentIdDic valueForKey:@"Success"] boolValue]) {
+                    _isEqInventoryAddToDb = YES;
                     return ;
                 }
-                
                 arrEquipmentId = [[NSMutableArray alloc]init];
                 arrEquipmentId= [responceEquipmentIdDic valueForKey:@"InventoryParts"];
+             
                 if (arrEquipmentId.count != 0) {
+                    _isEqInventoryAddToDb = NO;
                     DropDownPopOver *dropDown = (DropDownPopOver*)[[[NSBundle mainBundle] loadNibNamed:@"DropDownPopOver" owner:self options:nil] firstObject];
                     dropDown.delegate = self;
                     [dropDown showDropDownWith:arrEquipmentId view:textField key:@"Text"];
+                }
+                else{
+                    _isEqInventoryAddToDb = YES;
                 }
                 
                 
                 
             }];
                      });
+            }
+            else{
+               // alert(@"", @"We're sorry. C2IT is not currently available offline");
+            }
         }
         else{
             popOver = nil;
@@ -1220,6 +1374,19 @@
     return YES;
 }
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if (_txtEquipmentId.isEditing) {
+        [_txtEquipmentId resignFirstResponder];
+        if (_isEqInventoryAddToDb) {
+            return NO;
+        }
+        else{
+            if (_txtCategory.userInteractionEnabled) {
+                if ([[arrEquipmentId valueForKey:@"Text"] containsObject:_txtEquipmentId.text]) {
+                    return NO;
+                }
+            }
+        }
+    }
     _isUpdate = YES;
     BOOL allowEditing = YES;
     if ([textField isEqual:_txtDateOfWorkOrder]) {
@@ -1370,7 +1537,7 @@
           [sender setText:[value valueForKey:@"name"]];
     }
     else if ([sender isEqual:_txtEquipmentId]){
-        
+        _isEqInventoryAddToDb = NO;
         [sender setText:[value valueForKey:@"Text"]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
              [tempBtn setTitle:@"Fill" forState:UIControlStateNormal];
@@ -1378,6 +1545,35 @@
         });
         
         
+    }
+    else if ([sender isEqual:_txtNature]){
+         [sender setText:[value valueForKey:@"Text"]];
+
+        if ([[[value valueForKey:@"Text"]uppercaseString] isEqualToString:@"OTHER"]) {
+          
+            _txtOtherNote.hidden = false;
+            _imgBGOtherNote.hidden = false;
+           
+            
+        }
+        else{
+            _txtOtherNote.hidden = true;
+            _imgBGOtherNote.hidden = true;
+        }
+         [self viewSetUp:YES];
+    }
+    else if ([sender isEqual:_txtNature2]){
+        [sender setText:[value valueForKey:@"Text"]];
+        if ([[[value valueForKey:@"Text"]uppercaseString] isEqualToString:@"OTHER"]) {
+         
+            _txtOtherNote2.hidden = false;
+            _imgBGOtherNote2.hidden = false;
+        }
+        else{
+            _txtOtherNote2.hidden = true;
+            _imgBGOtherNote2.hidden = true;
+        }
+         [self viewSetUp:YES];
     }
     else
     [sender setText:[value valueForKey:@"Text"]];
@@ -1404,6 +1600,9 @@
 }
 
 - (IBAction)maintenanceRadioBtnTapped:(UIButton *)sender {
+    
+    _isEqInventoryAddToDb = NO;
+
     _isUpdate = YES;
      [_radioBtnMaintenanceType1 setSelected:NO];
      [_radioBtnMaintenanceType2 setSelected:NO];
@@ -1421,10 +1620,18 @@
     _txtNature2.text = @"";
     _txtActionTaken2.text = @"";
    if(_radioBtnMaintenanceType1.isSelected) {
+       _txtOtherNote.hidden = YES;
+       _imgBGOtherNote.hidden = YES;
+       
        _lblStarGAction.hidden = YES;
  _lblStarGNature.hidden = YES;
         for (int i =0; i<arrEquipmentReq.count; i++) {
-            if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"13"]) {
+            if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"16"]) {
+                if ([[[arrEquipmentReq valueForKey:@"Selected"] objectAtIndex:i] boolValue]) {
+                    _lblStarCategory.hidden = NO;
+                }
+            }
+            else if ([[NSString stringWithFormat:@"%@",[[arrEquipmentReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"13"]) {
                 if ([[[arrEquipmentReq valueForKey:@"Selected"] objectAtIndex:i] boolValue]) {
                     _lblStarEqAction.hidden = NO;
                 }
@@ -1471,6 +1678,9 @@
             }
         }
    }else{
+       _txtOtherNote2.hidden = YES;
+       _imgBGOtherNote2.hidden = YES;
+       
        _lblStarEqipId.hidden = YES;
        _lblStarSerialId.hidden = YES;
        _lblStarEqipName.hidden = YES;
@@ -1480,7 +1690,8 @@
        _lblStarEqBrand.hidden = YES;
        _lblStarEqNature.hidden = YES;
        _lblStarEqAction.hidden = YES;
-      
+       _lblStarCategory.hidden = YES;
+
            for (int i =0; i<arrGenReq.count; i++) {
                if ([[NSString stringWithFormat:@"%@",[[arrGenReq valueForKey:@"Id"] objectAtIndex:i]] isEqualToString:@"14"]) {
                    if ([[[arrGenReq valueForKey:@"Selected"] objectAtIndex:i] boolValue]) {
@@ -1507,13 +1718,13 @@
     if ([_radioBtnImg isSelected]) {
         _lblVideo.text = @"Image(s)";
         [_btnAttachVideoOrPhoto setTitle:@"Attach image" forState:UIControlStateNormal];
-        arrVideoOrImage = [NSMutableArray new];
+        //arrImage = [NSMutableArray new];
             }
     else
     {
         _lblVideo.text = @"Video(s)";
         [_btnAttachVideoOrPhoto setTitle:@"Attach video" forState:UIControlStateNormal];
-        arrVideoOrImage = [NSMutableArray new];
+//        arrVideo = [NSMutableArray new];
 
     }
     [_tblVideoList reloadData];
@@ -1522,34 +1733,81 @@
 - (IBAction)btnAttachVideoOrPhotoTapped:(UIButton *)sender {
     _isUpdate = YES;
     if ([_radioBtnVideo isSelected]) {
-        if (!(arrVideoOrImage.count < 1)) {
-               alert(@"", @"Sorry! You cannot attach more than 1 video.");
+        if (!(arrVideo.count < 1)) {
+            alert(@"", @"Sorry! You cannot attach more than 1 video.");
             return;
         }
+        if (arrImage.count != 0) {
+            UIAlertController * alertAddNew = [[UIAlertController alloc]init];
+            alertAddNew=[UIAlertController alertControllerWithTitle:@"" message:@"If you upload new video file, you will lose previously uploaded image. Do you want to upload new file?"preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* yesButton = [UIAlertAction
+                                        actionWithTitle:@"Yes"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            arrImage = [NSMutableArray new];
+                                              arrVideo = [NSMutableArray new];
+                                            [self actionSheetCall:sender];
+                                        }];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+
+            [alertAddNew addAction:yesButton];
+             [alertAddNew addAction:cancel];
+            [self presentViewController:alertAddNew animated:YES completion:nil];
+
+
+        }
+   
     }
     else if ([_radioBtnImg isSelected]) {
-        if (!(arrVideoOrImage.count < 3)) {
+        if (!(arrImage.count < 3)) {
             alert(@"", @"Sorry! You cannot attach more than 3 images.");
             return;
         }
+        if (arrVideo.count != 0) {
+ 
+            UIAlertController * alertAddNew = [[UIAlertController alloc]init];
+            alertAddNew=[UIAlertController alertControllerWithTitle:@"" message:@"If you upload new image file, you will lose previously uploaded video. Do you want to upload new file?"preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* yesButton = [UIAlertAction
+                                        actionWithTitle:@"Yes"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action)
+                                        {
+                                            arrVideo = [NSMutableArray new];
+                                              arrImage = [NSMutableArray new];
+                                              [self actionSheetCall:sender];
+                                        }];
+             UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+            [alertAddNew addAction:yesButton];
+            [alertAddNew addAction:cancel];
+            [self presentViewController:alertAddNew animated:YES completion:nil];
+        }
+
+      
     }
 
+      [self actionSheetCall:sender];
+
+    
+}
+-(void)actionSheetCall:(UIButton *)sender{
     UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
     if ([_radioBtnImg isSelected]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Select Photo",@"Select Camera",nil];
     }else  if ([_radioBtnVideo isSelected]) {
         actionSheet = [[UIActionSheet alloc] initWithTitle:@"Capture Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Select Video",@"Select Camera",nil];
     }
-
+    
     
     rect = [self.view convertRect:CGRectMake(self.view.frame.size.width/2-80, self.view.frame.size.height/2-240, sender.frame.size.width, sender.frame.size.height) toView:self.view];
+   
     rect = [self.view convertRect:rect toView:self.view];
     [actionSheet showInView:self.view];
-
     
 }
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
           if ([_radioBtnImg isSelected]) {
         if (buttonIndex == 0) {
             [self showPhotoLibrary:@"image"];
@@ -1623,7 +1881,7 @@
 //          [tempDic setValue:[[info objectForKey:UIImagePickerControllerReferenceURL] pathExtension] forKey:@"fileType"];
         [tempDic setValue:@"Image" forKey:@"Key"];
         [tempDic setValue:strEncoded forKey:@"Value"];//
-        [arrVideoOrImage addObject:tempDic];
+        [arrImage addObject:tempDic];
               //  [aDict setObject:strEncoded forKey:@"answer"];
       //  [aDict setObject:tempstrDataType forKey:@"existingResponse"];
         
@@ -1680,7 +1938,7 @@
                 //          [tempDic setValue:[[info objectForKey:UIImagePickerControllerReferenceURL] pathExtension] forKey:@"fileType"];
                 [tempDic setValue:@"Video" forKey:@"Key"];
                 [tempDic setValue:strEncoded forKey:@"Value"];
-                [arrVideoOrImage addObject:tempDic];
+                [arrVideo addObject:tempDic];
 
               //  [aDict setObject:strEncoded forKey:@"answer"];
               //  [aDict setObject:tempstrDataType forKey:@"existingResponse"];
@@ -1741,31 +1999,227 @@
         
     }];
 }
+-(void)saveInventoryToDatabase:(BOOL)isSubmitLatter{
 
-- (IBAction)btnSubmitTapped:(UIButton *)sender {
-    if ([self validationFinalSubmit]) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"This item was not found in the inventory. Do you want to add this item to inventory?" preferredStyle:UIAlertControllerStyleAlert];
         
-        NSDictionary *aDictParams = [self sendData];
-   //     //NSLog(@"%@",aDictParams);
-    [[WebSerivceCall webServiceObject]callServiceForAddNewCreateWorkOrder:YES paraDic:aDictParams isReadyForFollowupcomplition:@"true" complition:^{
-         [self.navigationController popViewControllerAnimated:YES];
-       alert(@"", @"Work Order created successfully");
-       
+        UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                             {
+                                 
+                                 [gblAppDelegate showActivityIndicator];
+                                 NSDictionary *aDictParams = [self sendInventoryData];
 
-    }];
+                                 if (gblAppDelegate.isNetworkReachable) {
+                                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                         [[WebSerivceCall webServiceObject]callServiceForAddNewEquipmentInventoryToDatabase:YES paraDic:aDictParams complition:^(NSDictionary *response){
+                                             
+                                             if ([[response valueForKey:@"Success"] boolValue]) {
+                                                 [self finalSubmit:isSubmitLatter];
+                                             }
+                                             else{
+                                                 [gblAppDelegate hideActivityIndicator];
+                                             }
+                                         }];
+                                     });
+                                 }
+                                 else{
+                                     [self saveInventoryDataToSync:aDictParams];
+                                     [gblAppDelegate hideActivityIndicator];
+                                       [self finalSubmit:isSubmitLatter];
+                                     alert(@"", MSG_ADDED_TO_SYNC);
+                                     
+                                 }
+                            
+                             }];
+                                                    
+        UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:yes];
+        [alert addAction:no];
+        [self presentViewController:alert animated:YES completion:nil];
+  //  }
 }
+-(void)finalSubmit:(BOOL)isSubmitLatter{
+          NSDictionary *aDictParams = [self sendData];
+    NSString * isReadyForFollowupcomplition = @"true";
+    NSString * alertMsg = @"Work Order created successfully";
+    
+    if (isSubmitLatter) {
+        isReadyForFollowupcomplition = @"false";
+        alertMsg = @"Your work order has been saved in progress.  It can be found under My Work Orders.";
+    }
+    if (gblAppDelegate.isNetworkReachable) {
+        [gblAppDelegate showActivityIndicator];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+            [[WebSerivceCall webServiceObject]callServiceForAddNewCreateWorkOrder:YES paraDic:aDictParams isReadyForFollowupcomplition:isReadyForFollowupcomplition complition:^{
+                [self.navigationController popViewControllerAnimated:YES];
+                alert(@"", alertMsg);
+                [gblAppDelegate hideActivityIndicator];
+
+            }];
+        });
+       
+    }
+    else{
+        
+        [self saveDataToSync:aDictParams isSubmitLatter:isReadyForFollowupcomplition];
+            [self.navigationController popViewControllerAnimated:YES];
+        [gblAppDelegate hideActivityIndicator];
+        alert(@"", MSG_ADDED_TO_SYNC);
+    }
+}
+-(void)saveInventoryDataToSync:(NSDictionary*)saveDataDic{
+    
+    WorkOrderNewEquipmentInventory * workOrder = [NSEntityDescription insertNewObjectForEntityForName:@"WorkOrderNewEquipmentInventory" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+    
+    workOrder.serialId = [saveDataDic objectForKey:@"SerialId"];
+    workOrder.inventorySetupId = [saveDataDic objectForKey:@"InventorySetupId"];
+    workOrder.inventoryManufactureId = [saveDataDic objectForKey:@"InventoryManufactureId"];
+    workOrder.inventoryBrandId = [saveDataDic objectForKey:@"InventoryBrandId"];
+    workOrder.inventoryModelId = [saveDataDic objectForKey:@"InventoryModelId"];
+    workOrder.inventoryTypeId = [saveDataDic objectForKey:@"InventoryTypeId"];
+    workOrder.inventoryCategoryId = [saveDataDic objectForKey:@"InventoryCategoryId"];
+    workOrder.equipmentId = [saveDataDic objectForKey:@"EquipmentId"];
+    workOrder.equipmentName = [saveDataDic objectForKey:@"EquipmentName"];
+    workOrder.unitQuantity = [saveDataDic objectForKey:@"UnitQuantity"];
+    workOrder.itemPerUnit = [saveDataDic objectForKey:@"ItemPerUnit"];
+    workOrder.itemPerUnitCost = [saveDataDic objectForKey:@"ItemPerUnitCost"];
+    workOrder.totalQuantity = [saveDataDic objectForKey:@"TotalQuantity"];
+    workOrder.isCompleted = [NSNumber numberWithBool:YES];
+    workOrder.userId = [[User currentUser] userId];
+    
+    [gblAppDelegate.managedObjectContext insertObject:workOrder];
+    [gblAppDelegate.managedObjectContext save:nil];
+}
+-(void)saveDataToSync:(NSDictionary*)saveDataDic isSubmitLatter:(NSString*)isSubmitLatter{
+    
+        WorkOrderCreateNewSubmit * workOrder = [NSEntityDescription insertNewObjectForEntityForName:@"WorkOrderCreateNewSubmit" inManagedObjectContext:gblAppDelegate.managedObjectContext];
+
+    workOrder.serialId = [saveDataDic objectForKey:@"SerialId"];
+    workOrder.workOrderDate = [saveDataDic objectForKey:@"WorkOrderDate"];
+    workOrder.workOrderTime = [saveDataDic objectForKey:@"WorkOrderTime"];
+    workOrder.descriptionOfIssue = [saveDataDic objectForKey:@"DescriptionOfIssue"];
+    workOrder.additionalInformation = [saveDataDic objectForKey:@"AdditionalInformation"];
+    workOrder.statusId = [saveDataDic objectForKey:@"StatusId"];
+    workOrder.equipmentActionId = [saveDataDic objectForKey:@"EquipmentActionId"];
+    workOrder.equipmentNatureId = [saveDataDic objectForKey:@"EquipmentNatureId"];
+    workOrder.generalActionId = [saveDataDic objectForKey:@"GeneralActionId"];
+    workOrder.generalNatureId = [saveDataDic objectForKey:@"GeneralNatureId"];
+    workOrder.otherGeneralNature = [saveDataDic objectForKey:@"OtherGeneralNature"];
+    workOrder.otherEquipmentNature = [saveDataDic objectForKey:@"OtherEquipmentNature"];
+    workOrder.maintenanceType = [saveDataDic objectForKey:@"MaintenanceType"];
+    workOrder.inventorySetupId = [saveDataDic objectForKey:@"InventorySetupId"];
+    workOrder.inventoryManufactureId = [saveDataDic objectForKey:@"InventoryManufactureId"];
+    workOrder.inventoryBrandId = [saveDataDic objectForKey:@"InventoryBrandId"];
+    workOrder.inventoryModelId = [saveDataDic objectForKey:@"InventoryModelId"];
+    workOrder.inventoryLocationId = [saveDataDic objectForKey:@"InventoryLocationId"];
+    workOrder.inventoryTypeId = [saveDataDic objectForKey:@"InventoryTypeId"];
+    workOrder.inventoryCategoryId = [saveDataDic objectForKey:@"InventoryCategoryId"];
+    workOrder.isNotificationField1Selected = [saveDataDic objectForKey:@"IsNotificationField1Selected"];
+    workOrder.isNotificationField2Selected = [saveDataDic objectForKey:@"IsNotificationField2Selected"];
+    workOrder.isNotificationField3Selected = [saveDataDic objectForKey:@"IsNotificationField3Selected"];
+    workOrder.isNotificationField4Selected = [saveDataDic objectForKey:@"IsNotificationField4Selected"];
+    workOrder.equipmentId = [saveDataDic objectForKey:@"EquipmentId"];
+    workOrder.equipmentName = [saveDataDic objectForKey:@"EquipmentName"];
+    workOrder.isPhotoExists = [saveDataDic objectForKey:@"IsPhotoExists"];
+    workOrder.isVideoExist = [saveDataDic objectForKey:@"IsVideoExist"];
+    workOrder.photo1 = [saveDataDic objectForKey:@"Photo1"];
+    workOrder.photo2 = [saveDataDic objectForKey:@"Photo2"];
+    workOrder.photo3 = [saveDataDic objectForKey:@"Photo3"];
+    workOrder.video1 = [saveDataDic objectForKey:@"Video1"];
+    workOrder.personFirstName = [saveDataDic objectForKey:@"PersonFirstName"];
+    workOrder.personMiddleInitial = [saveDataDic objectForKey:@"PersonMiddleInitial"];
+    workOrder.personLastName = [saveDataDic objectForKey:@"PersonLastName"];
+    workOrder.personHomePhone = [saveDataDic objectForKey:@"PersonHomePhone"];
+    workOrder.personAlternatePhone = [saveDataDic objectForKey:@"PersonAlternatePhone"];
+    workOrder.personEmail = [saveDataDic objectForKey:@"PersonEmail"];
+    workOrder.isReadyForFollowupcomplition = isSubmitLatter;
+    workOrder.isCompleted = [NSNumber numberWithBool:YES];
+    workOrder.userId = [[User currentUser] userId];
+    
+        [gblAppDelegate.managedObjectContext insertObject:workOrder];
+        [gblAppDelegate.managedObjectContext save:nil];
+
+    
+}
+- (IBAction)btnSubmitTapped:(UIButton *)sender {
+    if (_txtEquipmentId.isEditing) {
+        [_txtEquipmentId resignFirstResponder];
+    }
+    if ([self validationFinalSubmit]) {
+            if (_isEqInventoryAddToDb) {
+        [self saveInventoryToDatabase:NO];
+            }
+        else
+        {
+            [self finalSubmit:NO];
+        }
+    }
+
+
 
 }
 - (IBAction)btnSubmitLatterTapped:(UIButton *)sender {
-    NSDictionary *aDictParams = [self sendData];
-    ////NSLog(@"%@",aDictParams);
-    [[WebSerivceCall webServiceObject]callServiceForAddNewCreateWorkOrder:YES paraDic:aDictParams isReadyForFollowupcomplition:@"false" complition:^{
-          [self.navigationController popViewControllerAnimated:YES];
-        alert(@"", @"Your work order has been saved in progress.  It can be found under My Work Orders.");
-      
-        
-    }];
+    if (_txtEquipmentId.isEditing) {
+        [_txtEquipmentId resignFirstResponder];
+    }
+        if (_isEqInventoryAddToDb) {
+     [self saveInventoryToDatabase:YES];
+        }
+        else {
+          [self finalSubmit:YES];
+        }
+}
 
+-(NSDictionary*)sendInventoryData{
+    
+    
+    NSString* date,* time ,*maintenanceType = @"";
+    
+    NSDateFormatter * dateformatter = [[NSDateFormatter alloc]init];
+    [dateformatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate *from = [dateformatter dateFromString:_txtDateOfWorkOrder.text];
+    [dateformatter setDateFormat:@"yyyy/MM/dd"];
+    date = [dateformatter stringFromDate:from];
+    
+    [dateformatter setDateFormat:@"hh:mm a"];
+    NSDate *to = [dateformatter dateFromString:_txtTimeWorkOrder.text];
+    [dateformatter setDateFormat:@"yyyy/MM/dd HH:mm"];
+    time = [dateformatter stringFromDate:to];
+    
+    NSString * OtherGeneralNature = @"", *OtherEquipmentNature = @"";
+    
+    if (_radioBtnMaintenanceType1.selected) {
+        
+        maintenanceType = @"2";
+        OtherEquipmentNature = _txtOtherNote2.text;
+        
+    }
+    else if (_radioBtnMaintenanceType2.selected)
+    {
+        
+        maintenanceType = @"1";
+        OtherGeneralNature = _txtOtherNote.text;
+    }
+
+    
+    NSDictionary *aDict = @{
+                            @"SerialId":[NSString stringWithFormat:@"%@",_txtSerialId.text],
+                            @"InventorySetupId":[NSString stringWithFormat:@"%@",[[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"InventorySetupId"]],
+                            @"InventoryManufactureId":[self returnSelectedId:arrManufactur selectedStr:_txtManufacture.text],
+                            @"InventoryBrandId":[self returnSelectedId:arrBrand selectedStr:_txtBrand.text],
+                            @"InventoryModelId":[self returnSelectedId:arrModel selectedStr:_txtMode.text],
+                            @"InventoryTypeId":[self returnSelectedId:arrEquipmentType selectedStr:_txtType.text],
+                            @"InventoryCategoryId":[self returnSelectedId:arrCategoty selectedStr:_txtCategory.text],
+                            @"EquipmentId":[NSString stringWithFormat:@"%@",_txtEquipmentId.text],
+                            @"EquipmentName":[NSString stringWithFormat:@"%@",_txtEquipmentName.text],
+                            @"UnitQuantity":@"1",
+                            @"ItemPerUnit":@"1",
+                            @"ItemPerUnitCost":@"0",
+                            @"TotalQuantity":@"1"
+                            };
+  
+    return aDict;
 }
 -(NSDictionary*)sendData{
     
@@ -1783,24 +2237,26 @@
     [dateformatter setDateFormat:@"yyyy/MM/dd HH:mm"];
     time = [dateformatter stringFromDate:to];
 
-
+    NSString * OtherGeneralNature = @"", *OtherEquipmentNature = @"";
     
     if (_radioBtnMaintenanceType1.selected) {
         
         maintenanceType = @"2";
+        OtherEquipmentNature = _txtOtherNote2.text;
         
     }
     else if (_radioBtnMaintenanceType2.selected)
     {
 
         maintenanceType = @"1";
-        
+        OtherGeneralNature = _txtOtherNote.text;
     }
 
     
     
     NSDictionary *aDict = @{
                                   @"Id":@"0",
+                                  @"SerialId":[NSString stringWithFormat:@"%@",_txtSerialId.text],
                                   @"WorkOrderSetUpId":@"0",
                                   @"WorkOrderDate":date,
                                   @"WorkOrderTime":time,
@@ -1811,8 +2267,10 @@
                                   @"EquipmentNatureId":[self returnSelectedId:arrEquipmentNature selectedStr:_txtNature2.text],
                                   @"GeneralActionId":[self returnSelectedId:arrGenralActionTaken selectedStr:_txtActionTaken.text],
                                   @"GeneralNatureId":[self returnSelectedId:arrGenralNature selectedStr:_txtNature.text],
+                                  @"OtherGeneralNature":OtherGeneralNature,
+                                  @"OtherEquipmentNature":OtherEquipmentNature,
                                   @"MaintenanceType":maintenanceType,
-                                  @"InventorySetupId":@"0",
+                                  @"InventorySetupId":[NSString stringWithFormat:@"%@",[[responceDic valueForKey:@"WorkOrderSetupModel"] valueForKey:@"InventorySetupId"]],
                                   @"InventoryManufactureId":[self returnSelectedId:arrManufactur selectedStr:_txtManufacture.text],
                                   @"InventoryBrandId":[self returnSelectedId:arrBrand selectedStr:_txtBrand.text],
                                   @"InventoryModelId":[self returnSelectedId:arrModel selectedStr:_txtMode.text],
@@ -1825,12 +2283,12 @@
                                   @"IsNotificationField4Selected":[self radioBtnSelected:_radioBtnServity4],
                                   @"EquipmentId":[NSString stringWithFormat:@"%@",_txtEquipmentId.text],
                                   @"EquipmentName":[NSString stringWithFormat:@"%@",_txtEquipmentName.text],
-                                  @"IsPhotoExists":[self isPgotoVideoExist:arrVideoOrImage index:0 strImageOrVideo:@"img"],
-                                  @"IsVideoExist":[self isPgotoVideoExist:arrVideoOrImage index:0 strImageOrVideo:@"vid"],
-                                  @"Photo1":[self returnBase64String:arrVideoOrImage index:0 strImageOrVideo:@"img"],
-                                  @"Photo2":[self returnBase64String:arrVideoOrImage index:1 strImageOrVideo:@"img"],
-                                  @"Photo3":[self returnBase64String:arrVideoOrImage index:2 strImageOrVideo:@"img"],
-                                  @"Video1":[self returnBase64String:arrVideoOrImage index:0 strImageOrVideo:@"vid"],
+                                  @"IsPhotoExists":[self isPgotoVideoExist:arrImage index:0 strImageOrVideo:@"img"],
+                                  @"IsVideoExist":[self isPgotoVideoExist:arrVideo index:0 strImageOrVideo:@"vid"],
+                                  @"Photo1":[self returnBase64String:arrImage index:0 strImageOrVideo:@"img"],
+                                  @"Photo2":[self returnBase64String:arrImage index:1 strImageOrVideo:@"img"],
+                                  @"Photo3":[self returnBase64String:arrImage index:2 strImageOrVideo:@"img"],
+                                  @"Video1":[self returnBase64String:arrVideo index:0 strImageOrVideo:@"vid"],
                                   @"PersonFirstName":[NSString stringWithFormat:@"%@",_txtFname.text],
                                   @"PersonMiddleInitial":[NSString stringWithFormat:@"%@",_txtMname.text],
                                   @"PersonLastName":[NSString stringWithFormat:@"%@",_txtLname.text],
@@ -1843,43 +2301,48 @@
 }
 -(NSString*)returnBase64String:(NSMutableArray*)arr index:(int)index strImageOrVideo:(NSString*)strImageOrVideo{
     
-        if (arrVideoOrImage.count > index) {
-           if (_radioBtnImg.isSelected) {
-               if ([strImageOrVideo isEqualToString:@"vid"]) {
-                   return @"";
-               }else
-               return [[arrVideoOrImage valueForKey:@"Value"] objectAtIndex:index];
+    if ([strImageOrVideo isEqualToString:@"vid"]) {
+          if (arrVideo.count > index) {
+         return [[arrVideo valueForKey:@"Value"] objectAtIndex:index];
+          }
+          else{
+               return @"";
+          }
+    }
+    else{
+        if (arrImage.count > index) {
+            return [[arrImage valueForKey:@"Value"] objectAtIndex:index];
         }
-           else if (_radioBtnVideo.isSelected){
-                if ([strImageOrVideo isEqualToString:@"img"]) {
-                    return @"";
-                }else
-               return [[arrVideoOrImage valueForKey:@"Value"] objectAtIndex:index];
-
-           }
+        else{
+            return @"";
+        }
     }
     return @"";
 }
 -(NSString*)isPgotoVideoExist:(NSMutableArray*)arr index:(int)index strImageOrVideo:(NSString*)strImageOrVideo{
-    
-    if (arrVideoOrImage.count > 0) {
-        if (_radioBtnImg.isSelected) {
+
             if ([strImageOrVideo isEqualToString:@"img"]) {
-                 return @"true";
+                if (arrImage.count > 0) {
+                    return @"true";
+
+                }
+                else{
+                    return @"false";
+
+                }
             }
             else{
-                return @"false";
+                if (arrVideo.count > 0) {
+                    return @"true";
+                    
+                }
+                else{
+                    return @"false";
+                    
+                }
+            
             }
-        }
-        else if (_radioBtnVideo.isSelected){
-            if ([strImageOrVideo isEqualToString:@"vid"]) {
-                return @"true";
-            }
-            else{
-                return @"false";
-            }
-    }
-    }
+
     return @"false";
 }
 -(NSString*)radioBtnSelected:(UIButton*)senderBtn{
@@ -1916,10 +2379,6 @@
          alert(@"", @"Please select Work Order location");
         return NO;
     }
-    else if ([_txtCategory.text isEqualToString:@""]) {
-         alert(@"", @"Please select Work Order category");
-        return NO;
-    }
     else if ([_txtDescriptionIssue.text isEqualToString:@""]) {
          alert(@"", @"Please write some Work Order issue description");
         return NO;
@@ -1929,6 +2388,8 @@
             return NO;
         }
     
+
+
  if (!_lblStarFName.isHidden) {
             if ([_txtFname.text isEqualToString:@""]) {
                 alert(@"", @"Please enter employee first name");
@@ -1955,9 +2416,16 @@
         }
     
          if ([_radioBtnMaintenanceType1 isSelected]){
+             if (!_lblStarCategory.isHidden) {
+                 if ([_txtCategory.text isEqualToString:@""]) {
+                     alert(@"", @"Please select Work Order category");
+                     return NO;
+                 }
+             }
+             
             if (!_lblStarEqipId.isHidden) {
                 if ([_txtEquipmentId.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment id");
+                    alert(@"", @"Please enter equipment id");
                     return NO;
                 }
             }
@@ -1969,43 +2437,43 @@
             }
               if (!_lblStarEqipName.isHidden) {
                 if ([_txtEquipmentName.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment name");
+                    alert(@"", @"Please enter equipment name");
                     return NO;
                 }
             }
             if (!_lblStarManufact.isHidden) {
                 if ([_txtManufacture.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment manufacture");
+                    alert(@"", @"Please enter equipment manufacture");
                     return NO;
                 }
             }
               if (!_lblStarEqType.isHidden) {
                 if ([_txtType.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment type");
+                    alert(@"", @"Please enter equipment type");
                     return NO;
                 }
             }
          if (!_lblStarEqMode.isHidden) {
                 if ([_txtMode.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment model");
+                    alert(@"", @"Please enter equipment model");
                     return NO;
                 }
             }
            if (!_lblStarEqBrand.isHidden) {
                 if ([_txtBrand.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment brand");
+                    alert(@"", @"Please enter equipment brand");
                     return NO;
                 }
             }
              if (!_lblStarEqAction.isHidden) {
                 if ([_txtActionTaken2.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment action taken");
+                    alert(@"", @"Please enter equipment action taken");
                     return NO;
                 }
             }
            if (!_lblStarEqNature.isHidden) {
                 if ([_txtNature2.text isEqualToString:@""]) {
-                    alert(@"", @"Please enter eqipment nature");
+                    alert(@"", @"Please enter equipment nature");
                     return NO;
                 }
             }
@@ -2040,13 +2508,15 @@
         strIsBarCode = @"true";
         strBarcode = sender.titleLabel.text;
     }
+        if (gblAppDelegate.isNetworkReachable) {
     [[WebSerivceCall webServiceObject]callServiceForGetEquipmentDetailsWorkOrder:YES strBarcode:strBarcode strIsBarCode:strIsBarCode complition:^{
     
         NSData *dictionaryData = [[NSUserDefaults standardUserDefaults] objectForKey:@"equipmentWorkOrderRecponce"];
         equipmentResponceDic = [NSKeyedUnarchiver unarchiveObjectWithData:dictionaryData];
         //NSLog(@"%@",equipmentResponceDic);
-        
         if ([[equipmentResponceDic valueForKey:@"Success"] boolValue]) {
+            
+
             _txtSerialId.text = [equipmentResponceDic valueForKey:@"SerialId"];
             _txtEquipmentName.text = [equipmentResponceDic valueForKey:@"ItemName"];
             _txtManufacture.text = [equipmentResponceDic valueForKey:@"InventoryManufactureName"];
@@ -2054,6 +2524,19 @@
             _txtMode.text = [equipmentResponceDic valueForKey:@"InventoryModelName"];
             _txtBrand.text = [equipmentResponceDic valueForKey:@"InventoryBrandName"];
             _txtEquipmentId.text = [equipmentResponceDic valueForKey:@"ItemId"];
+            if ((![[equipmentResponceDic valueForKey:@"InventoryCategoryId"] isKindOfClass:[NSNull class]])) {
+                
+            _txtCategory.userInteractionEnabled = NO;
+                
+            for (int i = 0; i< arrCategoty.count; i++) {
+              
+                if ([[NSString stringWithFormat:@"%@",[[arrCategoty valueForKey:@"Value"]objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@",[equipmentResponceDic valueForKey:@"InventoryCategoryId"]]]) {
+                    _txtCategory.text = [[arrCategoty valueForKey:@"Text"]objectAtIndex:i];
+                }
+            }
+                
+                 }
+            
             _lblInventoryNotFound.hidden = YES;
            
             _txtSerialId.userInteractionEnabled = NO;
@@ -2062,9 +2545,12 @@
             _txtType.userInteractionEnabled = NO;
             _txtMode.userInteractionEnabled = NO;
             _txtBrand.userInteractionEnabled = NO;
+            _txtCategory.userInteractionEnabled = NO;
             
         }
         else{
+   
+
             _txtSerialId.text = @"";
             _txtEquipmentName.text = @"";
             _txtManufacture.text = @"";
@@ -2072,13 +2558,23 @@
             _txtMode.text = @"";
             _txtBrand.text = @"";
             _lblInventoryNotFound.hidden = NO;
+            _txtCategory.text = @"";
         }
         
 }];
-    
+}
+else{
+    alert(@"", @"We're sorry. C2IT is not currently available offline");
+}
+
 }
 
 - (IBAction)btnScanBarcodeTapped:(id)sender {
+    if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusDenied)
+    {
+        //access denide
+        return;
+    }
     _isUpdate = YES;
     // _viewCamera.hidden = false;
     _btnBackground.hidden = false;
@@ -2161,12 +2657,54 @@
 }
 
 - (IBAction)btnHideImageViewTapped:(UIButton *)sender {
+      if (_radioBtnVideo.isSelected) {
+    [_webViewVideoShow loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+      }
     _viewFullBGImageVideo.hidden = YES;
 }
 - (IBAction)btnDeleteImageVideo:(UIButton *)sender {
     _isUpdate = YES;
-    _viewFullBGImageVideo.hidden = YES;
-    [arrVideoOrImage removeObjectAtIndex:selectedImgVidIndex];
-      [_tblVideoList reloadData];
+    if (_radioBtnImg.isSelected) {
+        
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure you want to delete this image?" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                         {
+                             //BUTTON OK CLICK EVENT
+                             _viewFullBGImageVideo.hidden = YES;
+                             [arrImage removeObjectAtIndex:selectedImgVidIndex];
+                             [_tblVideoList reloadData];
+                         }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:cancel];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+        }
+    else
+    {
+        
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Are you sure you want to delete this video?" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                             {
+                                 //BUTTON OK CLICK EVENT
+                                 _viewFullBGImageVideo.hidden = YES;
+                                 [arrVideo removeObjectAtIndex:selectedImgVidIndex];
+                                 [_tblVideoList reloadData];
+                             }];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
+
+- (void)didTapOutSideOfDropDown:(UITapGestureRecognizer *)tapGesture {
+    if (_txtEquipmentId.isEditing) {
+        [_txtEquipmentId resignFirstResponder];
+    }
+}
+
 @end
